@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+
+    <include layout="@layout/com_title_bar" />
+
+    <com.kankan.kankanews.ui.view.StickyScrollView
+        android:id="@+id/scollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="51dp"
+        android:background="#ffffff"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="10dp" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="10dp" >
+
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:id="@+id/content_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:lineSpacingExtra="6dp"
+                    android:textSize="25dp" />
+
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:id="@+id/content_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="3dp"
+                    android:textColor="@color/text_gray_color"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" >
+
+                    <LinearLayout
+                        android:id="@+id/content_share_shina_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:background="#e51c23"
+                        android:orientation="vertical" >
+
+                        <com.kankan.kankanews.ui.view.MyTextView
+                            android:id="@+id/content_share_shina"
+                            style="@style/content_share_text"
+                            android:text="0" />
+
+                        <ImageView
+                            style="@style/content_share_img"
+                            android:src="@drawable/share_sina" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/content_share_qq_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="#3f51b5"
+                        android:orientation="vertical" >
+
+                        <com.kankan.kankanews.ui.view.MyTextView
+                            android:id="@+id/content_share_qq"
+                            style="@style/content_share_text"
+                            android:text="0" />
+
+                        <ImageView
+                            style="@style/content_share_img"
+                            android:src="@drawable/share_tencent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/content_share_weixin_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="#259b24"
+                        android:orientation="vertical" >
+
+                        <com.kankan.kankanews.ui.view.MyTextView
+                            android:id="@+id/content_share_weixin"
+                            style="@style/content_share_text"
+                            android:text="0" />
+
+                        <ImageView
+                            style="@style/content_share_img"
+                            android:src="@drawable/share_wechatx" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/content_share_mail_layout"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="#607d8b"
+                        android:orientation="vertical" >
+
+                        <com.kankan.kankanews.ui.view.MyTextView
+                            android:id="@+id/content_share_mail"
+                            style="@style/content_share_text"
+                            android:text="0" />
+
+                        <ImageView
+                            style="@style/content_share_img"
+                            android:src="@drawable/share_mail" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/content_video_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:visibility="visible" >
+
+                    <ImageView
+                        android:id="@+id/content_video"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:clickable="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/default_news_display" />
+
+                    <com.kankan.kankanews.ui.view.MyTextView
+                        android:id="@+id/content_intro"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="4dp"
+                        android:paddingTop="10dp"
+                        android:textSize="16dp"
+                        android:textStyle="italic" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </com.kankan.kankanews.ui.view.StickyScrollView>
+
+    <RelativeLayout
+        android:id="@+id/content_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="51dp"
+        android:background="#ffffff"
+        android:clickable="true"
+        android:visibility="visible" >
+
+        <LinearLayout
+            android:layout_width="80dip"
+            android:layout_height="60dip"
+            android:layout_centerInParent="true"
+            android:background="@drawable/load_back_bg"
+            android:gravity="center"
+            android:paddingBottom="15dip"
+            android:paddingLeft="25dip"
+            android:paddingRight="25dip"
+            android:paddingTop="15dip" >
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDrawable="@drawable/iamge_progress"
+                android:indeterminateOnly="true"
+                android:visibility="visible" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/player_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="51dp"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/retry" />
+    </LinearLayout>
+
+    <View style="@style/set_item_Line" />
+
+    <RelativeLayout
+        android:id="@+id/rootview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:clickable="true"
+        android:visibility="gone" >
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rootview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:clickable="true"
+        android:visibility="gone" >
+
+        <LinearLayout
+            android:id="@+id/small_video_pb"
+            android:layout_width="80dip"
+            android:layout_height="60dip"
+            android:layout_centerInParent="true"
+            android:background="@drawable/load_back_bg"
+            android:paddingBottom="15dip"
+            android:paddingLeft="25dip"
+            android:paddingRight="25dip"
+            android:paddingTop="15dip"
+            android:visibility="gone" >
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminateBehavior="repeat"
+                android:indeterminateDrawable="@drawable/iamge_progress"
+                android:indeterminateOnly="true"
+                android:visibility="visible" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/operation_volume_brightness"
+        android:layout_width="150dip"
+        android:layout_height="150dip"
+        android:layout_centerInParent="true"
+        android:background="#00000000"
+        android:orientation="horizontal"
+        android:padding="0dip"
+        android:visibility="invisible" >
+
+        <ImageView
+            android:id="@+id/operation_bg"
+            android:layout_width="150dip"
+            android:layout_height="150dip"
+            android:layout_gravity="center"
+            android:src="@drawable/video_volumn_bg" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:paddingBottom="25dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip" >
+
+            <ImageView
+                android:id="@+id/operation_full"
+                android:layout_width="110dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:scaleType="fitXY"
+                android:src="@drawable/video_num_bg" />
+
+            <ImageView
+                android:id="@+id/operation_percent"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:scaleType="fitXY"
+                android:src="@drawable/video_num_front" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/full_screen_guide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/full_screen_guide"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/player_guide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/player_guide"
+        android:visibility="gone" />
+
+</RelativeLayout>

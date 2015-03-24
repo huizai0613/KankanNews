@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp" >
+
+        <LinearLayout
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingRight="8dp" >
+
+            <com.kankan.kankanews.ui.view.RoundImageView
+                android:id="@+id/attention_user_poster"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_news_report_pic" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <com.kankan.kankanews.ui.view.MyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="某某某"
+                android:textSize="14dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/attention_item_background"
+                android:orientation="horizontal"
+                android:padding="10dp" >
+
+                <ImageView
+                    android:layout_width="90dp"
+                    android:layout_height="60dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_news_display" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical" >
+
+                    <com.kankan.kankanews.ui.view.MyTextView
+                        android:id="@+id/title"
+                        android:layout_width="fill_parent"
+                        android:layout_height="40dp"
+                        android:ellipsize="end"
+                        android:lineSpacingExtra="2dip"
+                        android:maxLines="2"
+                        android:text="中山公园地铁口广告牌坠他砸人实拍! "
+                        android:textColor="#000000"
+                        android:textSize="16dip" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="20dp"
+                        android:orientation="horizontal" >
+
+                        <com.kankan.kankanews.ui.view.MyTextView
+                            android:id="@+id/newstime"
+                            android:layout_width="0dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:text="2014.10.14"
+                            android:textColor="#959595"
+                            android:textSize="15dip" />
+
+                        <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="20dp"
+                            android:scaleType="fitXY"
+                            android:src="@drawable/icon_attention_right" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

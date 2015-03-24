@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <com.kankan.kankanews.ui.view.MyTextView 
+            android:id="@+id/comment_no_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="已加载全部数据"
+            android:paddingBottom="10dp"
+            android:gravity="center"
+            android:textColor="@color/text_gray_color"
+            android:textSize="16dp"
+			android:visibility="visible"            
+            />
+
+</LinearLayout>

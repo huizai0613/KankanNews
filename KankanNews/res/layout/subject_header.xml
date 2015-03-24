@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffffff" >
+
+    <ImageView
+        android:id="@+id/titlepic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff" />
+
+    <RelativeLayout
+        android:id="@+id/layoutintro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/titlepic"
+        android:paddingBottom="0dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp" >
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/intro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:lineSpacingExtra="12dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="14dp"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="12dp"
+            android:background="#ff0000"
+            android:paddingBottom="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:paddingTop="2dp"
+            android:text="摘要"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/topline"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_below="@+id/layoutintro"
+        android:background="#e6e6e6" />
+
+</RelativeLayout>

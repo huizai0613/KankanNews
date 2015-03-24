@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:id="@+id/play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/smallrootview"
+            android:layout_width="match_parent"
+            android:layout_height="150dip"
+            android:background="#ff000000" >
+
+            <io.vov.vitamio.widget.VideoView
+                android:id="@+id/video_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:visibility="visible" />
+
+            <View
+                android:id="@+id/video_view_click"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00ffffff" />
+
+            <ImageView
+                android:id="@+id/video_player"
+                android:layout_width="90dip"
+                android:layout_height="90dip"
+                android:layout_centerInParent="true"
+                android:padding="10dip"
+                android:src="@drawable/ic_liveplay" />
+
+            <LinearLayout
+                android:id="@+id/video_pb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000"
+                android:gravity="center"
+                android:visibility="visible" >
+
+                <ProgressBar
+                    android:layout_width="40dip"
+                    android:layout_height="40dip"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@drawable/iamge_progress"
+                    android:indeterminateOnly="true"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/fullscrenn_but"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="15dip"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:src="@drawable/ic_fullscreen"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/smallscrenn_but"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="15dip"
+                android:paddingRight="15dip"
+                android:src="@drawable/full_screen_back"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dip"
+            android:background="@drawable/livebg1"
+            android:orientation="horizontal" >
+
+            <com.kankan.kankanews.ui.view.MyTextView
+                android:id="@+id/livePlayTitle"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="9"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dip"
+                android:singleLine="true"
+                android:textSize="16dip" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dip"
+            android:background="#e5e5e5" />
+    </LinearLayout>
+
+    <com.iss.view.pulltorefresh.PullToRefreshListView
+        android:id="@+id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/play"
+        android:divider="@null"
+        android:listSelector="#ffffff"
+        android:scrollbars="none" >
+    </com.iss.view.pulltorefresh.PullToRefreshListView>
+
+    <LinearLayout
+        android:id="@+id/main_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/retry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/screnn_pb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:visibility="visible" >
+
+        <ProgressBar
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@drawable/iamge_progress"
+            android:indeterminateOnly="true"
+            android:visibility="visible" />
+    </LinearLayout>
+
+</RelativeLayout>

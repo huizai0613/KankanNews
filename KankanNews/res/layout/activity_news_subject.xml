@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <com.kankan.kankanews.ui.view.StickyScrollView 
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+        
+        <LinearLayout 
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
+            
+            <ImageView 
+                android:layout_height="80dp"
+                android:layout_width="match_parent"
+                android:background="#259b24"/>
+            
+            <com.kankan.kankanews.ui.view.MyTextView 
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="的发放额外撒的发放额外份额啊范德萨范德萨发第三方的撒萨范德萨发第三方的撒"/>
+            
+            <View android:layout_height="1dp"
+                android:layout_width="match_parent"
+                android:background="#dddddd"/>
+            
+            <LinearLayout 
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                >
+                
+                <com.kankan.kankanews.ui.view.MyTextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ddddd"/>
+                
+            </LinearLayout>
+            
+        </LinearLayout>
+        
+    </com.kankan.kankanews.ui.view.StickyScrollView>
+    
+
+</LinearLayout>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/rl_column"
+            android:layout_width="match_parent"
+            android:layout_height="40dip"
+            android:background="@android:color/black" >
+
+            <HorizontalScrollView
+                android:id="@+id/mColumnHorizontalScrollView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="69dip"
+                android:layout_marginRight="10dip"
+                android:fadingEdge="@null"
+                android:scrollbars="none" >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <LinearLayout
+                        android:id="@+id/mRadioGroup_content"
+                        android:layout_width="fill_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" />
+
+                </RelativeLayout>
+            </HorizontalScrollView>
+
+    <!--         <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="69dip"
+                android:src="@drawable/ic_title_left" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_title_right" /> -->
+        </RelativeLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="60dip"
+        android:layout_height="60dip"
+        android:layout_marginLeft="10dip"
+        android:src="@drawable/ic_logo" />
+
+    <LinearLayout
+        android:id="@+id/main_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/retry" />
+    </LinearLayout>
+
+</RelativeLayout>

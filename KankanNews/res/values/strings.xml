@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">看看新闻</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="viewTag">100</string>
+    <string name="day_name_format">EEE</string>
+    <string name="invalid_date">Date must be between %1$s and %2$s.</string>
+    <string name="month_name_format">MMMM yyyy</string>
+    <string name="image_isrecy">image_isrecy</string>
+    <string name="image_isloadcom">image_isloadcom</string>
+    <string name="viewwidth">viewwidth</string>
+    <string name="isTop">isTop</string>
+    <string name="whb">whb</string>
+    <string name="graphic">graphic</string>
+
+</resources>

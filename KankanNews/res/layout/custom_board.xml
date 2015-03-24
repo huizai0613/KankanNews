@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff" >
+
+    <LinearLayout
+        android:id="@+id/one"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/sina_box"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_one_share_bg"
+            android:clickable="true" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/sina"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/umeng_socialize_sina_on"
+                    android:clickable="false" />
+
+                <TextView
+                    android:id="@+id/sina_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/sina"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dip"
+                    android:clickable="false"
+                    android:text="微博"
+                    android:textSize="12dip" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/qq_box"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_one_share_bg"
+            android:clickable="true" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/qq"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/umeng_socialize_qq_on"
+                    android:clickable="false" />
+
+                <TextView
+                    android:id="@+id/qq_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/qq"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dip"
+                    android:clickable="false"
+                    android:text="QQ"
+                    android:textSize="12dip" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/wechat_box"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_one_share_bg"
+            android:clickable="true" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/wechat"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/umeng_socialize_wechat"
+                    android:clickable="false" />
+
+                <TextView
+                    android:id="@+id/wechat_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/wechat"
+                    android:layout_marginTop="5dip"
+                    android:clickable="false"
+                    android:text="微信"
+                    android:textSize="12dip" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/wechat_circle_box"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_one_share_bg"
+            android:clickable="true" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/wechat_circle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/umeng_socialize_wxcircle"
+                    android:clickable="false" />
+
+                <TextView
+                    android:id="@+id/wechat_circle_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/wechat_circle"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dip"
+                    android:clickable="false"
+                    android:text="朋友圈"
+                    android:textSize="12dip" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/two"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_below="@id/one"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/email_box"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_one_share_bg"
+            android:clickable="true" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/email"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/umeng_socialize_gmail_on"
+                    android:clickable="false" />
+
+                <TextView
+                    android:id="@+id/email_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/email"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dip"
+                    android:clickable="false"
+                    android:text="邮件"
+                    android:textSize="12dip" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/refresh_box"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/selector_one_share_bg"
+            android:clickable="true" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/refresh"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/re"
+                    android:clickable="false" />
+
+                <TextView
+                    android:id="@+id/refresh_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/email"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dip"
+                    android:clickable="false"
+                    android:text="刷新"
+                    android:textSize="12dip" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible" >
+
+            <ImageButton
+                android:id="@+id/email"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/umeng_socialize_qq_on" />
+
+            <TextView
+                android:id="@+id/email_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/email"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dip"
+                android:text="邮件"
+                android:textSize="12dip" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="invisible" >
+
+            <ImageButton
+                android:id="@+id/email"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/umeng_socialize_qq_on" />
+
+            <TextView
+                android:id="@+id/email_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/email"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dip"
+                android:text="邮件"
+                android:textSize="12dip" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

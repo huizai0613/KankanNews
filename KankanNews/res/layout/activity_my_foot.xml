@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:swipe="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <include layout="@layout/com_title_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <com.fortysevendeg.swipelistview.SwipeListView
+                android:id="@+id/example_lv_list"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:divider="#00000000"
+                android:listSelector="#00000000"
+                swipe:swipeBackView="@+id/back"
+                swipe:swipeCloseAllItemsWhenMoveList="true"
+                swipe:swipeFrontView="@+id/front"
+                swipe:swipeMode="both" />
+
+            <View style="@style/set_item_Line_3" 
+                android:id="@+id/my_collect_bottom_line"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/my_collect_bottom_linearlayout"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="#f8f8f8"
+                android:orientation="horizontal" >
+
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:id="@+id/my_collect_bottom_allselect"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="全选"
+                    android:textColor="#333333"
+                    android:textSize="20dp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="#a8a8a8" />
+
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:id="@+id/my_collect_bottom_delete"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="删除"
+                    android:textColor="#ef1221"
+                    android:textSize="20dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/no_collect_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:background="#ffffff"
+            android:visibility="gone" >
+
+            <ImageView
+                style="@style/no_img_style"
+                android:src="@drawable/icon_no_foot" />
+            
+            <com.kankan.kankanews.ui.view.MyTextView 
+                style="@style/no_text_style"
+                android:text="暂无观看记录"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

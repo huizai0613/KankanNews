@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include
+        layout="@layout/com_title_bar"
+        android:background="#fefefe" />
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <se.emilsjolander.stickylistheaders.StickyListHeadersListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:divider="#e6e6e6"
+            android:dividerHeight="0dp"
+            android:drawSelectorOnTop="true"
+            android:fastScrollEnabled="false"
+            android:listSelector="@android:color/transparent"
+            android:overScrollMode="never"
+            android:padding="0dp"
+            android:scrollbars="none" />
+
+
+        <LinearLayout
+            android:id="@+id/main_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:clickable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/retry" />
+        </LinearLayout>
+        
+        <RelativeLayout
+            android:id="@+id/content_loading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:visibility="visible" >
+
+            <LinearLayout
+                android:layout_width="80dip"
+                android:layout_height="60dip"
+                android:layout_centerInParent="true"
+                android:background="@drawable/load_back_bg"
+                android:gravity="center"
+                android:paddingBottom="15dip"
+                android:paddingLeft="25dip"
+                android:paddingRight="25dip"
+                android:paddingTop="15dip" >
+
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@drawable/iamge_progress"
+                    android:indeterminateOnly="true"
+                    android:visibility="visible" />
+            </LinearLayout>
+        </RelativeLayout>
+        
+    </RelativeLayout>
+
+</LinearLayout>

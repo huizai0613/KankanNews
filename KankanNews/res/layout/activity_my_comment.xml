@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <include layout="@layout/com_title_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <com.iss.view.pulltorefresh.PullToRefreshListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:divider="@null"
+            android:scrollbars="none"
+            android:listSelector="@android:color/transparent" >
+        </com.iss.view.pulltorefresh.PullToRefreshListView>
+        
+        <LinearLayout 
+            android:id="@+id/no_comment_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#ffffff"
+            android:gravity="center_horizontal"
+            android:visibility="gone">
+            <ImageView
+                style="@style/no_img_style"
+                android:src="@drawable/icon_no_comment" />
+
+            <com.kankan.kankanews.ui.view.MyTextView
+                style="@style/no_text_style"
+                android:text="暂无评论" />
+        </LinearLayout>
+        
+        </RelativeLayout>
+
+        
+
+</LinearLayout>

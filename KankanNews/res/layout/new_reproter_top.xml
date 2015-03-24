@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:background="#ffffff"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <com.kankan.kankanews.ui.view.RoundImageView
+                android:id="@+id/reporter_top_pic"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/default_news_report_pic" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <com.kankan.kankanews.ui.view.MyTextView
+                        android:id="@+id/report_top_name"
+                        android:layout_width="0dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="某某某"
+                        android:textSize="22dp"
+                        android:textStyle="bold" />
+
+                    <com.kankan.kankanews.ui.view.MyTextView
+                        android:id="@+id/reporter_top_attention"
+                        android:layout_width="50dp"
+                        android:layout_height="25dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/attention_reporter_no"
+                        android:gravity="center"
+                        android:text="关注"
+                        android:textColor="#259b24"
+                        android:textSize="14dp" />
+                </LinearLayout>
+
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:id="@+id/report_top_motto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:singleLine="true"
+                    android:text="上海广播电视台电视中心记者"
+                    android:textColor="@color/text_gray_color"
+                    android:textSize="12dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="80dp"
+            android:layout_height="10dp"
+            android:gravity="center"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_reporter_top" />
+        </LinearLayout>
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/reporter_top_intro"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#eeeeee"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:textColor="#333333"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+</LinearLayout>

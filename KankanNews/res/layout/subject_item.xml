@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:background="#ffffff" >
+
+    
+    <RelativeLayout
+		android:id="@+id/layoutpic"
+        android:layout_width="120dp"
+        android:layout_height="80dp"
+		android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true" >
+
+    <com.xunao.view.photoview.PhotoView
+        android:id="@+id/titlepic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+    	android:background="@color/black"
+		android:scaleType="fitXY"
+		android:src="@drawable/default_news_display" />
+
+     <ImageView
+         android:layout_width="25dp"
+         android:layout_height="25dp"
+         android:layout_alignParentBottom="true"
+         android:layout_alignParentRight="true"
+         android:layout_marginBottom="5dp"
+         android:layout_marginRight="10dp"
+         android:scaleType="fitXY"
+         android:src="@drawable/new_icon_home_play" />
+	</RelativeLayout>
+            
+
+    <com.kankan.kankanews.ui.view.MyTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="73dp"
+        android:lineSpacingExtra = "4dp"
+        android:layout_toRightOf="@+id/layoutpic"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+    	android:background="#ffffff" />
+  
+</RelativeLayout>

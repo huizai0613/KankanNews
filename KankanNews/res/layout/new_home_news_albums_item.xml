@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/new_item_bg_selector"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                android:paddingRight="4dp" >
+
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:id="@+id/home_albums_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:text="某某某" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="15dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/new_icon_sign_albums" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/home_albums_imgs_layout"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/home_albums_img_1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_news_display" />
+
+                <ImageView
+                    android:id="@+id/home_albums_img_2"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_news_display" />
+
+                <ImageView
+                    android:id="@+id/home_albums_img_3"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_news_display" />
+            </LinearLayout>
+        </LinearLayout>
+
+ 
+        <View
+            android:visibility="gone"
+			android:id="@+id/listView_divider_line"
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/listView_divider_color" />
+    </LinearLayout>
+
+</LinearLayout>
