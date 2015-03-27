@@ -616,7 +616,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 				return getmTopNewsList != null && getmTopNewsList.size() > 0 ? ((getmNewsList
 						.size() + lineNum - 1)
 						/ lineNum + (getmTopNewsList != null ? 1 : 0))
-						: (0);
+						: (getmNewsList
+								.size() + lineNum - 1)
+								/ lineNum;
 			}
 		}
 
@@ -639,14 +641,16 @@ public class New_HomeItemFragment extends BaseFragment implements
 		@Override
 		public int getItemViewType(int position) {
 			// TODO Auto-generated method stub
-			if (position == 0) {
+			boolean hasTopNews = getmTopNewsList.size() > 0;
+			int newsPosition = hasTopNews ? position - 1 : position;
+			if (position == 0 && hasTopNews) {
 				return 0;
 			} else if (noMoreNews && getmNewsList.size() + 1 <= position) {
-				return 2;
+				return 2;//已加载全部
 			} else if (Integer
-					.valueOf(getmNewsList.get(position - 1).getType()) % 10 == 2) {
-				return 3;
-			} else if (getmNewsList.get(position - 1).getZtype().equals("1")) {
+					.valueOf(getmNewsList.get(newsPosition).getType()) % 10 == 2) {
+				return 3;//图集
+			} else if (getmNewsList.get(newsPosition).getZtype().equals("1")) {
 				return 4;
 			} else {
 				return 1;
@@ -658,7 +662,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 			int itemViewType = getItemViewType(position);
-			if (getmTopNewsList != null && getmTopNewsList.size() > 0) {
+			boolean hasTopNews = getmTopNewsList.size() > 0;
+			int newsPosition = hasTopNews ? position - 1 : position;
+//			if (getmTopNewsList != null && getmTopNewsList.size() > 0) {
 				if (convertView == null) {
 					if (itemViewType == 0) {
 
@@ -815,7 +821,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				if (itemViewType == 0) {
 					imagePagerAdapter.notifyDataSetChanged();
 				} else if (itemViewType == 1) {
-					final New_News_Home news = getmNewsList.get(position - 1);
+					final New_News_Home news = getmNewsList.get(newsPosition);
 					String clicktime = mClicks.get(news.getMid());
 					clicktime = TextUtils.isEmpty(clicktime) ? "0次" : clicktime
 							+ "次";
@@ -930,7 +936,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					holderInfo.info.setPadding(0, padding_in_px, 0,
 							padding_in_px);
 				} else if (itemViewType == 3) {
-					final New_News_Home news = getmNewsList.get(position - 1);
+					final New_News_Home news = getmNewsList.get(newsPosition);
 					albumsHolder.title.setText(news.getTitle());
 					final String[] pics = news.getTitlepic().split("::::::");
 					ArrayList<ImageView> image_view_list = new ArrayList<ImageView>();
@@ -978,7 +984,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					});
 
 				} else if (itemViewType == 4) {
-					final New_News_Home news = getmNewsList.get(position - 1);
+					final New_News_Home news = getmNewsList.get(newsPosition);
 					newZhuanTiHolder.title.setText(news.getTitle());
 					CommonUtils.zoomImage(imageLoader, news.getTitlepic(),
 							newZhuanTiHolder.home_news_titlepic, mActivity);
@@ -1003,7 +1009,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					});
 
 				}
-			}
+//			}
 
 			return convertView;
 		}

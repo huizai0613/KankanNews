@@ -112,6 +112,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 		if (ex == null) {
 			return false;
 		}
+		Log.e(TAG, "error : ", ex);
 		// 使用Toast来显示异常信息
 		new Thread() {
 			@Override
