@@ -828,7 +828,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					final int news_type = Integer.valueOf(news.getType());
 					newHolder.titlepic.setTag(R.string.viewwidth,
 							PixelUtil.dp2px(80));
-					CommonUtils.zoomImage(imageLoader, news.getTitlepic(),
+					CommonUtils.zoomImage(imageLoader, CommonUtils.doWebpUrl(news.getTitlepic()),
 							newHolder.titlepic, mActivity, imageCache);
 
 					// imageLoader.displayImage(news.getTitlepic(),
@@ -965,7 +965,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 						// image_view_list.get(i),
 						// Options.getSmallImageOptions(false));
 						if(pics.length > i){
-							CommonUtils.zoomImage(imageLoader, pics[i + 1],
+							CommonUtils.zoomImage(imageLoader, CommonUtils.doWebpUrl(pics[i + 1]),
 									image_view_list.get(i), mActivity, imageCache);
 						}
 					}
@@ -986,7 +986,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				} else if (itemViewType == 4) {
 					final New_News_Home news = getmNewsList.get(newsPosition);
 					newZhuanTiHolder.title.setText(news.getTitle());
-					CommonUtils.zoomImage(imageLoader, news.getTitlepic(),
+					CommonUtils.zoomImage(imageLoader, CommonUtils.doWebpUrl(news.getTitlepic()),
 							newZhuanTiHolder.home_news_titlepic, mActivity);
 					// imageLoader.displayImage(news.getTitlepic(),
 					// newZhuanTiHolder.home_news_titlepic,

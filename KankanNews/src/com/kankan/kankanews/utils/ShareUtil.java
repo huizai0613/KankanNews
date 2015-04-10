@@ -1,11 +1,13 @@
 package com.kankan.kankanews.utils;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-import com.kankan.kankanews.base.BaseVideoActivity;
-import com.kankan.kankanews.bean.New_News;
+import com.kankan.kankanews.base.BaseActivity;
+import com.kankan.kankannews.bean.interfaz.CanSharedObject;
+import com.kankanews.kankanxinwen.R;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
 import com.umeng.socialize.bean.StatusCode;
@@ -29,10 +31,10 @@ public class ShareUtil {
 	private final UMSocialService mController = UMServiceFactory
 			.getUMSocialService("com.umeng.share");
 	public Activity activity;
-	private New_News content_News;
+	private CanSharedObject shareObj;
 
-	public ShareUtil(New_News content_News, Activity activity) {
-		this.content_News = content_News;
+	public ShareUtil(CanSharedObject shareObj, Activity activity) {
+		this.shareObj = shareObj;
 		this.activity = activity;
 
 		// 关掉默认的提示
@@ -72,7 +74,7 @@ public class ShareUtil {
 			public void onComplete(SHARE_MEDIA platform, int eCode,
 					SocializeEntity entity) {
 				// String showText = "分享成功";
-				((BaseVideoActivity) activity).Commit_Share(platform);
+				((BaseActivity) activity).Commit_Share(platform);
 
 				if (platform.equals(SHARE_MEDIA.EMAIL)) {
 					return;
@@ -108,35 +110,40 @@ public class ShareUtil {
 		// UMImage localImage = new UMImage(activity,(
 		// (BitmapDrawable)drawable).getBitmap());
 		// UMImage SharePic = new UMImage(activity, content_News.getTitlepic());
-		UMImage TitlePic = new UMImage(activity, content_News.getTitlepiclist());
+		UMImage titlePic = null;
+		if(null == shareObj.getTitlepiclist() || "".equals(shareObj.getTitlepiclist().trim())){
+			titlePic = new UMImage(activity, R.drawable.ic_logo);
+		}else{
+			titlePic = new UMImage(activity, shareObj.getTitlepiclist());
+		}
 		// UMImage resImage = new UMImage(activity, R.drawable.icon);
 
 		// 视频分享
-		UMVideo video = new UMVideo(content_News.getTitleurl());
-		video.setMediaUrl(content_News.getTitleurl());
-		video.setThumb(content_News.getTitleurl());
-		video.setTargetUrl(content_News.getTitleurl());
-		video.setTitle(content_News.getTitle());
-		video.setThumb(TitlePic);
+		UMVideo video = new UMVideo(shareObj.getTitleurl());
+		video.setMediaUrl(shareObj.getTitleurl());
+		video.setThumb(shareObj.getTitleurl());
+		video.setTargetUrl(shareObj.getTitleurl());
+		video.setTitle(shareObj.getTitle());
+		video.setThumb(titlePic);
 
 		// 微信
 		WeiXinShareContent weixinContent = new WeiXinShareContent();
 		weixinContent
-				.setShareContent(content_News.getTitle() == null ? content_News
-						.getTitlelist() : content_News.getTitle());
-		weixinContent.setTitle(content_News.getTitlelist());
-		weixinContent.setTargetUrl(content_News.getTitleurl());
-		weixinContent.setShareMedia(TitlePic);
+				.setShareContent(shareObj.getTitle() == null ? shareObj
+						.getTitlelist() : shareObj.getTitle());
+		weixinContent.setTitle(shareObj.getTitlelist());
+		weixinContent.setTargetUrl(shareObj.getTitleurl());
+		weixinContent.setShareMedia(titlePic);
 		mController.setShareMedia(weixinContent);
 
 		// 设置朋友圈分享的内容
 		CircleShareContent circleMedia = new CircleShareContent();
-		circleMedia.setShareContent(content_News.getTitlelist());
-		circleMedia.setTitle(content_News.getTitlelist());
-		circleMedia.setShareImage(TitlePic);
+		circleMedia.setShareContent(shareObj.getTitlelist());
+		circleMedia.setTitle(shareObj.getTitlelist());
+		circleMedia.setShareImage(titlePic);
 		// circleMedia.setShareMedia(uMusic);
 		// circleMedia.setShareMedia(video);
-		circleMedia.setTargetUrl(content_News.getTitleurl());
+		circleMedia.setTargetUrl(shareObj.getTitleurl());
 		mController.setShareMedia(circleMedia);
 
 		// 设置QQ空间分享内容
@@ -152,12 +159,12 @@ public class ShareUtil {
 
 		// 设置qq分享内容
 		QQShareContent qqShareContent = new QQShareContent();
-		qqShareContent.setShareContent(content_News.getTitleurl());
-		qqShareContent.setTitle(content_News.getTitlelist());
-		qqShareContent.setShareImage(TitlePic);
+		qqShareContent.setShareContent(shareObj.getTitleurl());
+		qqShareContent.setTitle(shareObj.getTitlelist());
+		qqShareContent.setShareImage(titlePic);
 		// qqShareContent.setShareMusic(uMusic);
 		// qqShareContent.setShareVideo(video);
-		qqShareContent.setTargetUrl(content_News.getTitleurl());
+		qqShareContent.setTargetUrl(shareObj.getTitleurl());
 		mController.setShareMedia(qqShareContent);
 
 		// 视频分享
@@ -181,18 +188,18 @@ public class ShareUtil {
 		}
 		// UMImage maillocalImage = new
 		// UMImage(activity,R.drawable.ic_launcher);
-		mail.setTitle(content_News.getTitlelist());
-		mail.setShareContent(content_News.getTitleurl());
+		mail.setTitle(shareObj.getTitlelist());
+		mail.setShareContent(shareObj.getTitleurl());
 		// 设置tencent分享内容
 		mController.setShareMedia(mail);
 
 		// sina
-		SinaShareContent sinaContent = new SinaShareContent(TitlePic);
+		SinaShareContent sinaContent = new SinaShareContent(titlePic);
 		// sinaContent.setShareMedia(video);
-		sinaContent.setShareImage(TitlePic);
+		sinaContent.setShareImage(titlePic);
 		// TODO
-		sinaContent.setShareContent(content_News.getTitlelist() + "-看看新闻 "
-				+ content_News.getTitleurl() + " （分享自@看看新闻网） ");
+		sinaContent.setShareContent(shareObj.getTitlelist() + "-看看新闻 "
+				+ shareObj.getTitleurl() + " （分享自@看看新闻网） ");
 		mController.setShareMedia(sinaContent);
 	}
 

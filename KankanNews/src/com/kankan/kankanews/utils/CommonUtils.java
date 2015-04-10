@@ -45,6 +45,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -411,7 +412,7 @@ public class CommonUtils {
 	 * created on SD card by defined path if card is mounted and app has
 	 * appropriate permission. Else - Android defines cache directory on
 	 * device's file system.
-	 *
+	 * 
 	 * @param context
 	 *            Application context
 	 * @param cacheDir
@@ -617,74 +618,75 @@ public class CommonUtils {
 
 								protected Bitmap doInBackground(Object[] params) {
 
-									// int byteCount = arg2.getHeight();
-									// int rowBytes = arg2.getRowBytes();
-									// int mem = byteCount * rowBytes;
-									// int size = 90;
-									// if (mem > 1024 * 8 && mem < 30 * 1024 *
-									// 8) {
-									// size = 80;
-									// } else if (mem > 30 * 1024 * 8
-									// && mem < 40 * 1024 * 8) {
-									// size = 70;
-									// } else if (mem >= 40 * 1024 * 8
-									// && mem < 60 * 1024 * 8) {
-									// size = 60;
-									// } else if (mem >= 60 * 1024 * 8
-									// && mem < 90 * 1024 * 8) {
-									// size = 50;
-									// } else if (mem >= 90 * 1024 * 8) {
-									// size = 40;
-									// }
-
-									int width = arg2.getWidth();
-									int height = arg2.getHeight();
-
-									// whb=Math.round((float) width / (float)
-									// height);
-
-									int insampSize = 0;
-
-									if (viewWidth == 0 && viewHeight == 0) {
-										insampSize += Math.round((float) width
-												/ (float) viewwidth);
-									} else if (width > viewWidth
-											|| height > viewHeight) {
-										int wround = Math.round((float) width
-												/ (float) viewWidth);
-										int hround = Math.round((float) height
-												/ (float) viewHeight);
-										insampSize += (wround > hround ? wround
-												: hround) + 2;
-									}
+//									 int byteCount = arg2.getHeight();
+//									 int rowBytes = arg2.getRowBytes();
+//									 int mem = byteCount * rowBytes;
+//									 int size = 90;
+//									 if (mem > 1024 * 8 && mem < 30 * 1024 *
+//									 8) {
+//									 size = 80;
+//									 } else if (mem > 30 * 1024 * 8
+//									 && mem < 40 * 1024 * 8) {
+//									 size = 70;
+//									 } else if (mem >= 40 * 1024 * 8
+//									 && mem < 60 * 1024 * 8) {
+//									 size = 60;
+//									 } else if (mem >= 60 * 1024 * 8
+//									 && mem < 90 * 1024 * 8) {
+//									 size = 50;
+//									 } else if (mem >= 90 * 1024 * 8) {
+//									 size = 40;
+//									 }
+//
+//									int width = arg2.getWidth();
+//									int height = arg2.getHeight();
+//
+//									 whb=Math.round((float) width / (float)
+//									 height);
+//
+//									int insampSize = 0;
+//
+//									if (viewWidth == 0 && viewHeight == 0) {
+//										insampSize += Math.round((float) width
+//												/ (float) viewwidth);
+//									} else if (width > viewWidth
+//											|| height > viewHeight) {
+//										int wround = Math.round((float) width
+//												/ (float) viewWidth);
+//										int hround = Math.round((float) height
+//												/ (float) viewHeight);
+//										insampSize += (wround > hround ? wround
+//												: hround) + 2;
+//									}
 									try {
-										CompressFormat format = null;
-										if ("png"
-												.equalsIgnoreCase(UrlToFileFormat(titlepic))) {
-											format = CompressFormat.PNG;
-										} else {
-											format = CompressFormat.JPEG;
-										}
+										CompressFormat format = CompressFormat.WEBP;
+//										if ("png"
+//												.equalsIgnoreCase(UrlToFileFormat(titlepic))) {
+//											format = CompressFormat.PNG;
+//										} else {
+//											format = CompressFormat.JPEG;
+//										}
 
 										boolean compress = arg2.compress(
-												format, 90,
+												format, 100,
 												new FileOutputStream(file));
-										options.inPreferredConfig = Bitmap.Config.RGB_565;
-										options.inSampleSize = insampSize >= 6 ? insampSize - 2
-												: insampSize;
-										Bitmap decodeFile = BitmapFactory
-												.decodeFile(
-														file.getAbsolutePath(),
-														options);
-
+//										options.inPreferredConfig = Bitmap.Config.RGB_565;
+//										options.inSampleSize = insampSize >= 6 ? insampSize - 2
+//												: insampSize;
+//										Bitmap decodeFile = BitmapFactory
+//												.decodeFile(
+//														file.getAbsolutePath(),
+//														options);
+//										Log.w("图片地址", file.getAbsolutePath());
+										Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath());
 										if (arg2 != null) {
 											arg2.recycle();
 										}
 										return decodeFile;
-									} catch (FileNotFoundException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
 									} catch (OutOfMemoryError e) {
+										System.gc();
+										imageLoader.clearMemoryCache();
+									} catch (Exception e) {
 										System.gc();
 										imageLoader.clearMemoryCache();
 									}
@@ -740,43 +742,43 @@ public class CommonUtils {
 						protected Bitmap doInBackground(Object... params) {
 
 							try {
-								options.inPreferredConfig = Bitmap.Config.RGB_565;
-								options.inJustDecodeBounds = true;
-
-								Bitmap decodeFile = BitmapFactory.decodeFile(
-										file.getAbsolutePath(), options);
-
-								int height = options.outHeight;
-								int width = options.outWidth;
-								// whb=Math.round((float) width / (float)
-								// height);
-								int insampSize = 0;
-								if (viewWidth == 0 && viewHeight == 0) {
-									if (viewwidth != null) {
-										insampSize += Math.round((float) width
-												/ (float) viewwidth);
-									} else {
-										insampSize = 4;
-									}
-								} else if (width > viewWidth
-										|| height > viewHeight) {
-
-									int wround = Math.round((float) width
-											/ (float) viewWidth);
-									int hround = Math.round((float) height
-											/ (float) viewHeight);
-									insampSize += (wround > hround ? wround
-											: hround) + 2;
-								}
-
-								options.inPreferredConfig = Bitmap.Config.RGB_565;
-								options.inSampleSize = insampSize >= 6 ? insampSize - 2
-										: insampSize;
-								options.inJustDecodeBounds = false;
-								Bitmap decodeFilelock = BitmapFactory
-										.decodeFile(file.getAbsolutePath(),
-												options);
-
+//								options.inPreferredConfig = Bitmap.Config.RGB_565;
+//								options.inJustDecodeBounds = true;
+//
+//								Bitmap decodeFile = BitmapFactory.decodeFile(
+//										file.getAbsolutePath(), options);
+//
+//								int height = options.outHeight;
+//								int width = options.outWidth;
+//								 whb=Math.round((float) width / (float)
+//								 height);
+//								int insampSize = 0;
+//								if (viewWidth == 0 && viewHeight == 0) {
+//									if (viewwidth != null) {
+//										insampSize += Math.round((float) width
+//												/ (float) viewwidth);
+//									} else {
+//										insampSize = 4;
+//									}
+//								} else if (width > viewWidth
+//										|| height > viewHeight) {
+//
+//									int wround = Math.round((float) width
+//											/ (float) viewWidth);
+//									int hround = Math.round((float) height
+//											/ (float) viewHeight);
+//									insampSize += (wround > hround ? wround
+//											: hround) + 2;
+//								}
+//
+//								options.inPreferredConfig = Bitmap.Config.RGB_565;
+//								options.inSampleSize = insampSize >= 6 ? insampSize - 2
+//										: insampSize;
+//								options.inJustDecodeBounds = false;
+//								Bitmap decodeFilelock = BitmapFactory
+//										.decodeFile(file.getAbsolutePath(),
+//												options);
+								Bitmap decodeFilelock = BitmapFactory.decodeFile(file.getAbsolutePath());
 								return decodeFilelock;
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -886,46 +888,46 @@ public class CommonUtils {
 								// size = 40;
 								// }
 
-								int width = arg2.getWidth();
-								int height = arg2.getHeight();
+//								int width = arg2.getWidth();
+//								int height = arg2.getHeight();
 
 								// whb=Math.round((float) width / (float)
 								// height);
 
-								int insampSize = 0;
+//								int insampSize = 0;
 
 								try {
-									CompressFormat format = null;
-									if ("png"
-											.equalsIgnoreCase(UrlToFileFormat(titlepic))) {
-										format = CompressFormat.PNG;
-									} else {
-										format = CompressFormat.JPEG;
-									}
+									CompressFormat format = CompressFormat.WEBP;
+//									if ("png"
+//											.equalsIgnoreCase(UrlToFileFormat(titlepic))) {
+//										format = CompressFormat.PNG;
+//									} else {
+//										format = CompressFormat.JPEG;
+//									}
 									File file = null;
 									if (isTop == null || !isTop) {
 										file = new File(CommonUtils
 												.getImageCachePath(context),
 												CommonUtils.generate(titlepic));
 										boolean compress = arg2.compress(
-												format, 75,
+												format, 100,
 												new FileOutputStream(file));
 
-										if (viewWidth == 0 && viewHeight == 0) {
-											insampSize += Math
-													.round((float) width
-															/ (float) viewwidth);
-										} else if (width > viewWidth
-												|| height > viewHeight) {
-											int wround = Math
-													.round((float) width
-															/ (float) viewWidth);
-											int hround = Math
-													.round((float) height
-															/ (float) viewHeight);
-											insampSize += (wround > hround ? wround
-													: hround) + 2;
-										}
+//										if (viewWidth == 0 && viewHeight == 0) {
+//											insampSize += Math
+//													.round((float) width
+//															/ (float) viewwidth);
+//										} else if (width > viewWidth
+//												|| height > viewHeight) {
+//											int wround = Math
+//													.round((float) width
+//															/ (float) viewWidth);
+//											int hround = Math
+//													.round((float) height
+//															/ (float) viewHeight);
+//											insampSize += (wround > hround ? wround
+//													: hround) + 2;
+//										}
 
 									} else {
 										file = new File(
@@ -939,31 +941,31 @@ public class CommonUtils {
 												format, 100,
 												new FileOutputStream(file));
 
-										if (viewWidth == 0 && viewHeight == 0) {
-											insampSize += Math
-													.round((float) width
-															/ (float) viewwidth);
-										}
-
-										if (insampSize > 4) {
-											insampSize = insampSize - 2;
-										}
+//										if (viewWidth == 0 && viewHeight == 0) {
+//											insampSize += Math
+//													.round((float) width
+//															/ (float) viewwidth);
+//										}
+//
+//										if (insampSize > 4) {
+//											insampSize = insampSize - 2;
+//										}
 
 									}
 
-									options.inPreferredConfig = Bitmap.Config.RGB_565;
-									options.inSampleSize = insampSize;
-									Bitmap decodeFile = BitmapFactory
-											.decodeFile(file.getAbsolutePath(),
-													options);
-
+//									options.inPreferredConfig = Bitmap.Config.RGB_565;
+//									options.inSampleSize = insampSize;
+//									Bitmap decodeFile = BitmapFactory
+//											.decodeFile(file.getAbsolutePath(),
+//													options);
+									Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath());
 									if (arg2 != null) {
 										arg2.recycle();
 									}
 
 									return new SoftReference<Bitmap>(decodeFile)
 											.get();
-								} catch (FileNotFoundException e) {
+								} catch (Exception e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
@@ -1016,9 +1018,9 @@ public class CommonUtils {
 					protected Bitmap doInBackground(Object... params) {
 
 						try {
-							options.inPreferredConfig = Bitmap.Config.RGB_565;
-							options.inJustDecodeBounds = true;
-							int insampSize = 0;
+//							options.inPreferredConfig = Bitmap.Config.RGB_565;
+//							options.inJustDecodeBounds = true;
+//							int insampSize = 0;
 							File file = null;
 
 							if (isTop == null || !isTop) {
@@ -1027,62 +1029,63 @@ public class CommonUtils {
 										CommonUtils.getImageCachePath(context),
 										CommonUtils.generate(titlepic));
 
-								Bitmap decodeFile = BitmapFactory.decodeFile(
-										file.getAbsolutePath(), options);
+//								Bitmap decodeFile = BitmapFactory.decodeFile(
+//										file.getAbsolutePath(), options);
 
-								int height = options.outHeight;
-								int width = options.outWidth;
+//								int height = options.outHeight;
+//								int width = options.outWidth;
 
-								if (viewWidth == 0 && viewHeight == 0) {
-									if (viewwidth != null) {
-										insampSize += Math.round((float) width
-												/ (float) viewwidth);
-									} else {
-										insampSize = 4;
-									}
-								} else if (width > viewWidth
-										|| height > viewHeight) {
-
-									int wround = Math.round((float) width
-											/ (float) viewWidth);
-									int hround = Math.round((float) height
-											/ (float) viewHeight);
-									insampSize += (wround > hround ? wround
-											: hround) + 2;
-								}
+//								if (viewWidth == 0 && viewHeight == 0) {
+//									if (viewwidth != null) {
+//										insampSize += Math.round((float) width
+//												/ (float) viewwidth);
+//									} else {
+//										insampSize = 4;
+//									}
+//								} else if (width > viewWidth
+//										|| height > viewHeight) {
+//
+//									int wround = Math.round((float) width
+//											/ (float) viewWidth);
+//									int hround = Math.round((float) height
+//											/ (float) viewHeight);
+//									insampSize += (wround > hround ? wround
+//											: hround) + 2;
+//								}
 
 							} else {
 								file = new File(
 										CommonUtils.getImageCachePath(context),
 										"big_" + CommonUtils.generate(titlepic));
 
-								Bitmap decodeFile = BitmapFactory.decodeFile(
-										file.getAbsolutePath(), options);
+//								Bitmap decodeFile = BitmapFactory.decodeFile(
+//										file.getAbsolutePath(), options);
 
-								int height = options.outHeight;
-								int width = options.outWidth;
+//								int height = options.outHeight;
+//								int width = options.outWidth;
 
-								if (viewWidth == 0 && viewHeight == 0) {
-									if (viewwidth != null) {
-										insampSize += Math.round((float) width
-												/ (float) viewwidth);
-									}
-								}
-
-								if (insampSize > 4) {
-									insampSize = insampSize - 2;
-								}
+//								if (viewWidth == 0 && viewHeight == 0) {
+//									if (viewwidth != null) {
+//										insampSize += Math.round((float) width
+//												/ (float) viewwidth);
+//									}
+//								}
+//
+//								if (insampSize > 4) {
+//									insampSize = insampSize - 2;
+//								}
 
 							}
 
 							// whb=Math.round((float) width / (float)
 							// height);
 
-							options.inPreferredConfig = Bitmap.Config.RGB_565;
-							options.inSampleSize = insampSize;
-							options.inJustDecodeBounds = false;
-							Bitmap decodeFilelock = BitmapFactory.decodeFile(
-									file.getAbsolutePath(), options);
+//							options.inPreferredConfig = Bitmap.Config.RGB_565;
+//							options.inSampleSize = insampSize;
+//							options.inJustDecodeBounds = false;
+//							Bitmap decodeFilelock = BitmapFactory.decodeFile(
+//									file.getAbsolutePath(), options);
+							Bitmap decodeFilelock = BitmapFactory.decodeFile(file.getAbsolutePath());
 
 							return new SoftReference<Bitmap>(decodeFilelock)
 									.get();
@@ -1289,5 +1292,17 @@ public class CommonUtils {
 			}
 			gifView.setGifImage(rawFile);
 		}
+	}
+
+	public static String doWebpUrl(String imgUrl) {
+		String urlToFileFormat = UrlToFileFormat(imgUrl);
+		if (!"gif".equalsIgnoreCase(urlToFileFormat)) {
+			int lastIndexOf = imgUrl.lastIndexOf('.');
+			if (lastIndexOf == -1)
+				return imgUrl;
+			imgUrl = imgUrl.substring(0, lastIndexOf);
+			imgUrl += ".webp";
+		}
+		return imgUrl;
 	}
 }

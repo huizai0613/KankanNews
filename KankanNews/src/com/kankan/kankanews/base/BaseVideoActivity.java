@@ -21,14 +21,6 @@ public abstract class BaseVideoActivity extends BaseActivity {
 	public LinearLayout video_pb;
 	public LinearLayout small_video_pb;
 
-	public void sendSingleMessage() {
-
-	}
-
-	public void Commit_Share(SHARE_MEDIA platform) {
-
-	}
-
 	// 从全屏到小屏
 	public void fullScrenntoSamll() {
 
@@ -104,7 +96,5 @@ public abstract class BaseVideoActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 
 	}
-
-	public abstract void refresh();
 
 }

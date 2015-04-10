@@ -96,6 +96,14 @@
                 android:paddingLeft="10dip"
                 android:singleLine="true"
                 android:textSize="16dip" />
+            
+            <ImageView
+                android:id="@+id/live_share_but"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/new_ic_more_black" />
         </LinearLayout>
 
         <View

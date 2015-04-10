@@ -4,10 +4,11 @@ import org.json.JSONObject;
 
 import com.kankan.kankanews.base.BaseBean;
 import com.kankan.kankanews.exception.NetRequestException;
+import com.kankan.kankannews.bean.interfaz.CanSharedObject;
 import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Transient;
 
-public class New_LivePlay extends BaseBean<New_LivePlay> {
+public class New_LivePlay extends BaseBean<New_LivePlay> implements CanSharedObject {
 
 	// "title": "36集连续剧：幸福在哪里（13）",
 	// "titlepic":
@@ -28,6 +29,7 @@ public class New_LivePlay extends BaseBean<New_LivePlay> {
 	private String catename;
 	private String time;
 	private String datetime;
+	private String titleurl;
 	private boolean isOrder;
 
 	public boolean isOrder() {
@@ -110,6 +112,26 @@ public class New_LivePlay extends BaseBean<New_LivePlay> {
 	public void setDatetime(String datetime) {
 		this.datetime = datetime;
 	}
+	
+	public String getTitleurl() {
+		return titleurl;
+	}
+
+	public void setTitleurl(String titleurl) {
+		this.titleurl = titleurl;
+	}
+
+	@Override
+	public String getTitlelist() {
+		// TODO Auto-generated method stub
+		return this.title;
+	}
+
+	@Override
+	public String getTitlepiclist() {
+		// TODO Auto-generated method stub
+		return this.titlepic;
+	}
 
 	@Override
 	public JSONObject toJSON() {
@@ -129,7 +151,7 @@ public class New_LivePlay extends BaseBean<New_LivePlay> {
 		catename = jsonObj.optString("catename");
 		time = jsonObj.optString("time");
 		datetime = jsonObj.optString("datetime");
-
+		titleurl = jsonObj.optString("titleurl");
 		return this;
 	}
 

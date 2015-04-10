@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 
+import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankanews.kankanxinwen.R;
@@ -22,10 +23,10 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
  */
 public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
-	private BaseVideoActivity mActivity;
+	private BaseActivity mActivity;
 	private ShareUtil shareUtil;
 
-	public CustomShareBoard(BaseVideoActivity activity, ShareUtil shareUtil) {
+	public CustomShareBoard(BaseActivity activity, ShareUtil shareUtil) {
 		super(activity);
 		this.mActivity = activity;
 		this.shareUtil = shareUtil;

@@ -1,17 +1,15 @@
 package com.kankan.kankanews.bean;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.kankan.kankanews.base.BaseBean;
 import com.kankan.kankanews.exception.NetRequestException;
+import com.kankan.kankannews.bean.interfaz.CanSharedObject;
 
 @SuppressWarnings("serial")
-public class New_News extends BaseBean<New_News> {
+public class New_News extends BaseBean<New_News> implements CanSharedObject {
 
 	private String id;// 用mid 作为主键
 	private String title;

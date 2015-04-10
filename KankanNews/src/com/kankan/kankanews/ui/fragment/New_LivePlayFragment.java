@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,23 +46,32 @@ import com.android.volley.VolleyError;
 import com.iss.view.pulltorefresh.PullToRefreshBase;
 import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
+import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.receiver.AlarmReceiver;
+import com.kankan.kankanews.sina.Constants;
 import com.kankan.kankanews.ui.MainActivity;
+import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.PixelUtil;
+import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankan.kankanews.utils.XunaoLog;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.exception.DbException;
+import com.sina.weibo.sdk.api.share.BaseResponse;
+import com.sina.weibo.sdk.api.share.IWeiboHandler;
+import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
+import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+import com.sina.weibo.sdk.constant.WBConstants;
 
 public class New_LivePlayFragment extends BaseFragment implements
-		OnInfoListener, OnCompletionListener, OnErrorListener, OnClickListener,
+		OnInfoListener, IWeiboHandler.Response, OnCompletionListener, OnErrorListener, OnClickListener,
 		OnPreparedListener {
 
 	private View inflate;
@@ -78,6 +88,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 	private ImageView fullscrenn_but;
 	private ArrayList<New_LivePlay> mLivePlayList = new ArrayList<New_LivePlay>();
 	private MyAdapter myAdapter;
+	private ImageView liveShareBut;
+	
 
 	private boolean isFullstate;
 
@@ -88,6 +100,12 @@ public class New_LivePlayFragment extends BaseFragment implements
 	private boolean isFirst = true;
 	private AlarmManager manager;
 	private List<New_LivePlay> localDate;
+	private New_LivePlay nowLiveNew;
+	
+	/** 微博微博分享接口实例 */
+	private IWeiboShareAPI mWeiboShareAPI = null;
+	
+	private ShareUtil shareUtil = null;
 
 	public boolean isSelectPlay() {
 		return isSelectPlay;
@@ -189,6 +207,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 		fullscrenn_but = (ImageView) inflate.findViewById(R.id.fullscrenn_but);
 		smallscrenn_but = (ImageView) inflate
 				.findViewById(R.id.smallscrenn_but);
+		liveShareBut = (ImageView) inflate
+				.findViewById(R.id.live_share_but);
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 		initListView(Mode.PULL_DOWN_TO_REFRESH);
 		listview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
@@ -216,7 +236,11 @@ public class New_LivePlayFragment extends BaseFragment implements
 				refreshNetDate();
 			}
 		});
-
+		
+		// 初始化头部
+//		initTitle_Right_Left_bar(inflate, "看看直播", "", "", "#ffffff", R.drawable.new_ic_more, 0,
+//				"#000000", "#000000");
+		
 		listview.setAdapter(new MyAdapter());
 		initViewLayout();
 		initLinsenter();
@@ -228,7 +252,23 @@ public class New_LivePlayFragment extends BaseFragment implements
 			screnn_pb.setVisibility(View.GONE);
 			main_bg.setVisibility(View.VISIBLE);
 		}
+		
 
+		// mShareType = getIntent().getIntExtra(KEY_SHARE_TYPE, SHARE_CLIENT);
+		// 创建微博分享接口实例
+		mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this.getActivity(), Constants.APP_KEY);
+		// 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
+		// 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
+		// NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
+		mWeiboShareAPI.registerApp();
+		// 当 Activity 被重新初始化时（该 Activity 处于后台时，可能会由于内存不足被杀掉了），
+		// 需要调用 {@link IWeiboShareAPI#handleWeiboResponse} 来接收微博客户端返回的数据。
+		// 执行成功，返回 true，并调用 {@link IWeiboHandler.Response#onResponse}；
+		// 失败返回 false，不调用上述回调
+		if (savedInstanceState != null) {
+			mWeiboShareAPI.handleWeiboResponse(this.getActivity().getIntent(), this);
+		}
+		
 		return inflate;
 	}
 
@@ -248,6 +288,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 		video_view_click.setOnClickListener(this);
 		fullscrenn_but.setOnClickListener(this);
 		smallscrenn_but.setOnClickListener(this);
+		liveShareBut.setOnClickListener(this);
+// 		头部的左右点击事件
+//		setOnRightClickLinester(this);
 	}
 
 	@Override
@@ -339,6 +382,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 					video_view.setVideoPath(news.getStreamurl());
 					mActivity
 							.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+					nowLiveNew = news;
 					break;
 				} else {
 					if (Integer.parseInt(news.getZid()) == selectPlayID) {
@@ -562,6 +606,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 								video_view.setVideoPath(new_LivePlay
 										.getStreamurl());
 								video_player.setVisibility(View.VISIBLE);
+								nowLiveNew = new_LivePlay;
 							}
 						});
 			} else {
@@ -803,7 +848,19 @@ public class New_LivePlayFragment extends BaseFragment implements
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-
+		
+		switch (id) {
+		case R.id.live_share_but:
+			
+			shareUtil = new ShareUtil(nowLiveNew, this.getActivity());
+			// 一键分享
+			CustomShareBoard shareBoard = new CustomShareBoard((BaseActivity)this.getActivity(), shareUtil);
+			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
+			shareBoard.showAtLocation(this.getActivity().getWindow().getDecorView(),
+					Gravity.BOTTOM, 0, 0);
+			break;
+		}
+		
 		switch (id) {
 		case R.id.video_player:// 播放视频
 			video_view.start();
@@ -848,6 +905,22 @@ public class New_LivePlayFragment extends BaseFragment implements
 	// 刷新
 	public void refresh() {
 		listview.setRefreshing(false);
+	}
+	
+	@Override
+	public void onResponse(BaseResponse arg0) {
+		switch (arg0.errCode) {
+		case WBConstants.ErrorCode.ERR_OK:
+			ToastUtils.Infotoast(this.mActivity, "分享成功");
+			break;
+		case WBConstants.ErrorCode.ERR_CANCEL:
+			ToastUtils.Infotoast(this.mActivity, "分享取消");
+			break;
+		case WBConstants.ErrorCode.ERR_FAIL:
+			ToastUtils.Infotoast(this.mActivity, "分享失败");
+			break;
+		}
+
 	}
 
 }

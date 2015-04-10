@@ -44,6 +44,7 @@ import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.DbUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 public abstract class BaseActivity extends FragmentActivity {
 
@@ -581,5 +582,17 @@ public abstract class BaseActivity extends FragmentActivity {
 			return runningTaskInfos.get(0).topActivity.toString();
 		else
 			return null;
+	}
+
+	public void sendSingleMessage() {
+
+	}
+
+	public void refresh(){
+		
+	}
+
+	public void Commit_Share(SHARE_MEDIA platform) {
+
 	}
 }
