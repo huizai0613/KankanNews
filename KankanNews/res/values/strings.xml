@@ -14,5 +14,6 @@
     <string name="isTop">isTop</string>
     <string name="whb">whb</string>
     <string name="graphic">graphic</string>
+    <string name="main_post_content_hint">\u8bf7\u7b80\u5355\u63cf\u8ff0\u60a8\u7684\u7206\u6599\u5185\u5bb9\u002e\u002e\u002e</string>
 
 </resources>

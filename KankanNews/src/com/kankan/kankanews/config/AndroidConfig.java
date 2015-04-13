@@ -62,6 +62,11 @@ public class AndroidConfig {
 	public static final int Set_requestCode = 3001;
 	public static final int Set_resultCode = 3002;
 
+	// 选择图片回调
+	public static final int REVELATIONS_FRAGMENT_REQUEST_NO = 4001;
+	public static final int REVELATIONS_FRAGMENT_RESULT_OK = 4002;
+	public static final int REVELATIONS_FRAGMENT_RESULT_CANCEL = 4003;
+	
 	// 页面统计-ID
 	// 首页-最新
 	public static final String new_news_page = "PageView_timeline"; // "最新"
@@ -143,4 +148,6 @@ public class AndroidConfig {
 	// 获得热门推荐接口
 	public static final String New_Recommend = "http://api.app.kankanews.com/index.php/kankan/v5/content/recommend_timeline";
 	
+	//最大图片可选
+	public static final int MAX_PIC_SELECTED = 4;
 }

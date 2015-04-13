@@ -350,5 +350,9 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#f6f6f6</item>
     </style>
-
+	
+    <style name="anim_popup_dir">
+        <item name="android:windowEnterAnimation">@anim/pic_selected_slide_in</item>
+        <item name="android:windowExitAnimation">@anim/pic_selected_slide_out</item>
+    </style>
 </resources>

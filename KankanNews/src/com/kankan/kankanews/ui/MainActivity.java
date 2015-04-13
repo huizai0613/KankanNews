@@ -12,8 +12,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -25,7 +23,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 import android.widget.RelativeLayout.LayoutParams;
 
 import com.android.volley.VolleyError;
@@ -40,11 +37,11 @@ import com.kankan.kankanews.ui.fragment.New_ColumsFragment;
 import com.kankan.kankanews.ui.fragment.New_HomeFragment;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.fragment.New_MyFragment;
+import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
-import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.http.HttpHandler;
 import com.umeng.message.PushAgent;
@@ -77,10 +74,10 @@ public class MainActivity extends BaseActivity {
 
 	private int[] nomalImg = { R.drawable.tab_one_nomal,
 			R.drawable.tab_two_nomal, R.drawable.tab_three_nomal,
-			R.drawable.tab_four_nomal };
+			R.drawable.tab_four_nomal, R.drawable.tab_five_nomal };
 	private int[] touchImg = { R.drawable.tab_one_touch,
 			R.drawable.tab_two_touch, R.drawable.tab_three_touch,
-			R.drawable.tab_four_touch };
+			R.drawable.tab_four_touch, R.drawable.tab_five_touch };
 
 	// public DrawerView drawerView;
 
@@ -177,16 +174,19 @@ public class MainActivity extends BaseActivity {
 		tab_two = (RelativeLayout) findViewById(R.id.tab_two);
 		tab_three = (RelativeLayout) findViewById(R.id.tab_three);
 		tab_four = (RelativeLayout) findViewById(R.id.tab_four);
+		tab_five = (RelativeLayout) findViewById(R.id.tab_five);
 
 		// 初始化fragments
 		New_HomeFragment mainFragment = new New_HomeFragment();
 		New_LivePlayFragment liveFragment = new New_LivePlayFragment();
 		New_ColumsFragment columFragment = new New_ColumsFragment();
 		New_MyFragment setFragment = new New_MyFragment();
+		New_RevelationsFragment reveFragment = new New_RevelationsFragment();
 		fragments.add(mainFragment);
 		fragments.add(liveFragment);
 		fragments.add(columFragment);
 		fragments.add(setFragment);
+		fragments.add(reveFragment);
 
 		Intent intent = getIntent();
 		Serializable serializableExtra = intent.getSerializableExtra("LIVE");
@@ -268,6 +268,7 @@ public class MainActivity extends BaseActivity {
 		setTabStyle(tab_two, 1, false);
 		setTabStyle(tab_three, 2, false);
 		setTabStyle(tab_four, 3, false);
+		setTabStyle(tab_five, 4, false);
 
 		switch (id) {
 		case R.id.tab_one:
@@ -295,6 +296,11 @@ public class MainActivity extends BaseActivity {
 			curTouchTab = tab_four;
 			setTabStyle(tab_four, 3, true);
 			break;
+		case R.id.tab_five:
+			// error_bg.setVisibility(View.GONE);
+			curTouchTab = tab_five;
+			setTabStyle(tab_five, 4, true);
+			break;
 		}
 	}
 
@@ -312,6 +318,9 @@ public class MainActivity extends BaseActivity {
 			break;
 		case R.id.tab_four:
 			curTab = 3;
+			break;
+		case R.id.tab_five:
+			curTab = 4;
 			break;
 		}
 		New_LivePlayFragment fragment = (New_LivePlayFragment) fragments.get(1);
@@ -432,6 +441,12 @@ public class MainActivity extends BaseActivity {
 				isloaduser = false;
 			}
 		}
+		
+		if (resultCode == AndroidConfig.REVELATIONS_FRAGMENT_RESULT_CANCEL
+				|| resultCode == AndroidConfig.REVELATIONS_FRAGMENT_RESULT_OK) {
+			New_RevelationsFragment fragment = (New_RevelationsFragment)fragments.get(4);
+			fragment.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 
 	private BroadcastReceiver mHomeKeyEventReceiver = new BroadcastReceiver() {
@@ -475,6 +490,7 @@ public class MainActivity extends BaseActivity {
 	public RelativeLayout tab_two;
 	private RelativeLayout tab_three;
 	private RelativeLayout tab_four;
+	private RelativeLayout tab_five;
 
 	public void bottomBarVisible(int visibility) {
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
