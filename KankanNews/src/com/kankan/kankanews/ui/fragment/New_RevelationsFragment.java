@@ -27,6 +27,7 @@ import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.utils.ImageLoader;
 import com.kankan.kankanews.utils.ImageLoader.Type;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankannews.picsel.PicSelectedMainActivity;
 import com.kankanews.kankanxinwen.R;
 
@@ -46,12 +47,12 @@ public class New_RevelationsFragment extends BaseFragment implements
 	private ImageView[] imageViews = null;
 	private List<String> imagesSelected = new LinkedList<String>();
 
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
-
 		inflate = inflater.inflate(R.layout.new_fragment_revelations, null);
 
 		initview();
@@ -159,6 +160,18 @@ public class New_RevelationsFragment extends BaseFragment implements
 					(Serializable) imagesSelected);
 			this.startActivityForResult(intent,
 					AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
+			break;
+		case R.id.revelations_post_button:
+			new Thread(new Runnable(){
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					ImgUtils.send(imagesSelected.get(0));
+				}
+				
+			}).start();
+			break;
 		}
 	}
 

@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -69,7 +70,9 @@ public class SplashActivity extends BaseActivity {
 		mPushAgent = PushAgent.getInstance(this);
 		mPushAgent.onAppStart();
 		mPushAgent.enable();
-
+		
+		Log.e("UmengRegistrar", UmengRegistrar.getRegistrationId(this));
+		
 		mApplication.setStart(true);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -88,7 +91,7 @@ public class SplashActivity extends BaseActivity {
 
 		init();
 		// createShortcut();
-		String device_token = UmengRegistrar.getRegistrationId(this);
+//		String device_token = UmengRegistrar.getRegistrationId(this);
 	}
 
 	private void init() {

@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+﻿<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kankanews.kankanxinwen"
     android:versionCode="3"
     android:versionName="2.3.2" >
@@ -47,10 +47,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>  
-                <category android:name="android.intent.category.DEFAULT"/>            
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:scheme="kkl"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="kkl" />
             </intent-filter>
         </activity>
         <activity
@@ -257,7 +259,7 @@
                 <action android:name="org.agoo.android.intent.action.RECEIVE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.kankanews.jianghu.intent.action.COMMAND" />
+                <action android:name="com.kankanews.kankanxinwen.intent.action.COMMAND" />
             </intent-filter>
             <intent-filter>
                 <action android:name="org.agoo.android.intent.action.RE_ELECTION_V2" />
@@ -269,10 +271,10 @@
             android:exported="true"
             android:process=":umengService_v1" >
             <intent-filter>
-                <action android:name="com.kankanews.jianghu.intent.action.START" />
+                <action android:name="com.kankanews.kankanxinwen.intent.action.START" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.kankanews.jianghu.intent.action.COCKROACH" />
+                <action android:name="com.kankanews.kankanxinwen.intent.action.COCKROACH" />
             </intent-filter>
             <intent-filter>
                 <action android:name="org.agoo.android.intent.action.PING" />
@@ -294,7 +296,7 @@
         </meta-data>
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="f11ce2ef4808101352b93ccee101cfee" >
+            android:value="7d3e923113983ba0120732497b2dd844" >
         </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
@@ -302,7 +304,7 @@
         </meta-data>
 
         <!-- If you donot want to use the standard notification bar in SDK, you can define IntentService instead to handle message. -->
-        <service android:name="com.kankanews.jianghu.MyPushIntentService" />
+        <!-- <service android:name="com.kankanews.kankanxinwen.MyPushIntentService" /> -->
         <service android:name="com.umeng.message.UmengDownloadResourceService" >
         </service>
         <!-- 友盟消息推送 -->
