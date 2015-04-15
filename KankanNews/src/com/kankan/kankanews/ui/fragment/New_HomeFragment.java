@@ -67,9 +67,9 @@ public class New_HomeFragment extends BaseFragment implements
 	private int currentFragmentIndex;
 	private boolean isEnd;
 	
-	private String pushNewsId;
-	
 	public ArrayList<New_HomeItemFragment> fragments;
+	
+	public static String PUSH_NEWS_ID = null;
 
 	// 不同像素比文字大小
 	// int[] textTouchSize = { 12, 10, 7 };
@@ -548,13 +548,4 @@ public class New_HomeFragment extends BaseFragment implements
 		}
 	}
 
-	public String getPushNewsId() {
-		return pushNewsId;
-	}
-
-	public void setPushNewsId(String pushNewsId) {
-		this.pushNewsId = pushNewsId;
-	}
-	
-	
 }

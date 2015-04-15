@@ -156,7 +156,7 @@ public class MainActivity extends BaseActivity {
 					Log.e("PUSH_NEWS_ID", bun.getString("PUSH_NEWS_ID"));
 					New_HomeFragment fragment = (New_HomeFragment) fragments
 							.get(0);
-					fragment.setPushNewsId(bun.getString("PUSH_NEWS_ID"));
+					fragment.PUSH_NEWS_ID = bun.getString("PUSH_NEWS_ID");
 					touchTab(tab_one);   //正常启动
 				} else{
 					touchTab(tab_one);   //正常启动

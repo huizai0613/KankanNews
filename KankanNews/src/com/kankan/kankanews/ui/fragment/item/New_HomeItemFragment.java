@@ -49,6 +49,7 @@ import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.MainActivity;
+import com.kankan.kankanews.ui.fragment.New_HomeFragment;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
@@ -357,9 +358,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					
 					// TODO
-					if (((MainActivity)getActivity()).PUSH_NEWS_ID != null) {
+					if (New_HomeFragment.PUSH_NEWS_ID != null) {
 						// 推送
-						String news_id = ((MainActivity)getActivity()).PUSH_NEWS_ID;
+						String news_id = New_HomeFragment.PUSH_NEWS_ID;
 						Log.e("PUSH_NEWS_ID", news_id);
 						instance.getNewsContentDataPush(news_id,
 								new Listener<JSONObject>() {
@@ -380,6 +381,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 										ToastUtils.ErrorToastNoNet(getActivity());
 									}
 								});
+						New_HomeFragment.PUSH_NEWS_ID = null;
 					}
 				}
 			}, sleepTime);
