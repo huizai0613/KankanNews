@@ -1,9 +1,8 @@
 package com.kankan.kankanews.net;
 
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,12 +16,8 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.Volley;
 import com.kankan.kankanews.base.IA.CrashApplication;
-import com.kankan.kankanews.base.download.MyRequestCallBack;
-import com.kankan.kankanews.bean.Content_News;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.utils.CommonUtils;
-import com.kankan.kankanews.utils.XunaoLog;
-import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.callback.RequestCallBack;
@@ -101,7 +96,18 @@ public class ItnetUtils {
 				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
-
+	
+	/**
+	 * 获取新闻详细 数据
+	 */
+	public void getNewsContentDataPush(String news_id,
+			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.New_NETHOST + AndroidConfig.NewContentPush + news_id, null,
+				reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
+	}
+	
 	/**
 	 * 获取评论 新闻内容页
 	 */
@@ -330,7 +336,21 @@ public class ItnetUtils {
 				AndroidConfig.New_Colums, null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequestArray);
 	}
-
+	
+	/**
+	 * 提交报料内容
+	 */
+	public void postRevelationContent(String tel, String content, String imageUrls, Listener<JSONObject> reponseListener,
+			ErrorListener errorListener) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("phonenum", tel);
+		params.put("newstext", content);
+		params.put("imagegroup", imageUrls);
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.REVELATIONS_CONTENT_POST, params, reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
+	}
+	
 	/**
 	 * 获取栏目节目列表
 	 * 

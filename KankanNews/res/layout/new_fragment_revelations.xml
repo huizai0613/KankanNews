@@ -134,7 +134,7 @@
                     android:layout_margin="5dp"
                     android:background="@drawable/revelations_post_content_edittext_shape"
                     android:gravity="left|top"
-                    android:hint="请输入您的手机或固定电话"
+                    android:hint="请输入您的手机号"
                     android:maxLength="11"
                     android:phoneNumber="true"
                     android:inputType="phone"

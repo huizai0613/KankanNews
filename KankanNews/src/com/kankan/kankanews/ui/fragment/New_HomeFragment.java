@@ -66,7 +66,9 @@ public class New_HomeFragment extends BaseFragment implements
 	private int beginPosition;
 	private int currentFragmentIndex;
 	private boolean isEnd;
-
+	
+	private String pushNewsId;
+	
 	public ArrayList<New_HomeItemFragment> fragments;
 
 	// 不同像素比文字大小
@@ -202,6 +204,7 @@ public class New_HomeFragment extends BaseFragment implements
 			totalChildCount = mRadioGroup_content.getChildCount();
 
 			initViewPager();
+			
 		}
 	}
 
@@ -545,4 +548,13 @@ public class New_HomeFragment extends BaseFragment implements
 		}
 	}
 
+	public String getPushNewsId() {
+		return pushNewsId;
+	}
+
+	public void setPushNewsId(String pushNewsId) {
+		this.pushNewsId = pushNewsId;
+	}
+	
+	
 }

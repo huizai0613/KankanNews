@@ -220,8 +220,12 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 						imageFloder.setDir(dirPath);
 						imageFloder.setFirstImagePath(path);
 					}
-
-					int picSize = parentFile.list(new FilenameFilter()
+					
+					if(parentFile == null)
+						continue;
+					int picSize = 0;
+					try{
+					picSize = parentFile.list(new FilenameFilter()
 					{
 						@Override
 						public boolean accept(File dir, String filename)
@@ -236,6 +240,10 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 							return false;
 						}
 					}).length;
+					}catch(NullPointerException e){
+						Log.e("NULLPOINT", e.getLocalizedMessage(), e);
+						continue;
+					}
 					totalCount += picSize;
 
 					imageFloder.setCount(picSize);

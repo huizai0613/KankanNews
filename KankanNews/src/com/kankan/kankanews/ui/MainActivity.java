@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -38,6 +39,7 @@ import com.kankan.kankanews.ui.fragment.New_HomeFragment;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.fragment.New_MyFragment;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
+import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -128,6 +130,41 @@ public class MainActivity extends BaseActivity {
 		// 注册广播
 		// registerReceiver(mHomeKeyEventReceiver, new IntentFilter(
 		// Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
+		Intent intent = getIntent();
+		Serializable serializableExtra = intent.getSerializableExtra("LIVE");
+		if (serializableExtra != null) {
+			New_LivePlay mlive = (New_LivePlay) serializableExtra;
+			New_LivePlayFragment fragment = (New_LivePlayFragment) fragments
+					.get(1);
+			fragment.setSelectPlay(true);
+			fragment.setSelectPlayID(Integer.parseInt(mlive.getZid()));
+			touchTab(tab_two);
+		} else {
+			Bundle bun = intent.getExtras();
+			if (bun != null) {
+				if (bun.containsKey("LIVE_ID")) {
+					//直播分享
+					Log.e("LIVE_ID", bun.getString("LIVE_ID"));
+					New_LivePlayFragment fragment = (New_LivePlayFragment) fragments
+							.get(1);
+					fragment.setSelectPlay(true);
+					fragment.setSelectPlayID(Integer.parseInt(bun.getString("LIVE_ID")));
+					touchTab(tab_two);
+				} else if (bun.containsKey("PUSH_NEWS_ID")) {
+					//推送
+					Log.e("PUSH_NEWS_ID", bun.getString("PUSH_NEWS_ID"));
+					New_HomeFragment fragment = (New_HomeFragment) fragments
+							.get(0);
+					fragment.setPushNewsId(bun.getString("PUSH_NEWS_ID"));
+					touchTab(tab_one);   //正常启动
+				} else{
+					touchTab(tab_one);   //正常启动
+				}
+			} else {
+				touchTab(tab_one);   //正常启动
+			}
+		}
 	}
 
 	long lastTime;
@@ -187,19 +224,6 @@ public class MainActivity extends BaseActivity {
 		fragments.add(columFragment);
 		fragments.add(setFragment);
 		fragments.add(reveFragment);
-
-		Intent intent = getIntent();
-		Serializable serializableExtra = intent.getSerializableExtra("LIVE");
-		if (serializableExtra != null ) {
-			New_LivePlay mlive = (New_LivePlay) serializableExtra;
-			New_LivePlayFragment fragment = (New_LivePlayFragment) fragments
-					.get(1);
-			fragment.setSelectPlay(true);
-			fragment.setSelectPlayID(Integer.parseInt(mlive.getZid()));
-			touchTab(tab_two);
-		} else {
-			touchTab(tab_one);
-		}
 	}
 
 	@Override
@@ -441,10 +465,11 @@ public class MainActivity extends BaseActivity {
 				isloaduser = false;
 			}
 		}
-		
+
 		if (resultCode == AndroidConfig.REVELATIONS_FRAGMENT_RESULT_CANCEL
 				|| resultCode == AndroidConfig.REVELATIONS_FRAGMENT_RESULT_OK) {
-			New_RevelationsFragment fragment = (New_RevelationsFragment)fragments.get(4);
+			New_RevelationsFragment fragment = (New_RevelationsFragment) fragments
+					.get(4);
 			fragment.onActivityResult(requestCode, resultCode, data);
 		}
 	}

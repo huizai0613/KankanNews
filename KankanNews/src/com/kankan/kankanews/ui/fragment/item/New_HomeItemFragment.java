@@ -6,10 +6,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Map.Entry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,10 +18,9 @@ import org.json.JSONObject;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +30,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -50,8 +48,8 @@ import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
+import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
-import com.kankan.kankanews.ui.item.New_Activity_Content_Graphic;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
@@ -61,7 +59,6 @@ import com.kankan.kankanews.ui.view.AutoImageVIew;
 import com.kankan.kankanews.ui.view.AutoScrollViewPager;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
-import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
@@ -109,6 +106,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 	private boolean noMoreNews = false;
 
+	private boolean isPushNews = false;
+
 	public HashMap<String, SoftReference<Bitmap>> getImageCache() {
 		return imageCache;
 	}
@@ -134,7 +133,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 	@Override
 	public void onPause() {
-		// TODO Auto-generated method stub
+
 		super.onPause();
 		if (pagerHolder != null && pagerHolder.pager != null) {
 			pagerHolder.pager.stopAutoScroll();
@@ -249,7 +248,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 		// content_News = mActivity.dbUtils.findFirst(Selector.from(
 		// Content_News.class).where("uid", "=", reporter));
 		// } catch (DbException e) {
-		// // TODO Auto-generated catch block
+		// //
 		// e.printStackTrace();
 		// }
 		//
@@ -355,6 +354,33 @@ public class New_HomeItemFragment extends BaseFragment implements
 					listview.setAdapter(adapter);
 					listview.onRefreshComplete();
 					screnn_pb.setVisibility(View.GONE);
+
+					
+					// TODO
+					if (((MainActivity)getActivity()).PUSH_NEWS_ID != null) {
+						// 推送
+						String news_id = ((MainActivity)getActivity()).PUSH_NEWS_ID;
+						Log.e("PUSH_NEWS_ID", news_id);
+						instance.getNewsContentDataPush(news_id,
+								new Listener<JSONObject>() {
+									@Override
+									public void onResponse(JSONObject jsonObject) {
+										New_News_Home news = new New_News_Home();
+										try {
+											news.parseJSON(jsonObject);
+											openNews(news);
+										} catch (NetRequestException e) {
+											// TODO Auto-generated catch block
+											e.printStackTrace();
+										}
+									}
+								}, new ErrorListener() {
+									@Override
+									public void onErrorResponse(VolleyError error) {
+										ToastUtils.ErrorToastNoNet(getActivity());
+									}
+								});
+					}
 				}
 			}, sleepTime);
 
@@ -473,7 +499,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 		try {
 			new_home_list = new_home_list.parseJSON(jsonObject);
 		} catch (NetRequestException e) {
-			// TODO Auto-generated catch block
+			//
 			e.printStackTrace();
 		}
 
@@ -508,7 +534,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 	@Override
 	protected void onSuccessArray(JSONArray jsonObject) {
-		// TODO Auto-generated method stub
+		//
 	}
 
 	@Override
@@ -562,7 +588,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 						}
 
 					} catch (DbException e) {
-						// TODO Auto-generated catch block
+						//
 						e.printStackTrace();
 					}
 				}
@@ -572,7 +598,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 						// mActivity.dbUtils.delete(Selector.from(New_News.class).where("my_type","=","home_top_news").or("my_type","=","home_news"));
 						mActivity.dbUtils.saveOrUpdateAll(getmTopNewsList);
 					} catch (DbException e1) {
-						// TODO Auto-generated catch block
+						//
 						e1.printStackTrace();
 					}
 				}
@@ -606,7 +632,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
+			//
 			if (noMoreNews) {
 				return getmTopNewsList != null && getmTopNewsList.size() > 0 ? ((getmNewsList
 						.size() + lineNum - 1)
@@ -616,9 +642,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				return getmTopNewsList != null && getmTopNewsList.size() > 0 ? ((getmNewsList
 						.size() + lineNum - 1)
 						/ lineNum + (getmTopNewsList != null ? 1 : 0))
-						: (getmNewsList
-								.size() + lineNum - 1)
-								/ lineNum;
+						: (getmNewsList.size() + lineNum - 1) / lineNum;
 			}
 		}
 
@@ -634,22 +658,22 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 		@Override
 		public int getViewTypeCount() {
-			// TODO Auto-generated method stub
+			//
 			return 5;
 		}
 
 		@Override
 		public int getItemViewType(int position) {
-			// TODO Auto-generated method stub
+			//
 			boolean hasTopNews = getmTopNewsList.size() > 0;
 			int newsPosition = hasTopNews ? position - 1 : position;
 			if (position == 0 && hasTopNews) {
 				return 0;
 			} else if (noMoreNews && getmNewsList.size() + 1 <= position) {
-				return 2;//已加载全部
+				return 2;// 已加载全部
 			} else if (Integer
 					.valueOf(getmNewsList.get(newsPosition).getType()) % 10 == 2) {
-				return 3;//图集
+				return 3;// 图集
 			} else if (getmNewsList.get(newsPosition).getZtype().equals("1")) {
 				return 4;
 			} else {
@@ -664,354 +688,349 @@ public class New_HomeItemFragment extends BaseFragment implements
 			int itemViewType = getItemViewType(position);
 			boolean hasTopNews = getmTopNewsList.size() > 0;
 			int newsPosition = hasTopNews ? position - 1 : position;
-//			if (getmTopNewsList != null && getmTopNewsList.size() > 0) {
-				if (convertView == null) {
-					if (itemViewType == 0) {
-
-						convertView = inflate.inflate(mActivity,
-								R.layout.mainfragment_item_topnew, null);
-						pagerHolder = new ViewPagerHolder();
-
-						pagerHolder.pager = (AutoScrollViewPager) convertView
-								.findViewById(R.id.viewpager);
-
-						pagerHolder.point_content = (LinearLayout) convertView
-								.findViewById(R.id.point_content);
-
-						pagerHolder.title = (MyTextView) convertView
-								.findViewById(R.id.new_title);
-						// pagerHolder.labse = (MyTextView) convertView
-						// .findViewById(R.id.new_labase);
-						pagerHolder.pager
-								.setLayoutParams(new RelativeLayout.LayoutParams(
-										RelativeLayout.LayoutParams.MATCH_PARENT,
-										(int) (mActivity.topNewW / 1.7)));
-						convertView
-								.setLayoutParams(new AbsListView.LayoutParams(
-										RelativeLayout.LayoutParams.MATCH_PARENT,
-										(int) (mActivity.topNewW / 1.7)
-												+ PixelUtil.dp2px(45)));
-
-						pagerHolder.pager
-								.setOnPageChangeListener(New_HomeItemFragment.this);
-						convertView.setTag(pagerHolder);
-						imagePagerAdapter = new ImagePagerAdapter(mActivity,
-								New_HomeItemFragment.this, images,
-								getmTopNewsList);
-						pagerHolder.pager.stopAutoScroll();
-						if (images.size() > 1) {
-							pagerHolder.pager
-									.setCurrentItem(Integer.MAX_VALUE / 2
-											- Integer.MAX_VALUE / 2
-											% images.size());
-							imagePagerAdapter.setInfiniteLoop(true);
-							pagerHolder.pager.startAutoScroll(3000);
-							pagerHolder.pager.setSwipeScrollDurationFactor(0.5);
-
-						} else {
-							imagePagerAdapter.setInfiniteLoop(false);
-							pagerHolder.pager.stopAutoScroll();
-						}
-						pagerHolder.pager.setAdapter(imagePagerAdapter);
-						// pagerHolder.pager.setSwipeScrollDurationFactor(2.0);
-
-						int size = points.size();
-						if (size > 1) {
-							points.get(0).setBackgroundResource(
-									R.drawable.point_red);
-							for (View v : points) {
-								pagerHolder.point_content.addView(v);
-							}
-							pagerHolder.point_content
-									.setVisibility(View.VISIBLE);
-
-						} else {
-							pagerHolder.point_content.setVisibility(View.GONE);
-						}
-						pagerHolder.title.setText(getmTopNewsList.get(0)
-								.getTitle());
-
-					} else if (itemViewType == 1) {
-						convertView = inflate.inflate(mActivity,
-								R.layout.new_home_news_item, null);
-						newHolder = new NewContentHolder();
-						newHolder.titlepic = (ImageView) convertView
-								.findViewById(R.id.home_news_titlepic);
-
-						newHolder.title = (MyTextView) convertView
-								.findViewById(R.id.home_news_title);
-						newHolder.newstime_sign = (ImageView) convertView
-								.findViewById(R.id.home_news_newstime_sign);
-						newHolder.newstime = (MyTextView) convertView
-								.findViewById(R.id.home_news_newstime);
-						newHolder.news_type = (ImageView) convertView
-								.findViewById(R.id.home_news_newstype);
-						newHolder.home_news_play = (ImageView) convertView
-								.findViewById(R.id.home_news_play);
-						convertView.setTag(newHolder);
-					} else if (itemViewType == 2) {
-						holderInfo = new ViewHolderInfo();
-						convertView = LayoutInflater.from(mActivity).inflate(
-								R.layout.comment_nomore, null);
-						holderInfo.info = (MyTextView) convertView
-								.findViewById(R.id.comment_no_more);
-						convertView.setTag(holderInfo);
-					} else if (itemViewType == 3) {
-						convertView = inflate.inflate(mActivity,
-								R.layout.new_home_news_albums_item, null);
-						albumsHolder = new NewAlbumsHolder();
-						albumsHolder.title = (MyTextView) convertView
-								.findViewById(R.id.home_albums_title);
-						albumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
-								.findViewById(R.id.home_albums_imgs_layout);
-						albumsHolder.albums_image_1 = (ImageView) convertView
-								.findViewById(R.id.home_albums_img_1);
-						albumsHolder.albums_image_2 = (ImageView) convertView
-								.findViewById(R.id.home_albums_img_2);
-						albumsHolder.albums_image_3 = (ImageView) convertView
-								.findViewById(R.id.home_albums_img_3);
-						// image_view_list.clear();
-						// image_view_list.add(albumsHolder.albums_image_1);
-						// image_view_list.add(albumsHolder.albums_image_2);
-						// image_view_list.add(albumsHolder.albums_image_3);
-						albumsHolder.home_albums_imgs_layout
-								.setLayoutParams(new LinearLayout.LayoutParams(
-										LinearLayout.LayoutParams.MATCH_PARENT,
-										(int) ((mActivity.topNewW - PixelUtil
-												.dp2px(10 * 4)) / 3 * 0.7)));
-						convertView.setTag(albumsHolder);
-					} else if (itemViewType == 4) {
-						convertView = inflate.inflate(mActivity,
-								R.layout.new_home_news_zhuanti_item, null);
-						newZhuanTiHolder = new NewZhuanTiHolder();
-						newZhuanTiHolder.title = (MyTextView) convertView
-								.findViewById(R.id.title);
-						newZhuanTiHolder.home_news_titlepic = (ImageView) convertView
-								.findViewById(R.id.home_news_titlepic);
-						newZhuanTiHolder.home_news_intro = (MyTextView) convertView
-								.findViewById(R.id.home_news_intro);
-
-						newZhuanTiHolder.home_news_titlepic
-								.setLayoutParams(new LinearLayout.LayoutParams(
-										(int) ((mActivity.topNewW - PixelUtil
-												.dp2px(10 * 2))),
-										(int) ((float) ((mActivity.topNewW - PixelUtil
-												.dp2px(10 * 2)) / 3.2))));
-						newZhuanTiHolder.home_news_titlepic.setTag(
-								R.string.viewwidth,
-								(int) ((mActivity.topNewW - PixelUtil
-										.dp2px(10 * 2))));
-						convertView.setTag(newZhuanTiHolder);
-					}
-				} else {
-					if (itemViewType == 0) {
-						pagerHolder = (ViewPagerHolder) convertView.getTag();
-					} else if (itemViewType == 1) {
-						newHolder = (NewContentHolder) convertView.getTag();
-					} else if (itemViewType == 2) {
-						holderInfo = (ViewHolderInfo) convertView.getTag();
-					} else if (itemViewType == 3) {
-						albumsHolder = (NewAlbumsHolder) convertView.getTag();
-					} else if (itemViewType == 4) {
-						newZhuanTiHolder = (NewZhuanTiHolder) convertView
-								.getTag();
-					}
-				}
-
+			// if (getmTopNewsList != null && getmTopNewsList.size() > 0) {
+			if (convertView == null) {
 				if (itemViewType == 0) {
-					imagePagerAdapter.notifyDataSetChanged();
+
+					convertView = inflate.inflate(mActivity,
+							R.layout.mainfragment_item_topnew, null);
+					pagerHolder = new ViewPagerHolder();
+
+					pagerHolder.pager = (AutoScrollViewPager) convertView
+							.findViewById(R.id.viewpager);
+
+					pagerHolder.point_content = (LinearLayout) convertView
+							.findViewById(R.id.point_content);
+
+					pagerHolder.title = (MyTextView) convertView
+							.findViewById(R.id.new_title);
+					// pagerHolder.labse = (MyTextView) convertView
+					// .findViewById(R.id.new_labase);
+					pagerHolder.pager
+							.setLayoutParams(new RelativeLayout.LayoutParams(
+									RelativeLayout.LayoutParams.MATCH_PARENT,
+									(int) (mActivity.topNewW / 1.7)));
+					convertView.setLayoutParams(new AbsListView.LayoutParams(
+							RelativeLayout.LayoutParams.MATCH_PARENT,
+							(int) (mActivity.topNewW / 1.7)
+									+ PixelUtil.dp2px(45)));
+
+					pagerHolder.pager
+							.setOnPageChangeListener(New_HomeItemFragment.this);
+					convertView.setTag(pagerHolder);
+					imagePagerAdapter = new ImagePagerAdapter(mActivity,
+							New_HomeItemFragment.this, images, getmTopNewsList);
+					pagerHolder.pager.stopAutoScroll();
+					if (images.size() > 1) {
+						pagerHolder.pager.setCurrentItem(Integer.MAX_VALUE / 2
+								- Integer.MAX_VALUE / 2 % images.size());
+						imagePagerAdapter.setInfiniteLoop(true);
+						pagerHolder.pager.startAutoScroll(3000);
+						pagerHolder.pager.setSwipeScrollDurationFactor(0.5);
+
+					} else {
+						imagePagerAdapter.setInfiniteLoop(false);
+						pagerHolder.pager.stopAutoScroll();
+					}
+					pagerHolder.pager.setAdapter(imagePagerAdapter);
+					// pagerHolder.pager.setSwipeScrollDurationFactor(2.0);
+
+					int size = points.size();
+					if (size > 1) {
+						points.get(0).setBackgroundResource(
+								R.drawable.point_red);
+						for (View v : points) {
+							pagerHolder.point_content.addView(v);
+						}
+						pagerHolder.point_content.setVisibility(View.VISIBLE);
+
+					} else {
+						pagerHolder.point_content.setVisibility(View.GONE);
+					}
+					pagerHolder.title
+							.setText(getmTopNewsList.get(0).getTitle());
+
 				} else if (itemViewType == 1) {
-					final New_News_Home news = getmNewsList.get(newsPosition);
-					String clicktime = mClicks.get(news.getMid());
-					clicktime = TextUtils.isEmpty(clicktime) ? "0次" : clicktime
-							+ "次";
-					final int news_type = Integer.valueOf(news.getType());
-					newHolder.titlepic.setTag(R.string.viewwidth,
-							PixelUtil.dp2px(80));
-					CommonUtils.zoomImage(imageLoader, CommonUtils.doWebpUrl(news.getTitlepic()),
-							newHolder.titlepic, mActivity, imageCache);
+					convertView = inflate.inflate(mActivity,
+							R.layout.new_home_news_item, null);
+					newHolder = new NewContentHolder();
+					newHolder.titlepic = (ImageView) convertView
+							.findViewById(R.id.home_news_titlepic);
 
-					// imageLoader.displayImage(news.getTitlepic(),
-					// newHolder.titlepic,
-					// Options.getSmallImageOptions(false));
-					newHolder.title.setText(news.getTitle());
-					newHolder.newstime.setText(clicktime);
-					switch (news_type / 10) {
-					case 1:
-						newHolder.news_type
-								.setImageResource(R.drawable.new_icon_sign_unique);
-						break;
-					case 2:
-						newHolder.news_type
-								.setImageResource(R.drawable.new_icon_sign_tui);
-						break;
-					case 5:
-						newHolder.news_type
-								.setImageResource(R.drawable.new_icon_sign_subject);
-						break;
-
-					default:
-						newHolder.news_type.setImageBitmap(null);
-					}
-
-					switch (news_type % 10) {
-					case 5: // 小专题
-						newHolder.newstime.setVisibility(View.INVISIBLE);
-						newHolder.newstime_sign.setVisibility(View.INVISIBLE);
-						newHolder.news_type
-								.setImageResource(R.drawable.new_icon_sign_subject);
-						break;
-					case 6:
-						newHolder.newstime.setVisibility(View.INVISIBLE);
-						newHolder.newstime_sign
-								.setImageResource(R.drawable.new_icon_newstime);
-						newHolder.newstime
-								.setText(TimeUtil.unix2date(
-										Long.valueOf(news.getStime()), "mm:ss")
-										+ " - "
-										+ TimeUtil.unix2date(
-												Long.valueOf(news.getEtime()),
-												"mm:ss"));
-						newHolder.newstime_sign.setVisibility(View.INVISIBLE);
-						newHolder.news_type
-								.setImageResource(R.drawable.new_icon_sign_live);
-						break;
-					default:
-
-						if (clicktime.equalsIgnoreCase("false次")) {
-							newHolder.newstime.setVisibility(View.INVISIBLE);
-							newHolder.newstime_sign
-									.setVisibility(View.INVISIBLE);
-						} else {
-							newHolder.newstime.setVisibility(View.VISIBLE);
-							newHolder.newstime_sign.setVisibility(View.VISIBLE);
-						}
-						break;
-					}
-
-					// if (news_type % 10 == 1) {
-					// newHolder.home_news_play.setVisibility(View.VISIBLE);
-					// } else {
-					// newHolder.home_news_play.setVisibility(View.GONE);
-					// }
-
-					convertView.setOnClickListener(new OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							if (news_type % 10 == 1) {
-								mActivity.startAnimActivityByParameter(
-										New_Activity_Content_Video.class,
-										news.getMid(), news.getType(),
-										news.getTitleurl(), news.getNewstime(),
-										news.getTitlepic(), news.getTitle());
-							} else if (news_type % 10 == 5) {
-								// 专题
-								mActivity.startSubjectActivityByParameter(
-										New_Avtivity_Subject.class,
-										news.getZtid(), news.getTitle(),
-										news.getTitlepic(), news.getTitleurl());
-							} else if (news_type % 10 == 6) {// 直播
-								New_LivePlayFragment fragment = (New_LivePlayFragment) mActivity.fragments
-										.get(1);
-								fragment.setSelectPlay(true);
-								fragment.setSelectPlayID(Integer.parseInt(news
-										.getZtid()));
-								mActivity.touchTab(mActivity.tab_two);
-
-							} else {
-								mActivity.startAnimActivityByParameter(
-										New_Activity_Content_Web.class,
-										news.getMid(), news.getType(),
-										news.getTitleurl(), news.getNewstime(),
-										news.getTitlepic(), news.getTitle());
-							}
-						}
-					});
+					newHolder.title = (MyTextView) convertView
+							.findViewById(R.id.home_news_title);
+					newHolder.newstime_sign = (ImageView) convertView
+							.findViewById(R.id.home_news_newstime_sign);
+					newHolder.newstime = (MyTextView) convertView
+							.findViewById(R.id.home_news_newstime);
+					newHolder.news_type = (ImageView) convertView
+							.findViewById(R.id.home_news_newstype);
+					newHolder.home_news_play = (ImageView) convertView
+							.findViewById(R.id.home_news_play);
+					convertView.setTag(newHolder);
 				} else if (itemViewType == 2) {
-					int padding_in_dp = 10; // 6 dps
-					final float scale = getResources().getDisplayMetrics().density;
-					int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
-					holderInfo.info.setPadding(0, padding_in_px, 0,
-							padding_in_px);
+					holderInfo = new ViewHolderInfo();
+					convertView = LayoutInflater.from(mActivity).inflate(
+							R.layout.comment_nomore, null);
+					holderInfo.info = (MyTextView) convertView
+							.findViewById(R.id.comment_no_more);
+					convertView.setTag(holderInfo);
 				} else if (itemViewType == 3) {
-					final New_News_Home news = getmNewsList.get(newsPosition);
-					albumsHolder.title.setText(news.getTitle());
-					final String[] pics = news.getTitlepic().split("::::::");
-					ArrayList<ImageView> image_view_list = new ArrayList<ImageView>();
-
-					int width = (mActivity.mScreenWidth - PixelUtil.dp2px(20) / 3);
-					albumsHolder.albums_image_1
-							.setScaleType(ScaleType.CENTER_CROP);
-					albumsHolder.albums_image_1.setTag(R.string.viewwidth,
-							width);
-					albumsHolder.albums_image_1.setTag(R.string.isTop, true);
-					albumsHolder.albums_image_2
-							.setScaleType(ScaleType.CENTER_CROP);
-					albumsHolder.albums_image_2.setTag(R.string.viewwidth,
-							width);
-					albumsHolder.albums_image_2.setTag(R.string.isTop, true);
-					albumsHolder.albums_image_3
-							.setScaleType(ScaleType.CENTER_CROP);
-					albumsHolder.albums_image_3.setTag(R.string.viewwidth,
-							width);
-					albumsHolder.albums_image_3.setTag(R.string.isTop, true);
-					image_view_list.add(albumsHolder.albums_image_1);
-					image_view_list.add(albumsHolder.albums_image_2);
-					image_view_list.add(albumsHolder.albums_image_3);
-					for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++) {
-						// imageLoader.displayImage(pics[i + 1],
-						// image_view_list.get(i),
-						// Options.getSmallImageOptions(false));
-						if(pics.length > i){
-							CommonUtils.zoomImage(imageLoader, CommonUtils.doWebpUrl(pics[i + 1]),
-									image_view_list.get(i), mActivity, imageCache);
-						}
-					}
-
-					convertView.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View arg0) {
-							// startAnimActivityByBean(New_ActivityPicSet.class,
-							// "news_content", news);
-							mActivity.startAnimActivityByParameter(
-									New_Activity_Content_PicSet.class,
-									news.getMid(), news.getType(),
-									news.getTitleurl(), news.getNewstime(),
-									pics[1], news.getTitle());
-						}
-					});
-
+					convertView = inflate.inflate(mActivity,
+							R.layout.new_home_news_albums_item, null);
+					albumsHolder = new NewAlbumsHolder();
+					albumsHolder.title = (MyTextView) convertView
+							.findViewById(R.id.home_albums_title);
+					albumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
+							.findViewById(R.id.home_albums_imgs_layout);
+					albumsHolder.albums_image_1 = (ImageView) convertView
+							.findViewById(R.id.home_albums_img_1);
+					albumsHolder.albums_image_2 = (ImageView) convertView
+							.findViewById(R.id.home_albums_img_2);
+					albumsHolder.albums_image_3 = (ImageView) convertView
+							.findViewById(R.id.home_albums_img_3);
+					// image_view_list.clear();
+					// image_view_list.add(albumsHolder.albums_image_1);
+					// image_view_list.add(albumsHolder.albums_image_2);
+					// image_view_list.add(albumsHolder.albums_image_3);
+					albumsHolder.home_albums_imgs_layout
+							.setLayoutParams(new LinearLayout.LayoutParams(
+									LinearLayout.LayoutParams.MATCH_PARENT,
+									(int) ((mActivity.topNewW - PixelUtil
+											.dp2px(10 * 4)) / 3 * 0.7)));
+					convertView.setTag(albumsHolder);
 				} else if (itemViewType == 4) {
-					final New_News_Home news = getmNewsList.get(newsPosition);
-					newZhuanTiHolder.title.setText(news.getTitle());
-					CommonUtils.zoomImage(imageLoader, CommonUtils.doWebpUrl(news.getTitlepic()),
-							newZhuanTiHolder.home_news_titlepic, mActivity);
-					// imageLoader.displayImage(news.getTitlepic(),
-					// newZhuanTiHolder.home_news_titlepic,
-					// Options.getSmallImageOptions(false));
-					// newZhuanTiHolder.home_news_intro.setText(news.getIntro()
-					// .length() > 45 ? news.getIntro().subSequence(0, 45)
-					// + "..." : news.getIntro());
+					convertView = inflate.inflate(mActivity,
+							R.layout.new_home_news_zhuanti_item, null);
+					newZhuanTiHolder = new NewZhuanTiHolder();
+					newZhuanTiHolder.title = (MyTextView) convertView
+							.findViewById(R.id.title);
+					newZhuanTiHolder.home_news_titlepic = (ImageView) convertView
+							.findViewById(R.id.home_news_titlepic);
+					newZhuanTiHolder.home_news_intro = (MyTextView) convertView
+							.findViewById(R.id.home_news_intro);
 
-					newZhuanTiHolder.home_news_intro.setText(news.getIntro());
-
-					convertView.setOnClickListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							// 专题
-							mActivity.startSubjectActivityByParameter(
-									New_Avtivity_Subject.class, news.getZtid(),
-									news.getTitle(), news.getTitlepic(),
-									news.getTitleurl());
-						}
-					});
-
+					newZhuanTiHolder.home_news_titlepic
+							.setLayoutParams(new LinearLayout.LayoutParams(
+									(int) ((mActivity.topNewW - PixelUtil
+											.dp2px(10 * 2))),
+									(int) ((float) ((mActivity.topNewW - PixelUtil
+											.dp2px(10 * 2)) / 3.2))));
+					newZhuanTiHolder.home_news_titlepic
+							.setTag(R.string.viewwidth,
+									(int) ((mActivity.topNewW - PixelUtil
+											.dp2px(10 * 2))));
+					convertView.setTag(newZhuanTiHolder);
 				}
-//			}
+			} else {
+				if (itemViewType == 0) {
+					pagerHolder = (ViewPagerHolder) convertView.getTag();
+				} else if (itemViewType == 1) {
+					newHolder = (NewContentHolder) convertView.getTag();
+				} else if (itemViewType == 2) {
+					holderInfo = (ViewHolderInfo) convertView.getTag();
+				} else if (itemViewType == 3) {
+					albumsHolder = (NewAlbumsHolder) convertView.getTag();
+				} else if (itemViewType == 4) {
+					newZhuanTiHolder = (NewZhuanTiHolder) convertView.getTag();
+				}
+			}
+
+			if (itemViewType == 0) {
+				imagePagerAdapter.notifyDataSetChanged();
+			} else if (itemViewType == 1) {
+				final New_News_Home news = getmNewsList.get(newsPosition);
+				String clicktime = mClicks.get(news.getMid());
+				clicktime = TextUtils.isEmpty(clicktime) ? "0次" : clicktime
+						+ "次";
+				final int news_type = Integer.valueOf(news.getType());
+				newHolder.titlepic.setTag(R.string.viewwidth,
+						PixelUtil.dp2px(80));
+				CommonUtils.zoomImage(imageLoader,
+						CommonUtils.doWebpUrl(news.getTitlepic()),
+						newHolder.titlepic, mActivity, imageCache);
+
+				// imageLoader.displayImage(news.getTitlepic(),
+				// newHolder.titlepic,
+				// Options.getSmallImageOptions(false));
+				newHolder.title.setText(news.getTitle());
+				newHolder.newstime.setText(clicktime);
+				switch (news_type / 10) {
+				case 1:
+					newHolder.news_type
+							.setImageResource(R.drawable.new_icon_sign_unique);
+					break;
+				case 2:
+					newHolder.news_type
+							.setImageResource(R.drawable.new_icon_sign_tui);
+					break;
+				case 5:
+					newHolder.news_type
+							.setImageResource(R.drawable.new_icon_sign_subject);
+					break;
+
+				default:
+					newHolder.news_type.setImageBitmap(null);
+				}
+
+				switch (news_type % 10) {
+				case 5: // 小专题
+					newHolder.newstime.setVisibility(View.INVISIBLE);
+					newHolder.newstime_sign.setVisibility(View.INVISIBLE);
+					newHolder.news_type
+							.setImageResource(R.drawable.new_icon_sign_subject);
+					break;
+				case 6:
+					newHolder.newstime.setVisibility(View.INVISIBLE);
+					newHolder.newstime_sign
+							.setImageResource(R.drawable.new_icon_newstime);
+					newHolder.newstime.setText(TimeUtil.unix2date(
+							Long.valueOf(news.getStime()), "mm:ss")
+							+ " - "
+							+ TimeUtil.unix2date(Long.valueOf(news.getEtime()),
+									"mm:ss"));
+					newHolder.newstime_sign.setVisibility(View.INVISIBLE);
+					newHolder.news_type
+							.setImageResource(R.drawable.new_icon_sign_live);
+					break;
+				default:
+
+					if (clicktime.equalsIgnoreCase("false次")) {
+						newHolder.newstime.setVisibility(View.INVISIBLE);
+						newHolder.newstime_sign.setVisibility(View.INVISIBLE);
+					} else {
+						newHolder.newstime.setVisibility(View.VISIBLE);
+						newHolder.newstime_sign.setVisibility(View.VISIBLE);
+					}
+					break;
+				}
+
+				// if (news_type % 10 == 1) {
+				// newHolder.home_news_play.setVisibility(View.VISIBLE);
+				// } else {
+				// newHolder.home_news_play.setVisibility(View.GONE);
+				// }
+
+				convertView.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						//
+						openNews(news);
+					}
+				});
+			} else if (itemViewType == 2) {
+				int padding_in_dp = 10; // 6 dps
+				final float scale = getResources().getDisplayMetrics().density;
+				int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
+				holderInfo.info.setPadding(0, padding_in_px, 0, padding_in_px);
+			} else if (itemViewType == 3) {
+				final New_News_Home news = getmNewsList.get(newsPosition);
+				albumsHolder.title.setText(news.getTitle());
+				final String[] pics = news.getTitlepic().split("::::::");
+				ArrayList<ImageView> image_view_list = new ArrayList<ImageView>();
+
+				int width = (mActivity.mScreenWidth - PixelUtil.dp2px(20) / 3);
+				albumsHolder.albums_image_1.setScaleType(ScaleType.CENTER_CROP);
+				albumsHolder.albums_image_1.setTag(R.string.viewwidth, width);
+				albumsHolder.albums_image_1.setTag(R.string.isTop, true);
+				albumsHolder.albums_image_2.setScaleType(ScaleType.CENTER_CROP);
+				albumsHolder.albums_image_2.setTag(R.string.viewwidth, width);
+				albumsHolder.albums_image_2.setTag(R.string.isTop, true);
+				albumsHolder.albums_image_3.setScaleType(ScaleType.CENTER_CROP);
+				albumsHolder.albums_image_3.setTag(R.string.viewwidth, width);
+				albumsHolder.albums_image_3.setTag(R.string.isTop, true);
+				image_view_list.add(albumsHolder.albums_image_1);
+				image_view_list.add(albumsHolder.albums_image_2);
+				image_view_list.add(albumsHolder.albums_image_3);
+				for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++) {
+					// imageLoader.displayImage(pics[i + 1],
+					// image_view_list.get(i),
+					// Options.getSmallImageOptions(false));
+					if (pics.length > i) {
+						CommonUtils.zoomImage(imageLoader,
+								CommonUtils.doWebpUrl(pics[i + 1]),
+								image_view_list.get(i), mActivity, imageCache);
+					}
+				}
+
+				convertView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						// startAnimActivityByBean(New_ActivityPicSet.class,
+						// "news_content", news);
+						openNews(news);
+
+					}
+				});
+
+			} else if (itemViewType == 4) {
+				final New_News_Home news = getmNewsList.get(newsPosition);
+				newZhuanTiHolder.title.setText(news.getTitle());
+				CommonUtils.zoomImage(imageLoader,
+						CommonUtils.doWebpUrl(news.getTitlepic()),
+						newZhuanTiHolder.home_news_titlepic, mActivity);
+				// imageLoader.displayImage(news.getTitlepic(),
+				// newZhuanTiHolder.home_news_titlepic,
+				// Options.getSmallImageOptions(false));
+				// newZhuanTiHolder.home_news_intro.setText(news.getIntro()
+				// .length() > 45 ? news.getIntro().subSequence(0, 45)
+				// + "..." : news.getIntro());
+
+				newZhuanTiHolder.home_news_intro.setText(news.getIntro());
+
+				convertView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						// 专题
+						openNews(news);
+
+					}
+				});
+
+			}
+			// }
 
 			return convertView;
+		}
+	}
+
+	private void openNews(New_News_Home news) {
+		//
+		final int news_type = Integer.valueOf(news.getType());
+		if (news_type % 10 == 1) {
+			mActivity.startAnimActivityByParameter(
+					New_Activity_Content_Video.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					news.getTitlepic(), news.getTitle());
+		} else if (news_type % 10 == 2) {
+			final String[] pics = news.getTitlepic().split("::::::");
+			mActivity.startAnimActivityByParameter(
+					New_Activity_Content_PicSet.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					pics[1], news.getTitle());
+		} else if (news_type % 10 == 5) {
+			// 专题
+			mActivity.startSubjectActivityByParameter(
+					New_Avtivity_Subject.class, news.getZtid(),
+					news.getTitle(), news.getTitlepic(), news.getTitleurl());
+		} else if (news_type % 10 == 6) {
+			// 直播
+			New_LivePlayFragment fragment = (New_LivePlayFragment) mActivity.fragments
+					.get(1);
+			fragment.setSelectPlay(true);
+			fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
+			mActivity.touchTab(mActivity.tab_two);
+
+		} else if (news.getZtype().equals("1")) {
+			mActivity.startSubjectActivityByParameter(
+					New_Avtivity_Subject.class, news.getZtid(),
+					news.getTitle(), news.getTitlepic(), news.getTitleurl());
+		} else {
+			mActivity.startAnimActivityByParameter(
+					New_Activity_Content_Web.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					news.getTitlepic(), news.getTitle());
 		}
 	}
 
@@ -1106,7 +1125,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					}
 				}
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
+				//
 				e.printStackTrace();
 			}
 			addData(true);

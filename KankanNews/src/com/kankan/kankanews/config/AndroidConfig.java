@@ -23,6 +23,9 @@ public class AndroidConfig {
 	// 新闻详细数据
 	public static final String NewContent = "/info/show/";
 
+	// 新闻详细数据(推送版)
+	public static final String NewContentPush = "/v5/boardcast/appid/";
+
 	// 评论数据——新闻内容页
 	public static final String NewContentComment = "/comments/show/";
 
@@ -66,7 +69,7 @@ public class AndroidConfig {
 	public static final int REVELATIONS_FRAGMENT_REQUEST_NO = 4001;
 	public static final int REVELATIONS_FRAGMENT_RESULT_OK = 4002;
 	public static final int REVELATIONS_FRAGMENT_RESULT_CANCEL = 4003;
-	
+
 	// 页面统计-ID
 	// 首页-最新
 	public static final String new_news_page = "PageView_timeline"; // "最新"
@@ -147,7 +150,16 @@ public class AndroidConfig {
 
 	// 获得热门推荐接口
 	public static final String New_Recommend = "http://api.app.kankanews.com/index.php/kankan/v5/content/recommend_timeline";
-	
-	//最大图片可选
+
+	// ------------------------------------------------------------------报料------------------------------------------------------------------------
+	// 最大图片可选
 	public static final int MAX_PIC_SELECTED = 4;
+	// 报料图片上传接口
+	public static final String REVELATIONS_IMAGE_POST = "http://api.app.kankanews.com/kankan/v5/test/pic/1";
+
+	public static final String RESPONSE_CODE_OK = "200";
+	
+	// 报料信息上传接口
+	public static final String REVELATIONS_CONTENT_POST = "http://api.app.kankanews.com/kankan/v5/test/message/1";
+
 }
