@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/revelations_post_content_edittext_shape"
                     android:gravity="left|top"
-                    android:hint="@string/main_post_content_hint"
+                    android:hint="请简单描述您的报料内容"
                     android:inputType="textMultiLine"
                     android:maxLines="6"
                     android:minLines="6"
@@ -86,7 +86,8 @@
                     android:layout_marginLeft="14dip"
                     android:layout_marginBottom="10dip"
                     android:visibility="visible"
-                    android:src="@drawable/ic_logo" />
+                    android:src="@drawable/revelations_add_pic"
+        			android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/revelations_image_two"
@@ -96,7 +97,8 @@
                     android:layout_marginLeft="14dip"
                     android:layout_marginBottom="10dip"
                     android:visibility="invisible"
-                    android:src="@drawable/ic_logo" />
+                    android:src="@drawable/revelations_add_pic"
+        			android:scaleType="centerCrop"  />
 
                 <ImageView
                     android:id="@+id/revelations_image_three"
@@ -106,7 +108,8 @@
                     android:layout_marginLeft="14dip"
                     android:layout_marginBottom="10dip"
                     android:visibility="invisible"
-                    android:src="@drawable/ic_logo" />
+                    android:src="@drawable/revelations_add_pic"
+        			android:scaleType="centerCrop"  />
 
                 <ImageView
                     android:id="@+id/revelations_image_four"
@@ -116,7 +119,8 @@
                     android:layout_marginLeft="14dip"
                     android:layout_marginBottom="10dip"
                     android:visibility="invisible"
-                    android:src="@drawable/ic_logo" />
+                    android:src="@drawable/revelations_add_pic"
+        			android:scaleType="centerCrop"  />
             </LinearLayout>
 
             <TextView

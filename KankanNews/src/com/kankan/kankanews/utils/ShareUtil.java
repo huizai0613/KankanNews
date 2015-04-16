@@ -83,7 +83,7 @@ public class ShareUtil {
 				if (eCode == StatusCode.ST_CODE_SUCCESSED) {
 					ToastUtils.Infotoast(activity, "分享成功");
 				} else if (eCode == StatusCode.ST_CODE_ERROR_CANCEL) {
-					ToastUtils.Infotoast(activity, "分享取消");
+//					ToastUtils.Infotoast(activity, "分享取消");
 				} else {
 					ToastUtils.Infotoast(activity, "分享失败");
 				}

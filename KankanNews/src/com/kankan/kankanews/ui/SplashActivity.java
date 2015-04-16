@@ -71,7 +71,7 @@ public class SplashActivity extends BaseActivity {
 		mPushAgent.onAppStart();
 		mPushAgent.enable();
 		
-		Log.e("UmengRegistrar", UmengRegistrar.getRegistrationId(this));
+//		Log.e("UmengRegistrar", UmengRegistrar.getRegistrationId(this));
 		
 		mApplication.setStart(true);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);

@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,6 +33,7 @@ import com.kankan.kankanews.utils.ImageLoader;
 import com.kankan.kankanews.utils.ImageLoader.Type;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.ToastUtils;
+import com.kankan.kankannews.picsel.PicPreviewActivity;
 import com.kankan.kankannews.picsel.PicSelectedMainActivity;
 import com.kankanews.kankanxinwen.R;
 
@@ -83,7 +83,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 				.findViewById(R.id.revelations_image_four);
 		imageViews = new ImageView[] { imageOne, imageTwo, imageThree,
 				imageFour };
-		initTitle_Right_Left_bar(inflate, "看看爆料", "", "", "#ffffff", 0, 0,
+		initTitle_Right_Left_bar(inflate, "看看报料", "", "", "#ffffff", 0, 0,
 				"#000000", "#000000");
 	}
 
@@ -157,15 +157,32 @@ public class New_RevelationsFragment extends BaseFragment implements
 		int id = v.getId();
 		switch (id) {
 		case R.id.revelations_image_one:
+			if(imagesSelected.size() == 0){
+				goSelect();
+			}else{
+				foPreview();
+			}
+			break;
 		case R.id.revelations_image_two:
+			if(imagesSelected.size() == 1){
+				goSelect();
+			}else{
+				foPreview();
+			}
+			break;
 		case R.id.revelations_image_three:
-		case R.id.revelations_image_four:
-			Intent intent = new Intent(this.getActivity(),
-					PicSelectedMainActivity.class);
-			intent.putExtra("IMAGE_SELECTED_LIST",
-					(Serializable) imagesSelected);
-			this.startActivityForResult(intent,
-					AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
+			if(imagesSelected.size() == 2){
+				goSelect();
+			}else{
+				foPreview();
+			}
+			break;
+		case R.id.revelations_image_four: 
+			if(imagesSelected.size() == 3){
+				goSelect();
+			}else{
+				foPreview();
+			}
 			break;
 		case R.id.revelations_post_button:
 //			new Thread(new Runnable() {
@@ -193,9 +210,29 @@ public class New_RevelationsFragment extends BaseFragment implements
 			} 
 			postBut.setText("正在提交");
 			postBut.setEnabled(false);
-			postBut.setBackgroundColor(Color.parseColor("#ededed"));
+			postBut.setBackgroundColor(Color.parseColor("#BEBEBE"));
 			break;
 		}
+	}
+
+	private void goSelect() {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent(this.getActivity(),
+				PicSelectedMainActivity.class);
+		intent.putExtra("IMAGE_SELECTED_LIST",
+				(Serializable) imagesSelected);
+		this.startActivityForResult(intent,
+				AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
+	}
+
+	private void foPreview() {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent(this.getActivity(),
+				PicPreviewActivity.class);
+		intent.putExtra("IMAGE_SELECTED_LIST",
+				(Serializable) imagesSelected);
+		this.startActivityForResult(intent,
+				AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
 	}
 
 	@Override
@@ -222,7 +259,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 						imagesSelected.get(i), imageViews[i]);
 				imageViews[i].setVisibility(View.VISIBLE);
 			} else if (i == imagesSelected.size()) {
-				imageViews[i].setImageResource(R.drawable.ic_logo);
+				imageViews[i].setImageResource(R.drawable.revelations_add_pic);
 				imageViews[i].setVisibility(View.VISIBLE);
 			} else {
 				imageViews[i].setVisibility(View.INVISIBLE);
@@ -289,7 +326,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 		contentText.setText("");
 		imagesSelected.clear();
 		imagesSelectedUrl.clear();
-		imageOne.setImageResource(R.drawable.ic_logo);
+		imageOne.setImageResource(R.drawable.revelations_add_pic);
 		imageOne.setVisibility(View.VISIBLE);
 		imageTwo.setVisibility(View.INVISIBLE);
 		imageThree.setVisibility(View.INVISIBLE);

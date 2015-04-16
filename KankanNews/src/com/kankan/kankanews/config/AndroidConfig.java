@@ -155,11 +155,11 @@ public class AndroidConfig {
 	// 最大图片可选
 	public static final int MAX_PIC_SELECTED = 4;
 	// 报料图片上传接口
-	public static final String REVELATIONS_IMAGE_POST = "http://api.app.kankanews.com/kankan/v5/test/pic/1";
+	public static final String REVELATIONS_IMAGE_POST = "http://api.app.kankanews.com/kankan/v5/newsbreak/pic/1";
 
 	public static final String RESPONSE_CODE_OK = "200";
 	
 	// 报料信息上传接口
-	public static final String REVELATIONS_CONTENT_POST = "http://api.app.kankanews.com/kankan/v5/test/message/1";
+	public static final String REVELATIONS_CONTENT_POST = "http://api.app.kankanews.com/kankan/v5/newsbreak/message/1";
 
 }

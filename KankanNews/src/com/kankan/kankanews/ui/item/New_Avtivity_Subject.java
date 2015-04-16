@@ -999,7 +999,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 			ToastUtils.Infotoast(mContext, "分享成功");
 			break;
 		case WBConstants.ErrorCode.ERR_CANCEL:
-			ToastUtils.Infotoast(mContext, "分享取消");
+//			ToastUtils.Infotoast(mContext, "分享取消");
 			break;
 		case WBConstants.ErrorCode.ERR_FAIL:
 			ToastUtils.Infotoast(mContext, "分享失败");
