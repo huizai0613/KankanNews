@@ -1,5 +1,6 @@
 package com.kankan.kankannews.picsel;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
+import com.kankan.kankanews.config.AndroidConfig;
 import com.kankanews.kankanxinwen.R;
 
 public class PicPreviewActivity extends BaseActivity implements
@@ -173,12 +175,17 @@ public class PicPreviewActivity extends BaseActivity implements
 		int id = v.getId();
 		switch(id){
 		case R.id.pic_preview_ok:
+			getIntent().putExtra("NEW_IMAGE_SELECTED_LIST", (Serializable)imagesSelected);
+	        setResult(AndroidConfig.REVELATIONS_FRAGMENT_RESULT_OK, getIntent());
+	        finish();
+			break;
 		case R.id.pic_preview_cancel:
+	        setResult(AndroidConfig.REVELATIONS_FRAGMENT_RESULT_CANCEL);
+	        finish();
+	        break;
+			
 		case R.id.pic_preview_delete:
 			int curNo = imgViewPage.getCurrentItem();
-//			imgViewPage.removeViewAt(curNo);
-//			imagesSelected.remove(curNo);
-//			imgViewPage.getAdapter().notifyDataSetChanged();
 			if(curNo == 0){
 				if(sumImg ==0){
 					
@@ -192,6 +199,7 @@ public class PicPreviewActivity extends BaseActivity implements
 			ImageView image = imageViews.get(curNo);
 			imageViews.remove(image);
 			imgViewPage.removeView(image);
+			((BitmapDrawable) (image).getDrawable()).getBitmap().recycle();
 			imgViewPage.getAdapter().notifyDataSetChanged();
 			numPic.setText((curNo) + "");
 			sumImg--;
@@ -220,5 +228,18 @@ public class PicPreviewActivity extends BaseActivity implements
 	public void onPageSelected(int arg0) { 
 		numPic.setText((arg0 + 1) + "");
 	}
-
+	
+	@Override
+    public void onBackPressed() {
+        setResult(AndroidConfig.REVELATIONS_FRAGMENT_RESULT_CANCEL);
+        super.onBackPressed();
+    }
+	
+	@Override
+    public void finish() {
+        for (ImageView image : imageViews) {
+			((BitmapDrawable) (image).getDrawable()).getBitmap().recycle();
+		}
+        super.finish();
+    }
 }
