@@ -7,7 +7,6 @@ import java.util.List;
 import org.json.JSONObject;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -20,11 +19,13 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.config.AndroidConfig;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankanews.kankanxinwen.R;
 
 public class PicPreviewActivity extends BaseActivity implements
@@ -36,11 +37,10 @@ public class PicPreviewActivity extends BaseActivity implements
 	private Button delBut;
 	private TextView sumPic;
 	private TextView numPic;
-//	private LinearLayout showLayout;
+	private LinearLayout showLayout;
 	private List<String> imagesSelected = new LinkedList<String>();
 	private List<ImageView> imageViews = new LinkedList<ImageView>();
 	private int sumImg = 0;
- 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,28 @@ public class PicPreviewActivity extends BaseActivity implements
 		delBut = (Button) this.findViewById(R.id.pic_preview_delete);
 		sumPic = (TextView) this.findViewById(R.id.pic_preview_sum);
 		numPic = (TextView) this.findViewById(R.id.pic_preview_num);
-//		showLayout = (LinearLayout) this.findViewById(R.id.pic_preview_show);
+		showLayout = (LinearLayout) this.findViewById(R.id.pic_preview_show);
+		showLayout.post(new Runnable() {
+			@Override
+			public void run() {
+				LayoutParams layoutParams = new LayoutParams(showLayout.getWidth(),
+						showLayout.getHeight());
+				for (int i = 0; i < imagesSelected.size(); i++) {
+					ImageView image = new ImageView(PicPreviewActivity.this);
+					
+					image.setLayoutParams(layoutParams);
+					// ImageLoader.getInstance(1, Type.LIFO).loadImage(
+					// imagesSelected.get(i), image);
+					Bitmap bit = ImgUtils.decodeImage(imagesSelected.get(i),
+							image.getLayoutParams().width, image.getLayoutParams().height);
+					image.setImageBitmap(bit);
+					imageViews.add(image);
+					imgViewPage.addView(image);
+				}
 
+				imgViewPage.setAdapter(new ViewPagerAdapter());
+			}
+		});
 	}
 
 	@Override
@@ -69,26 +89,10 @@ public class PicPreviewActivity extends BaseActivity implements
 		List<String> mainSeleted = (List<String>) this.getIntent()
 				.getSerializableExtra("IMAGE_SELECTED_LIST");
 		imagesSelected.addAll(mainSeleted);
-
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.MATCH_PARENT);
-		for (int i = 0; i < imagesSelected.size(); i++) {
-			ImageView image = new ImageView(this);
-
-			image.setLayoutParams(layoutParams);
-//			ImageLoader.getInstance(1, Type.LIFO).loadImage(
-//					imagesSelected.get(i), image);
-			Bitmap bit = BitmapFactory.decodeFile(imagesSelected.get(i));
-			image.setImageBitmap(bit);
-			imageViews.add(image);
-			imgViewPage.addView(image);
-		}
-		
-		imgViewPage.setAdapter(new ViewPagerAdapter());
-		
+ 
 		sumImg = imagesSelected.size();
-		
-		sumPic.setText("/" + sumImg + "张");
+
+		sumPic.setText("/" + sumImg);
 		numPic.setText("1");
 	}
 
@@ -100,9 +104,10 @@ public class PicPreviewActivity extends BaseActivity implements
 		// 销毁arg1位置的界面
 		@Override
 		public void destroyItem(View arg0, int arg1, Object arg2) {
-//			((BitmapDrawable) (imageViews.get(arg1)).getDrawable()).getBitmap().recycle();
-//			((ViewPager) arg0).removeView(imageViews.get(arg1));
-//			imageViews.get(arg1).setImageBitmap(null);
+			// ((BitmapDrawable)
+			// (imageViews.get(arg1)).getDrawable()).getBitmap().recycle();
+			// ((ViewPager) arg0).removeView(imageViews.get(arg1));
+			// imageViews.get(arg1).setImageBitmap(null);
 			return;
 		}
 
@@ -141,22 +146,23 @@ public class PicPreviewActivity extends BaseActivity implements
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
 			ImageView image = imageViews.get(position);
-			Bitmap bit = BitmapFactory.decodeFile(imagesSelected.get(position));
+			Bitmap bit = ImgUtils.decodeImage(imagesSelected.get(position),
+					showLayout.getWidth(), showLayout.getHeight());
 			image.setImageBitmap(bit);
-			if(image.getParent() == null){
+			if (image.getParent() == null) {
 				container.addView(image);
-			} else{
-				 ((ViewGroup)image.getParent()).removeView(image);
-				 container.addView(image); 
+			} else {
+				((ViewGroup) image.getParent()).removeView(image);
+				container.addView(image);
 			}
 			return image;
 		}
 
 		@Override
 		public int getItemPosition(Object object) {
-		    return POSITION_NONE;
+			return POSITION_NONE;
 		}
-		
+
 	}
 
 	@Override
@@ -167,79 +173,89 @@ public class PicPreviewActivity extends BaseActivity implements
 		cancelBut.setOnClickListener(this);
 		delBut.setOnClickListener(this);
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
+
 		int id = v.getId();
-		switch(id){
+		switch (id) {
 		case R.id.pic_preview_ok:
-			getIntent().putExtra("NEW_IMAGE_SELECTED_LIST", (Serializable)imagesSelected);
-	        setResult(AndroidConfig.REVELATIONS_FRAGMENT_RESULT_OK, getIntent());
-	        finish();
+			getIntent().putExtra("NEW_IMAGE_SELECTED_LIST",
+					(Serializable) imagesSelected);
+			setResult(AndroidConfig.REVELATIONS_FRAGMENT_RESULT_OK, getIntent());
+			finish();
 			break;
 		case R.id.pic_preview_cancel:
-	        setResult(AndroidConfig.REVELATIONS_FRAGMENT_RESULT_CANCEL);
-	        finish();
-	        break;
-			
+			setResult(AndroidConfig.REVELATIONS_FRAGMENT_RESULT_CANCEL);
+			finish();
+			break;
+
 		case R.id.pic_preview_delete:
 			int curNo = imgViewPage.getCurrentItem();
-			if(curNo == 0){
-				if(sumImg ==0){
-					
-				}else {
-					imgViewPage.setCurrentItem(1);
-				}
-			}else{
-				imgViewPage.setCurrentItem(curNo - 1);
+			if (curNo == 0 && sumImg == 1) {
+				getIntent().putExtra("NEW_IMAGE_SELECTED_LIST",
+						(Serializable) new LinkedList<String>());
+				setResult(AndroidConfig.REVELATIONS_FRAGMENT_RESULT_OK,
+						getIntent());
+				finish();
+				break;
 			}
+			imgViewPage.setCurrentItem(curNo);
 			imagesSelected.remove(curNo);
 			ImageView image = imageViews.get(curNo);
 			imageViews.remove(image);
 			imgViewPage.removeView(image);
 			((BitmapDrawable) (image).getDrawable()).getBitmap().recycle();
 			imgViewPage.getAdapter().notifyDataSetChanged();
-			numPic.setText((curNo) + "");
+			numPic.setText((imgViewPage.getCurrentItem() + 1) + "");
 			sumImg--;
-			sumPic.setText("/" + sumImg + "张");
+			sumPic.setText("/" + sumImg);
 			break;
 		}
 	}
 
 	@Override
-	protected void onSuccess(JSONObject jsonObject) { 
+	protected void onSuccess(JSONObject jsonObject) {
 	}
 
 	@Override
-	protected void onFailure(VolleyError error) { 
+	protected void onFailure(VolleyError error) {
 	}
 
 	@Override
-	public void onPageScrollStateChanged(int arg0) { 
+	public void onPageScrollStateChanged(int arg0) {
 	}
 
 	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) { 
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
 	}
 
 	@Override
-	public void onPageSelected(int arg0) { 
+	public void onPageSelected(int arg0) {
 		numPic.setText((arg0 + 1) + "");
 	}
-	
+
 	@Override
-    public void onBackPressed() {
-        setResult(AndroidConfig.REVELATIONS_FRAGMENT_RESULT_CANCEL);
-        super.onBackPressed();
-    }
-	
+	public void onBackPressed() {
+		setResult(AndroidConfig.REVELATIONS_FRAGMENT_RESULT_CANCEL);
+		super.onBackPressed();
+	}
+
 	@Override
-    public void finish() {
-        for (ImageView image : imageViews) {
-			((BitmapDrawable) (image).getDrawable()).getBitmap().recycle();
+	public void finish() {
+		if(imgViewPage != null){
+			imgViewPage.removeAllViews();
+			imgViewPage.setAdapter(null);
+			imgViewPage = null;
 		}
-        super.finish();
-    }
+		if(imageViews != null){
+			for (ImageView image : imageViews) {
+				((BitmapDrawable) (image).getDrawable()).getBitmap().recycle();
+			}
+			imageViews = null;
+		}
+		System.gc();
+		super.finish();
+	}
 }

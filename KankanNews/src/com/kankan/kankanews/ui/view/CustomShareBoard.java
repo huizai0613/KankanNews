@@ -15,6 +15,7 @@ import android.widget.PopupWindow;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.utils.ShareUtil;
+import com.kankan.kankannews.bean.interfaz.CanSharedBySina;
 import com.kankanews.kankanxinwen.R;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -25,11 +26,13 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	private BaseActivity mActivity;
 	private ShareUtil shareUtil;
+	private CanSharedBySina shareObj;
 
-	public CustomShareBoard(BaseActivity activity, ShareUtil shareUtil) {
+	public CustomShareBoard(BaseActivity activity, ShareUtil shareUtil, CanSharedBySina shareObj) {
 		super(activity);
 		this.mActivity = activity;
 		this.shareUtil = shareUtil;
+		this.shareObj = shareObj;
 		initView(activity);
 	}
 
@@ -68,10 +71,10 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			shareUtil.directShare(SHARE_MEDIA.EMAIL);
 			break;
 		case R.id.sina_box:
-			mActivity.sendSingleMessage();
+			shareObj.sendSingleMessage();
 			break;
 		case R.id.refresh_box:
-			mActivity.refresh();
+			shareObj.refresh();
 			break;
 		default:
 			break;

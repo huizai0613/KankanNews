@@ -47,6 +47,7 @@ import com.kankan.kankanews.utils.TimeUtil;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.http.HttpHandler;
 import com.umeng.message.PushAgent;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends BaseActivity {

@@ -10,7 +10,6 @@ import io.vov.vitamio.widget.VideoView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.TimeZone;
 
@@ -24,7 +23,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,27 +52,37 @@ import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.receiver.AlarmReceiver;
+import com.kankan.kankanews.sina.AccessTokenKeeper;
 import com.kankan.kankanews.sina.Constants;
-import com.kankan.kankanews.ui.MainActivity;
+import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
-import com.kankan.kankanews.utils.PixelUtil;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankan.kankanews.utils.XunaoLog;
+import com.kankan.kankannews.bean.interfaz.CanSharedBySina;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.exception.DbException;
+import com.sina.weibo.sdk.api.ImageObject;
+import com.sina.weibo.sdk.api.TextObject;
+import com.sina.weibo.sdk.api.WeiboMultiMessage;
 import com.sina.weibo.sdk.api.share.BaseResponse;
 import com.sina.weibo.sdk.api.share.IWeiboHandler;
 import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
+import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
 import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+import com.sina.weibo.sdk.auth.AuthInfo;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.sina.weibo.sdk.auth.WeiboAuthListener;
 import com.sina.weibo.sdk.constant.WBConstants;
+import com.sina.weibo.sdk.exception.WeiboException;
 
 public class New_LivePlayFragment extends BaseFragment implements
 		OnInfoListener, IWeiboHandler.Response, OnCompletionListener, OnErrorListener, OnClickListener,
-		OnPreparedListener {
+		OnPreparedListener, CanSharedBySina {
 
 	private View inflate;
 	private RelativeLayout smallrootview;
@@ -507,6 +517,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 							.setImageResource(R.drawable.xwzh);
 					mViewHolderLive.new_item_liveplay_live_bg
 							.setBackgroundResource(R.drawable.livebg3);
+					mViewHolderLive.new_item_liveplay_content
+							.setVisibility(View.GONE);
 				} else if (new_LivePlay.getCatename().equals("东方卫视")) {
 					mViewHolderLive.new_item_liveplay_but
 							.setVisibility(View.GONE);
@@ -518,6 +530,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 							.setImageResource(R.drawable.dfws);
 					mViewHolderLive.new_item_liveplay_live_bg
 							.setBackgroundResource(R.drawable.livebg4);
+					mViewHolderLive.new_item_liveplay_content
+					.setVisibility(View.GONE);
 				} else {
 					mViewHolderLive.new_item_liveplay_live_ic
 							.setVisibility(View.GONE);
@@ -567,7 +581,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 								.setVisibility(View.GONE);
 					}
 
-					final boolean new_item_liveplay_content_show1 = mViewHolderLive.new_item_liveplay_content
+					final boolean new_item_liveplay_content_show = mViewHolderLive.new_item_liveplay_content
 							.getVisibility() == View.VISIBLE;
 
 					mViewHolderLive.new_item_liveplay_content
@@ -578,7 +592,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 								public void onClick(View v) {
 									curPosition = position;
 
-									if (new_item_liveplay_content_show1) {
+									if (new_item_liveplay_content_show) {
 										isShow = false;
 									} else {
 										isShow = true;
@@ -854,7 +868,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 			
 			shareUtil = new ShareUtil(nowLiveNew, this.getActivity());
 			// 一键分享
-			CustomShareBoard shareBoard = new CustomShareBoard((BaseActivity)this.getActivity(), shareUtil);
+			CustomShareBoard shareBoard = new CustomShareBoard((BaseActivity)this.mActivity, shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(this.getActivity().getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
@@ -921,6 +935,77 @@ public class New_LivePlayFragment extends BaseFragment implements
 			break;
 		}
 
+	}
+	
+	public void sendSingleMessage() {
+		new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				// 1. 初始化微博的分享消息
+				WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
+				// 创建媒体消息
+				// weiboMultiMessage.mediaObject = getVideoObj();
+				TextObject textObject = new TextObject();
+				textObject.text = nowLiveNew.getTitlelist() + "-看看新闻 "
+						+ nowLiveNew.getTitleurl() + " （分享自@看看新闻网） ";
+				ImageObject imageObject = new ImageObject();
+				Bitmap shareImg = ImgUtils.getNetImage(nowLiveNew.getTitlepic());
+				if(shareImg == null){
+					BitmapDrawable draw=(BitmapDrawable) getResources().getDrawable(R.drawable.ic_logo);
+					shareImg=draw.getBitmap();
+				}
+				imageObject.setImageObject(shareImg);
+				weiboMultiMessage.textObject = textObject;
+				weiboMultiMessage.imageObject = imageObject;
+				// 2. 初始化从第三方到微博的消息请求
+				SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
+				// 用transaction唯一标识一个请求
+				request.transaction = String.valueOf(System.currentTimeMillis());
+				request.multiMessage = weiboMultiMessage;
+
+				AuthInfo authInfo = new AuthInfo(New_LivePlayFragment.this.mActivity, Constants.APP_KEY,
+						Constants.REDIRECT_URL, Constants.SCOPE);
+				Oauth2AccessToken accessToken = AccessTokenKeeper
+						.readAccessToken(New_LivePlayFragment.this.mActivity.getApplicationContext());
+				String token = "";
+				if (accessToken != null) {
+					token = accessToken.getToken();
+				}
+				boolean hasSucceed = mWeiboShareAPI.sendRequest(New_LivePlayFragment.this.mActivity, request, authInfo, token,
+						new WeiboAuthListener() {
+
+							@Override
+							public void onWeiboException(WeiboException arg0) {
+								ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享失败");
+							}
+
+							@Override
+							public void onComplete(Bundle bundle) {
+								// TODO Auto-generated method stub
+								Oauth2AccessToken newToken = Oauth2AccessToken
+										.parseAccessToken(bundle);
+								AccessTokenKeeper.writeAccessToken(
+										New_LivePlayFragment.this.mActivity.getApplicationContext(), newToken);
+								// Toast.makeText(
+								// getApplicationContext(),
+								// "onAuthorizeComplete token = "
+								// + newToken.getToken(), 0).show();
+								ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享成功");
+							}
+
+							@Override
+							public void onCancel() {
+								ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享取消");
+							}
+						});
+				if(hasSucceed)
+					ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享成功");
+			}
+			
+		}).start();
+		
 	}
 
 }

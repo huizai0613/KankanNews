@@ -19,6 +19,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -50,9 +51,11 @@ import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.sina.AccessTokenKeeper;
 import com.kankan.kankanews.sina.Constants;
+import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
@@ -828,7 +831,8 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 			shareUtil = new ShareUtil(new_news, mContext);
 
 			// 一键分享
-			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil);
+			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
+					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
@@ -915,49 +919,60 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	}
 
 	public void sendSingleMessage() {
-		// 1. 初始化微博的分享消息
-		WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
-		// 创建媒体消息
-		// weiboMultiMessage.mediaObject = getVideoObj();
-		TextObject textObject = new TextObject();
-		textObject.text = title + "-看看新闻 " + titleurl + " （分享自@看看新闻网） ";
-		ImageObject imageObject = new ImageObject();
-		imageObject.setImageObject(getThumbBitmap());
-		weiboMultiMessage.textObject = textObject;
-		weiboMultiMessage.imageObject = imageObject;
-		// 2. 初始化从第三方到微博的消息请求
-		SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-		// 用transaction唯一标识一个请求
-		request.transaction = String.valueOf(System.currentTimeMillis());
-		request.multiMessage = weiboMultiMessage;
+		new Thread(new Runnable() {
 
-		AuthInfo authInfo = new AuthInfo(this, Constants.APP_KEY,
-				Constants.REDIRECT_URL, Constants.SCOPE);
-		Oauth2AccessToken accessToken = AccessTokenKeeper
-				.readAccessToken(getApplicationContext());
-		String token = "";
-		if (accessToken != null) {
-			token = accessToken.getToken();
-		}
-		mWeiboShareAPI.sendRequest(this, request, authInfo, token,
-				new WeiboAuthListener() {
+			@Override
+			public void run() {
+				// 1. 初始化微博的分享消息
+				WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
+				// 创建媒体消息
+				// weiboMultiMessage.mediaObject = getVideoObj();
+				TextObject textObject = new TextObject();
+				textObject.text = title + "-看看新闻 " + titleurl + " （分享自@看看新闻网） ";
+				ImageObject imageObject = new ImageObject();
+				imageObject.setImageObject(getThumbBitmap());
+				weiboMultiMessage.textObject = textObject;
+				weiboMultiMessage.imageObject = imageObject;
+				// 2. 初始化从第三方到微博的消息请求
+				SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
+				// 用transaction唯一标识一个请求
+				request.transaction = String
+						.valueOf(System.currentTimeMillis());
+				request.multiMessage = weiboMultiMessage;
 
-					@Override
-					public void onWeiboException(WeiboException arg0) {
-					}
+				AuthInfo authInfo = new AuthInfo(New_Avtivity_Subject.this,
+						Constants.APP_KEY, Constants.REDIRECT_URL,
+						Constants.SCOPE);
+				Oauth2AccessToken accessToken = AccessTokenKeeper
+						.readAccessToken(getApplicationContext());
+				String token = "";
+				if (accessToken != null) {
+					token = accessToken.getToken();
+				}
+				mWeiboShareAPI.sendRequest(New_Avtivity_Subject.this, request,
+						authInfo, token, new WeiboAuthListener() {
 
-					@Override
-					public void onComplete(Bundle bundle) {
-						Oauth2AccessToken newToken = Oauth2AccessToken
-								.parseAccessToken(bundle);
-						AccessTokenKeeper.writeAccessToken(
-								getApplicationContext(), newToken);
-					}
+							@Override
+							public void onWeiboException(WeiboException arg0) {
+							}
 
-					@Override
-					public void onCancel() {
-					}
-				});
+							@Override
+							public void onComplete(Bundle bundle) {
+								Oauth2AccessToken newToken = Oauth2AccessToken
+										.parseAccessToken(bundle);
+								AccessTokenKeeper.writeAccessToken(
+										getApplicationContext(), newToken);
+								ToastUtils.Infotoast(New_Avtivity_Subject.this, "分享成功");
+							}
+
+							@Override
+							public void onCancel() {
+								ToastUtils.Infotoast(New_Avtivity_Subject.this, "分享取消");
+							}
+						});
+
+			}
+		}).start();
 	}
 
 	/**
@@ -967,10 +982,29 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		options.inPreferredConfig = Bitmap.Config.RGB_565;
+		// Bitmap decodeFile = BitmapFactory.decodeFile(CommonUtils
+		// .getImageCachePath(mContext)
+		// + "/"
+		// + CommonUtils.generate(titlepic));
 		Bitmap decodeFile = BitmapFactory.decodeFile(CommonUtils
 				.getImageCachePath(mContext)
 				+ "/"
 				+ CommonUtils.generate(titlepic));
+
+		if (decodeFile == null) {
+			decodeFile = BitmapFactory.decodeFile(CommonUtils
+					.getImageCachePath(mContext)
+					+ "/"
+					+ "big_"
+					+ CommonUtils.generate(titlepic));
+		}
+		if(decodeFile == null){
+			decodeFile = ImgUtils.getNetImage(titlepic);
+			if(decodeFile == null){
+				BitmapDrawable draw=(BitmapDrawable) getResources().getDrawable(R.drawable.ic_logo);
+				decodeFile=draw.getBitmap();
+			}
+		}
 		int byteCount = decodeFile.getRowBytes();
 		int height2 = decodeFile.getHeight();
 		long mem = height2 * byteCount;
@@ -999,7 +1033,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 			ToastUtils.Infotoast(mContext, "分享成功");
 			break;
 		case WBConstants.ErrorCode.ERR_CANCEL:
-//			ToastUtils.Infotoast(mContext, "分享取消");
+			// ToastUtils.Infotoast(mContext, "分享取消");
 			break;
 		case WBConstants.ErrorCode.ERR_FAIL:
 			ToastUtils.Infotoast(mContext, "分享失败");

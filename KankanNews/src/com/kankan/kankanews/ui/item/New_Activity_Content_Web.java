@@ -40,9 +40,11 @@ import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.bean.New_News;
+import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.sina.AccessTokenKeeper;
 import com.kankan.kankanews.sina.Constants;
+import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.ProgressWebView;
@@ -400,12 +402,16 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 
 		switch (id) {
 		case R.id.com_title_bar_left_bt:
+			if(webView.canGoBack()){
+				webView.goBack();
+				break;
+			}
 			webFinish();
 			break;
 		case R.id.com_title_bar_right_bt:
 		case R.id.com_title_bar_right_tv:
 			// 一键分享
-			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil);
+			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
@@ -547,10 +553,12 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 								.parseAccessToken(bundle);
 						AccessTokenKeeper.writeAccessToken(
 								getApplicationContext(), newToken);
+						ToastUtils.Infotoast(New_Activity_Content_Web.this, "分享成功");
 					}
 
 					@Override
 					public void onCancel() {
+						ToastUtils.Infotoast(New_Activity_Content_Web.this, "分享取消");
 					}
 				});
 	}
@@ -558,6 +566,10 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if(webView.canGoBack()){
+				webView.goBack();
+				return true;
+			}
 			if (inCustomView()) {
 				hideCustomView();
 				return true;
@@ -572,7 +584,6 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 	private void webFinish(){
 		webView.loadUrl("about:blank");
 		finish();
-		onBackPressed();
 	}
 	
 	/**
@@ -792,6 +803,16 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 	@Override
 	public void refresh() {
 		webView.loadUrl(titleurl + "?fromkkApp=1");
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if(webView.canGoBack()){
+			webView.goBack();
+		}else {
+			webView.loadUrl("about:blank");
+			super.onBackPressed();
+		}
 	}
 
 }

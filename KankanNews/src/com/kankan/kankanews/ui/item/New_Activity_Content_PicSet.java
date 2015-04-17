@@ -418,7 +418,7 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 				shareUtil = new ShareUtil(new_news, mContext);
 			}
 			// 一键分享
-			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil);
+			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
@@ -467,10 +467,12 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 								.parseAccessToken(bundle);
 						AccessTokenKeeper.writeAccessToken(
 								getApplicationContext(), newToken);
+						ToastUtils.Infotoast(New_Activity_Content_PicSet.this, "分享成功");
 					}
 
 					@Override
 					public void onCancel() {
+						ToastUtils.Infotoast(New_Activity_Content_PicSet.this, "分享取消");
 					}
 				});
 	}

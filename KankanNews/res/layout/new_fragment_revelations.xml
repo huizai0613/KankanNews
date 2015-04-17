@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="10dp"
-                android:text="我的报料"
+                android:text="我要报料"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/revelations_post_content_edittext_shape"
                     android:gravity="left|top"
-                    android:hint="请简单描述您的报料内容"
+                    android:hint="上海电视台的记者会尽快处理"
                     android:inputType="textMultiLine"
                     android:maxLines="6"
                     android:minLines="6"
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="8dp"
-                android:text="照片(选填，提供报料相关照片)"
+                android:text="照片(选填、最多上传4张)"
                 android:textSize="16dp" />
 
             <LinearLayout
@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="8dp"
-                android:text="联系电话"
+                android:text="联系电话(必填)"
                 android:textSize="16dp" />
 			
             <EditText
@@ -138,7 +138,7 @@
                     android:layout_margin="5dp"
                     android:background="@drawable/revelations_post_content_edittext_shape"
                     android:gravity="left|top"
-                    android:hint="请输入您的手机号"
+                    android:hint="手机或固定电话，让我们找到您"
                     android:maxLength="11"
                     android:phoneNumber="true"
                     android:inputType="phone"

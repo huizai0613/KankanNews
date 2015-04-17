@@ -856,7 +856,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		case R.id.com_title_bar_right_bt:
 		case R.id.com_title_bar_right_tv:
 			// 一键分享
-			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil);
+			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
@@ -1390,14 +1390,14 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		Bitmap decodeFile = BitmapFactory.decodeFile(CommonUtils
 				.getImageCachePath(mContext)
 				+ "/"
-				+ CommonUtils.generate(new_news.getTitlepiclist()));
+				+ CommonUtils.generate(titlepiclist));
 
 		if (decodeFile == null) {
 			decodeFile = BitmapFactory.decodeFile(CommonUtils
 					.getImageCachePath(mContext)
 					+ "/"
 					+ "big_"
-					+ CommonUtils.generate(new_news.getTitlepiclist()));
+					+ CommonUtils.generate(titlepiclist));
 		}
 
 		int byteCount = decodeFile.getRowBytes();
@@ -1487,6 +1487,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 								.parseAccessToken(bundle);
 						AccessTokenKeeper.writeAccessToken(
 								getApplicationContext(), newToken);
+						ToastUtils.Infotoast(New_Activity_Content_Video.this, "分享成功");
 						// Toast.makeText(
 						// getApplicationContext(),
 						// "onAuthorizeComplete token = "
@@ -1495,6 +1496,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 					@Override
 					public void onCancel() {
+						ToastUtils.Infotoast(New_Activity_Content_Video.this, "分享取消");
 					}
 				});
 	}

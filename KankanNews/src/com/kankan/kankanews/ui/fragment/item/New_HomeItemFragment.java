@@ -842,6 +842,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				imagePagerAdapter.notifyDataSetChanged();
 			} else if (itemViewType == 1) {
 				final New_News_Home news = getmNewsList.get(newsPosition);
+				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
 				String clicktime = mClicks.get(news.getMid());
 				clicktime = TextUtils.isEmpty(clicktime) ? "0次" : clicktime
 						+ "次";
@@ -849,7 +850,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				newHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
 				CommonUtils.zoomImage(imageLoader,
-						CommonUtils.doWebpUrl(news.getTitlepic()),
+						news.getTitlepic(),
 						newHolder.titlepic, mActivity, imageCache);
 
 				// imageLoader.displayImage(news.getTitlepic(),
@@ -968,9 +969,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 			} else if (itemViewType == 4) {
 				final New_News_Home news = getmNewsList.get(newsPosition);
+				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
 				newZhuanTiHolder.title.setText(news.getTitle());
 				CommonUtils.zoomImage(imageLoader,
-						CommonUtils.doWebpUrl(news.getTitlepic()),
+						news.getTitlepic(),
 						newZhuanTiHolder.home_news_titlepic, mActivity);
 				// imageLoader.displayImage(news.getTitlepic(),
 				// newZhuanTiHolder.home_news_titlepic,
@@ -1010,7 +1012,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			mActivity.startAnimActivityByParameter(
 					New_Activity_Content_PicSet.class, news.getMid(),
 					news.getType(), news.getTitleurl(), news.getNewstime(),
-					pics[1], news.getTitle());
+					CommonUtils.doWebpUrl(pics[1]), news.getTitle());
 		} else if (news_type % 10 == 5) {
 			// 专题
 			mActivity.startSubjectActivityByParameter(

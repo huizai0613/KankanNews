@@ -668,9 +668,10 @@ public class CommonUtils {
 //										}
 
 										boolean compress = arg2.compress(
-												format, 100,
+												format, 80,
 												new FileOutputStream(file));
-//										options.inPreferredConfig = Bitmap.Config.RGB_565;
+										options.inPreferredConfig = Bitmap.Config.RGB_565;
+										options.inJustDecodeBounds = false;
 //										options.inSampleSize = insampSize >= 6 ? insampSize - 2
 //												: insampSize;
 //										Bitmap decodeFile = BitmapFactory
@@ -678,7 +679,7 @@ public class CommonUtils {
 //														file.getAbsolutePath(),
 //														options);
 //										Log.w("图片地址", file.getAbsolutePath());
-										Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath());
+										Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 										if (arg2 != null) {
 											arg2.recycle();
 										}
@@ -771,14 +772,14 @@ public class CommonUtils {
 //											: hround) + 2;
 //								}
 //
-//								options.inPreferredConfig = Bitmap.Config.RGB_565;
+								options.inPreferredConfig = Bitmap.Config.RGB_565;
 //								options.inSampleSize = insampSize >= 6 ? insampSize - 2
 //										: insampSize;
-//								options.inJustDecodeBounds = false;
+								options.inJustDecodeBounds = false;
 //								Bitmap decodeFilelock = BitmapFactory
 //										.decodeFile(file.getAbsolutePath(),
 //												options);
-								Bitmap decodeFilelock = BitmapFactory.decodeFile(file.getAbsolutePath());
+								Bitmap decodeFilelock = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 								return decodeFilelock;
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -910,7 +911,7 @@ public class CommonUtils {
 												.getImageCachePath(context),
 												CommonUtils.generate(titlepic));
 										boolean compress = arg2.compress(
-												format, 100,
+												format, 80,
 												new FileOutputStream(file));
 
 //										if (viewWidth == 0 && viewHeight == 0) {
@@ -938,7 +939,7 @@ public class CommonUtils {
 																.generate(titlepic));
 
 										boolean compress = arg2.compress(
-												format, 100,
+												format, 80,
 												new FileOutputStream(file));
 
 //										if (viewWidth == 0 && viewHeight == 0) {
@@ -953,12 +954,13 @@ public class CommonUtils {
 
 									}
 
-//									options.inPreferredConfig = Bitmap.Config.RGB_565;
+									options.inPreferredConfig = Bitmap.Config.RGB_565;
+									options.inJustDecodeBounds = false;
 //									options.inSampleSize = insampSize;
 //									Bitmap decodeFile = BitmapFactory
 //											.decodeFile(file.getAbsolutePath(),
 //													options);
-									Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath());
+									Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 									if (arg2 != null) {
 										arg2.recycle();
 									}
@@ -1080,12 +1082,13 @@ public class CommonUtils {
 							// whb=Math.round((float) width / (float)
 							// height);
 
-//							options.inPreferredConfig = Bitmap.Config.RGB_565;
+							options.inPreferredConfig = Bitmap.Config.RGB_565;
+							options.inJustDecodeBounds = false;
 //							options.inSampleSize = insampSize;
 //							options.inJustDecodeBounds = false;
 //							Bitmap decodeFilelock = BitmapFactory.decodeFile(
 //									file.getAbsolutePath(), options);
-							Bitmap decodeFilelock = BitmapFactory.decodeFile(file.getAbsolutePath());
+							Bitmap decodeFilelock = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
 
 							return new SoftReference<Bitmap>(decodeFilelock)
 									.get();

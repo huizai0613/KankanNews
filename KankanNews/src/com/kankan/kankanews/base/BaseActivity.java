@@ -3,7 +3,6 @@ package com.kankan.kankanews.base;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -40,13 +39,14 @@ import com.kankan.kankanews.ui.item.Activity_Login;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.SharePreferenceUtil;
 import com.kankan.kankanews.utils.XunaoLog;
+import com.kankan.kankannews.bean.interfaz.CanSharedBySina;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.DbUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
-public abstract class BaseActivity extends FragmentActivity {
+public abstract class BaseActivity extends FragmentActivity implements CanSharedBySina {
 
 	public DbUtils dbUtils;
 	protected Loading_Dialog loading_dialog;

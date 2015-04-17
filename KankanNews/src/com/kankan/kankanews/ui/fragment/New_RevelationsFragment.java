@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -83,7 +85,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 				.findViewById(R.id.revelations_image_four);
 		imageViews = new ImageView[] { imageOne, imageTwo, imageThree,
 				imageFour };
-		initTitle_Right_Left_bar(inflate, "看看报料", "", "", "#ffffff", 0, 0,
+		initTitle_Right_Left_bar(inflate, "我要报料", "", "", "#ffffff", 0, 0,
 				"#000000", "#000000");
 	}
 
@@ -157,57 +159,57 @@ public class New_RevelationsFragment extends BaseFragment implements
 		int id = v.getId();
 		switch (id) {
 		case R.id.revelations_image_one:
-			if(imagesSelected.size() == 0){
+			if (imagesSelected.size() == 0) {
 				goSelect();
-			}else{
+			} else {
 				foPreview();
 			}
 			break;
 		case R.id.revelations_image_two:
-			if(imagesSelected.size() == 1){
+			if (imagesSelected.size() == 1) {
 				goSelect();
-			}else{
+			} else {
 				foPreview();
 			}
 			break;
 		case R.id.revelations_image_three:
-			if(imagesSelected.size() == 2){
+			if (imagesSelected.size() == 2) {
 				goSelect();
-			}else{
+			} else {
 				foPreview();
 			}
 			break;
-		case R.id.revelations_image_four: 
-			if(imagesSelected.size() == 3){
+		case R.id.revelations_image_four:
+			if (imagesSelected.size() == 3) {
 				goSelect();
-			}else{
+			} else {
 				foPreview();
 			}
 			break;
 		case R.id.revelations_post_button:
-//			new Thread(new Runnable() {
-//
-//				@Override
-//				public void run() {
-//					// TODO Auto-generated method stub
-//					
-//					ImgUtils.send(imagesSelected.get(0));
-//				}
-//
-//			}).start();
-			if(contentText.getText().length() == 0){
+			// new Thread(new Runnable() {
+			//
+			// @Override
+			// public void run() {
+			// // TODO Auto-generated method stub
+			//
+			// ImgUtils.send(imagesSelected.get(0));
+			// }
+			//
+			// }).start();
+			if (contentText.getText().length() == 0) {
 				contentText.requestFocus();
 				ToastUtils.Errortoast(getActivity(), "报料内容不得为空");
 				break;
 			}
-			if(telText.getText().length() < 11){
+			if (telText.getText().length() == 0 || !isPhoneNum(telText.getText().toString())) {
 				telText.requestFocus();
-				ToastUtils.Errortoast(getActivity(), "请填写正确的手机号");
+				ToastUtils.Errortoast(getActivity(), "请填写正确的电话号码");
 				break;
 			}
 			if (CommonUtils.isNetworkAvailable(mActivity)) {
 				new PostTask().execute("");
-			} 
+			}
 			postBut.setText("正在提交");
 			postBut.setEnabled(false);
 			postBut.setBackgroundColor(Color.parseColor("#BEBEBE"));
@@ -215,22 +217,26 @@ public class New_RevelationsFragment extends BaseFragment implements
 		}
 	}
 
+	private boolean isPhoneNum(String phoneNum) {
+		// TODO Auto-generated method stub
+		Pattern pattern = Pattern.compile("(\\d{11})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))");
+		Matcher matcher = pattern.matcher(phoneNum);
+		return  matcher.matches();
+	}
+
 	private void goSelect() {
 		// TODO Auto-generated method stub
 		Intent intent = new Intent(this.getActivity(),
 				PicSelectedMainActivity.class);
-		intent.putExtra("IMAGE_SELECTED_LIST",
-				(Serializable) imagesSelected);
+		intent.putExtra("IMAGE_SELECTED_LIST", (Serializable) imagesSelected);
 		this.startActivityForResult(intent,
 				AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
 	}
 
 	private void foPreview() {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(this.getActivity(),
-				PicPreviewActivity.class);
-		intent.putExtra("IMAGE_SELECTED_LIST",
-				(Serializable) imagesSelected);
+		Intent intent = new Intent(this.getActivity(), PicPreviewActivity.class);
+		intent.putExtra("IMAGE_SELECTED_LIST", (Serializable) imagesSelected);
 		this.startActivityForResult(intent,
 				AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
 	}
@@ -274,30 +280,34 @@ public class New_RevelationsFragment extends BaseFragment implements
 		protected Map<String, String> doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			Map<String, String> taskResult = new HashMap<String, String>();
-			
+
 			for (int i = 0; i < imagesSelected.size(); i++) {
 				if (i < imagesSelectedUrl.size())
 					continue;
-				Map<String, String> response= ImgUtils.sendImage(imagesSelected.get(i));
-				if(response.get("ResponseCode").equals(AndroidConfig.RESPONSE_CODE_OK)){
+				Map<String, String> response = ImgUtils
+						.sendImage(imagesSelected.get(i));
+				if (response.get("ResponseCode").equals(
+						AndroidConfig.RESPONSE_CODE_OK)) {
 					imagesSelectedUrl.add(response.get("ResponseContent"));
-				} else{
+				} else {
 					taskResult.put("ResultCode", "ERROR");
 					taskResult.put("ResultText", "上传图片失败请重新上传");
 					return taskResult;
 				}
 			}
-			
+
 			String tel = telText.getText().toString();
 			String content = contentText.getText().toString();
 			StringBuffer imageUrls = new StringBuffer();
 			for (int i = 0; i < imagesSelectedUrl.size(); i++) {
 				imageUrls.append(imagesSelectedUrl.get(i));
-				if(i != imagesSelectedUrl.size() - 1)
+				if (i != imagesSelectedUrl.size() - 1)
 					imageUrls.append("|");
 			}
-//			instance.postRevelationContent(tel, content, imageUrls.toString(), this.mListenerObject, mErrorListener);
-			Map<String, String> result = ImgUtils.sendRevelationsContent(tel, content, imageUrls.toString());
+			// instance.postRevelationContent(tel, content,
+			// imageUrls.toString(), this.mListenerObject, mErrorListener);
+			Map<String, String> result = ImgUtils.sendRevelationsContent(tel,
+					content, imageUrls.toString());
 			taskResult.put("ResultCode", result.get("ResponseCode"));
 			taskResult.put("ResultText", result.get("ResponseContent"));
 			return taskResult;
@@ -307,10 +317,10 @@ public class New_RevelationsFragment extends BaseFragment implements
 		protected void onPostExecute(Map<String, String> result) {
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			if(result.get("ResultCode").equals(AndroidConfig.RESPONSE_CODE_OK)){
+			if (result.get("ResultCode").equals(AndroidConfig.RESPONSE_CODE_OK)) {
 				ToastUtils.Infotoast(getActivity(), "上传成功");
 				cleanRevelation();
-			} else{
+			} else {
 				ToastUtils.Errortoast(getActivity(), "内容上传失败请重新上传");
 				postBut.setText("提交");
 				postBut.setEnabled(true);
@@ -335,15 +345,15 @@ public class New_RevelationsFragment extends BaseFragment implements
 		postBut.setEnabled(true);
 		postBut.setBackgroundColor(Color.parseColor("#FF0000"));
 	}
-	
-	private void sendRevelationContent(){
+
+	private void sendRevelationContent() {
 
 	}
-	
-	private void sendImagesError(String msg){
+
+	private void sendImagesError(String msg) {
 		ToastUtils.Errortoast(getActivity(), msg);
 	}
-	
+
 	@Override
 	protected void onSuccessObject(JSONObject jsonObject) {
 		ToastUtils.Infotoast(getActivity(), jsonObject.toString());
@@ -354,7 +364,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 		// TODO Auto-generated method stub
 		ToastUtils.Errortoast(getActivity(), "内容上传失败请重新上传");
 	}
-	
+
 	@Override
 	protected boolean initLocalDate() {
 		// TODO Auto-generated method stub

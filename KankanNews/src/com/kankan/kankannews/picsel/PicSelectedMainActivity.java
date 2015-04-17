@@ -235,7 +235,7 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 									|| filename.endsWith(".png")
 									|| filename.endsWith(".PNG")
 									|| filename.endsWith(".jpeg")
-									|| filename.endsWith(".JPEG"))
+									|| filename.endsWith(".JPEG") && new File(dir+ "/" +filename).length() < AndroidConfig.MAX_SEL_IMG_LENGTH)
 								return true;
 							return false;
 						}
@@ -328,7 +328,8 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 			public boolean accept(File dir, String filename)
 			{
 				if (filename.endsWith(".jpg") || filename.endsWith(".png")
-						|| filename.endsWith(".jpeg"))
+						|| filename.endsWith(".jpeg") || filename.endsWith(".JPG") || filename.endsWith(".PNG")
+						|| filename.endsWith(".JPEG") && new File(dir+ "/" +filename).length() < AndroidConfig.MAX_SEL_IMG_LENGTH)
 					return true;
 				return false;
 			}
