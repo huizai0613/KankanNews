@@ -928,7 +928,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 			ToastUtils.Infotoast(this.mActivity, "分享成功");
 			break;
 		case WBConstants.ErrorCode.ERR_CANCEL:
-//			ToastUtils.Infotoast(this.mActivity, "分享取消");
+			ToastUtils.Infotoast(this.mActivity, "分享取消");
 			break;
 		case WBConstants.ErrorCode.ERR_FAIL:
 			ToastUtils.Infotoast(this.mActivity, "分享失败");
@@ -1000,8 +1000,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 								ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享取消");
 							}
 						});
-				if(hasSucceed)
-					ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享成功");
+//				mWeiboShareAPI.handleWeiboResponse(arg0, arg1)
+//				if(hasSucceed)
+//					ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享成功");
 			}
 			
 		}).start();

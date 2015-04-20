@@ -37,8 +37,7 @@
         <activity
             android:name="com.kankan.kankanews.ui.SplashActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme_s" >
+            android:screenOrientation="portrait" >
 
             <!-- android:theme="@style/AppTheme_s" -->
             <intent-filter>

@@ -484,7 +484,8 @@ public class New_ColumsFragment extends BaseFragment {
 	}
 
 	public void refresh() {
-		listview.setRefreshing(false);
+		if(listview != null)
+			listview.setRefreshing(false);
 	}
 
 }

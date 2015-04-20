@@ -140,6 +140,9 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		String appCaceDir = this.getApplicationContext()
 				.getDir("cache", Context.MODE_PRIVATE).getPath();
 		webSettings.setAppCachePath(appCaceDir);
+		  //适应屏幕 
+		webSettings.setUseWideViewPort(true);
+		webSettings.setLoadWithOverviewMode(true);  
 		if (CommonUtils.isNetworkAvailable(mContext)) {
 			webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 		} else {
@@ -156,7 +159,8 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
-
+		
+//		this.setRightFinsh(false);
 		// initVideoFull();
 
 	}

@@ -108,6 +108,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 	private boolean noMoreNews = false;
 
 	private boolean isPushNews = false;
+	
+	private ArrayList<String> new_has_click = new ArrayList<String>();
 
 	public HashMap<String, SoftReference<Bitmap>> getImageCache() {
 		return imageCache;
@@ -350,7 +352,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					saveLocalDate();
 					initTopImageAndPoint();
-					listview.setBackgroundColor(Color.parseColor("#f5f5f5"));
+					listview.setBackgroundColor(Color.parseColor("#BDBDBD"));
 					adapter = new TopAdapter();
 					listview.setAdapter(adapter);
 					listview.onRefreshComplete();
@@ -858,6 +860,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 				// Options.getSmallImageOptions(false));
 				newHolder.title.setText(news.getTitle());
 				newHolder.newstime.setText(clicktime);
+				if(new_has_click.contains(news.getId())){
+					newHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
+				} else{
+					newHolder.title.setTextColor(Color.parseColor("#000000"));
+				}
 				switch (news_type / 10) {
 				case 1:
 					newHolder.news_type
@@ -920,6 +927,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 					public void onClick(View v) {
 						//
 						openNews(news);
+						if(!new_has_click.contains(news.getId())){
+							MyTextView textView = (MyTextView)v.findViewById(R.id.home_news_title);
+							new_has_click.add(news.getId());
+							textView.setTextColor(Color.parseColor("#B0B0B0"));
+						}
 					}
 				});
 			} else if (itemViewType == 2) {
@@ -933,6 +945,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final String[] pics = news.getTitlepic().split("::::::");
 				ArrayList<ImageView> image_view_list = new ArrayList<ImageView>();
 
+				if(new_has_click.contains(news.getId())){
+					albumsHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
+				} else{
+					albumsHolder.title.setTextColor(Color.parseColor("#000000"));
+				}
 				int width = (mActivity.mScreenWidth - PixelUtil.dp2px(20) / 3);
 				albumsHolder.albums_image_1.setScaleType(ScaleType.CENTER_CROP);
 				albumsHolder.albums_image_1.setTag(R.string.viewwidth, width);
@@ -959,11 +976,15 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
-					public void onClick(View arg0) {
+					public void onClick(View v) {
 						// startAnimActivityByBean(New_ActivityPicSet.class,
 						// "news_content", news);
 						openNews(news);
-
+						if(!new_has_click.contains(news.getId())){
+							MyTextView textView = (MyTextView)v.findViewById(R.id.home_albums_title);
+							new_has_click.add(news.getId());
+							textView.setTextColor(Color.parseColor("#B0B0B0"));
+						}
 					}
 				});
 
@@ -971,6 +992,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final New_News_Home news = getmNewsList.get(newsPosition);
 				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
 				newZhuanTiHolder.title.setText(news.getTitle());
+				if(new_has_click.contains(news.getId())){
+					newZhuanTiHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
+				} else{
+					newZhuanTiHolder.title.setTextColor(Color.parseColor("#000000"));
+				}
 				CommonUtils.zoomImage(imageLoader,
 						news.getTitlepic(),
 						newZhuanTiHolder.home_news_titlepic, mActivity);
@@ -988,7 +1014,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 					public void onClick(View v) {
 						// 专题
 						openNews(news);
-
+						if(!new_has_click.contains(news.getId())){
+							MyTextView textView = (MyTextView)v.findViewById(R.id.title);
+							new_has_click.add(news.getId());
+							textView.setTextColor(Color.parseColor("#B0B0B0"));
+						}
 					}
 				});
 

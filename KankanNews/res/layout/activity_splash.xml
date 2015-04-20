@@ -3,6 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SplashActivity" >
-
-
+    
+    <ImageView 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+        android:background="@drawable/default_welcome"/>
+ 
+	<ImageView
+        android:id="@+id/welcome_logo_img"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="200dp"
+        android:src="@drawable/ic_logo" />
+	
+	<ImageView
+        android:id="@+id/welcome_logo_text_img"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_marginTop="200dp" 
+        android:layout_marginLeft="140dp"
+        android:src="@drawable/logtxt" />
+ -->
 </RelativeLayout>

@@ -1,5 +1,7 @@
 package com.kankan.kankanews.ui;
 
+import java.lang.reflect.Field;
+
 import org.json.JSONObject;
 
 import android.content.Intent;
@@ -7,14 +9,20 @@ import android.content.Intent.ShortcutIconResource;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
 import com.android.volley.VolleyError;
@@ -23,7 +31,6 @@ import com.kankan.kankanews.utils.CommonUtils;
 import com.kankanews.kankanxinwen.R;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
-import com.umeng.message.UmengRegistrar;
 
 /**
  * class desc: 启动画面 (1)判断是否是首次加载应用--采取读取SharedPreferences的方法
@@ -41,6 +48,7 @@ public class SplashActivity extends BaseActivity {
 	private static final long SPLASH_DELAY_MILLIS = 2000;
 
 	private ImageView welcome_img;
+	private ImageView welcome_text_img;
 	private Animation animation;
 
 	/**
@@ -70,11 +78,12 @@ public class SplashActivity extends BaseActivity {
 		mPushAgent = PushAgent.getInstance(this);
 		mPushAgent.onAppStart();
 		mPushAgent.enable();
-		
-//		Log.e("UmengRegistrar", UmengRegistrar.getRegistrationId(this));
-		
+
+		// Log.e("UmengRegistrar", UmengRegistrar.getRegistrationId(this));
+
 		mApplication.setStart(true);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		 requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		 requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -91,7 +100,7 @@ public class SplashActivity extends BaseActivity {
 
 		init();
 		// createShortcut();
-//		String device_token = UmengRegistrar.getRegistrationId(this);
+		// String device_token = UmengRegistrar.getRegistrationId(this);
 	}
 
 	private void init() {
@@ -116,14 +125,15 @@ public class SplashActivity extends BaseActivity {
 	private void goHome() {
 		Intent intent = getIntent();
 		String scheme = intent.getScheme();
-		if("kkl".equals(scheme)){
+		if ("kkl".equals(scheme)) {
 			Uri uridata = this.getIntent().getData();
 			String liveId = uridata.getQueryParameter("liveId");
 			intent.putExtra("LIVE_ID", liveId);
 		}
 		intent.setClass(SplashActivity.this, MainActivity.class);
-		SplashActivity.this.startActivity(intent);
-		SplashActivity.this.finish();
+		SplashActivity.this.startActivity(intent); 
+		overridePendingTransition(R.anim.alpha, R.anim.alpha_op); 
+		SplashActivity.this.finish(); 
 	}
 
 	private void goGuide() {
@@ -176,6 +186,102 @@ public class SplashActivity extends BaseActivity {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
+		welcome_img = (ImageView) this.findViewById(R.id.welcome_logo_img);
+		welcome_text_img = (ImageView) this.findViewById(R.id.welcome_logo_text_img);
+		welcome_img.post(new Runnable() {
+			@Override
+			public void run() {
+				AnimationSet animationSet = new AnimationSet(true);
+				final int top = welcome_img.getTop();
+				final int left = welcome_img.getLeft();
+				View v = getWindow().findViewById(Window.ID_ANDROID_CONTENT);
+
+				Class<?> c = null;
+				Object obj = null;
+				Field field = null;
+				int x = 0, sbar = 0;
+				try {
+					c = Class.forName("com.android.internal.R$dimen");
+					obj = c.newInstance();
+					field = c.getField("status_bar_height");
+					x = Integer.parseInt(field.get(obj).toString());
+					sbar = getResources().getDimensionPixelSize(x);
+				} catch (Exception e) {
+					Log.e("get status bar height fail", e.getLocalizedMessage(), e);
+				}
+
+				Rect frame = new Rect();
+				getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+
+				final float statusBarHeight = frame.top;
+				final float displayHeight = getWindowManager().getDefaultDisplay().getHeight();  
+
+				
+				final float toY = (top - statusBarHeight) / displayHeight;
+				
+				TranslateAnimation translateAnimation = new TranslateAnimation(
+						Animation.RELATIVE_TO_SELF, 0f,
+						Animation.RELATIVE_TO_SELF, -5 / 6f,
+						Animation.RELATIVE_TO_SELF, 0f,
+						Animation.RELATIVE_TO_PARENT, - toY);
+				translateAnimation.setDuration(2000);
+				translateAnimation.setFillAfter(true);
+				translateAnimation.setFillEnabled(true);
+				animationSet.addAnimation(translateAnimation);
+				welcome_img.startAnimation(animationSet);
+				
+
+		        AnimationSet alphaSet = new AnimationSet(true);
+		        AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
+		        alphaAnimation.setDuration(2000);
+		        alphaSet.addAnimation(alphaAnimation);
+				welcome_text_img.startAnimation(alphaSet);
+				alphaAnimation.setAnimationListener(new AnimationListener(){
+
+					@Override
+					public void onAnimationStart(Animation animation) {
+						// TODO Auto-generated method stub
+						welcome_text_img.setVisibility(View.GONE);
+					}
+
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+					}
+					
+				});
+				
+				translateAnimation.setAnimationListener(new AnimationListener(){
+
+					@Override
+					public void onAnimationStart(Animation animation) {
+						// TODO Auto-generated method stub
+						welcome_img.setVisibility(View.GONE);
+					}
+
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						// TODO Auto-generated method stub
+//						welcome_img.setX(welcome_img.getWidth() / 6);
+//						welcome_img.setY(top - statusBarHeight);
+//						welcome_img.setLayoutParams(new LayoutParams(10, (int) (top - statusBarHeight)));
+//						welcome_img.setVisibility(View.VISIBLE);
+						
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+				});
+			}
+		});
 
 	}
 

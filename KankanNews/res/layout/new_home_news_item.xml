@@ -60,6 +60,7 @@
                     android:lineSpacingExtra="4dp"
                     android:maxLines="2"
                     android:paddingTop="5dp"
+                    android:paddingRight="2dp"
                     android:text="俄罗斯总统会见朝鲜最高领导人特使"
                     android:textSize="16dp" />
 
