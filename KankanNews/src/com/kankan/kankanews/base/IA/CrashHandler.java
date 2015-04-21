@@ -124,7 +124,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
 		}.start();
 		// 收集设备参数信息
 		collectDeviceInfo(mContext);
-		MobclickAgent.reportError(mContext, ex);
+//		MobclickAgent.reportError(mContext, ex);
 		// 保存日志文件
 		String saveCrashInfo2File = saveCrashInfo2File(ex);
 		return true;

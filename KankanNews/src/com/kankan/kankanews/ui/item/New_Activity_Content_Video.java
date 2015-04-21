@@ -245,7 +245,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
 			CommonUtils.clickevent(mContext, "action", "放大",
 					AndroidConfig.video_fullscreen_event);
-
+			
 			full_screen_guide.setVisibility(View.GONE);
 			spUtil.setFirstContent(false);
 			if (video_view.isPlaying()) {
@@ -856,7 +856,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		case R.id.com_title_bar_right_bt:
 		case R.id.com_title_bar_right_tv:
 			// 一键分享
-			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil, this);
+			shareBoard = new CustomShareBoard(this, shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
@@ -1501,7 +1501,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 				});
 	}
 
-	private CustomShareBoard shareBoard;
+	private static CustomShareBoard shareBoard;
 	private boolean noShowPB;
 	private boolean isload;
 
@@ -1644,6 +1644,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		for (int i = 0; i < recommends.size(); i++) {
 
 			final New_Recommend mNew_Recommend = recommends.get(i);
+			mNew_Recommend.setTitlepic(CommonUtils.doWebpUrl(mNew_Recommend.getTitlepic()));
 			View v = LayoutInflater.from(mContext).inflate(
 					R.layout.new_recommend_item, null);
 			ImageView home_news_titlepic = (ImageView) v

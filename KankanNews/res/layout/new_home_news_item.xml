@@ -55,13 +55,14 @@
                     android:id="@+id/home_news_title"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="0dp"
                     android:ellipsize="end"
                     android:lineSpacingExtra="4dp"
                     android:maxLines="2"
                     android:paddingTop="5dp"
                     android:paddingRight="2dp"
                     android:text="俄罗斯总统会见朝鲜最高领导人特使"
+                	android:textStyle="bold"
                     android:textSize="16dp" />
 
                 <LinearLayout

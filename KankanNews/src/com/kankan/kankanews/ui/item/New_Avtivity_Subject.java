@@ -562,7 +562,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 				// line.setVisibility(View.GONE);
 
 				final Subject_Item item = subjectList.getList().get(position);
-
+				item.setTitlepic(CommonUtils.doWebpUrl(item.getTitlepic()));
 				if (dataType == 1) {
 					headerHolder.title.setText(item.getTitle());
 				} else {
@@ -673,7 +673,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 						image_view_list.add(albumsHolder.albums_image_2);
 						image_view_list.add(albumsHolder.albums_image_3);
 						for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++) {
-							CommonUtils.zoomImage(imageLoader, pics[i + 1],
+							CommonUtils.zoomImage(imageLoader, CommonUtils.doWebpUrl(pics[i + 1]),
 									image_view_list.get(i), mContext,
 									imageCache);
 						}
@@ -685,7 +685,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 										New_Activity_Content_PicSet.class,
 										item.getMid(), item.getType(),
 										item.getTitleurl(), item.getNewstime(),
-										pics[1], item.getTitle());
+										CommonUtils.doWebpUrl(pics[1]), item.getTitle());
 							}
 						});
 
@@ -907,7 +907,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		//
 		ImageView photoView = (ImageView) headerView
 				.findViewById(R.id.titlepic);
-		imageLoader.displayImage(subjectList.getTitlePic(), photoView,
+		imageLoader.displayImage(CommonUtils.doWebpUrl(subjectList.getTitlePic()), photoView,
 				Options.getSmallImageOptions(false));
 
 		MyTextView title = (MyTextView) headerView.findViewById(R.id.intro);
@@ -989,14 +989,14 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		Bitmap decodeFile = BitmapFactory.decodeFile(CommonUtils
 				.getImageCachePath(mContext)
 				+ "/"
-				+ CommonUtils.generate(titlepic));
+				+ CommonUtils.doWebpUrl(CommonUtils.generate(titlepic)));
 
 		if (decodeFile == null) {
 			decodeFile = BitmapFactory.decodeFile(CommonUtils
 					.getImageCachePath(mContext)
 					+ "/"
 					+ "big_"
-					+ CommonUtils.generate(titlepic));
+					+ CommonUtils.doWebpUrl(CommonUtils.generate(titlepic)));
 		}
 		if(decodeFile == null){
 			decodeFile = ImgUtils.getNetImage(titlepic);

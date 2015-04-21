@@ -334,6 +334,7 @@ public class New_Activity_Colums_Info extends BaseActivity implements
 			if (itemViewType == 0) {
 				final New_Colums_Info mcolums_info = new_colums_infos
 						.get(position);
+				mcolums_info.setTitlepic(CommonUtils.doWebpUrl(mcolums_info.getTitlepic()));
 				final int news_type = Integer.valueOf(mcolums_info.getType());
 
 				// imageLoader.displayImage(mcolums_info.getTitlepic(),

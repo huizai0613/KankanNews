@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankanews.kankanxinwen.R;
+import com.networkbench.agent.impl.NBSAppAgent;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
 
@@ -81,9 +82,11 @@ public class SplashActivity extends BaseActivity {
 
 		// Log.e("UmengRegistrar", UmengRegistrar.getRegistrationId(this));
 
+		NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
+				.withLocationServiceEnabled(true).start(this);
 		mApplication.setStart(true);
-		 requestWindowFeature(Window.FEATURE_NO_TITLE);
-//		 requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -127,13 +130,13 @@ public class SplashActivity extends BaseActivity {
 		String scheme = intent.getScheme();
 		if ("kkl".equals(scheme)) {
 			Uri uridata = this.getIntent().getData();
-			String liveId = uridata.getQueryParameter("liveId");
+			String liveId = uridata.getQueryParameter("LIVE_ID");
 			intent.putExtra("LIVE_ID", liveId);
 		}
 		intent.setClass(SplashActivity.this, MainActivity.class);
-		SplashActivity.this.startActivity(intent); 
-		overridePendingTransition(R.anim.alpha, R.anim.alpha_op); 
-		SplashActivity.this.finish(); 
+		SplashActivity.this.startActivity(intent);
+		// overridePendingTransition(R.anim.alpha, R.anim.alpha_op);
+		SplashActivity.this.finish();
 	}
 
 	private void goGuide() {
@@ -187,7 +190,8 @@ public class SplashActivity extends BaseActivity {
 	protected void initView() {
 		// TODO Auto-generated method stub
 		welcome_img = (ImageView) this.findViewById(R.id.welcome_logo_img);
-		welcome_text_img = (ImageView) this.findViewById(R.id.welcome_logo_text_img);
+		welcome_text_img = (ImageView) this
+				.findViewById(R.id.welcome_logo_text_img);
 		welcome_img.post(new Runnable() {
 			@Override
 			public void run() {
@@ -207,79 +211,83 @@ public class SplashActivity extends BaseActivity {
 					x = Integer.parseInt(field.get(obj).toString());
 					sbar = getResources().getDimensionPixelSize(x);
 				} catch (Exception e) {
-					Log.e("get status bar height fail", e.getLocalizedMessage(), e);
+					Log.e("get status bar height fail",
+							e.getLocalizedMessage(), e);
 				}
 
 				Rect frame = new Rect();
 				getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
 
 				final float statusBarHeight = frame.top;
-				final float displayHeight = getWindowManager().getDefaultDisplay().getHeight();  
+				final float displayHeight = getWindowManager()
+						.getDefaultDisplay().getHeight();
 
-				
 				final float toY = (top - statusBarHeight) / displayHeight;
-				
-				TranslateAnimation translateAnimation = new TranslateAnimation(
-						Animation.RELATIVE_TO_SELF, 0f,
-						Animation.RELATIVE_TO_SELF, -5 / 6f,
-						Animation.RELATIVE_TO_SELF, 0f,
-						Animation.RELATIVE_TO_PARENT, - toY);
-				translateAnimation.setDuration(2000);
-				translateAnimation.setFillAfter(true);
-				translateAnimation.setFillEnabled(true);
-				animationSet.addAnimation(translateAnimation);
-				welcome_img.startAnimation(animationSet);
-				
 
-		        AnimationSet alphaSet = new AnimationSet(true);
-		        AlphaAnimation alphaAnimation = new AlphaAnimation(1, 0);
-		        alphaAnimation.setDuration(2000);
-		        alphaSet.addAnimation(alphaAnimation);
+				// TranslateAnimation translateAnimation = new
+				// TranslateAnimation(
+				// Animation.RELATIVE_TO_SELF, 0f,
+				// Animation.RELATIVE_TO_SELF, -5 / 6f,
+				// Animation.RELATIVE_TO_SELF, 0f,
+				// Animation.RELATIVE_TO_PARENT, - toY);
+				// translateAnimation.setDuration(2000);
+				// translateAnimation.setFillAfter(true);
+				// translateAnimation.setFillEnabled(true);
+				// animationSet.addAnimation(translateAnimation);
+				// welcome_img.startAnimation(animationSet);
+
+				AnimationSet alphaSet = new AnimationSet(true);
+				AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+				alphaAnimation.setDuration(1000);
+				alphaSet.addAnimation(alphaAnimation);
 				welcome_text_img.startAnimation(alphaSet);
-				alphaAnimation.setAnimationListener(new AnimationListener(){
+				welcome_img.startAnimation(alphaSet);
+				alphaAnimation.setAnimationListener(new AnimationListener() {
 
 					@Override
 					public void onAnimationStart(Animation animation) {
 						// TODO Auto-generated method stub
-						welcome_text_img.setVisibility(View.GONE);
+						// welcome_text_img.setVisibility(View.GONE);
 					}
 
 					@Override
 					public void onAnimationEnd(Animation animation) {
-						
+
 					}
 
 					@Override
 					public void onAnimationRepeat(Animation animation) {
 					}
-					
+
 				});
-				
-				translateAnimation.setAnimationListener(new AnimationListener(){
 
-					@Override
-					public void onAnimationStart(Animation animation) {
-						// TODO Auto-generated method stub
-						welcome_img.setVisibility(View.GONE);
-					}
-
-					@Override
-					public void onAnimationEnd(Animation animation) {
-						// TODO Auto-generated method stub
-//						welcome_img.setX(welcome_img.getWidth() / 6);
-//						welcome_img.setY(top - statusBarHeight);
-//						welcome_img.setLayoutParams(new LayoutParams(10, (int) (top - statusBarHeight)));
-//						welcome_img.setVisibility(View.VISIBLE);
-						
-					}
-
-					@Override
-					public void onAnimationRepeat(Animation animation) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-				});
+				// translateAnimation.setAnimationListener(new
+				// AnimationListener(){
+				//
+				// @Override
+				// public void onAnimationStart(Animation animation) {
+				// // TODO Auto-generated method stub
+				// welcome_img.setVisibility(View.GONE);
+				// }
+				//
+				// @Override
+				// public void onAnimationEnd(Animation animation) {
+				// // TODO Auto-generated method stub
+				// // welcome_img.setX(welcome_img.getWidth() / 6);
+				// // welcome_img.setY(top - statusBarHeight);
+				// // welcome_img.setLayoutParams(new LayoutParams(10, (int)
+				// (top - statusBarHeight)));
+				// // welcome_img.setVisibility(View.VISIBLE);
+				//
+				// }
+				//
+				// @Override
+				// public void onAnimationRepeat(Animation animation) {
+				// // TODO Auto-generated method stub
+				//
+				// }
+				//
+				// });
 			}
 		});
 

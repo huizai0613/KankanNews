@@ -40,15 +40,14 @@ import com.kankan.kankanews.ui.fragment.New_HomeFragment;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.fragment.New_MyFragment;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
-import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.http.HttpHandler;
+import com.networkbench.agent.impl.NBSAppAgent;
 import com.umeng.message.PushAgent;
-import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends BaseActivity {
@@ -120,7 +119,7 @@ public class MainActivity extends BaseActivity {
 		spUtil.setFristComing(false);
 		wm = (WindowManager) getApplicationContext().getSystemService(
 				Context.WINDOW_SERVICE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		// 自动更新提示
@@ -134,7 +133,6 @@ public class MainActivity extends BaseActivity {
 		// 注册广播
 		// registerReceiver(mHomeKeyEventReceiver, new IntentFilter(
 		// Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
-
 		Intent intent = getIntent();
 		Serializable serializableExtra = intent.getSerializableExtra("LIVE");
 		if (serializableExtra != null) {

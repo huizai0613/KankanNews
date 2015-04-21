@@ -305,7 +305,7 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			String picUrl = parseImagegroups[position][1];
+			String picUrl = CommonUtils.doWebpUrl(parseImagegroups[position][1]);
 			View view = getLayoutInflater().inflate(
 					R.layout.new_item_activity_picset, null);
 			final PhotoView photoView = (PhotoView) view
@@ -506,8 +506,8 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 
 		File file = new File(
 				CommonUtils.getImageCachePath(mContext),
-				CommonUtils
-						.generate(new_news.getTitlepiclist().split("::::::")[0]));
+				CommonUtils.doWebpUrl(CommonUtils
+						.generate(new_news.getTitlepiclist().split("::::::")[0])));
 		Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath());
 
 		if (decodeFile == null) {
@@ -515,8 +515,8 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 					.getImageCachePath(mContext)
 					+ "/"
 					+ "big_"
-					+ CommonUtils.generate(new_news.getTitlepiclist().split(
-							"::::::")[0]));
+					+ CommonUtils.doWebpUrl(CommonUtils.generate(new_news.getTitlepiclist().split(
+							"::::::")[0])));
 		}
 
 		// Bitmap decodeFile = BitmapFactory.decodeFile(CommonUtils

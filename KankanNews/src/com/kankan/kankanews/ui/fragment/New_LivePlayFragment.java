@@ -111,7 +111,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 	private AlarmManager manager;
 	private List<New_LivePlay> localDate;
 	private New_LivePlay nowLiveNew;
-	
+
+	private static CustomShareBoard shareBoard;
 	/** 微博微博分享接口实例 */
 	private IWeiboShareAPI mWeiboShareAPI = null;
 	
@@ -145,6 +146,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 		WindowManager.LayoutParams attrs = mActivity.getWindow()
 				.getAttributes();
 		if (width > height) {
+			if (shareBoard != null && shareBoard.isShowing()) {
+				shareBoard.dismiss();
+			}
 			fullscrenn_but.setVisibility(View.GONE);
 			smallscrenn_but.setVisibility(View.VISIBLE);
 			mActivity.bottomBarVisible(View.GONE);
@@ -868,7 +872,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 			
 			shareUtil = new ShareUtil(nowLiveNew, this.getActivity());
 			// 一键分享
-			CustomShareBoard shareBoard = new CustomShareBoard((BaseActivity)this.mActivity, shareUtil, this);
+			shareBoard = new CustomShareBoard((BaseActivity)this.mActivity, shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(this.getActivity().getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);

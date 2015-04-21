@@ -133,7 +133,13 @@
     <dimen name="textsize_2">10dip</dimen>
     <dimen name="textsize_3">7dip</dimen>
     <dimen name="textsize_4">5dip</dimen>
-
+    
+	<!-- 字体大小 -->
+    <dimen name="news_textsize_1">9dip</dimen>
+    <dimen name="news_textsize_2">8dip</dimen>
+    <dimen name="news_textsize_3">5.5dip</dimen>
+    <dimen name="news_textsize_4">3dip</dimen>
+    
     <!-- Padding  10dp -->
     <dimen name="padding_10dp">10dp</dimen>
     <dimen name="calendar_day_headers_paddingbottom">4dp</dimen>

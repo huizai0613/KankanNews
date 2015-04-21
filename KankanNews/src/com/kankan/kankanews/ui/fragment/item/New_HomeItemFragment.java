@@ -110,7 +110,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 	private boolean isPushNews = false;
 	
 	private ArrayList<String> new_has_click = new ArrayList<String>();
-
+	
+	int[] textNomalSize = { R.dimen.news_textsize_1, R.dimen.news_textsize_2,
+			R.dimen.news_textsize_3, R.dimen.news_textsize_4 };
+	
 	public HashMap<String, SoftReference<Bitmap>> getImageCache() {
 		return imageCache;
 	}
@@ -363,7 +366,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					if (New_HomeFragment.PUSH_NEWS_ID != null) {
 						// 推送
 						String news_id = New_HomeFragment.PUSH_NEWS_ID;
-						Log.e("PUSH_NEWS_ID", news_id);
+//						Log.e("PUSH_NEWS_ID", news_id);
 						instance.getNewsContentDataPush(news_id,
 								new Listener<JSONObject>() {
 									@Override
@@ -435,6 +438,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			AutoImageVIew imageView = null;
 			for (final New_News_Top tn : getmTopNewsList) {
 				// imageView = new AutoImageVIew(mActivity);
+				tn.setTitlepic(CommonUtils.doWebpUrl(tn.getTitlepic()));
 				AutoImageTag tag = new AutoImageTag(tn.getTitlepic(), true);
 				tag.setId(tn.getId());
 				// imageView.setmAutoImageTag(tag);
@@ -689,6 +693,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 		@Override
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
+//			Log.e("PixelUtil", New_HomeItemFragment.this.getResources().getDimension(
+//					textNomalSize[PixelUtil.getScale()]) + "");
 			int itemViewType = getItemViewType(position);
 			boolean hasTopNews = getmTopNewsList.size() > 0;
 			int newsPosition = hasTopNews ? position - 1 : position;
@@ -708,6 +714,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					pagerHolder.title = (MyTextView) convertView
 							.findViewById(R.id.new_title);
+					pagerHolder.title.setTextSize(New_HomeItemFragment.this.getResources().getDimension(
+							textNomalSize[PixelUtil.getScale()]));
 					// pagerHolder.labse = (MyTextView) convertView
 					// .findViewById(R.id.new_labase);
 					pagerHolder.pager
@@ -763,6 +771,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					newHolder.title = (MyTextView) convertView
 							.findViewById(R.id.home_news_title);
+					newHolder.title.setTextSize(New_HomeItemFragment.this.getResources().getDimension(
+							textNomalSize[PixelUtil.getScale()]));
 					newHolder.newstime_sign = (ImageView) convertView
 							.findViewById(R.id.home_news_newstime_sign);
 					newHolder.newstime = (MyTextView) convertView
@@ -785,6 +795,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 					albumsHolder = new NewAlbumsHolder();
 					albumsHolder.title = (MyTextView) convertView
 							.findViewById(R.id.home_albums_title);
+					albumsHolder.title.setTextSize(New_HomeItemFragment.this.getResources().getDimension(
+							textNomalSize[PixelUtil.getScale()]));
 					albumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
 							.findViewById(R.id.home_albums_imgs_layout);
 					albumsHolder.albums_image_1 = (ImageView) convertView
@@ -809,6 +821,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 					newZhuanTiHolder = new NewZhuanTiHolder();
 					newZhuanTiHolder.title = (MyTextView) convertView
 							.findViewById(R.id.title);
+					newZhuanTiHolder.title.setTextSize(New_HomeItemFragment.this.getResources().getDimension(
+							textNomalSize[PixelUtil.getScale()]));
 					newZhuanTiHolder.home_news_titlepic = (ImageView) convertView
 							.findViewById(R.id.home_news_titlepic);
 					newZhuanTiHolder.home_news_intro = (MyTextView) convertView

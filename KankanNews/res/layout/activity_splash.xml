@@ -8,21 +8,23 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" 
         android:background="@drawable/default_welcome"/>
- 
+
 	<ImageView
-        android:id="@+id/welcome_logo_img"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="200dp"
-        android:src="@drawable/ic_logo" />
-	
+	    android:id="@+id/welcome_logo_text_img"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_centerHorizontal="true"
+	    android:layout_centerVertical="true"
+	    android:src="@drawable/logtxt" />
+
 	<ImageView
-        android:id="@+id/welcome_logo_text_img"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_marginTop="200dp" 
-        android:layout_marginLeft="140dp"
-        android:src="@drawable/logtxt" />
+	    android:id="@+id/welcome_logo_img"
+	    android:layout_width="60dp"
+	    android:layout_height="60dp"
+	    android:layout_above="@+id/welcome_logo_text_img"
+	    android:layout_centerHorizontal="true"
+	    android:layout_marginBottom="24dp"
+	    android:src="@drawable/ic_logo" />
+
  -->
 </RelativeLayout>

@@ -7,7 +7,13 @@
     <include
         layout="@layout/com_title_bar"
         android:background="#000000" />
-
+	
+    <com.kankan.kankanews.ui.view.ReboundScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ededed"
+        android:scrollbars="none" >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -43,7 +49,7 @@
                     android:gravity="left|top"
                     android:hint="上海电视台的记者会尽快处理"
                     android:inputType="textMultiLine"
-                    android:maxLines="6"
+                    android:maxLines="5"
                     android:minLines="6"
                     android:paddingTop="10dp"
                     android:paddingLeft="10dp"
@@ -86,7 +92,7 @@
                     android:layout_width="60dip"
                     android:layout_height="60dip"
                     android:layout_marginTop="10dip"
-                    android:layout_marginLeft="20dip"
+                    android:layout_marginLeft="16dip"
                     android:layout_marginBottom="10dip"
                     android:visibility="visible"
                     android:src="@drawable/revelations_add_pic"
@@ -97,7 +103,7 @@
                     android:layout_width="60dip"
                     android:layout_height="60dip"
                     android:layout_marginTop="10dip"
-                    android:layout_marginLeft="20dip"
+                    android:layout_marginLeft="16dip"
                     android:layout_marginBottom="10dip"
                     android:visibility="invisible"
                     android:src="@drawable/revelations_add_pic"
@@ -108,7 +114,7 @@
                     android:layout_width="60dip"
                     android:layout_height="60dip"
                     android:layout_marginTop="10dip"
-                    android:layout_marginLeft="20dip"
+                    android:layout_marginLeft="16dip"
                     android:layout_marginBottom="10dip"
                     android:visibility="invisible"
                     android:src="@drawable/revelations_add_pic"
@@ -119,7 +125,7 @@
                     android:layout_width="60dip"
                     android:layout_height="60dip"
                     android:layout_marginTop="10dip"
-                    android:layout_marginLeft="20dip"
+                    android:layout_marginLeft="16dip"
                     android:layout_marginBottom="10dip"
                     android:visibility="invisible"
                     android:src="@drawable/revelations_add_pic"
@@ -162,5 +168,5 @@
                 android:text="提交" />
         </LinearLayout>
     </LinearLayout>
-
+	</com.kankan.kankanews.ui.view.ReboundScrollView>
 </LinearLayout>

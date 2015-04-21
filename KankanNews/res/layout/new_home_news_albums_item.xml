@@ -36,6 +36,7 @@
                     android:textSize="16dp"
                     android:singleLine="true"
                     android:ellipsize="end"
+                	android:textStyle="bold"
                     android:text="某某某" />
 
                 <ImageView

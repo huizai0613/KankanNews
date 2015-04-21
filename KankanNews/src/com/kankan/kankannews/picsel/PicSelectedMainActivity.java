@@ -52,7 +52,10 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 	/**
 	 * 所有的图片
 	 */
-	private List<String> mImgs;
+	private List<String> mImgs = new ArrayList<String>();
+	
+
+	private List<String> allImgs = new ArrayList<String>();
 
 	private GridView mGirdView;
 	private PicSelectedGridAdapter mAdapter;
@@ -103,8 +106,26 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
-
+		
+//		for (ImageFloder floder : mImageFloders) {
+////			mImgs.addAll(Arrays.asList(new File(floder.getDir()).list()));
+//			mImgDir = new File(floder.getDir());
+//			mImgs.addAll(Arrays.asList(mImgDir.list(new FilenameFilter()
+//			{
+//				@Override
+//				public boolean accept(File dir, String filename)
+//				{
+//					if (filename.endsWith(".jpg") || filename.endsWith(".png")
+//							|| filename.endsWith(".jpeg") || filename.endsWith(".JPG") || filename.endsWith(".PNG")
+//							|| filename.endsWith(".JPEG") && new File(dir+ "/" +filename).length() < AndroidConfig.MAX_SEL_IMG_LENGTH)
+//						return true;
+//					return false;
+//				}
+//			})));
+//		}
+		
 		mImgs = Arrays.asList(mImgDir.list());
+		
 		/**
 		 * 可以看到文件夹的路径和图片的路径分开保存，极大的减少了内存的消耗；
 		 */
@@ -192,7 +213,8 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 								+ MediaStore.Images.Media.MIME_TYPE + "=?",
 						new String[] { "image/jpeg", "image/png", "image/jpg" },
 						MediaStore.Images.Media.DATE_MODIFIED);
-
+				
+				Log.e("Cursor", mCursor.getColumnCount() + "");
 				while (mCursor.moveToNext())
 				{
 					// 获取图片的路径
@@ -225,7 +247,8 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 						continue;
 					int picSize = 0;
 					try{
-					picSize = parentFile.list(new FilenameFilter()
+						
+					String[] parentFileList = parentFile.list(new FilenameFilter()
 					{
 						@Override
 						public boolean accept(File dir, String filename)
@@ -239,7 +262,10 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 								return true;
 							return false;
 						}
-					}).length;
+					});
+					
+					allImgs.addAll(Arrays.asList(parentFileList));
+					picSize = parentFileList.length;
 					}catch(NullPointerException e){
 						Log.e("NULLPOINT", e.getLocalizedMessage(), e);
 						continue;
