@@ -5,6 +5,8 @@ import java.io.FilenameFilter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -76,7 +78,7 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 	private TextView selectedNum;
 	private Button selectedOk;
 	int totalCount = 0;
-
+	
 	private int mScreenHeight;
 
 	private ListImageDirPopupWindow mListImageDirPopupWindow;
@@ -124,13 +126,30 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 //			})));
 //		}
 		
-		mImgs = Arrays.asList(mImgDir.list());
+//		mImgs = Arrays.asList(mImgDir.list());
 		
 		/**
 		 * 可以看到文件夹的路径和图片的路径分开保存，极大的减少了内存的消耗；
 		 */
-		mAdapter = new PicSelectedGridAdapter(getApplicationContext(), mImgs,
-				R.layout.pic_selected_grid_item, mImgDir.getAbsolutePath(), this);
+//		mImgs = Arrays.asList(mImgDir.list());
+//		String[] array = (String[])allImgs.toArray();
+//		List<String> tmpList = Arrays.asList(array);
+		
+//		tmpList.addAll(allImgs);
+//		Collections.sort(allImgs, new Comparator<String>() {
+//            public int compare(String arg0, String arg1) {
+//            	File file1 = new File(arg0);
+//            	File file2 = new File(arg1);
+//            	if(file1.lastModified() > file2.lastModified())
+//            		return  1;
+//            	return -1;
+//            }
+//        });
+
+//		Log.e("allImgs", allImgs.get(0));
+//		Log.e("allImgs", allImgs.get(10));
+		mAdapter = new PicSelectedGridAdapter(getApplicationContext(), allImgs,
+				R.layout.pic_selected_grid_item, "", this);
 		mGirdView.setAdapter(mAdapter);
 		mImageCount.setText(totalCount + "张");
 	};
@@ -199,20 +218,24 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 			@Override
 			public void run()
 			{
+				
 
+				ImageFloder allImageFloder = new ImageFloder();
+				mImageFloders.add(allImageFloder);
 				String firstImage = null;
 
 				Uri mImageUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 				ContentResolver mContentResolver = PicSelectedMainActivity.this
 						.getContentResolver();
-
+				
 				// 只查询jpeg和png的图片
 				Cursor mCursor = mContentResolver.query(mImageUri, null,
-						MediaStore.Images.Media.MIME_TYPE + "=? or "
+						"(" + MediaStore.Images.Media.MIME_TYPE + "=? or "
 								+ MediaStore.Images.Media.MIME_TYPE + "=? or "
-								+ MediaStore.Images.Media.MIME_TYPE + "=?",
+								+ MediaStore.Images.Media.MIME_TYPE + "=? ) and "
+								+ MediaStore.Images.Media.SIZE + "<" + AndroidConfig.MAX_SEL_IMG_LENGTH,
 						new String[] { "image/jpeg", "image/png", "image/jpg" },
-						MediaStore.Images.Media.DATE_MODIFIED);
+						MediaStore.Images.Media.DATE_MODIFIED + " DESC");
 				
 				Log.e("Cursor", mCursor.getColumnCount() + "");
 				while (mCursor.moveToNext())
@@ -220,7 +243,7 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 					// 获取图片的路径
 					String path = mCursor.getString(mCursor
 							.getColumnIndex(MediaStore.Images.Media.DATA));
-
+					
 					// 拿到第一张图片的路径
 					if (firstImage == null)
 						firstImage = path;
@@ -252,19 +275,23 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 					{
 						@Override
 						public boolean accept(File dir, String filename)
-						{
-							if (filename.endsWith(".jpg")
+						{	
+							long length = new File(dir+ "/" +filename).length();
+							if ((filename.endsWith(".jpg")
 									|| filename.endsWith(".JPG")
 									|| filename.endsWith(".png")
 									|| filename.endsWith(".PNG")
 									|| filename.endsWith(".jpeg")
-									|| filename.endsWith(".JPEG") && new File(dir+ "/" +filename).length() < AndroidConfig.MAX_SEL_IMG_LENGTH)
+									|| filename.endsWith(".JPEG")) &&  length < AndroidConfig.MAX_SEL_IMG_LENGTH)
 								return true;
 							return false;
 						}
 					});
-					
-					allImgs.addAll(Arrays.asList(parentFileList));
+					for (String imgPath : parentFileList) {
+						allImgs.add(parentFile + "/" + imgPath);
+					}
+//					imageFloder.setFirstImagePath(path);
+//					allImgs.addAll(Arrays.asList(parentFileList));
 					picSize = parentFileList.length;
 					}catch(NullPointerException e){
 						Log.e("NULLPOINT", e.getLocalizedMessage(), e);
@@ -281,6 +308,25 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 						mImgDir = parentFile;
 					}
 				}
+				allImageFloder.setCount(totalCount);
+				allImageFloder.setDir("");
+				allImageFloder.setName("所有图片");
+				
+//				Log.e("allImgs", allImgs.get(0));
+//				Log.e("allImgs", allImgs.get(10));
+				Collections.sort(allImgs, new Comparator<String>() {
+		            public int compare(String arg0, String arg1) {
+		            	File file1 = new File(arg0);
+		            	File file2 = new File(arg1);
+		            	if(file1.lastModified() > file2.lastModified())
+		            		return  -1;
+		            	return 1;
+		            }
+		        });
+				allImageFloder.setFirstImagePath(allImgs.get(0));
+
+//				Log.e("allImgs", allImgs.get(0));
+//				Log.e("allImgs", allImgs.get(10));
 				mCursor.close();
 
 				// 扫描完成，辅助的HashSet也就可以释放内存了
@@ -346,25 +392,39 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 	@Override
 	public void selected(ImageFloder floder)
 	{
-
-		mImgDir = new File(floder.getDir());
-		mImgs = Arrays.asList(mImgDir.list(new FilenameFilter()
-		{
-			@Override
-			public boolean accept(File dir, String filename)
+		if(!"".equals(floder.getDir())){
+			mImgDir = new File(floder.getDir());
+			mImgs = Arrays.asList(mImgDir.list(new FilenameFilter()
 			{
-				if (filename.endsWith(".jpg") || filename.endsWith(".png")
-						|| filename.endsWith(".jpeg") || filename.endsWith(".JPG") || filename.endsWith(".PNG")
-						|| filename.endsWith(".JPEG") && new File(dir+ "/" +filename).length() < AndroidConfig.MAX_SEL_IMG_LENGTH)
-					return true;
-				return false;
-			}
-		}));
+				@Override
+				public boolean accept(File dir, String filename)
+				{
+					if ((filename.endsWith(".jpg") || filename.endsWith(".png")
+							|| filename.endsWith(".jpeg") || filename.endsWith(".JPG") || filename.endsWith(".PNG")
+							|| filename.endsWith(".JPEG")) && new File(dir+ "/" +filename).length() < AndroidConfig.MAX_SEL_IMG_LENGTH)
+						return true;
+					return false;
+				}
+			}));
+			Collections.sort(mImgs, new Comparator<String>() {
+	            public int compare(String arg0, String arg1) {
+	            	File file1 = new File(mImgDir.getAbsolutePath() + "/" +arg0);
+	            	File file2 = new File(mImgDir.getAbsolutePath() + "/" +arg1);
+	            	if(file1.lastModified() > file2.lastModified())
+	            		return  -1;
+	            	return 1;
+	            }
+	        });
+			mAdapter = new PicSelectedGridAdapter(getApplicationContext(), mImgs,
+					R.layout.pic_selected_grid_item, mImgDir.getAbsolutePath(), this);
+		}else{
+			mAdapter = new PicSelectedGridAdapter(getApplicationContext(), allImgs,
+					R.layout.pic_selected_grid_item, "", this);
+		}
 		/**
 		 * 可以看到文件夹的路径和图片的路径分开保存，极大的减少了内存的消耗；
 		 */
-		mAdapter = new PicSelectedGridAdapter(getApplicationContext(), mImgs,
-				R.layout.pic_selected_grid_item, mImgDir.getAbsolutePath(), this);
+		
 		mGirdView.setAdapter(mAdapter);
 		// mAdapter.notifyDataSetChanged();
 		mImageCount.setText(floder.getCount() + "张");

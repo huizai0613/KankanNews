@@ -161,6 +161,11 @@ public class New_LivePlayFragment extends BaseFragment implements
 			video_view.setFull(true);
 			isFullstate = true;
 			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
+			if(video_view.isPlaying()){
+				video_view.pause();
+				video_player.setVisibility(View.VISIBLE);
+			}
+//			video_view.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 		} else {
 			fullscrenn_but.setVisibility(View.VISIBLE);
 			smallscrenn_but.setVisibility(View.GONE);
@@ -176,6 +181,10 @@ public class New_LivePlayFragment extends BaseFragment implements
 			video_view.setFull(false);
 			isFullstate = false;
 			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
+			if(video_view.isPlaying()){
+				video_view.pause();
+				video_player.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
@@ -869,7 +878,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 		
 		switch (id) {
 		case R.id.live_share_but:
-			
+			nowLiveNew.setTitlepic(null);
 			shareUtil = new ShareUtil(nowLiveNew, this.getActivity());
 			// 一键分享
 			shareBoard = new CustomShareBoard((BaseActivity)this.mActivity, shareUtil, this);

@@ -31,10 +31,12 @@ public class ListImageDirPopupWindow extends BasePopupWindowForListView<ImageFlo
 		{
 			@Override
 			public void convert(ViewHolder helper, ImageFloder item)
-			{
+			{	
 				helper.setText(R.id.id_dir_item_name, item.getName());
 				helper.setImageByUrl(R.id.id_dir_item_image,
 						item.getFirstImagePath());
+//				helper.setImageByUrl(R.id.id_dir_item_image,
+//						item.getDir() + "/" + mDatas.get(0));
 				helper.setText(R.id.id_dir_item_count, item.getCount() + "张");
 			}
 		});

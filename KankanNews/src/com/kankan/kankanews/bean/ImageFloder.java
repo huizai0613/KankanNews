@@ -30,8 +30,10 @@ public class ImageFloder
 	public void setDir(String dir)
 	{
 		this.dir = dir;
-		int lastIndexOf = this.dir.lastIndexOf("/");
-		this.name = this.dir.substring(lastIndexOf);
+		if(!"".equals(dir)){
+			int lastIndexOf = this.dir.lastIndexOf("/");
+			this.name = this.dir.substring(lastIndexOf);
+		}
 	}
 
 	public String getFirstImagePath()
@@ -58,6 +60,9 @@ public class ImageFloder
 		this.count = count;
 	}
 
-	
+	public void setName(String name)
+	{
+		this.name = name;
+	}
 
 }

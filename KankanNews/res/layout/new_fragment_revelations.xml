@@ -30,9 +30,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="10dp"
-                android:text="我要报料"
-                android:textSize="18dp"
-                android:textStyle="bold" />
+                android:text="报料内容(必填)"
+                android:textSize="16dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -49,8 +48,8 @@
                     android:gravity="left|top"
                     android:hint="上海电视台的记者会尽快处理"
                     android:inputType="textMultiLine"
-                    android:maxLines="5"
-                    android:minLines="6"
+                    android:maxLines="6"
+                    android:minLines="5"
                     android:paddingTop="10dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
