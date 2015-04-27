@@ -36,9 +36,9 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="10dip"
         android:background="#88000000"
         android:paddingLeft="10dip"
+        android:paddingBottom="10dip"
         android:paddingRight="10dip" >
 
         <TextView

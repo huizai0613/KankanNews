@@ -860,6 +860,14 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final New_News_Home news = getmNewsList.get(newsPosition);
 				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
 				String clicktime = mClicks.get(news.getMid());
+//				if("false".equalsIgnoreCase(clicktime)){
+//					newHolder.newstime.setVisibility(View.INVISIBLE);
+//					newHolder.newstime_sign.setVisibility(View.INVISIBLE);
+//				} else{
+//					newHolder.newstime.setVisibility(View.VISIBLE);
+//					newHolder.newstime_sign.setVisibility(View.VISIBLE);
+//					newHolder.newstime.setText(clicktime);
+//				}
 				clicktime = TextUtils.isEmpty(clicktime) ? "0次" : clicktime
 						+ "次";
 				final int news_type = Integer.valueOf(news.getType());

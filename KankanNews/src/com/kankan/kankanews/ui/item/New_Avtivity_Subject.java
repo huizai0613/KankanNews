@@ -599,20 +599,35 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 
 						switch (news_type % 10) {
 						case 5:
-							newHolder.newstime.setVisibility(View.VISIBLE);
-							newHolder.newstime_sign.setVisibility(View.VISIBLE);
+							if (clicktime.equalsIgnoreCase("false次")) {
+								newHolder.newstime.setVisibility(View.INVISIBLE);
+								newHolder.newstime_sign.setVisibility(View.INVISIBLE);
+							} else {
+								newHolder.newstime.setVisibility(View.VISIBLE);
+								newHolder.newstime_sign.setVisibility(View.VISIBLE);
+							}
 							newHolder.news_type
 									.setImageResource(R.drawable.new_icon_sign_subject);
 							break;
 						case 6:
-							newHolder.newstime.setVisibility(View.VISIBLE);
-							newHolder.newstime_sign.setVisibility(View.VISIBLE);
+							if (clicktime.equalsIgnoreCase("false次")) {
+								newHolder.newstime.setVisibility(View.INVISIBLE);
+								newHolder.newstime_sign.setVisibility(View.INVISIBLE);
+							} else {
+								newHolder.newstime.setVisibility(View.VISIBLE);
+								newHolder.newstime_sign.setVisibility(View.VISIBLE);
+							}
 							newHolder.news_type
 									.setImageResource(R.drawable.new_icon_sign_live);
 							break;
 						default:
-							newHolder.newstime.setVisibility(View.VISIBLE);
-							newHolder.newstime_sign.setVisibility(View.VISIBLE);
+							if (clicktime.equalsIgnoreCase("false次")) {
+								newHolder.newstime.setVisibility(View.INVISIBLE);
+								newHolder.newstime_sign.setVisibility(View.INVISIBLE);
+							} else {
+								newHolder.newstime.setVisibility(View.VISIBLE);
+								newHolder.newstime_sign.setVisibility(View.VISIBLE);
+							}
 							break;
 						}
 
