@@ -62,7 +62,7 @@ public class AndroidConfig {
 	public static final int Comment_resultCode = 2002;
 
 	// 设置回调
-	public static final int Set_requestCode = 3001;
+//	public static final int Set_requestCode = 3001;
 	public static final int Set_resultCode = 3002;
 
 	// 选择图片回调

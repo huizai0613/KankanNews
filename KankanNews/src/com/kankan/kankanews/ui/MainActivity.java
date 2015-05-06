@@ -65,8 +65,6 @@ public class MainActivity extends BaseActivity {
 	public int topNewW;
 
 	public FragmentManager fragmentManager;
-	// 记录用户是否登录
-	private boolean isloaduser = false;
 
 	// 获取我的收藏的数组
 	private ArrayList<MyCollect> myCollects;
@@ -447,26 +445,6 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == AndroidConfig.Drawer_login_resultCode) {
-			boolean isuser = (Boolean) data.getSerializableExtra("User");
-			if (isuser) {
-				side_drawer.showMenu();
-				imageLoader.displayImage(mApplication.getUser()
-						.getUser_poster(), menu_user_img, Options
-						.getBigImageOptions(null));
-				menu_user_name.setText(mApplication.getUser().getUser_name());
-				isloaduser = true;
-			}
-		}
-
-		if (resultCode == AndroidConfig.Set_resultCode) {
-			boolean isuser = (Boolean) data.getSerializableExtra("User");
-			if (!isuser) {
-				menu_user_img.setImageResource(R.drawable.icon_menu_login);
-				menu_user_name.setText("登录");
-				isloaduser = false;
-			}
-		}
 
 		if (resultCode == AndroidConfig.REVELATIONS_FRAGMENT_RESULT_CANCEL
 				|| resultCode == AndroidConfig.REVELATIONS_FRAGMENT_RESULT_OK) {

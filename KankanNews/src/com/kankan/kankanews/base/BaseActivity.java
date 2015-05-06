@@ -35,7 +35,6 @@ import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.dialog.Loading_Dialog;
 import com.kankan.kankanews.dialog.TishiMsgHint;
-import com.kankan.kankanews.ui.item.Activity_Login;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.SharePreferenceUtil;
 import com.kankan.kankanews.utils.XunaoLog;
@@ -227,28 +226,6 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 	 */
 	public void ShowLog(String msg) {
 		yeLog.i(msg);
-	}
-
-	/**
-	 * 检查用户是否登录,没有登录直接跳转到登录界面,登录的话,跳到指定页面
-	 */
-	public void checkUser(Class<?> cla) {
-		if (mApplication.getUser() == null) {
-			startAnimActivity(Activity_Login.class);
-		} else {
-			startAnimActivity(cla);
-		}
-	}
-
-	/**
-	 * 检查用户是否登录，并返回true或false
-	 */
-	public boolean checkUser() {
-		if (mApplication.getUser() == null) {
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 	public void startAnimActivity2Obj(Class<?> cla, String key, BaseBean bean) {
