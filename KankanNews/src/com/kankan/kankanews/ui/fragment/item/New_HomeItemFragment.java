@@ -302,8 +302,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 			}
 			initTopImageAndPoint();
 			if (mTopNews != null && mNews != null) {
-				adapter = new TopAdapter();
-				listview.setAdapter(adapter);
+//				adapter = new TopAdapter();
+//				listview.setAdapter(adapter);
 				// 点击量
 				for (int i = 0; new_news_clicks != null
 						&& i < new_news_clicks.size(); i++) {
@@ -989,7 +989,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					// imageLoader.displayImage(pics[i + 1],
 					// image_view_list.get(i),
 					// Options.getSmallImageOptions(false));
-					if (pics.length > i) {
+					if (pics.length > i + 1) {
 						CommonUtils.zoomImage(imageLoader,
 								CommonUtils.doWebpUrl(pics[i + 1]),
 								image_view_list.get(i), mActivity, imageCache);

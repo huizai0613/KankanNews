@@ -112,7 +112,7 @@ public class ShareUtil {
 		// UMImage SharePic = new UMImage(activity, content_News.getTitlepic());
 		UMImage titlePic = null;
 		if(null == shareObj.getTitlepiclist() || "".equals(shareObj.getTitlepiclist().trim())){
-			titlePic = new UMImage(activity, R.drawable.ic_logo);
+			titlePic = new UMImage(activity, R.drawable.icon_shared);
 		}else{
 			titlePic = new UMImage(activity, shareObj.getTitlepiclist());
 		}

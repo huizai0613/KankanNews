@@ -8,7 +8,6 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -19,10 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
-import android.view.ViewTreeObserver.OnPreDrawListener;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +30,6 @@ import com.kankan.kankanews.bean.New_HomeCate;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
-import com.kankan.kankanews.ui.view.ColumnHorizontalScrollView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -111,11 +105,12 @@ public class New_HomeFragment extends BaseFragment implements
 
 		mViewpager = (ViewPager) inflate.findViewById(R.id.viewpager);
 		mViewpager.setOffscreenPageLimit(1);
-		initLocaDate = initLocalDate();
-
+		
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
+
 			refreshNetDate();
 		} else {
+			initLocaDate = initLocalDate();
 			if (!initLocaDate) {
 				main_bg.setVisibility(View.VISIBLE);
 			}
@@ -156,7 +151,7 @@ public class New_HomeFragment extends BaseFragment implements
 						R.color.top_category_scroll_text_color_day));
 				columnTextView
 						.setBackgroundResource(R.drawable.select_columnitem);
-
+//				columnTextView.setBackgroundResource(R.drawable.bg_coumitem);
 				if (columnSelectIndex == i) {
 					columnTextView.setSelected(true);
 					columnTextView.setTextSize(getResourcesSelf()
