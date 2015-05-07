@@ -1,4 +1,4 @@
-package com.kankan.kankannews.picsel;
+package com.kankan.kankanews.picsel;
 
 import android.content.Context;
 import android.graphics.Bitmap;

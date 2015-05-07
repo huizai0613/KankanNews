@@ -575,9 +575,10 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 						final int news_type = Integer.valueOf(item.getType());
 						newHolder.titlepic.setTag(R.string.viewwidth,
 								PixelUtil.dp2px(80));
-						CommonUtils.zoomImage(imageLoader, item.getTitlepic(),
-								newHolder.titlepic, mContext, imageCache);
-
+						// CommonUtils.zoomImage(imageLoader,
+						// item.getTitlepic(),
+						// newHolder.titlepic, mContext, imageCache);
+						imageLoader.displayImage(item.getTitlepic(), newHolder.titlepic, ImgUtils.homeImageOptions);
 						newHolder.title.setText(item.getTitle());
 						switch (news_type / 10) {
 						case 1:
@@ -688,9 +689,10 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 						image_view_list.add(albumsHolder.albums_image_2);
 						image_view_list.add(albumsHolder.albums_image_3);
 						for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++) {
-							CommonUtils.zoomImage(imageLoader, CommonUtils.doWebpUrl(pics[i + 1]),
-									image_view_list.get(i), mContext,
-									imageCache);
+//							CommonUtils.zoomImage(imageLoader, CommonUtils.doWebpUrl(pics[i + 1]),
+//									image_view_list.get(i), mContext,
+//									imageCache);
+							imageLoader.displayImage(CommonUtils.doWebpUrl(pics[i + 1]), image_view_list.get(i), ImgUtils.homeImageOptions);
 						}
 
 						convertView.setOnClickListener(new OnClickListener() {

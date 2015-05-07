@@ -23,6 +23,7 @@ import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ViewHolderUtil;
 import com.kankanews.kankanxinwen.R;
@@ -193,11 +194,15 @@ public class New_Activity_MyFoot extends BaseActivity implements
 			final New_News new_news = mNew_News.get(position);
 			titlepic.setTag(R.string.viewwidth, PixelUtil.dp2px(80));
 			if (new_news.getTitlepiclist() != null) {
-				CommonUtils.zoomImage(imageLoader, new_news.getTitlepiclist()
-						.split("::::::")[0], titlepic, mContext, imageCache);
+//				CommonUtils.zoomImage(imageLoader, new_news.getTitlepiclist()
+//						.split("::::::")[0], titlepic, mContext, imageCache);
+				imageLoader.displayImage(new_news.getTitlepiclist()
+						.split("::::::")[0], titlepic, ImgUtils.homeImageOptions);
 			}else{
-				CommonUtils.zoomImage(imageLoader, new_news.getTitlepic()
-						.split("::::::")[0], titlepic, mContext, imageCache);
+//				CommonUtils.zoomImage(imageLoader, new_news.getTitlepic()
+//						.split("::::::")[0], titlepic, mContext, imageCache);
+				imageLoader.displayImage(new_news.getTitlepic()
+						.split("::::::")[0], titlepic, ImgUtils.homeImageOptions);
 			}
 			if (new_news.getTitlelist() != null) {
 			title.setText(new_news.getTitlelist());

@@ -6,7 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.kankan.kankanews.base.BaseActivity;
-import com.kankan.kankannews.bean.interfaz.CanSharedObject;
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankanews.kankanxinwen.R;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;

@@ -14,8 +14,8 @@ import android.widget.PopupWindow;
 
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.bean.interfaz.CanSharedBySina;
 import com.kankan.kankanews.utils.ShareUtil;
-import com.kankan.kankannews.bean.interfaz.CanSharedBySina;
 import com.kankanews.kankanxinwen.R;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 

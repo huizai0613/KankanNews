@@ -1,4 +1,4 @@
-package com.kankan.kankannews.bean.interfaz;
+package com.kankan.kankanews.bean.interfaz;
 
 public interface CanSharedObject {
 	String getTitle();

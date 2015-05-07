@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import org.json.JSONObject;
 
 import com.kankan.kankanews.base.BaseBean;
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankannews.bean.interfaz.CanSharedObject;
 
 @SuppressWarnings("serial")
 public class New_News extends BaseBean<New_News> implements CanSharedObject {

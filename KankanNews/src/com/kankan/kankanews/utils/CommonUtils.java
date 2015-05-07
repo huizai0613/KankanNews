@@ -56,8 +56,10 @@ import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.utils.L;
 import com.umeng.analytics.MobclickAgent;
@@ -568,253 +570,256 @@ public class CommonUtils {
 	}
 
 	// 压缩图片后再显示
-	public static void zoomImage(final ImageLoader imageLoader,
-			final String titlepic, final ImageView titlepic2,
-			final Context context,
-			final Map<String, SoftReference<Bitmap>> imageCache) {
-
-		String tag = (String) titlepic2.getTag();
-
-		titlepic2.setTag(titlepic);
-		Boolean isLoad = (Boolean) titlepic2.getTag(R.string.image_isloadcom);
-		if (tag == null || !tag.equalsIgnoreCase(titlepic)
-				|| (isLoad == null || !isLoad)) {
-
-			Bitmap bitmapByPath = getBitmapByPath(titlepic, imageCache);
-
-			if (bitmapByPath == null) {
-				titlepic2.setTag(R.string.image_isloadcom, false);
-				final Integer viewwidth = (Integer) titlepic2
-						.getTag(R.string.viewwidth);
-				final int viewWidth = titlepic2.getWidth();
-				final int viewHeight = titlepic2.getHeight();
-				final File file = new File(
-						CommonUtils.getImageCachePath(context),
-						CommonUtils.generate(titlepic));
-				final BitmapFactory.Options options = new BitmapFactory.Options();
-
-				if (!file.exists()) {
-					titlepic2.setTag(titlepic);
-					imageLoader.loadImage(titlepic, new ImageLoadingListener() {
-						@Override
-						public void onLoadingStarted(String arg0, View arg1) {
-							titlepic2
-									.setImageResource(R.drawable.default_news_display);
-						}
-
-						@Override
-						public void onLoadingFailed(String arg0, View arg1,
-								FailReason arg2) {
-							titlepic2
-									.setImageResource(R.drawable.default_news_display);
-						}
-
-						@Override
-						public void onLoadingComplete(String arg0, View arg1,
-								final Bitmap arg2) {
-							AsyncTask asyncTask = new AsyncTask<Object, Object, Bitmap>() {
-
-								private int whb;
-
-								protected Bitmap doInBackground(Object[] params) {
-
-//									 int byteCount = arg2.getHeight();
-//									 int rowBytes = arg2.getRowBytes();
-//									 int mem = byteCount * rowBytes;
-//									 int size = 90;
-//									 if (mem > 1024 * 8 && mem < 30 * 1024 *
-//									 8) {
-//									 size = 80;
-//									 } else if (mem > 30 * 1024 * 8
-//									 && mem < 40 * 1024 * 8) {
-//									 size = 70;
-//									 } else if (mem >= 40 * 1024 * 8
-//									 && mem < 60 * 1024 * 8) {
-//									 size = 60;
-//									 } else if (mem >= 60 * 1024 * 8
-//									 && mem < 90 * 1024 * 8) {
-//									 size = 50;
-//									 } else if (mem >= 90 * 1024 * 8) {
-//									 size = 40;
-//									 }
-//
-//									int width = arg2.getWidth();
-//									int height = arg2.getHeight();
-//
-//									 whb=Math.round((float) width / (float)
-//									 height);
-//
-//									int insampSize = 0;
-//
-//									if (viewWidth == 0 && viewHeight == 0) {
-//										insampSize += Math.round((float) width
-//												/ (float) viewwidth);
-//									} else if (width > viewWidth
-//											|| height > viewHeight) {
-//										int wround = Math.round((float) width
-//												/ (float) viewWidth);
-//										int hround = Math.round((float) height
-//												/ (float) viewHeight);
-//										insampSize += (wround > hround ? wround
-//												: hround) + 2;
-//									}
-									try {
-										CompressFormat format = CompressFormat.WEBP;
-//										if ("png"
-//												.equalsIgnoreCase(UrlToFileFormat(titlepic))) {
-//											format = CompressFormat.PNG;
-//										} else {
-//											format = CompressFormat.JPEG;
-//										}
-
-										boolean compress = arg2.compress(
-												format, 80,
-												new FileOutputStream(file));
-										options.inPreferredConfig = Bitmap.Config.RGB_565;
-										options.inJustDecodeBounds = false;
-//										options.inSampleSize = insampSize >= 6 ? insampSize - 2
-//												: insampSize;
-//										Bitmap decodeFile = BitmapFactory
-//												.decodeFile(
-//														file.getAbsolutePath(),
-//														options);
-//										Log.w("图片地址", file.getAbsolutePath());
-										Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-										if (arg2 != null) {
-											arg2.recycle();
-										}
-										return decodeFile;
-									} catch (OutOfMemoryError e) {
-										System.gc();
-										imageLoader.clearMemoryCache();
-									} catch (Exception e) {
-										System.gc();
-										imageLoader.clearMemoryCache();
-									}
-									return null;
-
-								};
-
-								protected void onPostExecute(Bitmap result) {
-									String tag = (String) titlepic2.getTag();
-									if (titlepic.equalsIgnoreCase(tag)) {
-										// if (whb != 0
-										// && titlepic2.getTag(R.string.graphic)
-										// !=
-										// null
-										// && "graphic"
-										// .equalsIgnoreCase((String) titlepic2
-										// .getTag(R.string.graphic))) {
-										// titlepic2.getLayoutParams().height =
-										// viewwidth
-										// / whb;
-										// }
-										if (result != null) {
-											titlepic2.setTag(
-													R.string.image_isloadcom,
-													true);
-											titlepic2
-													.setImageBitmap(addBitmapToCache(
-															titlepic, result,
-															imageCache));
-										}
-									}
-
-								};
-
-							};
-							asyncTask.execute();
-						}
-
-						@Override
-						public void onLoadingCancelled(String arg0, View arg1) {
-							titlepic2
-									.setImageResource(R.drawable.default_news_display);
-						}
-					});
-				} else {
-					titlepic2.setImageResource(R.drawable.default_news_display);
-
-					AsyncTask asyncTask = new AsyncTask<Object, Object, Bitmap>() {
-
-						private int whb;
-
-						@Override
-						protected Bitmap doInBackground(Object... params) {
-
-							try {
-//								options.inPreferredConfig = Bitmap.Config.RGB_565;
-//								options.inJustDecodeBounds = true;
-//
-//								Bitmap decodeFile = BitmapFactory.decodeFile(
-//										file.getAbsolutePath(), options);
-//
-//								int height = options.outHeight;
-//								int width = options.outWidth;
-//								 whb=Math.round((float) width / (float)
-//								 height);
-//								int insampSize = 0;
-//								if (viewWidth == 0 && viewHeight == 0) {
-//									if (viewwidth != null) {
-//										insampSize += Math.round((float) width
-//												/ (float) viewwidth);
-//									} else {
-//										insampSize = 4;
-//									}
-//								} else if (width > viewWidth
-//										|| height > viewHeight) {
-//
-//									int wround = Math.round((float) width
-//											/ (float) viewWidth);
-//									int hround = Math.round((float) height
-//											/ (float) viewHeight);
-//									insampSize += (wround > hround ? wround
-//											: hround) + 2;
-//								}
-//
-								options.inPreferredConfig = Bitmap.Config.RGB_565;
-//								options.inSampleSize = insampSize >= 6 ? insampSize - 2
-//										: insampSize;
-								options.inJustDecodeBounds = false;
-//								Bitmap decodeFilelock = BitmapFactory
-//										.decodeFile(file.getAbsolutePath(),
-//												options);
-								Bitmap decodeFilelock = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
-								return decodeFilelock;
-							} catch (Exception e) {
-								e.printStackTrace();
-							} catch (OutOfMemoryError e) {
-								System.gc();
-								imageLoader.clearMemoryCache();
-							}
-							return null;
-						}
-
-						@Override
-						protected void onPostExecute(Bitmap result) {
-							String tag = (String) titlepic2.getTag();
-							if (titlepic.equalsIgnoreCase(tag)) {
-								if (result != null) {
-									titlepic2.setImageBitmap(addBitmapToCache(
-											titlepic, result, imageCache));
-								}
-							}
-						}
-					};
-					asyncTask.execute();
-				}
-			} else {
-				String tag1 = (String) titlepic2.getTag();
-				if (titlepic.equalsIgnoreCase(tag1)) {
-					if (bitmapByPath != null) {
-						titlepic2.setTag(R.string.image_isloadcom, true);
-						titlepic2.setImageBitmap(bitmapByPath);
-					}
-				}
-			}
-		}
-
-	}
+	// public static void zoomImage(final ImageLoader imageLoader,
+	// final String titlepic, final ImageView titlepic2,
+	// final Context context,
+	// final Map<String, SoftReference<Bitmap>> imageCache) {
+	//
+	// String tag = (String) titlepic2.getTag();
+	//
+	// titlepic2.setTag(titlepic);
+	// Boolean isLoad = (Boolean) titlepic2.getTag(R.string.image_isloadcom);
+	// if (tag == null || !tag.equalsIgnoreCase(titlepic)
+	// || (isLoad == null || !isLoad)) {
+	//
+	// Bitmap bitmapByPath = getBitmapByPath(titlepic, imageCache);
+	//
+	// if (bitmapByPath == null) {
+	// titlepic2.setTag(R.string.image_isloadcom, false);
+	// final Integer viewwidth = (Integer) titlepic2
+	// .getTag(R.string.viewwidth);
+	// final int viewWidth = titlepic2.getWidth();
+	// final int viewHeight = titlepic2.getHeight();
+	// final File file = new File(
+	// CommonUtils.getImageCachePath(context),
+	// CommonUtils.generate(titlepic));
+	// final BitmapFactory.Options options = new BitmapFactory.Options();
+	//
+	// if (!file.exists()) {
+	// Log.e("COMMONUTILS", "图片不存在");
+	// titlepic2.setTag(titlepic);
+	// imageLoader.loadImage(titlepic, new ImageLoadingListener() {
+	// @Override
+	// public void onLoadingStarted(String arg0, View arg1) {
+	// titlepic2
+	// .setImageResource(R.drawable.default_news_display);
+	// }
+	//
+	// @Override
+	// public void onLoadingFailed(String arg0, View arg1,
+	// FailReason arg2) {
+	// titlepic2
+	// .setImageResource(R.drawable.default_news_display);
+	// }
+	//
+	// @Override
+	// public void onLoadingComplete(String arg0, View arg1,
+	// final Bitmap arg2) {
+	// AsyncTask asyncTask = new AsyncTask<Object, Object, Bitmap>() {
+	//
+	// private int whb;
+	//
+	// protected Bitmap doInBackground(Object[] params) {
+	//
+	// // int byteCount = arg2.getHeight();
+	// // int rowBytes = arg2.getRowBytes();
+	// // int mem = byteCount * rowBytes;
+	// // int size = 90;
+	// // if (mem > 1024 * 8 && mem < 30 * 1024 *
+	// // 8) {
+	// // size = 80;
+	// // } else if (mem > 30 * 1024 * 8
+	// // && mem < 40 * 1024 * 8) {
+	// // size = 70;
+	// // } else if (mem >= 40 * 1024 * 8
+	// // && mem < 60 * 1024 * 8) {
+	// // size = 60;
+	// // } else if (mem >= 60 * 1024 * 8
+	// // && mem < 90 * 1024 * 8) {
+	// // size = 50;
+	// // } else if (mem >= 90 * 1024 * 8) {
+	// // size = 40;
+	// // }
+	// //
+	// // int width = arg2.getWidth();
+	// // int height = arg2.getHeight();
+	// //
+	// // whb=Math.round((float) width / (float)
+	// // height);
+	// //
+	// // int insampSize = 0;
+	// //
+	// // if (viewWidth == 0 && viewHeight == 0) {
+	// // insampSize += Math.round((float) width
+	// // / (float) viewwidth);
+	// // } else if (width > viewWidth
+	// // || height > viewHeight) {
+	// // int wround = Math.round((float) width
+	// // / (float) viewWidth);
+	// // int hround = Math.round((float) height
+	// // / (float) viewHeight);
+	// // insampSize += (wround > hround ? wround
+	// // : hround) + 2;
+	// // }
+	// try {
+	// CompressFormat format = CompressFormat.WEBP;
+	// // if ("png"
+	// // .equalsIgnoreCase(UrlToFileFormat(titlepic))) {
+	// // format = CompressFormat.PNG;
+	// // } else {
+	// // format = CompressFormat.JPEG;
+	// // }
+	//
+	// boolean compress = arg2.compress(
+	// format, 80,
+	// new FileOutputStream(file));
+	// options.inPreferredConfig = Bitmap.Config.RGB_565;
+	// options.inJustDecodeBounds = false;
+	// // options.inSampleSize = insampSize >= 6 ? insampSize - 2
+	// // : insampSize;
+	// // Bitmap decodeFile = BitmapFactory
+	// // .decodeFile(
+	// // file.getAbsolutePath(),
+	// // options);
+	// // Log.w("图片地址", file.getAbsolutePath());
+	// Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath(),
+	// options);
+	// if (arg2 != null) {
+	// arg2.recycle();
+	// }
+	// return decodeFile;
+	// } catch (OutOfMemoryError e) {
+	// System.gc();
+	// imageLoader.clearMemoryCache();
+	// } catch (Exception e) {
+	// System.gc();
+	// imageLoader.clearMemoryCache();
+	// }
+	// return null;
+	//
+	// };
+	//
+	// protected void onPostExecute(Bitmap result) {
+	// String tag = (String) titlepic2.getTag();
+	// if (titlepic.equalsIgnoreCase(tag)) {
+	// // if (whb != 0
+	// // && titlepic2.getTag(R.string.graphic)
+	// // !=
+	// // null
+	// // && "graphic"
+	// // .equalsIgnoreCase((String) titlepic2
+	// // .getTag(R.string.graphic))) {
+	// // titlepic2.getLayoutParams().height =
+	// // viewwidth
+	// // / whb;
+	// // }
+	// if (result != null) {
+	// titlepic2.setTag(
+	// R.string.image_isloadcom,
+	// true);
+	// titlepic2
+	// .setImageBitmap(addBitmapToCache(
+	// titlepic, result,
+	// imageCache));
+	// }
+	// }
+	//
+	// };
+	//
+	// };
+	// asyncTask.execute();
+	// }
+	//
+	// @Override
+	// public void onLoadingCancelled(String arg0, View arg1) {
+	// titlepic2
+	// .setImageResource(R.drawable.default_news_display);
+	// }
+	// });
+	// } else {
+	// titlepic2.setImageResource(R.drawable.default_news_display);
+	//
+	// AsyncTask asyncTask = new AsyncTask<Object, Object, Bitmap>() {
+	//
+	// private int whb;
+	//
+	// @Override
+	// protected Bitmap doInBackground(Object... params) {
+	//
+	// try {
+	// // options.inPreferredConfig = Bitmap.Config.RGB_565;
+	// // options.inJustDecodeBounds = true;
+	// //
+	// // Bitmap decodeFile = BitmapFactory.decodeFile(
+	// // file.getAbsolutePath(), options);
+	// //
+	// // int height = options.outHeight;
+	// // int width = options.outWidth;
+	// // whb=Math.round((float) width / (float)
+	// // height);
+	// // int insampSize = 0;
+	// // if (viewWidth == 0 && viewHeight == 0) {
+	// // if (viewwidth != null) {
+	// // insampSize += Math.round((float) width
+	// // / (float) viewwidth);
+	// // } else {
+	// // insampSize = 4;
+	// // }
+	// // } else if (width > viewWidth
+	// // || height > viewHeight) {
+	// //
+	// // int wround = Math.round((float) width
+	// // / (float) viewWidth);
+	// // int hround = Math.round((float) height
+	// // / (float) viewHeight);
+	// // insampSize += (wround > hround ? wround
+	// // : hround) + 2;
+	// // }
+	// //
+	// options.inPreferredConfig = Bitmap.Config.RGB_565;
+	// // options.inSampleSize = insampSize >= 6 ? insampSize - 2
+	// // : insampSize;
+	// options.inJustDecodeBounds = false;
+	// // Bitmap decodeFilelock = BitmapFactory
+	// // .decodeFile(file.getAbsolutePath(),
+	// // options);
+	// Bitmap decodeFilelock = BitmapFactory.decodeFile(file.getAbsolutePath(),
+	// options);
+	// return decodeFilelock;
+	// } catch (Exception e) {
+	// e.printStackTrace();
+	// } catch (OutOfMemoryError e) {
+	// System.gc();
+	// imageLoader.clearMemoryCache();
+	// }
+	// return null;
+	// }
+	//
+	// @Override
+	// protected void onPostExecute(Bitmap result) {
+	// String tag = (String) titlepic2.getTag();
+	// if (titlepic.equalsIgnoreCase(tag)) {
+	// if (result != null) {
+	// titlepic2.setImageBitmap(addBitmapToCache(
+	// titlepic, result, imageCache));
+	// }
+	// }
+	// }
+	// };
+	// asyncTask.execute();
+	// }
+	// } else {
+	// String tag1 = (String) titlepic2.getTag();
+	// if (titlepic.equalsIgnoreCase(tag1)) {
+	// if (bitmapByPath != null) {
+	// titlepic2.setTag(R.string.image_isloadcom, true);
+	// titlepic2.setImageBitmap(bitmapByPath);
+	// }
+	// }
+	// }
+	// }
+	//
+	// }
 
 	// 压缩图片后再显示
 	public static void zoomImage(ImageLoader imageLoader,
@@ -889,22 +894,23 @@ public class CommonUtils {
 								// size = 40;
 								// }
 
-//								int width = arg2.getWidth();
-//								int height = arg2.getHeight();
+								// int width = arg2.getWidth();
+								// int height = arg2.getHeight();
 
 								// whb=Math.round((float) width / (float)
 								// height);
 
-//								int insampSize = 0;
+								// int insampSize = 0;
 
 								try {
 									CompressFormat format = CompressFormat.WEBP;
-//									if ("png"
-//											.equalsIgnoreCase(UrlToFileFormat(titlepic))) {
-//										format = CompressFormat.PNG;
-//									} else {
-//										format = CompressFormat.JPEG;
-//									}
+									// if ("png"
+									// .equalsIgnoreCase(UrlToFileFormat(titlepic)))
+									// {
+									// format = CompressFormat.PNG;
+									// } else {
+									// format = CompressFormat.JPEG;
+									// }
 									File file = null;
 									if (isTop == null || !isTop) {
 										file = new File(CommonUtils
@@ -914,21 +920,23 @@ public class CommonUtils {
 												format, 80,
 												new FileOutputStream(file));
 
-//										if (viewWidth == 0 && viewHeight == 0) {
-//											insampSize += Math
-//													.round((float) width
-//															/ (float) viewwidth);
-//										} else if (width > viewWidth
-//												|| height > viewHeight) {
-//											int wround = Math
-//													.round((float) width
-//															/ (float) viewWidth);
-//											int hround = Math
-//													.round((float) height
-//															/ (float) viewHeight);
-//											insampSize += (wround > hround ? wround
-//													: hround) + 2;
-//										}
+										// if (viewWidth == 0 && viewHeight ==
+										// 0) {
+										// insampSize += Math
+										// .round((float) width
+										// / (float) viewwidth);
+										// } else if (width > viewWidth
+										// || height > viewHeight) {
+										// int wround = Math
+										// .round((float) width
+										// / (float) viewWidth);
+										// int hround = Math
+										// .round((float) height
+										// / (float) viewHeight);
+										// insampSize += (wround > hround ?
+										// wround
+										// : hround) + 2;
+										// }
 
 									} else {
 										file = new File(
@@ -942,25 +950,28 @@ public class CommonUtils {
 												format, 80,
 												new FileOutputStream(file));
 
-//										if (viewWidth == 0 && viewHeight == 0) {
-//											insampSize += Math
-//													.round((float) width
-//															/ (float) viewwidth);
-//										}
-//
-//										if (insampSize > 4) {
-//											insampSize = insampSize - 2;
-//										}
+										// if (viewWidth == 0 && viewHeight ==
+										// 0) {
+										// insampSize += Math
+										// .round((float) width
+										// / (float) viewwidth);
+										// }
+										//
+										// if (insampSize > 4) {
+										// insampSize = insampSize - 2;
+										// }
 
 									}
 
 									options.inPreferredConfig = Bitmap.Config.RGB_565;
 									options.inJustDecodeBounds = false;
-//									options.inSampleSize = insampSize;
-//									Bitmap decodeFile = BitmapFactory
-//											.decodeFile(file.getAbsolutePath(),
-//													options);
-									Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+									// options.inSampleSize = insampSize;
+									// Bitmap decodeFile = BitmapFactory
+									// .decodeFile(file.getAbsolutePath(),
+									// options);
+									Bitmap decodeFile = BitmapFactory
+											.decodeFile(file.getAbsolutePath(),
+													options);
 									if (arg2 != null) {
 										arg2.recycle();
 									}
@@ -1020,9 +1031,10 @@ public class CommonUtils {
 					protected Bitmap doInBackground(Object... params) {
 
 						try {
-//							options.inPreferredConfig = Bitmap.Config.RGB_565;
-//							options.inJustDecodeBounds = true;
-//							int insampSize = 0;
+							// options.inPreferredConfig =
+							// Bitmap.Config.RGB_565;
+							// options.inJustDecodeBounds = true;
+							// int insampSize = 0;
 							File file = null;
 
 							if (isTop == null || !isTop) {
@@ -1031,51 +1043,51 @@ public class CommonUtils {
 										CommonUtils.getImageCachePath(context),
 										CommonUtils.generate(titlepic));
 
-//								Bitmap decodeFile = BitmapFactory.decodeFile(
-//										file.getAbsolutePath(), options);
+								// Bitmap decodeFile = BitmapFactory.decodeFile(
+								// file.getAbsolutePath(), options);
 
-//								int height = options.outHeight;
-//								int width = options.outWidth;
+								// int height = options.outHeight;
+								// int width = options.outWidth;
 
-//								if (viewWidth == 0 && viewHeight == 0) {
-//									if (viewwidth != null) {
-//										insampSize += Math.round((float) width
-//												/ (float) viewwidth);
-//									} else {
-//										insampSize = 4;
-//									}
-//								} else if (width > viewWidth
-//										|| height > viewHeight) {
-//
-//									int wround = Math.round((float) width
-//											/ (float) viewWidth);
-//									int hround = Math.round((float) height
-//											/ (float) viewHeight);
-//									insampSize += (wround > hround ? wround
-//											: hround) + 2;
-//								}
+								// if (viewWidth == 0 && viewHeight == 0) {
+								// if (viewwidth != null) {
+								// insampSize += Math.round((float) width
+								// / (float) viewwidth);
+								// } else {
+								// insampSize = 4;
+								// }
+								// } else if (width > viewWidth
+								// || height > viewHeight) {
+								//
+								// int wround = Math.round((float) width
+								// / (float) viewWidth);
+								// int hround = Math.round((float) height
+								// / (float) viewHeight);
+								// insampSize += (wround > hround ? wround
+								// : hround) + 2;
+								// }
 
 							} else {
 								file = new File(
 										CommonUtils.getImageCachePath(context),
 										"big_" + CommonUtils.generate(titlepic));
 
-//								Bitmap decodeFile = BitmapFactory.decodeFile(
-//										file.getAbsolutePath(), options);
+								// Bitmap decodeFile = BitmapFactory.decodeFile(
+								// file.getAbsolutePath(), options);
 
-//								int height = options.outHeight;
-//								int width = options.outWidth;
+								// int height = options.outHeight;
+								// int width = options.outWidth;
 
-//								if (viewWidth == 0 && viewHeight == 0) {
-//									if (viewwidth != null) {
-//										insampSize += Math.round((float) width
-//												/ (float) viewwidth);
-//									}
-//								}
-//
-//								if (insampSize > 4) {
-//									insampSize = insampSize - 2;
-//								}
+								// if (viewWidth == 0 && viewHeight == 0) {
+								// if (viewwidth != null) {
+								// insampSize += Math.round((float) width
+								// / (float) viewwidth);
+								// }
+								// }
+								//
+								// if (insampSize > 4) {
+								// insampSize = insampSize - 2;
+								// }
 
 							}
 
@@ -1084,11 +1096,12 @@ public class CommonUtils {
 
 							options.inPreferredConfig = Bitmap.Config.RGB_565;
 							options.inJustDecodeBounds = false;
-//							options.inSampleSize = insampSize;
-//							options.inJustDecodeBounds = false;
-//							Bitmap decodeFilelock = BitmapFactory.decodeFile(
-//									file.getAbsolutePath(), options);
-							Bitmap decodeFilelock = BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+							// options.inSampleSize = insampSize;
+							// options.inJustDecodeBounds = false;
+							// Bitmap decodeFilelock = BitmapFactory.decodeFile(
+							// file.getAbsolutePath(), options);
+							Bitmap decodeFilelock = BitmapFactory.decodeFile(
+									file.getAbsolutePath(), options);
 
 							return new SoftReference<Bitmap>(decodeFilelock)
 									.get();

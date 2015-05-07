@@ -32,9 +32,29 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
 import com.kankan.kankanews.config.AndroidConfig;
+import com.kankanews.kankanxinwen.R;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class ImgUtils {
-
+	public static DisplayImageOptions homeImageOptions;
+	static {
+		homeImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true)// 设置下载的图片是否缓存在内存中
+				.cacheOnDisc(true)// 设置下载的图片是否缓存在SD卡中
+				 .showImageOnLoading(R.drawable.default_news_display) //设置图片在下载期间显示的图片  
+				 .showImageForEmptyUri(R.drawable.default_news_display)//设置图片Uri为空或是错误的时候显示的图片  
+				.showImageOnFail(R.drawable.default_news_display)  //设置图片加载/解码过程中错误时候显示的图片
+				.imageScaleType(ImageScaleType.EXACTLY_STRETCHED)// 设置图片以如何的编码方式显示
+				.bitmapConfig(Bitmap.Config.RGB_565)// 设置图片的解码类型//
+				.decodingOptions(new BitmapFactory.Options())// 设置图片的解码配置
+				// .delayBeforeLoading(int delayInMillis)//int
+				// delayInMillis为你设置的下载前的延迟时间
+				// 设置图片加入缓存前，对bitmap进行设置
+				// .preProcessor(BitmapProcessor preProcessor)
+				.resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
+				.build();// 构建完成
+	}
+	
 	public static Map<String, String> sendImage(String fileUrl) {
 		Map<String, String> result = new HashMap<String, String>();
 		HttpURLConnection conn = null;
@@ -250,7 +270,4 @@ public class ImgUtils {
 		}
 	}
 	
-	public static void sortImgListByModified(){
-		
-	}
 }

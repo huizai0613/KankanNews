@@ -3,8 +3,8 @@ package com.kankan.kankanews.bean;
 import org.json.JSONObject;
 
 import com.kankan.kankanews.base.BaseBean;
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankannews.bean.interfaz.CanSharedObject;
 import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Transient;
 

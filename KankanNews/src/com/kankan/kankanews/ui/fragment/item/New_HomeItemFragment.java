@@ -60,6 +60,7 @@ import com.kankan.kankanews.ui.view.AutoImageVIew;
 import com.kankan.kankanews.ui.view.AutoScrollViewPager;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
@@ -108,12 +109,12 @@ public class New_HomeItemFragment extends BaseFragment implements
 	private boolean noMoreNews = false;
 
 	private boolean isPushNews = false;
-	
+
 	private ArrayList<String> new_has_click = new ArrayList<String>();
-	
+
 	int[] textNomalSize = { R.dimen.news_textsize_1, R.dimen.news_textsize_2,
 			R.dimen.news_textsize_3, R.dimen.news_textsize_4 };
-	
+
 	public HashMap<String, SoftReference<Bitmap>> getImageCache() {
 		return imageCache;
 	}
@@ -166,8 +167,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		inflate = inflater.inflate(R.layout.new_fragment_home_item, null);
-		// 统计
-		// initAnalytics(AndroidConfig.new_news_page);
+
 		instance = ItnetUtils.getInstance(mActivity);
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 		screnn_pb = (LinearLayout) inflate.findViewById(R.id.screnn_pb);
@@ -232,40 +232,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 		}
 
-		// 处理推送逻辑
-		// Bundle bun = mActivity.getIntent().getExtras();
-		// String newsid = null;
-		// String reporter = null;
-		// if (bun != null) {
-		// newsid = bun.getString("newsid");
-		// }
-		// if (bun != null) {
-		// reporter = bun.getString("reporter");
-		// }
-		//
-		// if (!TextUtils.isEmpty(newsid)) {
-		// // startAnimActivityById(New_Activity_Content_Video.class, 0,
-		// // "arrayid", new int[] { Integer.parseInt(newsid) });
-		//
-		// } else if (!TextUtils.isEmpty(reporter)) {
-		//
-		// Content_News content_News = null;
-		// try {
-		// content_News = mActivity.dbUtils.findFirst(Selector.from(
-		// Content_News.class).where("uid", "=", reporter));
-		// } catch (DbException e) {
-		// //
-		// e.printStackTrace();
-		// }
-		//
-		// if (content_News != null) {
-		// mActivity.startAnimActivity2Obj(Activity_Reporter.class,
-		// "content_News", content_News);
-		// } else {
-		// mActivity.startAnimActivity2Obj(Activity_Reporter.class, "ID",
-		// reporter, null);
-		// }
-		// } else {
 		return inflate;
 
 	}
@@ -302,9 +268,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			}
 			initTopImageAndPoint();
 			if (mTopNews != null && mNews != null) {
-//				adapter = new TopAdapter();
-//				listview.setAdapter(adapter);
-				// 点击量
+
 				for (int i = 0; new_news_clicks != null
 						&& i < new_news_clicks.size(); i++) {
 					mClicks.put(new_news_clicks.get(i).getId(), new_news_clicks
@@ -361,12 +325,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 					listview.onRefreshComplete();
 					screnn_pb.setVisibility(View.GONE);
 
-					
 					// TODO
 					if (New_HomeFragment.PUSH_NEWS_ID != null) {
 						// 推送
 						String news_id = New_HomeFragment.PUSH_NEWS_ID;
-//						Log.e("PUSH_NEWS_ID", news_id);
 						instance.getNewsContentDataPush(news_id,
 								new Listener<JSONObject>() {
 									@Override
@@ -382,8 +344,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 									}
 								}, new ErrorListener() {
 									@Override
-									public void onErrorResponse(VolleyError error) {
-										ToastUtils.ErrorToastNoNet(getActivity());
+									public void onErrorResponse(
+											VolleyError error) {
+										ToastUtils
+												.ErrorToastNoNet(getActivity());
 									}
 								});
 						New_HomeFragment.PUSH_NEWS_ID = null;
@@ -516,7 +480,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 			new_news_clicks = new ArrayList<New_News_Click>();
 			for (int i = 0; i < new_home_list.getHome_list().size(); i++) {
 				New_News_Home new_news = new_home_list.getHome_list().get(i);
-				;
 
 				if (Integer.parseInt(new_news.getType()) % 10 != 5
 						&& Integer.parseInt(new_news.getType()) % 10 != 6) {
@@ -536,13 +499,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 			new_news_clicks = new ArrayList<New_News_Click>();
 			addData(false);
 		}
-
-		// addData();
 	}
 
 	@Override
 	protected void onSuccessArray(JSONArray jsonObject) {
-		//
 	}
 
 	@Override
@@ -571,9 +531,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 	@Override
 	protected void saveLocalDate() {
-		// arrayid = new int[(getmTopNewsList == null ? 0 :
-		// getmTopNewsList.size())
-		// + (getmNewsList == null ? 0 : getmNewsList.size())];
 
 		new Thread() {
 			public void run() {
@@ -603,7 +560,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 				if (getmTopNewsList != null) {
 					try {
-						// mActivity.dbUtils.delete(Selector.from(New_News.class).where("my_type","=","home_top_news").or("my_type","=","home_news"));
 						mActivity.dbUtils.saveOrUpdateAll(getmTopNewsList);
 					} catch (DbException e1) {
 						//
@@ -693,12 +649,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 		@Override
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
-//			Log.e("PixelUtil", New_HomeItemFragment.this.getResources().getDimension(
-//					textNomalSize[PixelUtil.getScale()]) + "");
 			int itemViewType = getItemViewType(position);
 			boolean hasTopNews = getmTopNewsList.size() > 0;
 			int newsPosition = hasTopNews ? position - 1 : position;
-			// if (getmTopNewsList != null && getmTopNewsList.size() > 0) {
 			if (convertView == null) {
 				if (itemViewType == 0) {
 
@@ -714,10 +667,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					pagerHolder.title = (MyTextView) convertView
 							.findViewById(R.id.new_title);
-					pagerHolder.title.setTextSize(New_HomeItemFragment.this.getResources().getDimension(
-							textNomalSize[PixelUtil.getScale()]));
-					// pagerHolder.labse = (MyTextView) convertView
-					// .findViewById(R.id.new_labase);
+					pagerHolder.title.setTextSize(New_HomeItemFragment.this
+							.getResources().getDimension(
+									textNomalSize[PixelUtil.getScale()]));
 					pagerHolder.pager
 							.setLayoutParams(new RelativeLayout.LayoutParams(
 									RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -745,7 +697,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 						pagerHolder.pager.stopAutoScroll();
 					}
 					pagerHolder.pager.setAdapter(imagePagerAdapter);
-					// pagerHolder.pager.setSwipeScrollDurationFactor(2.0);
 
 					int size = points.size();
 					if (size > 1) {
@@ -771,8 +722,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					newHolder.title = (MyTextView) convertView
 							.findViewById(R.id.home_news_title);
-					newHolder.title.setTextSize(New_HomeItemFragment.this.getResources().getDimension(
-							textNomalSize[PixelUtil.getScale()]));
+					newHolder.title.setTextSize(New_HomeItemFragment.this
+							.getResources().getDimension(
+									textNomalSize[PixelUtil.getScale()]));
 					newHolder.newstime_sign = (ImageView) convertView
 							.findViewById(R.id.home_news_newstime_sign);
 					newHolder.newstime = (MyTextView) convertView
@@ -795,8 +747,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 					albumsHolder = new NewAlbumsHolder();
 					albumsHolder.title = (MyTextView) convertView
 							.findViewById(R.id.home_albums_title);
-					albumsHolder.title.setTextSize(New_HomeItemFragment.this.getResources().getDimension(
-							textNomalSize[PixelUtil.getScale()]));
+					albumsHolder.title.setTextSize(New_HomeItemFragment.this
+							.getResources().getDimension(
+									textNomalSize[PixelUtil.getScale()]));
 					albumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
 							.findViewById(R.id.home_albums_imgs_layout);
 					albumsHolder.albums_image_1 = (ImageView) convertView
@@ -805,10 +758,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 							.findViewById(R.id.home_albums_img_2);
 					albumsHolder.albums_image_3 = (ImageView) convertView
 							.findViewById(R.id.home_albums_img_3);
-					// image_view_list.clear();
-					// image_view_list.add(albumsHolder.albums_image_1);
-					// image_view_list.add(albumsHolder.albums_image_2);
-					// image_view_list.add(albumsHolder.albums_image_3);
 					albumsHolder.home_albums_imgs_layout
 							.setLayoutParams(new LinearLayout.LayoutParams(
 									LinearLayout.LayoutParams.MATCH_PARENT,
@@ -821,8 +770,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 					newZhuanTiHolder = new NewZhuanTiHolder();
 					newZhuanTiHolder.title = (MyTextView) convertView
 							.findViewById(R.id.title);
-					newZhuanTiHolder.title.setTextSize(New_HomeItemFragment.this.getResources().getDimension(
-							textNomalSize[PixelUtil.getScale()]));
+					newZhuanTiHolder.title
+							.setTextSize(New_HomeItemFragment.this
+									.getResources()
+									.getDimension(
+											textNomalSize[PixelUtil.getScale()]));
 					newZhuanTiHolder.home_news_titlepic = (ImageView) convertView
 							.findViewById(R.id.home_news_titlepic);
 					newZhuanTiHolder.home_news_intro = (MyTextView) convertView
@@ -860,31 +812,22 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final New_News_Home news = getmNewsList.get(newsPosition);
 				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
 				String clicktime = mClicks.get(news.getMid());
-//				if("false".equalsIgnoreCase(clicktime)){
-//					newHolder.newstime.setVisibility(View.INVISIBLE);
-//					newHolder.newstime_sign.setVisibility(View.INVISIBLE);
-//				} else{
-//					newHolder.newstime.setVisibility(View.VISIBLE);
-//					newHolder.newstime_sign.setVisibility(View.VISIBLE);
-//					newHolder.newstime.setText(clicktime);
-//				}
 				clicktime = TextUtils.isEmpty(clicktime) ? "0次" : clicktime
 						+ "次";
 				final int news_type = Integer.valueOf(news.getType());
 				newHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
-				CommonUtils.zoomImage(imageLoader,
-						news.getTitlepic(),
-						newHolder.titlepic, mActivity, imageCache);
+				// CommonUtils.zoomImage(imageLoader,
+				// news.getTitlepic(),
+				// newHolder.titlepic, mActivity, imageCache);
+				imageLoader.displayImage(news.getTitlepic(),
+						newHolder.titlepic, ImgUtils.homeImageOptions);
 
-				// imageLoader.displayImage(news.getTitlepic(),
-				// newHolder.titlepic,
-				// Options.getSmallImageOptions(false));
 				newHolder.title.setText(news.getTitle());
 				newHolder.newstime.setText(clicktime);
-				if(new_has_click.contains(news.getId())){
+				if (new_has_click.contains(news.getId())) {
 					newHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
-				} else{
+				} else {
 					newHolder.title.setTextColor(Color.parseColor("#000000"));
 				}
 				switch (news_type / 10) {
@@ -937,20 +880,15 @@ public class New_HomeItemFragment extends BaseFragment implements
 					break;
 				}
 
-				// if (news_type % 10 == 1) {
-				// newHolder.home_news_play.setVisibility(View.VISIBLE);
-				// } else {
-				// newHolder.home_news_play.setVisibility(View.GONE);
-				// }
-
 				convertView.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
 						//
 						openNews(news);
-						if(!new_has_click.contains(news.getId())){
-							MyTextView textView = (MyTextView)v.findViewById(R.id.home_news_title);
+						if (!new_has_click.contains(news.getId())) {
+							MyTextView textView = (MyTextView) v
+									.findViewById(R.id.home_news_title);
 							new_has_click.add(news.getId());
 							textView.setTextColor(Color.parseColor("#B0B0B0"));
 						}
@@ -967,10 +905,12 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final String[] pics = news.getTitlepic().split("::::::");
 				ArrayList<ImageView> image_view_list = new ArrayList<ImageView>();
 
-				if(new_has_click.contains(news.getId())){
-					albumsHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
-				} else{
-					albumsHolder.title.setTextColor(Color.parseColor("#000000"));
+				if (new_has_click.contains(news.getId())) {
+					albumsHolder.title
+							.setTextColor(Color.parseColor("#B0B0B0"));
+				} else {
+					albumsHolder.title
+							.setTextColor(Color.parseColor("#000000"));
 				}
 				int width = (mActivity.mScreenWidth - PixelUtil.dp2px(20) / 3);
 				albumsHolder.albums_image_1.setScaleType(ScaleType.CENTER_CROP);
@@ -986,24 +926,25 @@ public class New_HomeItemFragment extends BaseFragment implements
 				image_view_list.add(albumsHolder.albums_image_2);
 				image_view_list.add(albumsHolder.albums_image_3);
 				for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++) {
-					// imageLoader.displayImage(pics[i + 1],
-					// image_view_list.get(i),
-					// Options.getSmallImageOptions(false));
 					if (pics.length > i + 1) {
-						CommonUtils.zoomImage(imageLoader,
+						// CommonUtils.zoomImage(imageLoader,
+						// CommonUtils.doWebpUrl(pics[i + 1]),
+						// image_view_list.get(i), mActivity, imageCache);
+						imageLoader.displayImage(
 								CommonUtils.doWebpUrl(pics[i + 1]),
-								image_view_list.get(i), mActivity, imageCache);
+								image_view_list.get(i),
+								ImgUtils.homeImageOptions);
+
 					}
 				}
 
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						// startAnimActivityByBean(New_ActivityPicSet.class,
-						// "news_content", news);
 						openNews(news);
-						if(!new_has_click.contains(news.getId())){
-							MyTextView textView = (MyTextView)v.findViewById(R.id.home_albums_title);
+						if (!new_has_click.contains(news.getId())) {
+							MyTextView textView = (MyTextView) v
+									.findViewById(R.id.home_albums_title);
 							new_has_click.add(news.getId());
 							textView.setTextColor(Color.parseColor("#B0B0B0"));
 						}
@@ -1014,20 +955,15 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final New_News_Home news = getmNewsList.get(newsPosition);
 				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
 				newZhuanTiHolder.title.setText(news.getTitle());
-				if(new_has_click.contains(news.getId())){
-					newZhuanTiHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
-				} else{
-					newZhuanTiHolder.title.setTextColor(Color.parseColor("#000000"));
+				if (new_has_click.contains(news.getId())) {
+					newZhuanTiHolder.title.setTextColor(Color
+							.parseColor("#B0B0B0"));
+				} else {
+					newZhuanTiHolder.title.setTextColor(Color
+							.parseColor("#000000"));
 				}
-				CommonUtils.zoomImage(imageLoader,
-						news.getTitlepic(),
+				CommonUtils.zoomImage(imageLoader, news.getTitlepic(),
 						newZhuanTiHolder.home_news_titlepic, mActivity);
-				// imageLoader.displayImage(news.getTitlepic(),
-				// newZhuanTiHolder.home_news_titlepic,
-				// Options.getSmallImageOptions(false));
-				// newZhuanTiHolder.home_news_intro.setText(news.getIntro()
-				// .length() > 45 ? news.getIntro().subSequence(0, 45)
-				// + "..." : news.getIntro());
 
 				newZhuanTiHolder.home_news_intro.setText(news.getIntro());
 
@@ -1036,8 +972,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 					public void onClick(View v) {
 						// 专题
 						openNews(news);
-						if(!new_has_click.contains(news.getId())){
-							MyTextView textView = (MyTextView)v.findViewById(R.id.title);
+						if (!new_has_click.contains(news.getId())) {
+							MyTextView textView = (MyTextView) v
+									.findViewById(R.id.title);
 							new_has_click.add(news.getId());
 							textView.setTextColor(Color.parseColor("#B0B0B0"));
 						}
@@ -1045,7 +982,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 				});
 
 			}
-			// }
 
 			return convertView;
 		}
@@ -1167,7 +1103,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 		public void onResponse(JSONArray jsonObject) {
 
 			try {
-				// JSONArray jsonArray = new JSONArray(jsonObject.toString());
 				JSONArray jsonArray = jsonObject;
 				if (jsonArray != null && jsonArray.length() > 0) {
 					for (int i = 0; i < jsonArray.length(); i++) {
@@ -1185,7 +1120,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 				e.printStackTrace();
 			}
 			addData(true);
-			// new_news_clicks
 		}
 	};
 

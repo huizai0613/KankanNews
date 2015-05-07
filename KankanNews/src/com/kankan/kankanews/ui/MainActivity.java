@@ -80,8 +80,6 @@ public class MainActivity extends BaseActivity {
 			R.drawable.tab_two_touch, R.drawable.tab_three_touch,
 			R.drawable.tab_four_touch, R.drawable.tab_five_touch };
 
-	// public DrawerView drawerView;
-
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 
@@ -117,20 +115,16 @@ public class MainActivity extends BaseActivity {
 		spUtil.setFristComing(false);
 		wm = (WindowManager) getApplicationContext().getSystemService(
 				Context.WINDOW_SERVICE);
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		// 自动更新提示
 		UmengUpdateAgent.setUpdateOnlyWifi(false);
 		UmengUpdateAgent.update(this);
-		// tongji
-		// initAnalytics("");
-
+		
 		newsW = (mScreenWidth - PixelUtil.dp2px(15)) / 2;
 		topNewW = mScreenWidth;
-		// 注册广播
-		// registerReceiver(mHomeKeyEventReceiver, new IntentFilter(
-		// Intent.ACTION_CLOSE_SYSTEM_DIALOGS));
+
 		Intent intent = getIntent();
 		Serializable serializableExtra = intent.getSerializableExtra("LIVE");
 		if (serializableExtra != null) {
@@ -145,7 +139,6 @@ public class MainActivity extends BaseActivity {
 			if (bun != null) {
 				if (bun.containsKey("LIVE_ID")) {
 					//直播分享
-					Log.e("LIVE_ID", bun.getString("LIVE_ID"));
 					New_LivePlayFragment fragment = (New_LivePlayFragment) fragments
 							.get(1);
 					fragment.setSelectPlay(true);
@@ -153,7 +146,6 @@ public class MainActivity extends BaseActivity {
 					touchTab(tab_two);
 				} else if (bun.containsKey("PUSH_NEWS_ID")) {
 					//推送
-					Log.e("PUSH_NEWS_ID", bun.getString("PUSH_NEWS_ID"));
 					New_HomeFragment fragment = (New_HomeFragment) fragments
 							.get(0);
 					fragment.PUSH_NEWS_ID = bun.getString("PUSH_NEWS_ID");
@@ -172,15 +164,6 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mApplication.checkLogin();
-		// if (!isloaduser && mApplication.isLogin) {
-		// imageLoader.displayImage(mApplication.getUser().getUser_poster(),
-		// menu_user_img, Options.getBigImageOptions(null));
-		// menu_user_name.setText(mApplication.getUser().getUser_name());
-		// isloaduser = true;
-		// findViewById(R.id.menu_set).setVisibility(View.GONE);
-		// findViewById(R.id.menu_offline).setVisibility(View.GONE);
-		// }
 
 		if (lastTime != 0) {
 			if ((TimeUtil.now() - lastTime) / 60 >= 10) {
@@ -245,38 +228,14 @@ public class MainActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 	}
 
-	// protected void initSlidingMenu() {
-	// drawerView = new DrawerView(this);
-	// side_drawer = new DrawerView(this).initSlidingMenu();
-	//
-	// }
-	//
 	int i;
 	long front;
 	long later;
 
-	public void touchDoubleDown() {
-		// i++;
-		// if (i < 2) {
-		// front = System.currentTimeMillis();
-		// return;
-		// }
-		// if (i >= 2) {
-		// later = System.currentTimeMillis();
-		// if (later - front > 500) {
-		// front = System.currentTimeMillis();
-		// i = 1;
-		// } else {
-		refreshMianItem();
-		// i = 0;
-		// }
-		// }
-	}
-
 	public void touchTab(View v) {
 		int id = v.getId();
 		if (id == R.id.tab_one && curTouchTab == tab_one) {
-			touchDoubleDown();
+			refreshMianItem();
 		} else if (id == R.id.tab_two && curTouchTab == tab_two) {
 			refreshLive();
 		} else if (id == R.id.tab_three && curTouchTab == tab_three) {
@@ -296,32 +255,22 @@ public class MainActivity extends BaseActivity {
 
 		switch (id) {
 		case R.id.tab_one:
-			// error_bg.setVisibility(View.GONE);
 			curTouchTab = tab_one;
 			setTabStyle(tab_one, 0, true);
 			break;
 		case R.id.tab_two:
-			// error_bg.setVisibility(View.GONE);
 			curTouchTab = tab_two;
 			setTabStyle(tab_two, 1, true);
 			break;
 		case R.id.tab_three:
-			// if (mApplication.getUser().getType() == 0) {
-			// msg_tv.setText("请与办公室联系，加入办公室即可跟踪运单状态.");
-			// error_bg.setVisibility(View.VISIBLE);
-			// } else {
-			// error_bg.setVisibility(View.GONE);
-			// }
 			curTouchTab = tab_three;
 			setTabStyle(tab_three, 2, true);
 			break;
 		case R.id.tab_four:
-			// error_bg.setVisibility(View.GONE);
 			curTouchTab = tab_four;
 			setTabStyle(tab_four, 3, true);
 			break;
 		case R.id.tab_five:
-			// error_bg.setVisibility(View.GONE);
 			curTouchTab = tab_five;
 			setTabStyle(tab_five, 4, true);
 			break;
@@ -406,11 +355,9 @@ public class MainActivity extends BaseActivity {
 
 	private void setTabStyle(RelativeLayout view, int positon, boolean isTouch) {
 
-		// TextView tab_num = (TextView) view.findViewById(R.id.tab_num);
 		ImageView tab_img = (ImageView) view.findViewById(R.id.tab_img);
 
 		if (isTouch) {
-			// tab_num.setVisibility(View.GONE);
 			tab_img.setImageResource(touchImg[positon]);
 		} else {
 			tab_img.setImageResource(nomalImg[positon]);
@@ -432,16 +379,6 @@ public class MainActivity extends BaseActivity {
 
 		mApplication.shutDown();
 	}
-
-	// @Override
-	// protected void onResume() {
-	// super.onResume();
-	// if(mApplication.getUser()!=null){
-	// side_drawer.showMenu();
-	// imageLoader.displayImage(mApplication.getUser().getProfile_image_url(),menu_user_img,Options.getListOptions());
-	// menu_user_name.setText(mApplication.getUser().getScreen_name());
-	// }
-	// }
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

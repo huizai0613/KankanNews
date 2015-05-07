@@ -36,6 +36,7 @@ import com.lidroid.xutils.DbUtils.DbUpgradeListener;
 import com.lidroid.xutils.http.HttpHandler;
 import com.nostra13.universalimageloader.cache.disc.impl.BaseDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -148,14 +149,15 @@ public class CrashApplication extends Application {
 		// method.
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
 				context).threadPriority(Thread.NORM_PRIORITY - 2)
-				.discCache(new MyUnlimitedDiscCache(cacheDir))
+				.diskCache(new MyUnlimitedDiscCache(cacheDir))
 				.denyCacheImageMultipleSizesInMemory()
 				.diskCacheSize(50 * 1024 * 1024)
-				.memoryCacheSize(20*1024*1024)
-				.diskCacheExtraOptions(480, 320, null)
+				.memoryCache(new WeakMemoryCache())
+//				.memoryCacheSize(20*1024*1024)
+//				.diskCacheExtraOptions(480, 320, null)
 				// 50 Mb
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
-				.writeDebugLogs() // Remove for release app
+//				.writeDebugLogs() // Remove for release app
 				.build();
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);

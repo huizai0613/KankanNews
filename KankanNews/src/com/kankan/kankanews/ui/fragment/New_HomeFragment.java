@@ -56,17 +56,13 @@ public class New_HomeFragment extends BaseFragment implements
 	private RelativeLayout rl_column;
 	private View main_bg;
 
-	// private int endPosition;
-	private int beginPosition;
 	private int currentFragmentIndex;
 	private boolean isEnd;
-	
+
 	public ArrayList<New_HomeItemFragment> fragments;
-	
+
 	public static String PUSH_NEWS_ID = null;
 
-	// 不同像素比文字大小
-	// int[] textTouchSize = { 12, 10, 7 };
 	int[] textNomalSize = { R.dimen.textsize_1, R.dimen.textsize_2,
 			R.dimen.textsize_3, R.dimen.textsize_4 };
 
@@ -79,8 +75,7 @@ public class New_HomeFragment extends BaseFragment implements
 				.findViewById(R.id.mColumnHorizontalScrollView);
 		mRadioGroup_content = (LinearLayout) inflate
 				.findViewById(R.id.mRadioGroup_content);
-		// scrollBlock = (ImageView) inflate.findViewById(R.id.scrollBlock);
-		// scrollBlock.getLayoutParams().width = itemWidth;
+
 		mRadioGroupContentWidth = mActivity.mScreenWidth - PixelUtil.dp2px(69);
 		columnWidth = mRadioGroupContentWidth / 5 + PixelUtil.dp2px(10);
 
@@ -101,11 +96,9 @@ public class New_HomeFragment extends BaseFragment implements
 			}
 		});
 
-		// shade_right = (ImageView) inflate.findViewById(R.id.shade_right);
-
 		mViewpager = (ViewPager) inflate.findViewById(R.id.viewpager);
 		mViewpager.setOffscreenPageLimit(1);
-		
+
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 
 			refreshNetDate();
@@ -134,16 +127,12 @@ public class New_HomeFragment extends BaseFragment implements
 
 			for (int i = 0; i < count; i++) {
 
-				// TextView localTextView = (TextView)
-				// mInflater.inflate(R.layout.column_radio_item, null);
 				LinearLayout layout = new LinearLayout(mActivity);
 				layout.setGravity(Gravity.CENTER);
 				final MyTextView columnTextView = new MyTextView(mActivity);
 				columnTextView.setTextAppearance(mActivity,
 						R.style.top_category_scroll_view_item_text);
-				// localTextView.setBackground(getResources().getDrawable(R.drawable.top_category_scroll_text_view_bg));
-				// columnTextView
-				// .setBackgroundResource(R.drawable.radio_buttong_bg);
+
 				columnTextView.setGravity(Gravity.CENTER);
 				columnTextView.setId(i);
 				columnTextView.setText(homeCates.get(i).getTitle());
@@ -151,7 +140,7 @@ public class New_HomeFragment extends BaseFragment implements
 						R.color.top_category_scroll_text_color_day));
 				columnTextView
 						.setBackgroundResource(R.drawable.select_columnitem);
-//				columnTextView.setBackgroundResource(R.drawable.bg_coumitem);
+
 				if (columnSelectIndex == i) {
 					columnTextView.setSelected(true);
 					columnTextView.setTextSize(getResourcesSelf()
@@ -199,7 +188,7 @@ public class New_HomeFragment extends BaseFragment implements
 			totalChildCount = mRadioGroup_content.getChildCount();
 
 			initViewPager();
-			
+
 		}
 	}
 
@@ -303,51 +292,6 @@ public class New_HomeFragment extends BaseFragment implements
 	@Override
 	public void onPageSelected(final int position) {
 
-		// mColumnHorizontalScrollView.smoothScrollBy(scrollWidth, 0);
-
-		// }
-		// currentFragmentIndex = position;
-		// int count = 0;
-		// int flat = 1;
-		// count = position + 1;
-		// if (position > lastPosition) {
-		// flat = 1;
-		// } else {
-		// flat = -1;
-		// }
-		//
-		// lastPosition = position;
-		// Animation animation = new TranslateAnimation(endPosition, position
-		// * itemWidth, 0, 0);
-		//
-		// beginPosition = position * itemWidth;
-		//
-		// currentFragmentIndex = position;
-		// if (animation != null) {
-		// animation.setFillAfter(true);
-		// animation.setDuration(0);
-		// scrollBlock.startAnimation(animation);
-		// int s = (count - 4);
-		// int scrollWidth = 0;
-		// // for (int i = 0; i < count; i++) {
-		// if (s > 0) {
-		// View childAt = mRadioGroup_content.getChildAt(count);
-		// if (childAt != null) {
-		// scrollWidth += (childAt.getWidth() + PixelUtil.dp2px(20))
-		// * flat;
-		//
-		// mColumnHorizontalScrollView.smoothScrollBy(scrollWidth, 0);
-		// } else {
-		// childAt = mRadioGroup_content.getChildAt(count - 1);
-		// scrollWidth += childAt.getWidth() + PixelUtil.dp2px(40);
-		// mColumnHorizontalScrollView.smoothScrollBy(
-		// mColumnHorizontalScrollView.getWidth(), 0);
-		//
-		// }
-		// }
-		// }
-
-		// }
 		if (itemWidth == null) {
 			childCount = mRadioGroup_content.getChildCount();
 			itemWidth = new int[childCount];
@@ -390,8 +334,7 @@ public class New_HomeFragment extends BaseFragment implements
 		} else {
 			currentFragmentIndex = position;
 			if (currentFragmentIndex - bottomPosition - 1 >= 0) {
-				// mColumnHorizontalScrollView.smoothScrollTo(
-				// (currentFragmentIndex - 2) * columnWidth, 0);
+
 				mColumnHorizontalScrollView.smoothScrollTo(
 						itemWidth[(currentFragmentIndex - bottomPosition - 1)],
 						0);
@@ -405,47 +348,13 @@ public class New_HomeFragment extends BaseFragment implements
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
 		if (!isEnd) {
-			// if (currentFragmentIndex == position) {
-			// endPosition = itemWidth * currentFragmentIndex
-			// + (int) (itemWidth * positionOffset);
-			// }
-			// if (currentFragmentIndex == position + 1) {
-			// endPosition = itemWidth * currentFragmentIndex
-			// - (int) (itemWidth * (1 - positionOffset));
-			// }
 
-			// Animation mAnimation = new TranslateAnimation(beginPosition,
-			// endPosition, 0, 0);
-			//
-			// mColumnHorizontalScrollView.smoothScrollTo(endPosition, 0);
-			//
-			// mAnimation.setFillAfter(true);
-			// mAnimation.setDuration(0);
-			// scrollBlock.startAnimation(mAnimation);
-			// mColumnHorizontalScrollView.invalidate();
-			// beginPosition = endPosition;
 		}
 	}
 
 	@Override
 	public void onPageScrollStateChanged(int state) {
-		// if (state == ViewPager.SCROLL_STATE_DRAGGING) {
-		// isEnd = false;
-		// } else if (state == ViewPager.SCROLL_STATE_SETTLING) {
-		// isEnd = true;
-		// beginPosition = currentFragmentIndex * itemWidth;
-		// if (mViewpager.getCurrentItem() == currentFragmentIndex) {
-		// scrollBlock.clearAnimation();
-		// Animation animation = null;
-		// animation = new TranslateAnimation(endPosition,
-		// currentFragmentIndex * itemWidth, 0, 0);
-		// animation.setFillAfter(true);
-		// animation.setDuration(1);
-		// scrollBlock.startAnimation(animation);
-		// mColumnHorizontalScrollView.invalidate();
-		// endPosition = currentFragmentIndex * itemWidth;
-		// }
-		// }
+
 	}
 
 	boolean initLocaDate;
@@ -457,8 +366,6 @@ public class New_HomeFragment extends BaseFragment implements
 	public int columnSelectIndex = 0;
 
 	private FragmentStatePagerAdapter adapter;
-
-	// private ImageView scrollBlock;
 
 	private int lastPosition;
 	private int columnWidth;

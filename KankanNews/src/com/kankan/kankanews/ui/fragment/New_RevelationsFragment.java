@@ -30,13 +30,13 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.config.AndroidConfig;
+import com.kankan.kankanews.picsel.PicPreviewActivity;
+import com.kankan.kankanews.picsel.PicSelectedMainActivity;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImageLoader;
 import com.kankan.kankanews.utils.ImageLoader.Type;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.ToastUtils;
-import com.kankan.kankannews.picsel.PicPreviewActivity;
-import com.kankan.kankannews.picsel.PicSelectedMainActivity;
 import com.kankanews.kankanxinwen.R;
 
 public class New_RevelationsFragment extends BaseFragment implements

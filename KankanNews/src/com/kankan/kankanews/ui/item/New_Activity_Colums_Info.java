@@ -31,6 +31,7 @@ import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
@@ -334,7 +335,8 @@ public class New_Activity_Colums_Info extends BaseActivity implements
 			if (itemViewType == 0) {
 				final New_Colums_Info mcolums_info = new_colums_infos
 						.get(position);
-				mcolums_info.setTitlepic(CommonUtils.doWebpUrl(mcolums_info.getTitlepic()));
+				mcolums_info.setTitlepic(CommonUtils.doWebpUrl(mcolums_info
+						.getTitlepic()));
 				final int news_type = Integer.valueOf(mcolums_info.getType());
 
 				// imageLoader.displayImage(mcolums_info.getTitlepic(),
@@ -342,8 +344,11 @@ public class New_Activity_Colums_Info extends BaseActivity implements
 				// Options.getSmallImageOptions(false));
 				newsItemHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
-				CommonUtils.zoomImage(imageLoader, mcolums_info.getTitlepic(),
-						newsItemHolder.titlepic, mContext, imageCache);
+				imageLoader.displayImage(mcolums_info.getTitlepic(),
+						newsItemHolder.titlepic, ImgUtils.homeImageOptions);
+				// CommonUtils.zoomImage(imageLoader,
+				// mcolums_info.getTitlepic(),
+				// newsItemHolder.titlepic, mContext, imageCache);
 
 				newsItemHolder.title.setText(mcolums_info.getTitle());
 				newsItemHolder.newstime.setText(TimeUtil.unix2date(
