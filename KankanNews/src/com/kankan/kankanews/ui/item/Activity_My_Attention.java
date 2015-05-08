@@ -22,6 +22,7 @@ import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.Content_News;
 import com.kankan.kankanews.bean.User;
 import com.kankan.kankanews.bean.User_Collect_Offline;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
@@ -238,7 +239,7 @@ public class Activity_My_Attention extends BaseActivity implements OnClickListen
 			if(itemViewType == 0){
 				User user = mApplication.getUser();
 				if(user!=null){
-				imageLoader.displayImage(
+					ImgUtils.imageLoader.displayImage(
 						user.getUser_poster(),
 						attentionTopHolder.user_poster);
 				attentionTopHolder.user_name.setText(user.getUser_name());

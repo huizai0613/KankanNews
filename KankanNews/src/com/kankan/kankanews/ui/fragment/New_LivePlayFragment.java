@@ -964,9 +964,10 @@ public class New_LivePlayFragment extends BaseFragment implements
 				textObject.text = nowLiveNew.getTitlelist() + "-看看新闻 "
 						+ nowLiveNew.getTitleurl() + " （分享自@看看新闻网） ";
 				ImageObject imageObject = new ImageObject();
-				Bitmap shareImg = ImgUtils.getNetImage(nowLiveNew.getTitlepic());
+//				Bitmap shareImg = ImgUtils.getNetImage(nowLiveNew.getTitlepic());
+				Bitmap shareImg = null;
 				if(shareImg == null){
-					BitmapDrawable draw=(BitmapDrawable) getResources().getDrawable(R.drawable.ic_logo);
+					BitmapDrawable draw=(BitmapDrawable) getResources().getDrawable(R.drawable.icon_shared);
 					shareImg=draw.getBitmap();
 				}
 				imageObject.setImageObject(shareImg);

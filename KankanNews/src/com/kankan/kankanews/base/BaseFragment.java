@@ -33,7 +33,7 @@ public abstract class BaseFragment extends Fragment {
 
 	protected CrashApplication crashApplication;
 	public MainActivity mActivity;
-	protected ImageLoader imageLoader = ImageLoader.getInstance();
+	
 	protected DisplayImageOptions options;
 	protected PullToRefreshListView listview;
 	protected LayoutInflater inflater;

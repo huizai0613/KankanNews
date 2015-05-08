@@ -25,6 +25,7 @@ import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.item.New_Activity_Colums_Info;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -282,7 +283,7 @@ public class New_ColumsFragment extends BaseFragment {
 				// CommonUtils.zoomImage(imageLoader, N_C.getProgramPic(),
 				// viewOne.img, mActivity);
 				N_C.setProgramPic(CommonUtils.doWebpUrl(N_C.getProgramPic()));
-				imageLoader.displayImage(N_C.getProgramPic(), viewOne.img,
+				ImgUtils.imageLoader.displayImage(N_C.getProgramPic(), viewOne.img,
 						Options.getSmallImageOptions(false));
 				// imageLoader.loadImage(N_C.getProgramPic(), new ImageSize(
 				// (mActivity.topNewW - PixelUtil.dp2px(10 * 2)),
@@ -331,7 +332,7 @@ public class New_ColumsFragment extends BaseFragment {
 				// N_C_S.get(0).getProgramPic(), viewTwo.v1, mActivity);
 
 				N_C_S.get(0).setProgramPic(CommonUtils.doWebpUrl(N_C_S.get(0).getProgramPic()));
-				imageLoader.displayImage(N_C_S.get(0).getProgramPic(),
+				ImgUtils.imageLoader.displayImage(N_C_S.get(0).getProgramPic(),
 						viewTwo.v1, Options.getSmallImageOptions(false));
 				// imageLoader.loadImage(
 				// N_C_S.get(0).getProgramPic(),
@@ -381,7 +382,7 @@ public class New_ColumsFragment extends BaseFragment {
 					// .getProgramPic(), viewTwo.v2, mActivity);
 
 					N_C_S.get(1).setProgramPic(CommonUtils.doWebpUrl(N_C_S.get(1).getProgramPic()));
-					imageLoader.displayImage(N_C_S.get(1).getProgramPic(),
+					ImgUtils.imageLoader.displayImage(N_C_S.get(1).getProgramPic(),
 							viewTwo.v2, Options.getSmallImageOptions(false));
 
 					// imageLoader.loadImage(

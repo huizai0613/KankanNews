@@ -344,7 +344,7 @@ public class New_Activity_Colums_Info extends BaseActivity implements
 				// Options.getSmallImageOptions(false));
 				newsItemHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
-				imageLoader.displayImage(mcolums_info.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(mcolums_info.getTitlepic(),
 						newsItemHolder.titlepic, ImgUtils.homeImageOptions);
 				// CommonUtils.zoomImage(imageLoader,
 				// mcolums_info.getTitlepic(),

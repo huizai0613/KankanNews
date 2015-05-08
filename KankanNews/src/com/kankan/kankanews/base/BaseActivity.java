@@ -55,7 +55,7 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 	public int mScreenHeight;
 	private XunaoLog yeLog;
 	protected BaseActivity mContext;
-	protected ImageLoader imageLoader = ImageLoader.getInstance();
+//	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	protected PullToRefreshListView listview;
 	protected boolean isLoadMore;
 

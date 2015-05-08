@@ -38,6 +38,7 @@ import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.view.MarqueeTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ToastUtils;
@@ -306,7 +307,7 @@ public class Activity_OffLine extends BaseActivity implements OnClickListener {
 			// imageLoader.displayImage(item.getSmallTitlepic(), image,
 			// Options_Item.getSmallImageOptions());
 
-			imageLoader.displayImage(item.getTitlepic(), image,
+			ImgUtils.imageLoader.displayImage(item.getTitlepic(), image,
 					Options.getSmallImageOptions(true));
 			title.setText(item.getTitle());
 

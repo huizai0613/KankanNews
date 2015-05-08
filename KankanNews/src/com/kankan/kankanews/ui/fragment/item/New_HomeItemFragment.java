@@ -820,7 +820,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				// CommonUtils.zoomImage(imageLoader,
 				// news.getTitlepic(),
 				// newHolder.titlepic, mActivity, imageCache);
-				imageLoader.displayImage(news.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(news.getTitlepic(),
 						newHolder.titlepic, ImgUtils.homeImageOptions);
 
 				newHolder.title.setText(news.getTitle());
@@ -930,7 +930,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 						// CommonUtils.zoomImage(imageLoader,
 						// CommonUtils.doWebpUrl(pics[i + 1]),
 						// image_view_list.get(i), mActivity, imageCache);
-						imageLoader.displayImage(
+						ImgUtils.imageLoader.displayImage(
 								CommonUtils.doWebpUrl(pics[i + 1]),
 								image_view_list.get(i),
 								ImgUtils.homeImageOptions);
@@ -962,9 +962,12 @@ public class New_HomeItemFragment extends BaseFragment implements
 					newZhuanTiHolder.title.setTextColor(Color
 							.parseColor("#000000"));
 				}
-				CommonUtils.zoomImage(imageLoader, news.getTitlepic(),
-						newZhuanTiHolder.home_news_titlepic, mActivity);
-
+//				CommonUtils.zoomImage(imageLoader, news.getTitlepic(),
+//						newZhuanTiHolder.home_news_titlepic, mActivity);
+				ImgUtils.imageLoader.displayImage(
+						news.getTitlepic(),
+						newZhuanTiHolder.home_news_titlepic,
+						ImgUtils.homeImageOptions);
 				newZhuanTiHolder.home_news_intro.setText(news.getIntro());
 
 				convertView.setOnClickListener(new OnClickListener() {

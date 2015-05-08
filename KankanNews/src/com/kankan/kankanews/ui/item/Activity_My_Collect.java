@@ -34,6 +34,7 @@ import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.view.MarqueeTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -385,7 +386,7 @@ public class Activity_My_Collect extends BaseActivity implements
 
 			// imageLoader.displayImage(item.getSmallTitlepic(), image,
 			// Options_Item.getSmallImageOptions());
-			imageLoader.displayImage(item.getTitlepic(), image,
+			ImgUtils.imageLoader.displayImage(item.getTitlepic(), image,
 					Options.getSmallImageOptions(true));
 
 			title.setText(item.getTitle());

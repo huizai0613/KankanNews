@@ -71,7 +71,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			shareUtil.directShare(SHARE_MEDIA.EMAIL);
 			break;
 		case R.id.sina_box:
-			shareObj.sendSingleMessage();
+			shareUtil.directShare(SHARE_MEDIA.SINA);
+//			shareObj.sendSingleMessage();
 			break;
 		case R.id.refresh_box:
 			shareObj.refresh();

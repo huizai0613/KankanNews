@@ -196,12 +196,12 @@ public class New_Activity_MyFoot extends BaseActivity implements
 			if (new_news.getTitlepiclist() != null) {
 //				CommonUtils.zoomImage(imageLoader, new_news.getTitlepiclist()
 //						.split("::::::")[0], titlepic, mContext, imageCache);
-				imageLoader.displayImage(new_news.getTitlepiclist()
+				ImgUtils.imageLoader.displayImage(new_news.getTitlepiclist()
 						.split("::::::")[0], titlepic, ImgUtils.homeImageOptions);
 			}else{
 //				CommonUtils.zoomImage(imageLoader, new_news.getTitlepic()
 //						.split("::::::")[0], titlepic, mContext, imageCache);
-				imageLoader.displayImage(new_news.getTitlepic()
+				ImgUtils.imageLoader.displayImage(new_news.getTitlepic()
 						.split("::::::")[0], titlepic, ImgUtils.homeImageOptions);
 			}
 			if (new_news.getTitlelist() != null) {

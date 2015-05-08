@@ -76,6 +76,7 @@ import com.kankan.kankanews.ui.view.StickyScrollView;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -1037,7 +1038,7 @@ public class New_Activity_Content_Graphic extends BaseVideoActivity implements
 			Bitmap currentFrame = curVideoView.getCurrentFrame();
 			return currentFrame;
 		} catch (OutOfMemoryError e) {
-			imageLoader.clearMemoryCache();
+			ImgUtils.imageLoader.clearMemoryCache();
 			System.gc();
 			getCurrentFrame();
 		}

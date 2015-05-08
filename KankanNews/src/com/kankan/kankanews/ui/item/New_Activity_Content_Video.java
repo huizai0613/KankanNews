@@ -81,6 +81,7 @@ import com.kankan.kankanews.ui.view.StickyScrollView;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
@@ -882,7 +883,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			break;
 		// 微博分享
 		case R.id.content_share_shina_layout:
-			sendSingleMessage();
+			shareUtil.directShare(SHARE_MEDIA.SINA);
+//			sendSingleMessage();
 			break;
 		// qq分享
 		case R.id.content_share_qq_layout:
@@ -1075,7 +1077,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			content_intro.setText(new_news.getIntro().equals("") ? "暂无简介 "
 					: new_news.getIntro());
 
-			imageLoader.displayImage(new_news.getTitlepiclist(), content_video,
+			ImgUtils.imageLoader.displayImage(new_news.getTitlepiclist(), content_video,
 					Options.getBigImageOptions(createFromPath));
 			// } else {
 			// WebSettings webSettings = content_web_layout.getSettings();
@@ -1216,7 +1218,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			Bitmap currentFrame = video_view.getCurrentFrame();
 			return currentFrame;
 		} catch (OutOfMemoryError e) {
-			imageLoader.clearMemoryCache();
+			ImgUtils.imageLoader.clearMemoryCache();
 			System.gc();
 			getCurrentFrame();
 		}
@@ -1457,6 +1459,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 				+ new_news.getTitleurl() + " （分享自@看看新闻网） ";
 		ImageObject imageObject = new ImageObject();
 		imageObject.setImageObject(getThumbBitmap());
+		 
 		weiboMultiMessage.textObject = textObject;
 		weiboMultiMessage.imageObject = imageObject;
 		// 2. 初始化从第三方到微博的消息请求
@@ -1464,7 +1467,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// 用transaction唯一标识一个请求
 		request.transaction = String.valueOf(System.currentTimeMillis());
 		request.multiMessage = weiboMultiMessage;
-
+		
 		AuthInfo authInfo = new AuthInfo(this, Constants.APP_KEY,
 				Constants.REDIRECT_URL, Constants.SCOPE);
 		Oauth2AccessToken accessToken = AccessTokenKeeper
@@ -1656,8 +1659,11 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			TextView home_news_newstime = (TextView) v
 					.findViewById(R.id.home_news_newstime);
 			home_news_titlepic.setTag(R.string.viewwidth, PixelUtil.dp2px(100));
-			CommonUtils.zoomImage(imageLoader, mNew_Recommend.getTitlepic(),
-					home_news_titlepic, mContext);
+//			CommonUtils.zoomImage(imageLoader, mNew_Recommend.getTitlepic(),
+//					home_news_titlepic, mContext);
+			ImgUtils.imageLoader.displayImage(mNew_Recommend.getTitlepic(),
+					home_news_titlepic, ImgUtils.homeImageOptions);
+			
 			home_news_title.setText(mNew_Recommend.getTitle());
 			home_news_newstime.setText(TimeUtil.unix2date(
 					Long.valueOf(mNew_Recommend.getNewstime()), "yyyy-MM-dd"));

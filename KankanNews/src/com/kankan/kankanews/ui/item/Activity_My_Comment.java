@@ -26,6 +26,7 @@ import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
@@ -287,7 +288,7 @@ public class Activity_My_Comment extends BaseActivity {
 			}
 			switch (itemViewType) {
 			case 1:// 评论
-				imageLoader.displayImage(c.getUserpic(),
+				ImgUtils.imageLoader.displayImage(c.getUserpic(),
 						holderCom.comment_userpic,
 						Options.getSmallImageOptions(false));
 				holderCom.comment_name.setText(c.getName());

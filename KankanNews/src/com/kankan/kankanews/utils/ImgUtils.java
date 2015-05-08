@@ -34,9 +34,11 @@ import android.util.Log;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankanews.kankanxinwen.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class ImgUtils {
+	public static ImageLoader imageLoader = ImageLoader.getInstance();
 	public static DisplayImageOptions homeImageOptions;
 	static {
 		homeImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true)// 设置下载的图片是否缓存在内存中

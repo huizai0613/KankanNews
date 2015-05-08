@@ -39,6 +39,7 @@ import com.kankan.kankanews.sina.AccessTokenKeeper;
 import com.kankan.kankanews.sina.Constants;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
@@ -372,7 +373,7 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 			});
 
 			// 加载图片
-			imageLoader.displayImage(picUrl, photoView,
+			ImgUtils.imageLoader.displayImage(picUrl, photoView,
 					Options.getSmallImageOptions(false));
 			view.setTag(photoView);
 			container.addView(view);
