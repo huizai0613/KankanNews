@@ -178,8 +178,8 @@ public class New_HomeFragment extends BaseFragment implements
 						}
 					}
 				});
-				params.rightMargin = PixelUtil.dp2px(5);
-				params.leftMargin = PixelUtil.dp2px(5);
+				params.rightMargin = PixelUtil.dp2px(0);
+				params.leftMargin = PixelUtil.dp2px(18);
 
 				layout.addView(columnTextView, params);
 				mRadioGroup_content.addView(layout, Linparams);
@@ -241,7 +241,7 @@ public class New_HomeFragment extends BaseFragment implements
 				}
 
 			};
-
+			 
 			mViewpager.setDrawingCacheEnabled(false);
 			mViewpager.setOnPageChangeListener(this);
 			mViewpager.setAdapter(adapter);
@@ -306,7 +306,7 @@ public class New_HomeFragment extends BaseFragment implements
 			mColumnHorizontalScrollViewWidth = mColumnHorizontalScrollView
 					.getWidth();
 			for (int j = 0; j < childCount; j++) {
-				if (mColumnHorizontalScrollViewWidth - PixelUtil.dp2px(30) <= itemWidth[j]) {
+				if (mColumnHorizontalScrollViewWidth - PixelUtil.dp2px(60) <= itemWidth[j]) {
 					bottomPosition = j - 1;
 					break;
 				}

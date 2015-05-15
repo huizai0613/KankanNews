@@ -64,19 +64,20 @@ import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.sina.weibo.sdk.api.ImageObject;
-import com.sina.weibo.sdk.api.TextObject;
-import com.sina.weibo.sdk.api.WeiboMultiMessage;
-import com.sina.weibo.sdk.api.share.BaseResponse;
-import com.sina.weibo.sdk.api.share.IWeiboHandler;
-import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
-import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-import com.sina.weibo.sdk.auth.AuthInfo;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
-import com.sina.weibo.sdk.constant.WBConstants;
-import com.sina.weibo.sdk.exception.WeiboException;
+import com.umeng.socialize.sso.UMSsoHandler;
+//import com.sina.weibo.sdk.api.ImageObject;
+//import com.sina.weibo.sdk.api.TextObject;
+//import com.sina.weibo.sdk.api.WeiboMultiMessage;
+//import com.sina.weibo.sdk.api.share.BaseResponse;
+//import com.sina.weibo.sdk.api.share.IWeiboHandler;
+//import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
+//import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
+//import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+//import com.sina.weibo.sdk.auth.AuthInfo;
+//import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+//import com.sina.weibo.sdk.auth.WeiboAuthListener;
+//import com.sina.weibo.sdk.constant.WBConstants;
+//import com.sina.weibo.sdk.exception.WeiboException;
 import com.xunao.view.photoview.PhotoView;
 
 public class New_Avtivity_Subject extends BaseVideoActivity implements
@@ -84,16 +85,17 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		StickyListHeadersListView.OnHeaderClickListener,
 		StickyListHeadersListView.OnStickyHeaderOffsetChangedListener,
 		StickyListHeadersListView.OnStickyHeaderChangedListener,
-		OnClickListener, IWeiboHandler.Response {
+		OnClickListener {
 
 	/** 微博微博分享接口实例 */
-	private IWeiboShareAPI mWeiboShareAPI = null;
+	// private IWeiboShareA.PI mWeiboShareAPI = null;
 	// 分享类
 	private ShareUtil shareUtil;
 
 	private String ztid;
 	private String title;
 	private String titlepic;
+	private String sharedPic;
 	private String titleurl;
 
 	private LinkedList<Subject_Item> subjectData = new LinkedList<Subject_Item>();
@@ -126,18 +128,30 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		setContentView(R.layout.subject);
 
 		// 创建微博分享接口实例
-		mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, Constants.APP_KEY);
-		// 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
-		// 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
-		// NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
-		mWeiboShareAPI.registerApp();
-		// 当 Activity 被重新初始化时（该 Activity 处于后台时，可能会由于内存不足被杀掉了），
-		// 需要调用 {@link IWeiboShareAPI#handleWeiboResponse} 来接收微博客户端返回的数据。
-		// 执行成功，返回 true，并调用 {@link IWeiboHandler.Response#onResponse}；
-		// 失败返回 false，不调用上述回调
-		if (savedInstanceState != null) {
-			mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
-		}
+		// mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this,
+		// Constants.APP_KEY);
+		// // 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
+		// // 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
+		// // NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
+		// mWeiboShareAPI.registerApp();
+		// // 当 Activity 被重新初始化时（该 Activity 处于后台时，可能会由于内存不足被杀掉了），
+		// // 需要调用 {@link IWeiboShareAPI#handleWeiboResponse} 来接收微博客户端返回的数据。
+		// // 执行成功，返回 true，并调用 {@link IWeiboHandler.Response#onResponse}；
+		// // 失败返回 false，不调用上述回调
+		// if (savedInstanceState != null) {
+		// mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
+		// }
+	}
+	
+	@Override 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    /**使用SSO授权必须添加如下代码 */
+	    
+	    UMSsoHandler ssoHandler = shareUtil.getmController().getConfig().getSsoHandler(requestCode) ;
+	    if(ssoHandler != null){
+	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+	    }
 	}
 
 	@Override
@@ -155,12 +169,13 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		ztid = intent.getStringExtra("ztid");
 		title = intent.getStringExtra("title");
 		titlepic = intent.getStringExtra("titlepic");
+		sharedPic = intent.getStringExtra("sharedPic");
 		titleurl = intent.getStringExtra("titleurl");
 
 		new_news = new New_News();
 
 		new_news.setTitlelist(title);
-		new_news.setTitlepiclist(titlepic);
+		new_news.setSharedPic(sharedPic);
 		new_news.setTitleurl(titleurl);
 
 		// 初始化shareutil类
@@ -359,36 +374,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-
-		// if (subjectList.getList().size() > position - 1) {
-		// Subject_Item news = subjectList.getList().get(position - 1);
-		// int type = news.getDataType();
-		// if (type == 2) {
-		// if (Integer.valueOf(news.getType()) % 10 == 1) {
-		// startAnimActivityByParameter(
-		// New_Activity_Content_Video.class, news.getMid(),
-		// news.getType(), news.getTitleurl(),
-		// news.getNewstime());
-		// } else {
-		// startAnimActivityByParameter(
-		// New_Activity_Content_Graphic.class, news.getMid(),
-		// news.getType(), news.getTitleurl(),
-		// news.getNewstime());
-		// }
-		// }
-		// }
 	}
-
-	// public void startAnimActivityByParameter(Class<?> cla, String mid,
-	// String type, String titleurl, String newstime) {
-	// Intent intent = new Intent(this, cla);
-	// intent.putExtra("mid", mid);
-	// intent.putExtra("type", type);
-	// intent.putExtra("titleurl", titleurl);
-	// intent.putExtra("newstime", newstime);
-	// this.startActivity(intent);
-	// this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
-	// }
 
 	@Override
 	public void onHeaderClick(StickyListHeadersListView l, View header,
@@ -578,7 +564,8 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 						// CommonUtils.zoomImage(imageLoader,
 						// item.getTitlepic(),
 						// newHolder.titlepic, mContext, imageCache);
-						imageLoader.displayImage(item.getTitlepic(), newHolder.titlepic, ImgUtils.homeImageOptions);
+						imageLoader.displayImage(item.getTitlepic(),
+								newHolder.titlepic, ImgUtils.homeImageOptions);
 						newHolder.title.setText(item.getTitle());
 						switch (news_type / 10) {
 						case 1:
@@ -601,33 +588,42 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 						switch (news_type % 10) {
 						case 5:
 							if (clicktime.equalsIgnoreCase("false次")) {
-								newHolder.newstime.setVisibility(View.INVISIBLE);
-								newHolder.newstime_sign.setVisibility(View.INVISIBLE);
+								newHolder.newstime
+										.setVisibility(View.INVISIBLE);
+								newHolder.newstime_sign
+										.setVisibility(View.INVISIBLE);
 							} else {
 								newHolder.newstime.setVisibility(View.VISIBLE);
-								newHolder.newstime_sign.setVisibility(View.VISIBLE);
+								newHolder.newstime_sign
+										.setVisibility(View.VISIBLE);
 							}
 							newHolder.news_type
 									.setImageResource(R.drawable.new_icon_sign_subject);
 							break;
 						case 6:
 							if (clicktime.equalsIgnoreCase("false次")) {
-								newHolder.newstime.setVisibility(View.INVISIBLE);
-								newHolder.newstime_sign.setVisibility(View.INVISIBLE);
+								newHolder.newstime
+										.setVisibility(View.INVISIBLE);
+								newHolder.newstime_sign
+										.setVisibility(View.INVISIBLE);
 							} else {
 								newHolder.newstime.setVisibility(View.VISIBLE);
-								newHolder.newstime_sign.setVisibility(View.VISIBLE);
+								newHolder.newstime_sign
+										.setVisibility(View.VISIBLE);
 							}
 							newHolder.news_type
 									.setImageResource(R.drawable.new_icon_sign_live);
 							break;
 						default:
 							if (clicktime.equalsIgnoreCase("false次")) {
-								newHolder.newstime.setVisibility(View.INVISIBLE);
-								newHolder.newstime_sign.setVisibility(View.INVISIBLE);
+								newHolder.newstime
+										.setVisibility(View.INVISIBLE);
+								newHolder.newstime_sign
+										.setVisibility(View.INVISIBLE);
 							} else {
 								newHolder.newstime.setVisibility(View.VISIBLE);
-								newHolder.newstime_sign.setVisibility(View.VISIBLE);
+								newHolder.newstime_sign
+										.setVisibility(View.VISIBLE);
 							}
 							break;
 						}
@@ -643,14 +639,18 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 											item.getMid(), item.getType(),
 											item.getTitleurl(),
 											item.getNewstime(),
-											item.getTitlepic(), item.getTitle());
+											item.getTitle(),
+											item.getTitlepic(), 
+											item.getSharedPic());
 								} else if (news_type % 10 == 5) {
 									// 专题
 									startSubjectActivityByParameter(
 											New_Avtivity_Subject.class,
 											item.getZtid(), item.getTitle(),
 											item.getTitlepic(),
-											item.getTitleurl());
+											item.getTitleurl(),
+											item.getTitlepic(), 
+											item.getSharedPic());
 								} else if (news_type % 10 == 6) {// 直播
 									// New_LivePlayFragment fragment =
 									// (New_LivePlayFragment)
@@ -667,7 +667,9 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 											item.getMid(), item.getType(),
 											item.getTitleurl(),
 											item.getNewstime(),
-											item.getTitlepic(), item.getTitle());
+											item.getTitle(),
+											item.getTitlepic(), 
+											item.getSharedPic());
 								}
 							}
 						});
@@ -689,10 +691,14 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 						image_view_list.add(albumsHolder.albums_image_2);
 						image_view_list.add(albumsHolder.albums_image_3);
 						for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++) {
-//							CommonUtils.zoomImage(imageLoader, CommonUtils.doWebpUrl(pics[i + 1]),
-//									image_view_list.get(i), mContext,
-//									imageCache);
-							imageLoader.displayImage(CommonUtils.doWebpUrl(pics[i + 1]), image_view_list.get(i), ImgUtils.homeImageOptions);
+							// CommonUtils.zoomImage(imageLoader,
+							// CommonUtils.doWebpUrl(pics[i + 1]),
+							// image_view_list.get(i), mContext,
+							// imageCache);
+							imageLoader.displayImage(
+									CommonUtils.doWebpUrl(pics[i + 1]),
+									image_view_list.get(i),
+									ImgUtils.homeImageOptions);
 						}
 
 						convertView.setOnClickListener(new OnClickListener() {
@@ -702,7 +708,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 										New_Activity_Content_PicSet.class,
 										item.getMid(), item.getType(),
 										item.getTitleurl(), item.getNewstime(),
-										CommonUtils.doWebpUrl(pics[1]), item.getTitle());
+										item.getTitle(), item.getTitlepic(), pics[1]);
 							}
 						});
 
@@ -924,7 +930,8 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		//
 		ImageView photoView = (ImageView) headerView
 				.findViewById(R.id.titlepic);
-		imageLoader.displayImage(CommonUtils.doWebpUrl(subjectList.getTitlePic()), photoView,
+		imageLoader.displayImage(
+				CommonUtils.doWebpUrl(subjectList.getTitlePic()), photoView,
 				Options.getSmallImageOptions(false));
 
 		MyTextView title = (MyTextView) headerView.findViewById(R.id.intro);
@@ -936,60 +943,61 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	}
 
 	public void sendSingleMessage() {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				// 1. 初始化微博的分享消息
-				WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
-				// 创建媒体消息
-				// weiboMultiMessage.mediaObject = getVideoObj();
-				TextObject textObject = new TextObject();
-				textObject.text = title + "-看看新闻 " + titleurl + " （分享自@看看新闻网） ";
-				ImageObject imageObject = new ImageObject();
-				imageObject.setImageObject(getThumbBitmap());
-				weiboMultiMessage.textObject = textObject;
-				weiboMultiMessage.imageObject = imageObject;
-				// 2. 初始化从第三方到微博的消息请求
-				SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-				// 用transaction唯一标识一个请求
-				request.transaction = String
-						.valueOf(System.currentTimeMillis());
-				request.multiMessage = weiboMultiMessage;
-
-				AuthInfo authInfo = new AuthInfo(New_Avtivity_Subject.this,
-						Constants.APP_KEY, Constants.REDIRECT_URL,
-						Constants.SCOPE);
-				Oauth2AccessToken accessToken = AccessTokenKeeper
-						.readAccessToken(getApplicationContext());
-				String token = "";
-				if (accessToken != null) {
-					token = accessToken.getToken();
-				}
-				mWeiboShareAPI.sendRequest(New_Avtivity_Subject.this, request,
-						authInfo, token, new WeiboAuthListener() {
-
-							@Override
-							public void onWeiboException(WeiboException arg0) {
-							}
-
-							@Override
-							public void onComplete(Bundle bundle) {
-								Oauth2AccessToken newToken = Oauth2AccessToken
-										.parseAccessToken(bundle);
-								AccessTokenKeeper.writeAccessToken(
-										getApplicationContext(), newToken);
-								ToastUtils.Infotoast(New_Avtivity_Subject.this, "分享成功");
-							}
-
-							@Override
-							public void onCancel() {
-								ToastUtils.Infotoast(New_Avtivity_Subject.this, "分享取消");
-							}
-						});
-
-			}
-		}).start();
+		// new Thread(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// // 1. 初始化微博的分享消息
+		// WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
+		// // 创建媒体消息
+		// // weiboMultiMessage.mediaObject = getVideoObj();
+		// TextObject textObject = new TextObject();
+		// textObject.text = title + "-看看新闻 " + titleurl + " （分享自@看看新闻网） ";
+		// ImageObject imageObject = new ImageObject();
+		// imageObject.setImageObject(getThumbBitmap());
+		// weiboMultiMessage.textObject = textObject;
+		// weiboMultiMessage.imageObject = imageObject;
+		// // 2. 初始化从第三方到微博的消息请求
+		// SendMultiMessageToWeiboRequest request = new
+		// SendMultiMessageToWeiboRequest();
+		// // 用transaction唯一标识一个请求
+		// request.transaction = String
+		// .valueOf(System.currentTimeMillis());
+		// request.multiMessage = weiboMultiMessage;
+		//
+		// AuthInfo authInfo = new AuthInfo(New_Avtivity_Subject.this,
+		// Constants.APP_KEY, Constants.REDIRECT_URL,
+		// Constants.SCOPE);
+		// Oauth2AccessToken accessToken = AccessTokenKeeper
+		// .readAccessToken(getApplicationContext());
+		// String token = "";
+		// if (accessToken != null) {
+		// token = accessToken.getToken();
+		// }
+		// mWeiboShareAPI.sendRequest(New_Avtivity_Subject.this, request,
+		// authInfo, token, new WeiboAuthListener() {
+		//
+		// @Override
+		// public void onWeiboException(WeiboException arg0) {
+		// }
+		//
+		// @Override
+		// public void onComplete(Bundle bundle) {
+		// Oauth2AccessToken newToken = Oauth2AccessToken
+		// .parseAccessToken(bundle);
+		// AccessTokenKeeper.writeAccessToken(
+		// getApplicationContext(), newToken);
+		// ToastUtils.Infotoast(New_Avtivity_Subject.this, "分享成功");
+		// }
+		//
+		// @Override
+		// public void onCancel() {
+		// ToastUtils.Infotoast(New_Avtivity_Subject.this, "分享取消");
+		// }
+		// });
+		//
+		// }
+		// }).start();
 	}
 
 	/**
@@ -1015,11 +1023,12 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 					+ "big_"
 					+ CommonUtils.doWebpUrl(CommonUtils.generate(titlepic)));
 		}
-		if(decodeFile == null){
+		if (decodeFile == null) {
 			decodeFile = ImgUtils.getNetImage(titlepic);
-			if(decodeFile == null){
-				BitmapDrawable draw=(BitmapDrawable) getResources().getDrawable(R.drawable.ic_logo);
-				decodeFile=draw.getBitmap();
+			if (decodeFile == null) {
+				BitmapDrawable draw = (BitmapDrawable) getResources()
+						.getDrawable(R.drawable.ic_logo);
+				decodeFile = draw.getBitmap();
 			}
 		}
 		int byteCount = decodeFile.getRowBytes();
@@ -1043,20 +1052,20 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		return decodeByteArray;
 	}
 
-	@Override
-	public void onResponse(BaseResponse arg0) {
-		switch (arg0.errCode) {
-		case WBConstants.ErrorCode.ERR_OK:
-			ToastUtils.Infotoast(mContext, "分享成功");
-			break;
-		case WBConstants.ErrorCode.ERR_CANCEL:
-			// ToastUtils.Infotoast(mContext, "分享取消");
-			break;
-		case WBConstants.ErrorCode.ERR_FAIL:
-			ToastUtils.Infotoast(mContext, "分享失败");
-			break;
-		}
-	}
+	// @Override
+	// public void onResponse(BaseResponse arg0) {
+	// switch (arg0.errCode) {
+	// case WBConstants.ErrorCode.ERR_OK:
+	// ToastUtils.Infotoast(mContext, "分享成功");
+	// break;
+	// case WBConstants.ErrorCode.ERR_CANCEL:
+	// // ToastUtils.Infotoast(mContext, "分享取消");
+	// break;
+	// case WBConstants.ErrorCode.ERR_FAIL:
+	// ToastUtils.Infotoast(mContext, "分享失败");
+	// break;
+	// }
+	// }
 
 	@Override
 	public void refresh() {

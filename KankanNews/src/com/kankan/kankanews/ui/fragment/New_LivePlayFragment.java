@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,22 +67,22 @@ import com.kankan.kankanews.utils.ToastUtils;
 import com.kankan.kankanews.utils.XunaoLog;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.exception.DbException;
-import com.sina.weibo.sdk.api.ImageObject;
-import com.sina.weibo.sdk.api.TextObject;
-import com.sina.weibo.sdk.api.WeiboMultiMessage;
-import com.sina.weibo.sdk.api.share.BaseResponse;
-import com.sina.weibo.sdk.api.share.IWeiboHandler;
-import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
-import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-import com.sina.weibo.sdk.auth.AuthInfo;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
-import com.sina.weibo.sdk.constant.WBConstants;
-import com.sina.weibo.sdk.exception.WeiboException;
+//import com.sina.weibo.sdk.api.ImageObject;
+//import com.sina.weibo.sdk.api.TextObject;
+//import com.sina.weibo.sdk.api.WeiboMultiMessage;
+//import com.sina.weibo.sdk.api.share.BaseResponse;
+//import com.sina.weibo.sdk.api.share.IWeiboHandler;
+//import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
+//import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
+//import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+//import com.sina.weibo.sdk.auth.AuthInfo;
+//import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+//import com.sina.weibo.sdk.auth.WeiboAuthListener;
+//import com.sina.weibo.sdk.constant.WBConstants;
+//import com.sina.weibo.sdk.exception.WeiboException;
 
 public class New_LivePlayFragment extends BaseFragment implements
-		OnInfoListener, IWeiboHandler.Response, OnCompletionListener, OnErrorListener, OnClickListener,
+		OnInfoListener, OnCompletionListener, OnErrorListener, OnClickListener,
 		OnPreparedListener, CanSharedBySina {
 
 	private View inflate;
@@ -114,7 +115,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 	private static CustomShareBoard shareBoard;
 	/** 微博微博分享接口实例 */
-	private IWeiboShareAPI mWeiboShareAPI = null;
+//	private IWeiboShareAPI mWeiboShareAPI = null;
 	
 	private ShareUtil shareUtil = null;
 
@@ -278,19 +279,19 @@ public class New_LivePlayFragment extends BaseFragment implements
 		
 
 		// mShareType = getIntent().getIntExtra(KEY_SHARE_TYPE, SHARE_CLIENT);
-		// 创建微博分享接口实例
-		mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this.getActivity(), Constants.APP_KEY);
-		// 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
-		// 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
-		// NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
-		mWeiboShareAPI.registerApp();
-		// 当 Activity 被重新初始化时（该 Activity 处于后台时，可能会由于内存不足被杀掉了），
-		// 需要调用 {@link IWeiboShareAPI#handleWeiboResponse} 来接收微博客户端返回的数据。
-		// 执行成功，返回 true，并调用 {@link IWeiboHandler.Response#onResponse}；
-		// 失败返回 false，不调用上述回调
-		if (savedInstanceState != null) {
-			mWeiboShareAPI.handleWeiboResponse(this.getActivity().getIntent(), this);
-		}
+//		// 创建微博分享接口实例
+//		mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this.getActivity(), Constants.APP_KEY);
+//		// 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
+//		// 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
+//		// NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
+//		mWeiboShareAPI.registerApp();
+//		// 当 Activity 被重新初始化时（该 Activity 处于后台时，可能会由于内存不足被杀掉了），
+//		// 需要调用 {@link IWeiboShareAPI#handleWeiboResponse} 来接收微博客户端返回的数据。
+//		// 执行成功，返回 true，并调用 {@link IWeiboHandler.Response#onResponse}；
+//		// 失败返回 false，不调用上述回调
+//		if (savedInstanceState != null) {
+//			mWeiboShareAPI.handleWeiboResponse(this.getActivity().getIntent(), this);
+//		}
 		
 		return inflate;
 	}
@@ -387,10 +388,12 @@ public class New_LivePlayFragment extends BaseFragment implements
 	private void showData() {
 		boolean unStart = false;
 		for (New_LivePlay news : mLivePlayList) {
+			Log.e("isSelectPlay", "已播放" + selectPlayID + " " + news.getZid() + " " + isSelectPlay);
 
 			if (isSelectPlay
 					&& Integer.parseInt(news.getZid()) == selectPlayID) {
 				unStart = true;
+				Log.e("isSelectPlay", "已播放" + selectPlayID);
 			}
 
 			if (!news.getType().equals("直播预告")) {
@@ -409,6 +412,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 					break;
 				} else {
 					if (Integer.parseInt(news.getZid()) == selectPlayID) {
+						Log.e("isSelectPlay", "已播放" + selectPlayID);
 						unStart = false;
 						livePlayTitle.setText("正在播放:" + news.getTitle());
 						isSelectPlay = false;
@@ -878,7 +882,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 		
 		switch (id) {
 		case R.id.live_share_but:
-			nowLiveNew.setTitlepic(null);
+			nowLiveNew.setSharedPic(null);
 			shareUtil = new ShareUtil(nowLiveNew, this.getActivity());
 			// 一键分享
 			shareBoard = new CustomShareBoard((BaseActivity)this.mActivity, shareUtil, this);
@@ -932,95 +936,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 	// 刷新
 	public void refresh() {
 		listview.setRefreshing(false);
-	}
-	
-	@Override
-	public void onResponse(BaseResponse arg0) {
-		switch (arg0.errCode) {
-		case WBConstants.ErrorCode.ERR_OK:
-			ToastUtils.Infotoast(this.mActivity, "分享成功");
-			break;
-		case WBConstants.ErrorCode.ERR_CANCEL:
-			ToastUtils.Infotoast(this.mActivity, "分享取消");
-			break;
-		case WBConstants.ErrorCode.ERR_FAIL:
-			ToastUtils.Infotoast(this.mActivity, "分享失败");
-			break;
-		}
-
-	}
-	
-	public void sendSingleMessage() {
-		new Thread(new Runnable(){
-
-			@Override
-			public void run() {
-				// TODO Auto-generated method stub
-				// 1. 初始化微博的分享消息
-				WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
-				// 创建媒体消息
-				// weiboMultiMessage.mediaObject = getVideoObj();
-				TextObject textObject = new TextObject();
-				textObject.text = nowLiveNew.getTitlelist() + "-看看新闻 "
-						+ nowLiveNew.getTitleurl() + " （分享自@看看新闻网） ";
-				ImageObject imageObject = new ImageObject();
-//				Bitmap shareImg = ImgUtils.getNetImage(nowLiveNew.getTitlepic());
-				Bitmap shareImg = null;
-				if(shareImg == null){
-					BitmapDrawable draw=(BitmapDrawable) getResources().getDrawable(R.drawable.icon_shared);
-					shareImg=draw.getBitmap();
-				}
-				imageObject.setImageObject(shareImg);
-				weiboMultiMessage.textObject = textObject;
-				weiboMultiMessage.imageObject = imageObject;
-				// 2. 初始化从第三方到微博的消息请求
-				SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-				// 用transaction唯一标识一个请求
-				request.transaction = String.valueOf(System.currentTimeMillis());
-				request.multiMessage = weiboMultiMessage;
-
-				AuthInfo authInfo = new AuthInfo(New_LivePlayFragment.this.mActivity, Constants.APP_KEY,
-						Constants.REDIRECT_URL, Constants.SCOPE);
-				Oauth2AccessToken accessToken = AccessTokenKeeper
-						.readAccessToken(New_LivePlayFragment.this.mActivity.getApplicationContext());
-				String token = "";
-				if (accessToken != null) {
-					token = accessToken.getToken();
-				}
-				boolean hasSucceed = mWeiboShareAPI.sendRequest(New_LivePlayFragment.this.mActivity, request, authInfo, token,
-						new WeiboAuthListener() {
-
-							@Override
-							public void onWeiboException(WeiboException arg0) {
-								ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享失败");
-							}
-
-							@Override
-							public void onComplete(Bundle bundle) {
-								// TODO Auto-generated method stub
-								Oauth2AccessToken newToken = Oauth2AccessToken
-										.parseAccessToken(bundle);
-								AccessTokenKeeper.writeAccessToken(
-										New_LivePlayFragment.this.mActivity.getApplicationContext(), newToken);
-								// Toast.makeText(
-								// getApplicationContext(),
-								// "onAuthorizeComplete token = "
-								// + newToken.getToken(), 0).show();
-								ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享成功");
-							}
-
-							@Override
-							public void onCancel() {
-								ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享取消");
-							}
-						});
-//				mWeiboShareAPI.handleWeiboResponse(arg0, arg1)
-//				if(hasSucceed)
-//					ToastUtils.Infotoast(New_LivePlayFragment.this.mActivity, "分享成功");
-			}
-			
-		}).start();
-		
 	}
 
 }

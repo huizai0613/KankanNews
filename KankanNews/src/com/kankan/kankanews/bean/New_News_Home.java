@@ -11,6 +11,7 @@ public class New_News_Home extends BaseBean<New_News_Home> {
 	private String title;
 	private String titleurl;
 	private String titlepic;
+	private String sharedPic;
 	private String type;
 	private String sourceid;
 	private String newstime;
@@ -47,6 +48,7 @@ public class New_News_Home extends BaseBean<New_News_Home> {
 		title = jsonObj.optString("title");
 		titleurl = jsonObj.optString("titleurl");
 		titlepic = jsonObj.optString("titlepic");
+		sharedPic = jsonObj.optString("titlepic");
 		type = jsonObj.optString("type");
 		if (type.equalsIgnoreCase("5")) {
 			System.out.println(12);
@@ -179,4 +181,13 @@ public class New_News_Home extends BaseBean<New_News_Home> {
 		this.etime = etime;
 	}
 
+	public String getSharedPic() {
+		return sharedPic;
+	}
+
+	public void setSharedPic(String sharedPic) {
+		this.sharedPic = sharedPic;
+	}
+	
+	
 }

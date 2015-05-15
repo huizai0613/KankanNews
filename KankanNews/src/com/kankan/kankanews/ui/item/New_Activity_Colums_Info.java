@@ -365,8 +365,9 @@ public class New_Activity_Colums_Info extends BaseActivity implements
 									mcolums_info.getType(),
 									mcolums_info.getTitleurl(),
 									mcolums_info.getNewstime(),
+									mcolums_info.getTitle(),
 									mcolums_info.getTitlepic(),
-									mcolums_info.getTitle());
+									mcolums_info.getSharedPic());
 						} else if (news_type % 10 == 2) {
 							startAnimActivityByParameter(
 									New_Activity_Content_Web.class,
@@ -374,8 +375,9 @@ public class New_Activity_Colums_Info extends BaseActivity implements
 									mcolums_info.getType(),
 									mcolums_info.getTitleurl(),
 									mcolums_info.getNewstime(),
+									mcolums_info.getTitle(),
 									mcolums_info.getTitlepic(),
-									mcolums_info.getTitle());
+									mcolums_info.getSharedPic());
 						}
 					}
 				});

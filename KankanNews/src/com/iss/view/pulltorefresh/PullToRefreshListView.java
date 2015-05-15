@@ -58,6 +58,11 @@ public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView
 		super(context, mode, style);
 	}
 
+	public void showHeadLoadingView() {
+//		mHeaderLoadingView.setVisibility(View.VISIBLE);
+		this.setState(State.REFRESHING, true);
+	}
+
 	@Override
 	public final Orientation getPullToRefreshScrollDirection() {
 		return Orientation.VERTICAL;

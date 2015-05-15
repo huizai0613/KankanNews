@@ -92,25 +92,26 @@ import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.nostra13.universalimageloader.utils.L;
-import com.sina.weibo.sdk.api.ImageObject;
-import com.sina.weibo.sdk.api.TextObject;
-import com.sina.weibo.sdk.api.VideoObject;
-import com.sina.weibo.sdk.api.WeiboMultiMessage;
-import com.sina.weibo.sdk.api.share.BaseResponse;
-import com.sina.weibo.sdk.api.share.IWeiboHandler;
-import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
-import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-import com.sina.weibo.sdk.auth.AuthInfo;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
-import com.sina.weibo.sdk.constant.WBConstants;
-import com.sina.weibo.sdk.exception.WeiboException;
-import com.sina.weibo.sdk.utils.Utility;
+//import com.sina.weibo.sdk.api.ImageObject;
+//import com.sina.weibo.sdk.api.TextObject;
+//import com.sina.weibo.sdk.api.VideoObject;
+//import com.sina.weibo.sdk.api.WeiboMultiMessage;
+//import com.sina.weibo.sdk.api.share.BaseResponse;
+//import com.sina.weibo.sdk.api.share.IWeiboHandler;
+//import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
+//import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
+//import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+//import com.sina.weibo.sdk.auth.AuthInfo;
+//import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+//import com.sina.weibo.sdk.auth.WeiboAuthListener;
+//import com.sina.weibo.sdk.constant.WBConstants;
+//import com.sina.weibo.sdk.exception.WeiboException;
+//import com.sina.weibo.sdk.utils.Utility;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.sso.UMSsoHandler;
 
 public class New_Activity_Content_Video extends BaseVideoActivity implements
-		OnInfoListener, IWeiboHandler.Response, OnClickListener,
+		OnInfoListener, OnClickListener,
 		OnPreparedListener, OnCompletionListener, OnErrorListener {
 
 	private ArrayList<New_Recommend> recommends = new ArrayList<New_Recommend>();
@@ -119,14 +120,15 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	private String type;
 	private String titleurl;
 	private String newstime;
-	private String titlepiclist;
+	private String titlePic;
+	private String sharedPic;
 	private String titlelist;
 
 	private LinearLayout content_comment_list;
 	private LinearLayout content_comment_list_list;
 
 	/** 微博微博分享接口实例 */
-	private IWeiboShareAPI mWeiboShareAPI = null;
+//	private IWeiboShareAPI mWeiboShareAPI = null;
 	// private int mShareType = SHARE_CLIENT;
 	/** 最大声音 */
 	private int mMaxVolume;
@@ -368,6 +370,17 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			}
 		}
 	}
+	
+	@Override 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    /**使用SSO授权必须添加如下代码 */
+	    
+	    UMSsoHandler ssoHandler = shareUtil.getmController().getConfig().getSsoHandler(requestCode) ;
+	    if(ssoHandler != null){
+	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+	    }
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -404,17 +417,17 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 		// mShareType = getIntent().getIntExtra(KEY_SHARE_TYPE, SHARE_CLIENT);
 		// 创建微博分享接口实例
-		mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, Constants.APP_KEY);
+//		mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, Constants.APP_KEY);
 		// 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
 		// 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
 		// NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
-		mWeiboShareAPI.registerApp();
+//		mWeiboShareAPI.registerApp();
 		// 当 Activity 被重新初始化时（该 Activity 处于后台时，可能会由于内存不足被杀掉了），
 		// 需要调用 {@link IWeiboShareAPI#handleWeiboResponse} 来接收微博客户端返回的数据。
 		// 执行成功，返回 true，并调用 {@link IWeiboHandler.Response#onResponse}；
 		// 失败返回 false，不调用上述回调
 		if (savedInstanceState != null) {
-			mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
+//			mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
 		}
 
 		// upDataDownUI(true);
@@ -439,7 +452,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// 从当前应用唤起微博并进行分享后，返回到当前应用时，需要在此处调用该函数
 		// 来接收微博客户端返回的数据；执行成功，返回 true，并调用
 		// {@link IWeiboHandler.Response#onResponse}；失败返回 false，不调用上述回调
-		mWeiboShareAPI.handleWeiboResponse(intent, this);
+//		mWeiboShareAPI.handleWeiboResponse(intent, this);
 
 	}
 
@@ -523,7 +536,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		type = intent.getStringExtra("type");
 		titleurl = intent.getStringExtra("titleurl");
 		newstime = intent.getStringExtra("newstime");
-		titlepiclist = intent.getStringExtra("titlepiclist");
+		titlePic = intent.getStringExtra("titlePic");
+		sharedPic = intent.getStringExtra("sharedPic");
 		titlelist = intent.getStringExtra("titlelist");
 		// 存储数据
 		new_news = new New_News();
@@ -531,7 +545,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		new_news.setType(type);
 		new_news.setTitleurl(titleurl);
 		new_news.setNewstime(newstime);
-		new_news.setTitlepiclist(titlepiclist);
+		new_news.setTitlepic(titlePic);
+		new_news.setSharedPic(sharedPic);
 		new_news.setTitlelist(titlelist);
 
 		// 提交点击
@@ -730,22 +745,15 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	boolean isContainKey;
 
 	// 保存数据到本地
-	private void saveDate(String mid) {
+	private void saveDate() {
 
 		new Thread() {
 			@Override
 			public void run() {
 				if (new_news != null) {
 					try {
-						// if (!new_news.equals(localnew_news)) {
-						// dbUtils.deleteById(new_news.class,
-						// new_news.getId());
 						dbUtils.saveOrUpdate(new_news);
-						// }
-						// this.dbUtils.delete(new_news.class,
-						// WhereBuilder.b("mid","==",mid));
 					} catch (DbException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -792,11 +800,11 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		new_news.setIntro(intro);
 		new_news.setNewstext(newstext);
 		new_news.setTitle(title);
-		new_news.setTitlepic(titlepic);
+//		new_news.setTitlepic(titlepic);
 
 		new_news.setLooktime(Long.toString(TimeUtil.now()));
 
-		saveDate(new_news.getId());
+		saveDate();
 
 		// 初始化shareutil类
 		shareUtil = new ShareUtil(new_news, mContext);
@@ -1077,58 +1085,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			content_intro.setText(new_news.getIntro().equals("") ? "暂无简介 "
 					: new_news.getIntro());
 
-			ImgUtils.imageLoader.displayImage(new_news.getTitlepiclist(), content_video,
+			ImgUtils.imageLoader.displayImage(new_news.getTitlepic(), content_video,
 					Options.getBigImageOptions(createFromPath));
-			// } else {
-			// WebSettings webSettings = content_web_layout.getSettings();
-			// if (isNetOk) {
-			// webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
-			// } else {
-			// webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-			// }
-			// // 设置适应屏幕
-			// webSettings.setSupportZoom(true);
-			// webSettings.setJavaScriptEnabled(true);
-			// webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-			//
-			// DisplayMetrics metrics = new DisplayMetrics();
-			// getWindowManager().getDefaultDisplay().getMetrics(metrics);
-			// int mDensity = metrics.densityDpi;
-			// if (mDensity == 240) {
-			// webSettings.setDefaultZoom(ZoomDensity.FAR);
-			// } else if (mDensity == 160) {
-			// webSettings.setDefaultZoom(ZoomDensity.MEDIUM);
-			// } else if (mDensity == 120) {
-			// webSettings.setDefaultZoom(ZoomDensity.CLOSE);
-			// } else if (mDensity == DisplayMetrics.DENSITY_XHIGH) {
-			// webSettings.setDefaultZoom(ZoomDensity.FAR);
-			// } else if (mDensity == DisplayMetrics.DENSITY_TV) {
-			// webSettings.setDefaultZoom(ZoomDensity.FAR);
-			// }
-			// // 开启 DOM storage API 功能
-			// content_web_layout.getSettings().setDomStorageEnabled(true);
-			// // 开启 database storage API 功能
-			// content_web_layout.getSettings().setDatabaseEnabled(true);
-			// // 设置数据库缓存路径
-			// //
-			// content_web_layout.getSettings().setDatabasePath("/data/data/a");
-			// int width = PixelUtil.px2dp(mScreenWidth) - 20;
-			// int height = (int) (width*0.75);
-			// String data =
-			// "<html><head><style>img{width:"+width+"px;height:"+height+"px;}</style></head><body>"+
-			// new_news.getNewstext().replaceAll("\\\\", "")
-			// +"</body></html>";
-			// data = data.replaceAll("480", width+"");
-			// data = data.replaceAll("361", height + "");
-			// content_web_layout.loadDataWithBaseURL(null, data, "text/html",
-			// "UTF-8", null);
-			// // content_web_layout.loadUrl("http://www.baidu.com");
-			// // content_web_layout.loadDataWithBaseURL(null,
-			// //
-			// "<img  src=\"http://static.statickksmg.com/image/2015/01/15/23b7d5dde85f1e2ab046dfeef112d705.jpg\"/>",
-			// // "text/html", "UTF-8", null);
-			// // 设置Web视图
-			// content_web_layout.setWebViewClient(new WebViewClient());
 		}
 
 	}
@@ -1137,32 +1095,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	 * 提交分享数据
 	 */
 	public void Commit_Share(SHARE_MEDIA platform) {
-		// if (platform == SHARE_MEDIA.SINA) {
-		// content_share_shina
-		// .setText((Integer.parseInt((String) content_share_shina
-		// .getText()) + 1) + "");
-		// instance.CommitShare(newsid, SHARE_SINA, ShareListener,
-		// ShareErrorListener);
-		// } else if (platform == SHARE_MEDIA.QQ) {
-		// content_share_qq.setText((Integer
-		// .parseInt((String) content_share_qq.getText()) + 1) + "");
-		// instance.CommitShare(newsid, SHARE_QQ, ShareListener,
-		// ShareErrorListener);
-		// } else if (platform == SHARE_MEDIA.WEIXIN) {
-		// content_share_weixin.setText((Integer
-		// .parseInt((String) content_share_weixin.getText()) + 1)
-		// + "");
-		// instance.CommitShare(newsid, SHARE_WIEXIN, ShareListener,
-		// ShareErrorListener);
-		// } else if (platform == SHARE_MEDIA.EMAIL) {
-		// content_share_mail.setText((Integer
-		// .parseInt((String) content_share_mail.getText()) + 1) + "");
-		// instance.CommitShare(newsid, SHARE_EMAIL, ShareListener,
-		// ShareErrorListener);
-		// }
-		// instance.CommitShare(mApplication.getUser().getUid(), newsid,
-		// SHARE_SINA, ShareListener,
-		// ShareErrorListener);
 	}
 
 	// 处理网络出错
@@ -1362,167 +1294,9 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		}
 	}
 
-	// sina 分享
-	/**
-	 * 获取当前新闻的缩略图对应的 Bitmap。
-	 */
-	public Bitmap getThumbBitmap() {
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		options.inPreferredConfig = Bitmap.Config.RGB_565;
-		// Bitmap decodeFile = BitmapFactory
-		// .decodeFile(
-		// CommonUtils.getImageCachePath(mContext)
-		// .getAbsolutePath()
-		// + "/"
-		// + String.valueOf(new_news.getTitlepic()
-		// .hashCode()), options);
-		// int byteCount = decodeFile.getByteCount();
-		// int height = decodeFile.getHeight();
-		// long memeory=byteCount*height;
-		// int width = options.outWidth;
-		// int height = options.outHeight;
-		//
-		// if (width > height) {
-		// options.inSampleSize = width / 400;
-		// } else {
-		// options.inSampleSize = height / 400;
-		// }
-		// options.inJustDecodeBounds = false;
-		Bitmap decodeFile = BitmapFactory.decodeFile(CommonUtils
-				.getImageCachePath(mContext)
-				+ "/"
-				+ CommonUtils.generate(titlepiclist));
-
-		if (decodeFile == null) {
-			decodeFile = BitmapFactory.decodeFile(CommonUtils
-					.getImageCachePath(mContext)
-					+ "/"
-					+ "big_"
-					+ CommonUtils.generate(titlepiclist));
-		}
-
-		int byteCount = decodeFile.getRowBytes();
-
-		int height2 = decodeFile.getHeight();
-
-		long mem = height2 * byteCount;
-
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-
-		if (mem > 100 * 1024 * 8) {
-			decodeFile.compress(CompressFormat.JPEG, 80, bao);
-		} else if (mem < 100 * 1024 * 8 && mem > 80 * 1024 * 8) {
-			decodeFile.compress(CompressFormat.JPEG, 90, bao);
-		} else {
-			decodeFile.compress(CompressFormat.JPEG, 100, bao);
-		}
-		if (decodeFile != null && !decodeFile.isRecycled()) {
-			decodeFile.recycle();
-		}
-		byte[] byteArray = bao.toByteArray();
-		Bitmap decodeByteArray = BitmapFactory.decodeByteArray(byteArray, 0,
-				byteArray.length);
-
-		return decodeByteArray;
-	}
-
-	/**
-	 * 创建多媒体（视频）消息对象。
-	 * 
-	 * @return 多媒体（视频）消息对象。
-	 */
-	private VideoObject getVideoObj() {
-		// 创建媒体消息
-		VideoObject videoObject = new VideoObject();
-		videoObject.identify = Utility.generateGUID();
-		videoObject.title = new_news.getTitle();
-		videoObject.description = new_news.getTitle();
-
-		// 设置 Bitmap 类型的图片到视频对象里
-		videoObject.setThumbImage(getThumbBitmap());
-		videoObject.actionUrl = new_news.getVideourl();
-		videoObject.dataUrl = "www.weibo.com";
-		videoObject.dataHdUrl = "www.weibo.com";
-		videoObject.duration = 10;
-		videoObject.defaultText = "Vedio 默认文案";
-		return videoObject;
-	}
-
-	public void sendSingleMessage() {
-		// 1. 初始化微博的分享消息
-		WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
-		// 创建媒体消息
-		// weiboMultiMessage.mediaObject = getVideoObj();
-		TextObject textObject = new TextObject();
-		textObject.text = new_news.getTitlelist() + "-看看新闻 "
-				+ new_news.getTitleurl() + " （分享自@看看新闻网） ";
-		ImageObject imageObject = new ImageObject();
-		imageObject.setImageObject(getThumbBitmap());
-		 
-		weiboMultiMessage.textObject = textObject;
-		weiboMultiMessage.imageObject = imageObject;
-		// 2. 初始化从第三方到微博的消息请求
-		SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-		// 用transaction唯一标识一个请求
-		request.transaction = String.valueOf(System.currentTimeMillis());
-		request.multiMessage = weiboMultiMessage;
-		
-		AuthInfo authInfo = new AuthInfo(this, Constants.APP_KEY,
-				Constants.REDIRECT_URL, Constants.SCOPE);
-		Oauth2AccessToken accessToken = AccessTokenKeeper
-				.readAccessToken(getApplicationContext());
-		String token = "";
-		if (accessToken != null) {
-			token = accessToken.getToken();
-		}
-		mWeiboShareAPI.sendRequest(this, request, authInfo, token,
-				new WeiboAuthListener() {
-
-					@Override
-					public void onWeiboException(WeiboException arg0) {
-					}
-
-					@Override
-					public void onComplete(Bundle bundle) {
-						// TODO Auto-generated method stub
-						Oauth2AccessToken newToken = Oauth2AccessToken
-								.parseAccessToken(bundle);
-						AccessTokenKeeper.writeAccessToken(
-								getApplicationContext(), newToken);
-						ToastUtils.Infotoast(New_Activity_Content_Video.this, "分享成功");
-						// Toast.makeText(
-						// getApplicationContext(),
-						// "onAuthorizeComplete token = "
-						// + newToken.getToken(), 0).show();
-					}
-
-					@Override
-					public void onCancel() {
-						ToastUtils.Infotoast(New_Activity_Content_Video.this, "分享取消");
-					}
-				});
-	}
-
 	private static CustomShareBoard shareBoard;
 	private boolean noShowPB;
 	private boolean isload;
-
-	@Override
-	public void onResponse(BaseResponse arg0) {
-		switch (arg0.errCode) {
-		case WBConstants.ErrorCode.ERR_OK:
-			ToastUtils.Infotoast(mContext, "分享成功");
-			break;
-		case WBConstants.ErrorCode.ERR_CANCEL:
-//			ToastUtils.Infotoast(mContext, "分享取消");
-			break;
-		case WBConstants.ErrorCode.ERR_FAIL:
-			ToastUtils.Infotoast(mContext, "分享失败");
-			break;
-		}
-
-	}
 
 	private void goneContentVideoTempImage() {
 		video_controller.getContent_video_temp_image().setVisibility(View.GONE);
@@ -1689,8 +1463,9 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 								mNew_Recommend.getType(),
 								mNew_Recommend.getTitleurl(),
 								mNew_Recommend.getNewstime(),
+								mNew_Recommend.getTitle(),
 								mNew_Recommend.getTitlepic(),
-								mNew_Recommend.getTitle());
+								mNew_Recommend.getSharedPic());
 					} else if (news_type % 10 == 5) {
 						// 专题
 						mContext.startSubjectActivityByParameter(
@@ -1698,7 +1473,9 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 								mNew_Recommend.getZtid(),
 								mNew_Recommend.getTitle(),
 								mNew_Recommend.getTitlepic(),
-								mNew_Recommend.getTitleurl());
+								mNew_Recommend.getTitleurl(),
+								mNew_Recommend.getTitlepic(),
+								mNew_Recommend.getSharedPic());
 					} else if (news_type % 10 == 6) {// 直播
 						New_LivePlayFragment fragment = (New_LivePlayFragment) ((MainActivity) mContext).fragments
 								.get(1);
@@ -1715,8 +1492,9 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 								mNew_Recommend.getType(),
 								mNew_Recommend.getTitleurl(),
 								mNew_Recommend.getNewstime(),
+								mNew_Recommend.getTitle(),
 								mNew_Recommend.getTitlepic(),
-								mNew_Recommend.getTitle());
+								mNew_Recommend.getSharedPic());
 					}
 				}
 			});
@@ -1724,5 +1502,12 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			content_comment_list_list.addView(v);
 		}
 	}
-
+	
+	@Override
+	public void finish(){
+		if(content_video != null)
+			content_video.setBackground(null);
+		System.gc();
+		super.finish();
+	}
 }

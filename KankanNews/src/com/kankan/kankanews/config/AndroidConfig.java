@@ -162,5 +162,5 @@ public class AndroidConfig {
 	// 报料信息上传接口
 	public static final String REVELATIONS_CONTENT_POST = "http://api.app.kankanews.com/kankan/v5/newsbreak/message/1";
 	
-	public static final long MAX_SEL_IMG_LENGTH = 2048000;
+	public static final long MAX_SEL_IMG_LENGTH = 20971520;
 }

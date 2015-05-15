@@ -18,10 +18,14 @@ import org.json.JSONObject;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.DragEvent;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -108,7 +112,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 	private boolean noMoreNews = false;
 
-	private boolean isPushNews = false;
+	private boolean hasLoaded = false;
 
 	private ArrayList<String> new_has_click = new ArrayList<String>();
 
@@ -198,8 +202,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 				loadMoreNetDate();
 			}
-		});
-
+		}); 
 		listview.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -221,21 +224,47 @@ public class New_HomeItemFragment extends BaseFragment implements
 		inflate.setLayoutParams(new LinearLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-		if (CommonUtils.isNetworkAvailable(mActivity)) {
-			refreshNetDate();
-		} else {
-			initLocalDate = initLocalDate();
+		
+		initLocalDate = initLocalDate();
+		if (!initLocalDate) {
+			main_bg.setVisibility(View.VISIBLE);
+		}
+		screnn_pb.setVisibility(View.GONE);
+		
+		if (CommonUtils.isNetworkAvailable(mActivity) && !hasLoaded) {
+//			myClickEvent(listview, this.mActivity.mScreenWidth / 2 ,100, this.mActivity.mScreenWidth / 2,this.mActivity.mScreenHeight / 2 );
+			listview.showHeadLoadingView();
+//			listview.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+//	                MotionEvent.ACTION_DOWN, this.mActivity.mScreenWidth / 2, this.mActivity.mScreenHeight / 2, 0));
 			if (!initLocalDate) {
-				main_bg.setVisibility(View.VISIBLE);
+				screnn_pb.setVisibility(View.VISIBLE);
+				main_bg.setVisibility(View.GONE);
 			}
-			screnn_pb.setVisibility(View.GONE);
-
+			refreshNetDate();
 		}
 
 		return inflate;
 
 	}
+	
+	public void myClickEvent(View view, float x1, float y1, float x2, float y2) {
+        long firstTime = SystemClock.uptimeMillis();
+        final MotionEvent firstEvent = MotionEvent.obtain(firstTime, firstTime,
+                MotionEvent.ACTION_DOWN, x1, y1, 0);
 
+        long moveTime = 30;
+        final MotionEvent moveEvent = MotionEvent.obtain(moveTime, moveTime,
+                MotionEvent.ACTION_MOVE, x1, y1, 0);
+        
+        long secondTime = firstTime + 30;
+        final MotionEvent secondEvent = MotionEvent.obtain(secondTime,
+                secondTime, MotionEvent.ACTION_UP, x2, y2, 0);
+
+        view.dispatchTouchEvent(firstEvent);
+        view.dispatchTouchEvent(moveEvent);
+        view.dispatchTouchEvent(secondEvent);
+    }
+	
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -426,9 +455,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 	protected void refreshNetDate() {
 
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
+			Log.e("hasLoaded", "loading");
 			refreshStartTime = System.currentTimeMillis();
 			isLoadMore = false;
 			noMoreNews = false;
+			hasLoaded = true;
 			instance.getNewHomeData("", appclassid, sp, mListenerObject,
 					mErrorListener);
 		} else {
@@ -934,7 +965,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 								CommonUtils.doWebpUrl(pics[i + 1]),
 								image_view_list.get(i),
 								ImgUtils.homeImageOptions);
-
+					} else {
+						image_view_list.get(i).setBackgroundResource(R.drawable.default_news_display);
 					}
 				}
 
@@ -997,18 +1029,18 @@ public class New_HomeItemFragment extends BaseFragment implements
 			mActivity.startAnimActivityByParameter(
 					New_Activity_Content_Video.class, news.getMid(),
 					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitlepic(), news.getTitle());
+					news.getTitle(), news.getTitlepic(), news.getSharedPic());
 		} else if (news_type % 10 == 2) {
 			final String[] pics = news.getTitlepic().split("::::::");
 			mActivity.startAnimActivityByParameter(
 					New_Activity_Content_PicSet.class, news.getMid(),
 					news.getType(), news.getTitleurl(), news.getNewstime(),
-					CommonUtils.doWebpUrl(pics[1]), news.getTitle());
+					news.getTitle(),  news.getTitlepic(), pics[1]);
 		} else if (news_type % 10 == 5) {
 			// 专题
 			mActivity.startSubjectActivityByParameter(
 					New_Avtivity_Subject.class, news.getZtid(),
-					news.getTitle(), news.getTitlepic(), news.getTitleurl());
+					news.getTitle(), news.getTitlepic(), news.getTitleurl(),  news.getTitlepic(), news.getSharedPic());
 		} else if (news_type % 10 == 6) {
 			// 直播
 			New_LivePlayFragment fragment = (New_LivePlayFragment) mActivity.fragments
@@ -1020,12 +1052,12 @@ public class New_HomeItemFragment extends BaseFragment implements
 		} else if (news.getZtype().equals("1")) {
 			mActivity.startSubjectActivityByParameter(
 					New_Avtivity_Subject.class, news.getZtid(),
-					news.getTitle(), news.getTitlepic(), news.getTitleurl());
+					news.getTitle(), news.getTitlepic(), news.getTitleurl(), news.getTitlepic(), news.getSharedPic());
 		} else {
 			mActivity.startAnimActivityByParameter(
 					New_Activity_Content_Web.class, news.getMid(),
 					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitlepic(), news.getTitle());
+					news.getTitle(), news.getTitlepic(), news.getSharedPic());
 		}
 	}
 

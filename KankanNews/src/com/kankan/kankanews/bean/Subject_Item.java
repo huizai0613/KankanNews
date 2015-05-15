@@ -11,6 +11,7 @@ public class Subject_Item extends BaseBean<Subject_Item> {
 	private String title;
 	private String titleurl;
 	private String titlepic;
+	private String sharedPic;
 	private String type;
 	private String sourceid;
 	private String newstime;
@@ -32,6 +33,7 @@ public class Subject_Item extends BaseBean<Subject_Item> {
 		title = jsonObj.optString("title");
 		titleurl = jsonObj.optString("titleurl");
 		titlepic = jsonObj.optString("titlepic");
+		sharedPic = jsonObj.optString("titlepic");
 		type = jsonObj.optString("type");
 		sourceid = jsonObj.optString("sourceid");
 		newstime = jsonObj.optString("newstime");
@@ -109,7 +111,11 @@ public class Subject_Item extends BaseBean<Subject_Item> {
 	public void setDataType(int dataType) {
 		this.dataType = dataType;
 	}
-
-	
+	public String getSharedPic() {
+		return sharedPic;
+	}
+	public void setSharedPic(String sharedPic) {
+		this.sharedPic = sharedPic;
+	}
 
 }

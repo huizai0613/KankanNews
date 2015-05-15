@@ -11,6 +11,7 @@ public class New_Recommend extends BaseBean<New_Recommend> {
 	private String title;
 	private String titleurl;
 	private String titlepic;
+	private String sharedPic;
 	private String type;
 	private String sourceid;
 	private String newstime;
@@ -33,6 +34,7 @@ public class New_Recommend extends BaseBean<New_Recommend> {
 			title = jsonObj.optString("title");
 			titleurl = jsonObj.optString("titleurl");
 			titlepic = jsonObj.optString("titlepic");
+			sharedPic = jsonObj.optString("titlepic");
 			type = jsonObj.optString("type");
 			sourceid = jsonObj.optString("sourceid");
 			newstime = jsonObj.optString("newstime");
@@ -124,6 +126,14 @@ public class New_Recommend extends BaseBean<New_Recommend> {
 
 	public void setMid(String mid) {
 		this.mid = mid;
+	}
+
+	public String getSharedPic() {
+		return sharedPic;
+	}
+
+	public void setSharedPic(String sharedPic) {
+		this.sharedPic = sharedPic;
 	}
 	
 }

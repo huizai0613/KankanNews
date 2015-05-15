@@ -12,6 +12,7 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> {
 	private String mid;
 	private String title;
 	private String titlepic;
+	private String sharedPic;
 	private String titleurl;
 	private String videoscale;
 	private String type;
@@ -32,6 +33,7 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> {
 		mid = jsonObj.optString("id");
 		title = jsonObj.optString("title");
 		titlepic = jsonObj.optString("titlepic");
+		sharedPic = jsonObj.optString("titlepic");
 		titleurl = jsonObj.optString("titleurl");
 		videoscale = jsonObj.optString("videoscale");
 		type = jsonObj.optString("type");
@@ -114,4 +116,14 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> {
 		this.myType = myType;
 	}
 
+	public String getSharedPic() {
+		return sharedPic;
+	}
+
+	public void setSharedPic(String sharedPic) {
+		this.sharedPic = sharedPic;
+	}
+	
+	
+	
 }

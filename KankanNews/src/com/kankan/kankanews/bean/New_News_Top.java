@@ -11,6 +11,7 @@ public class New_News_Top extends BaseBean<New_News_Top> {
 	private String title;
 	private String titleurl;
 	private String titlepic;
+	private String sharedPic;
 	private String type;
 	private String sourceid;
 	private String newstime;
@@ -42,6 +43,7 @@ public class New_News_Top extends BaseBean<New_News_Top> {
 		title = jsonObj.optString("title");
 		titleurl = jsonObj.optString("titleurl");
 		titlepic = jsonObj.optString("titlepic");
+		sharedPic = jsonObj.optString("titlepic");
 		type = jsonObj.optString("type");
 		sourceid = jsonObj.optString("sourceid");
 		newstime = jsonObj.optString("newstime");
@@ -132,4 +134,13 @@ public class New_News_Top extends BaseBean<New_News_Top> {
 		this.mid = mid;
 	}
 
+	public String getSharedPic() {
+		return sharedPic;
+	}
+
+	public void setSharedPic(String sharedPic) {
+		this.sharedPic = sharedPic;
+	}
+	
+	
 }

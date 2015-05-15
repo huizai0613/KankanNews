@@ -28,26 +28,31 @@ import org.apache.http.util.EntityUtils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Matrix;
 import android.util.Log;
+import android.content.Context;
 
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankanews.kankanxinwen.R;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 public class ImgUtils {
 	public static ImageLoader imageLoader = ImageLoader.getInstance();
 	public static DisplayImageOptions homeImageOptions;
+	public static ImageLoaderConfiguration picSetImageOptions;
+	
 	static {
 		homeImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true)// 设置下载的图片是否缓存在内存中
 				.cacheOnDisc(true)// 设置下载的图片是否缓存在SD卡中
 				 .showImageOnLoading(R.drawable.default_news_display) //设置图片在下载期间显示的图片  
 				 .showImageForEmptyUri(R.drawable.default_news_display)//设置图片Uri为空或是错误的时候显示的图片  
 				.showImageOnFail(R.drawable.default_news_display)  //设置图片加载/解码过程中错误时候显示的图片
-				.imageScaleType(ImageScaleType.EXACTLY_STRETCHED)// 设置图片以如何的编码方式显示
-				.bitmapConfig(Bitmap.Config.RGB_565)// 设置图片的解码类型//
+				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)// 设置图片以如何的编码方式显示
+				.bitmapConfig(Bitmap.Config.RGB_565)// 设置图片的解码类型//  EXACTLY_STRETCHED
 				.decodingOptions(new BitmapFactory.Options())// 设置图片的解码配置
 				// .delayBeforeLoading(int delayInMillis)//int
 				// delayInMillis为你设置的下载前的延迟时间
@@ -98,7 +103,7 @@ public class ImgUtils {
 			conn.setRequestProperty("connection", "keep-alive");
 
 			ByteArrayOutputStream fileOut = getSmallBitmap(fileUrl);
-			;
+			
 			long fileLength = fileOut.toByteArray().length;
 
 			Log.e("UPLOAD_FILE_LENGTH", fileLength + "");
@@ -112,18 +117,8 @@ public class ImgUtils {
 			conn.setRequestProperty("Content-Type", MULTIPART_FROM_DATA
 					+ ";boundary=" + BOUNDARY);
 
-			// String topStr =
-			// "{\"phonenum\":\"11111111111\",\"newstext\":\"asdfasdfzchfadjf\",\"imagenum\":1,\"imagegroup\":{\"0\":{\"filename\":\"test.jpg\",\"base64file\":\"";
-			// String bottomStr = "\"}}}";
-
 			outStream = new DataOutputStream(conn.getOutputStream());
 			outStream.write(sb1.toString().getBytes());
-			// outStream.write(sb1.toString().getBytes());
-			// outStream.write(topStr.toString().getBytes());
-			// InputStream is =
-			// act.getResources().openRawResource(R.drawable.test);
-			// tarFile = new FileInputStream(srcFile);
-			// InputStream is = new FileInputStream(file.getValue());
 
 			byte[] buffer = new byte[8192];
 			int len = 0;
@@ -131,16 +126,6 @@ public class ImgUtils {
 				outStream.write(buffer, 0, len);
 			}
 			outStream.write(sb2.toString().getBytes());
-			// outStream.write(bottomStr.toString().getBytes());
-			// outStream.write(LINEND.getBytes());
-			// InputStream inpu = conn.getInputStream();
-			// StringBuffer buf = new StringBuffer();
-			// byte[] bufferR = new byte[1024];
-			// while ((len = is.read(buffer)) != -1) {
-			// buf.append(new String(buffer));
-			// }
-			// Log.i("IMAGE_BASE", conn.getResponseCode() + "");
-			// Log.i("IMAGE_BASE", conn.getResponseMessage());
 
 			responseReader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
@@ -183,11 +168,7 @@ public class ImgUtils {
 			// 设置httpPost请求参数
 			httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
 			httpResponse = new DefaultHttpClient().execute(httpPost);
-			// System.out.println(httpResponse.getStatusLine().getStatusCode());
-			// if (httpResponse.getStatusLine().getStatusCode() == 200) {
-			// // 第三步，使用getEntity方法活得返回结果
-			// String result = EntityUtils.toString(httpResponse.getEntity());
-			// }
+
 			result.put("ResponseCode", httpResponse.getStatusLine()
 					.getStatusCode() + "");
 			result.put("ResponseContent",
@@ -202,54 +183,58 @@ public class ImgUtils {
 		result.put("ResponseContent", "ERROR");
 		return result;
 	}
+	
+	public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    // Raw height and width of image
+    final int height = options.outHeight;
+    final int width = options.outWidth;
+    int inSampleSize = 1;
 
-	public static int calculateInSampleSize(BitmapFactory.Options options,
-			int reqWidth, int reqHeight) {
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-			final int heightRatio = Math.round((float) height
-					/ (float) reqHeight);
-			final int widthRatio = Math.round((float) width / (float) reqWidth);
-			inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
-		}
-		return inSampleSize;
-	}
-
+    if (height > reqHeight || width > reqWidth) {
+        if (width > height) {
+            inSampleSize = Math.round((float)height / (float)reqHeight);
+        } else {
+            inSampleSize = Math.round((float)width / (float)reqWidth);
+        }
+        return inSampleSize + 1;
+    }
+    return inSampleSize;
+}
+	
 	public static Bitmap decodeImage(String path, int showWidth, int showHeight) {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(path, options);
 
-		// Calculate inSampleSize
+		options.inJustDecodeBounds = false;
 		if (showWidth != 0 && showHeight != 0)
 			options.inSampleSize = calculateInSampleSize(options, showWidth,
 					showHeight);
-		// Decode bitmap with inSampleSize set
-		options.inJustDecodeBounds = false;
 		options.inPreferredConfig = Bitmap.Config.RGB_565;
 		return BitmapFactory.decodeFile(path, options);
 	}
 
 	public static ByteArrayOutputStream getSmallBitmap(String filePath) {
-		Bitmap bm = decodeImage(filePath, 0, 0);
+		Bitmap bm = decodeImage(filePath, 600, 800);
 		long fileLength = new File(filePath).length();
 		int scale = 60;
-		if (fileLength < 2048000 && fileLength > 1536000)
-			scale = 10;
-		if (fileLength <= 1536000 && fileLength > 1024000)
-			scale = 13;
-		if (fileLength <= 1024000 && fileLength > 512000)
+		if (fileLength > 2097152)
 			scale = 20;
-		if (fileLength <= 512000 && fileLength > 256000)
+		if (fileLength <= 2097152 && fileLength > 1572864)
 			scale = 40;
-		if (fileLength <= 256000)
+		if (fileLength <= 1572864 && fileLength > 1048576)
+			scale = 60;
+		if (fileLength <= 1048576 && fileLength > 524288)
+			scale = 70;
+		if (fileLength <= 524288 && fileLength > 262144)
 			scale = 80;
+		if (fileLength <= 262144)
+			scale = 100;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		if (filePath.endsWith(".jpg") || filePath.endsWith(".JPG"))
-			bm.compress(Bitmap.CompressFormat.JPEG, scale, baos);
+        
+        if (filePath.endsWith(".jpg") || filePath.endsWith(".JPG"))
+        	bm.compress(Bitmap.CompressFormat.JPEG, scale, baos);
 		if (filePath.endsWith(".jpeg") || filePath.endsWith(".JPEG"))
 			bm.compress(Bitmap.CompressFormat.JPEG, scale, baos);
 		if (filePath.endsWith(".png") || filePath.endsWith(".PNG"))

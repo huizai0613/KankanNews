@@ -193,15 +193,15 @@ public class New_Activity_MyFoot extends BaseActivity implements
 
 			final New_News new_news = mNew_News.get(position);
 			titlepic.setTag(R.string.viewwidth, PixelUtil.dp2px(80));
-			if (new_news.getTitlepiclist() != null) {
+			if (new_news.getTitlepic() != null) {
 //				CommonUtils.zoomImage(imageLoader, new_news.getTitlepiclist()
 //						.split("::::::")[0], titlepic, mContext, imageCache);
-				ImgUtils.imageLoader.displayImage(new_news.getTitlepiclist()
+				ImgUtils.imageLoader.displayImage(new_news.getTitlepic()
 						.split("::::::")[0], titlepic, ImgUtils.homeImageOptions);
 			}else{
 //				CommonUtils.zoomImage(imageLoader, new_news.getTitlepic()
 //						.split("::::::")[0], titlepic, mContext, imageCache);
-				ImgUtils.imageLoader.displayImage(new_news.getTitlepic()
+				ImgUtils.imageLoader.displayImage(new_news.getSharedPic()
 						.split("::::::")[0], titlepic, ImgUtils.homeImageOptions);
 			}
 			if (new_news.getTitlelist() != null) {
@@ -227,24 +227,23 @@ public class New_Activity_MyFoot extends BaseActivity implements
 			startAnimActivityByParameter(New_Activity_Content_Video.class,
 					new_news.getId(), new_news.getType(),
 					new_news.getTitleurl(), new_news.getNewstime(),
-					new_news.getTitlepic(), new_news.getTitle());
+					new_news.getTitle(), new_news.getTitlepic(), new_news.getSharedPic());
 			break;
 		case 2:// 图集
 			startAnimActivityByParameter(New_Activity_Content_PicSet.class,
 					new_news.getId(), new_news.getType(),
 					new_news.getTitleurl(), new_news.getNewstime(),
-					new_news.getTitlepic(), new_news.getTitle());
+					new_news.getTitle(), new_news.getTitlepic(), new_news.getSharedPic());
 			break;
 		case 5:// 专题
 			startSubjectActivityByParameter(New_Avtivity_Subject.class,
 					new_news.getZtid(), new_news.getTitle(),
-					new_news.getTitlepic(), new_news.getTitleurl());
+					new_news.getTitlepic(), new_news.getTitleurl(), new_news.getTitlepic(), new_news.getSharedPic());
 			break;
 		default:// 图文
 			startAnimActivityByParameter(New_Activity_Content_Web.class,
 					new_news.getId(), new_news.getType(),
-					new_news.getTitleurl(), new_news.getNewstime(),
-					new_news.getTitlepiclist(), new_news.getTitlelist());
+					new_news.getTitleurl(), new_news.getNewstime(), new_news.getTitlelist(), new_news.getTitlepic(), new_news.getSharedPic());
 			break;
 		}
 	}

@@ -41,6 +41,7 @@ import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.fragment.New_MyFragment;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -115,7 +116,7 @@ public class MainActivity extends BaseActivity {
 		spUtil.setFristComing(false);
 		wm = (WindowManager) getApplicationContext().getSystemService(
 				Context.WINDOW_SERVICE);
-
+		Log.e("SystemMemory", CommonUtils.getSystemMemoryInfo(this) + "");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		// 自动更新提示
@@ -143,6 +144,7 @@ public class MainActivity extends BaseActivity {
 							.get(1);
 					fragment.setSelectPlay(true);
 					fragment.setSelectPlayID(Integer.parseInt(bun.getString("LIVE_ID")));
+					Log.e("isSelectPlay", "已播放" + bun.getString("LIVE_ID"));
 					touchTab(tab_two);
 				} else if (bun.containsKey("PUSH_NEWS_ID")) {
 					//推送

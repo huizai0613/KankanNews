@@ -8,7 +8,8 @@ import com.kankan.kankanews.exception.NetRequestException;
 import com.lidroid.xutils.db.annotation.Id;
 import com.lidroid.xutils.db.annotation.Transient;
 
-public class New_LivePlay extends BaseBean<New_LivePlay> implements CanSharedObject {
+public class New_LivePlay extends BaseBean<New_LivePlay> implements
+		CanSharedObject {
 
 	// "title": "36集连续剧：幸福在哪里（13）",
 	// "titlepic":
@@ -23,6 +24,7 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements CanSharedObj
 	private String zid;
 	private String title;
 	private String titlepic;
+	private String sharedPic;
 	private String intro;
 	private String type;
 	private String streamurl;
@@ -47,7 +49,6 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements CanSharedObj
 	public void setZid(String zid) {
 		this.zid = zid;
 	}
-
 
 	public String getTitle() {
 		return title;
@@ -112,7 +113,7 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements CanSharedObj
 	public void setDatetime(String datetime) {
 		this.datetime = datetime;
 	}
-	
+
 	public String getTitleurl() {
 		return titleurl;
 	}
@@ -125,18 +126,20 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements CanSharedObj
 	public String getTitlelist() {
 		// TODO Auto-generated method stub
 		return this.title;
-	}
-
-	@Override
-	public String getTitlepiclist() {
-		// TODO Auto-generated method stub
-		return this.titlepic;
-	}
+	} 
 
 	@Override
 	public JSONObject toJSON() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public String getSharedPic() {
+		return sharedPic;
+	}
+
+	public void setSharedPic(String sharedPic) {
+		this.sharedPic = sharedPic;
 	}
 
 	@Override
@@ -145,6 +148,7 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements CanSharedObj
 		zid = jsonObj.optString("id");
 		title = jsonObj.optString("title");
 		titlepic = jsonObj.optString("titlepic");
+		sharedPic = jsonObj.optString("titlepic");
 		intro = jsonObj.optString("intro");
 		type = jsonObj.optString("type");
 		streamurl = jsonObj.optString("streamurl");

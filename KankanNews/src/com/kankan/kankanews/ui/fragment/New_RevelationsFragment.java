@@ -187,16 +187,6 @@ public class New_RevelationsFragment extends BaseFragment implements
 			}
 			break;
 		case R.id.revelations_post_button:
-			// new Thread(new Runnable() {
-			//
-			// @Override
-			// public void run() {
-			// // TODO Auto-generated method stub
-			//
-			// ImgUtils.send(imagesSelected.get(0));
-			// }
-			//
-			// }).start();
 			if (contentText.getText().length() == 0) {
 				contentText.requestFocus();
 				ToastUtils.Errortoast(getActivity(), "报料内容不得为空");

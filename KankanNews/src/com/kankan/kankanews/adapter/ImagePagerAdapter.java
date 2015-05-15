@@ -21,7 +21,6 @@ import com.ant.liao.GifView.GifImageType;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
-import com.kankan.kankanews.ui.item.New_Activity_Content_Graphic;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
@@ -129,7 +128,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								New_Activity_Content_Video.class,
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
-								news.getTitlepic(), news.getTitle());
+								news.getTitle(), news.getTitlepic(), news.getSharedPic());
 						break;
 					// 图集
 					case 2:
@@ -137,7 +136,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								New_Activity_Content_PicSet.class,
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
-								news.getTitlepic(), news.getTitle());
+								news.getTitle(), news.getTitlepic(), news.getSharedPic());
 						break;
 					case 6:
 						New_LivePlayFragment f = (New_LivePlayFragment) fragment.mActivity.fragments
@@ -151,8 +150,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 						fragment.mActivity.startAnimActivityByParameter(
 								New_Activity_Content_Web.class, news.getMid(),
 								news.getType(), news.getTitleurl(),
-								news.getNewstime(), news.getTitlepic(),
-								news.getTitle());
+								news.getNewstime(),
+								news.getTitle(), news.getTitlepic(), news.getSharedPic());
 						break;
 					}
 				}
@@ -184,7 +183,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								New_Activity_Content_Video.class,
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
-								news.getTitlepic(), news.getTitle());
+								news.getTitle(), news.getTitlepic(), news.getSharedPic());
 						break;
 					// 图集
 					case 2:
@@ -192,7 +191,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								New_Activity_Content_PicSet.class,
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
-								news.getTitlepic(), news.getTitle());
+								news.getTitle(), news.getTitlepic(), news.getSharedPic());
 						break;
 					case 6:
 						New_LivePlayFragment f = (New_LivePlayFragment) fragment.mActivity.fragments
@@ -206,8 +205,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 						fragment.mActivity.startAnimActivityByParameter(
 								New_Activity_Content_Web.class, news.getMid(),
 								news.getType(), news.getTitleurl(),
-								news.getNewstime(), news.getTitlepic(),
-								news.getTitle());
+								news.getNewstime(),
+								news.getTitle(), news.getTitlepic(), news.getSharedPic());
 						break;
 					}
 				}

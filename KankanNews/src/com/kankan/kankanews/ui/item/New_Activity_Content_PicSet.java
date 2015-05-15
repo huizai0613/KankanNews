@@ -47,33 +47,35 @@ import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.exception.DbException;
-import com.sina.weibo.sdk.api.ImageObject;
-import com.sina.weibo.sdk.api.TextObject;
-import com.sina.weibo.sdk.api.WeiboMultiMessage;
-import com.sina.weibo.sdk.api.share.BaseResponse;
-import com.sina.weibo.sdk.api.share.IWeiboHandler;
-import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
-import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-import com.sina.weibo.sdk.auth.AuthInfo;
-import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-import com.sina.weibo.sdk.auth.WeiboAuthListener;
-import com.sina.weibo.sdk.constant.WBConstants;
-import com.sina.weibo.sdk.exception.WeiboException;
+import com.umeng.socialize.sso.UMSsoHandler;
+//import com.sina.weibo.sdk.api.ImageObject;
+//import com.sina.weibo.sdk.api.TextObject;
+//import com.sina.weibo.sdk.api.WeiboMultiMessage;
+//import com.sina.weibo.sdk.api.share.BaseResponse;
+//import com.sina.weibo.sdk.api.share.IWeiboHandler;
+//import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
+//import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
+//import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+//import com.sina.weibo.sdk.auth.AuthInfo;
+//import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+//import com.sina.weibo.sdk.auth.WeiboAuthListener;
+//import com.sina.weibo.sdk.constant.WBConstants;
+//import com.sina.weibo.sdk.exception.WeiboException;
 import com.xunao.view.photoview.PhotoView;
 import com.xunao.view.photoview.PhotoViewAttacher.OnPhotoTapListener;
 
 public class New_Activity_Content_PicSet extends BaseVideoActivity implements
-		OnClickListener, OnPageChangeListener, IWeiboHandler.Response {
+		OnClickListener, OnPageChangeListener{
 
 	/** 微博微博分享接口实例 */
-	private IWeiboShareAPI mWeiboShareAPI = null;
+//	private IWeiboShareAPI mWeiboShareAPI = null;
 
 	private String mid;
 	private String type;
 	private String titleurl;
 	private String newstime;
-	private String titlepiclist;
+	private String titlePic;
+	private String sharedPic;
 	private String titlelist;
 
 	private boolean isHide = false;
@@ -98,21 +100,17 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_pic_set);
-
-		// mShareType = getIntent().getIntExtra(KEY_SHARE_TYPE, SHARE_CLIENT);
-		// 创建微博分享接口实例
-		mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, Constants.APP_KEY);
-		// 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
-		// 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
-		// NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
-		mWeiboShareAPI.registerApp();
-		// 当 Activity 被重新初始化时（该 Activity 处于后台时，可能会由于内存不足被杀掉了），
-		// 需要调用 {@link IWeiboShareAPI#handleWeiboResponse} 来接收微博客户端返回的数据。
-		// 执行成功，返回 true，并调用 {@link IWeiboHandler.Response#onResponse}；
-		// 失败返回 false，不调用上述回调
-		if (savedInstanceState != null) {
-			mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
-		}
+	}
+	
+	@Override 
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    /**使用SSO授权必须添加如下代码 */
+	    
+	    UMSsoHandler ssoHandler = shareUtil.getmController().getConfig().getSsoHandler(requestCode) ;
+	    if(ssoHandler != null){
+	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+	    }
 	}
 
 	@Override
@@ -144,7 +142,8 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 		type = intent.getStringExtra("type");
 		titleurl = intent.getStringExtra("titleurl");
 		newstime = intent.getStringExtra("newstime");
-		titlepiclist = intent.getStringExtra("titlepiclist");
+		titlePic = intent.getStringExtra("titlePic");
+		sharedPic = intent.getStringExtra("sharedPic");
 		titlelist = intent.getStringExtra("titlelist");
 		// 存储数据
 		new_news = new New_News();
@@ -152,7 +151,8 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 		new_news.setType(type);
 		new_news.setTitleurl(titleurl);
 		new_news.setNewstime(newstime);
-		new_news.setTitlepiclist(titlepiclist);
+		new_news.setTitlepic(titlePic);
+		new_news.setSharedPic(sharedPic);
 		new_news.setTitlelist(titlelist);
 
 		// 提交点击
@@ -373,8 +373,10 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 			});
 
 			// 加载图片
+//			ImgUtils.imageLoader.displayImage(picUrl, photoView,
+//					Options.getSmallImageOptions(false));
 			ImgUtils.imageLoader.displayImage(picUrl, photoView,
-					Options.getSmallImageOptions(false));
+					ImgUtils.homeImageOptions);
 			view.setTag(photoView);
 			container.addView(view);
 			return view;
@@ -386,22 +388,22 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 			View v = (View) object;
 			PhotoView tag2 = (PhotoView) v.getTag();
 
-			if (tag2 != null) {
-				Drawable drawable2 = tag2.getDrawable();
-
-				if (drawable2 instanceof BitmapDrawable) {
-					BitmapDrawable drawable = (BitmapDrawable) tag2
-							.getDrawable();
-					if (drawable != null) {
-						Bitmap bitmap = drawable.getBitmap();
-						if (bitmap != null) {
-							bitmap.recycle();
-							bitmap = null;
-						}
-						drawable = null;
-					}
-				}
-			}
+//			if (tag2 != null) {
+//				Drawable drawable2 = tag2.getDrawable();
+//
+//				if (drawable2 instanceof BitmapDrawable) {
+//					BitmapDrawable drawable = (BitmapDrawable) tag2
+//							.getDrawable();
+//					if (drawable != null) {
+//						Bitmap bitmap = drawable.getBitmap();
+//						if (bitmap != null) {
+//							bitmap.recycle();
+//							bitmap = null;
+//						}
+//						drawable = null;
+//					}
+//				}
+//			}
 			container.removeView((View) object);
 		}
 	}
@@ -429,145 +431,9 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 		}
 	}
 
-	public void sendSingleMessage() {
-		// 1. 初始化微博的分享消息
-		WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
-		// 创建媒体消息
-		// weiboMultiMessage.mediaObject = getVideoObj();
-		TextObject textObject = new TextObject();
-		textObject.text = new_news.getTitlelist() + "-看看新闻 "
-				+ new_news.getTitleurl() + " （分享自@看看新闻网） ";
-		ImageObject imageObject = new ImageObject();
-		imageObject.setImageObject(getThumbBitmap());
-		weiboMultiMessage.textObject = textObject;
-		weiboMultiMessage.imageObject = imageObject;
-		// 2. 初始化从第三方到微博的消息请求
-		SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-		// 用transaction唯一标识一个请求
-		request.transaction = String.valueOf(System.currentTimeMillis());
-		request.multiMessage = weiboMultiMessage;
-
-		AuthInfo authInfo = new AuthInfo(this, Constants.APP_KEY,
-				Constants.REDIRECT_URL, Constants.SCOPE);
-		Oauth2AccessToken accessToken = AccessTokenKeeper
-				.readAccessToken(getApplicationContext());
-		String token = "";
-		if (accessToken != null) {
-			token = accessToken.getToken();
-		}
-		mWeiboShareAPI.sendRequest(this, request, authInfo, token,
-				new WeiboAuthListener() {
-
-					@Override
-					public void onWeiboException(WeiboException arg0) {
-					}
-
-					@Override
-					public void onComplete(Bundle bundle) {
-						Oauth2AccessToken newToken = Oauth2AccessToken
-								.parseAccessToken(bundle);
-						AccessTokenKeeper.writeAccessToken(
-								getApplicationContext(), newToken);
-						ToastUtils.Infotoast(New_Activity_Content_PicSet.this, "分享成功");
-					}
-
-					@Override
-					public void onCancel() {
-						ToastUtils.Infotoast(New_Activity_Content_PicSet.this, "分享取消");
-					}
-				});
-	}
-
-	/**
-	 * 获取当前新闻的缩略图对应的 Bitmap。
-	 */
-	public Bitmap getThumbBitmap() {
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		options.inPreferredConfig = Bitmap.Config.RGB_565;
-		// Bitmap decodeFile = BitmapFactory
-		// .decodeFile(
-		// CommonUtils.getImageCachePath(mContext)
-		// .getAbsolutePath()
-		// + "/"
-		// + String.valueOf(new_news.getTitlepic()
-		// .hashCode()), options);
-		// int byteCount = decodeFile.getByteCount();
-		// int height = decodeFile.getHeight();
-		// long memeory=byteCount*height;
-		// int width = options.outWidth;
-		// int height = options.outHeight;
-		//
-		// if (width > height) {
-		// options.inSampleSize = width / 400;
-		// } else {
-		// options.inSampleSize = height / 400;
-		// }
-		// options.inJustDecodeBounds = false;
-
-		File file = new File(
-				CommonUtils.getImageCachePath(mContext),
-				CommonUtils.doWebpUrl(CommonUtils
-						.generate(new_news.getTitlepiclist().split("::::::")[0])));
-		Bitmap decodeFile = BitmapFactory.decodeFile(file.getAbsolutePath());
-
-		if (decodeFile == null) {
-			decodeFile = BitmapFactory.decodeFile(CommonUtils
-					.getImageCachePath(mContext)
-					+ "/"
-					+ "big_"
-					+ CommonUtils.doWebpUrl(CommonUtils.generate(new_news.getTitlepiclist().split(
-							"::::::")[0])));
-		}
-
-		// Bitmap decodeFile = BitmapFactory.decodeFile(CommonUtils
-		// .getImageCachePath(mContext)
-		// + "/"
-		// + CommonUtils.UrlToFileName(new_news.getTitlepiclist()));
-
-		int byteCount = decodeFile.getRowBytes();
-
-		int height2 = decodeFile.getHeight();
-
-		long mem = height2 * byteCount;
-
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-
-		if (mem > 100 * 1024 * 8) {
-			decodeFile.compress(CompressFormat.JPEG, 80, bao);
-		} else if (mem < 100 * 1024 * 8 && mem > 80 * 1024 * 8) {
-			decodeFile.compress(CompressFormat.JPEG, 90, bao);
-		} else {
-			decodeFile.compress(CompressFormat.JPEG, 100, bao);
-		}
-		if (decodeFile != null && !decodeFile.isRecycled()) {
-			decodeFile.recycle();
-		}
-		byte[] byteArray = bao.toByteArray();
-		Bitmap decodeByteArray = BitmapFactory.decodeByteArray(byteArray, 0,
-				byteArray.length);
-
-		return decodeByteArray;
-	}
-
 	@Override
 	public void onBackPressed() {
 		AnimFinsh();
-	}
-
-	@Override
-	public void onResponse(BaseResponse arg0) {
-		switch (arg0.errCode) {
-		case WBConstants.ErrorCode.ERR_OK:
-			ToastUtils.Infotoast(mContext, "分享成功");
-			break;
-		case WBConstants.ErrorCode.ERR_CANCEL:
-//			ToastUtils.Infotoast(mContext, "分享取消");
-			break;
-		case WBConstants.ErrorCode.ERR_FAIL:
-			ToastUtils.Infotoast(mContext, "分享失败");
-			break;
-		}
 	}
 
 	@Override
@@ -576,4 +442,11 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 			initNetData();
 	}
 
+	@Override
+	public void finish(){
+		if(vp != null)
+			vp.setAdapter(null);
+		System.gc();
+		super.finish();
+	}
 }

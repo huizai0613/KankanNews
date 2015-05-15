@@ -21,6 +21,7 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMVideo;
 import com.umeng.socialize.sso.EmailHandler;
 import com.umeng.socialize.sso.QZoneSsoHandler;
+import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
@@ -99,7 +100,7 @@ public class ShareUtil {
 	private void setShareContent() {
 
 		// 配置SSO
-		// mController.getConfig().setSsoHandler(new SinaSsoHandler());
+		 mController.getConfig().setSsoHandler(new SinaSsoHandler());
 		// mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
 
 		// QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(activity,
@@ -111,13 +112,15 @@ public class ShareUtil {
 		// (BitmapDrawable)drawable).getBitmap());
 		// UMImage SharePic = new UMImage(activity, content_News.getTitlepic());
 		UMImage titlePic = null;
-		if(null == shareObj.getTitlepiclist() || "".equals(shareObj.getTitlepiclist().trim())){
+		if(null == shareObj.getSharedPic() || "".equals(shareObj.getSharedPic().trim())){
 			titlePic = new UMImage(activity, R.drawable.icon_shared);
 		}else{
-			titlePic = new UMImage(activity, shareObj.getTitlepiclist());
+			titlePic = new UMImage(activity, shareObj.getSharedPic());
 		}
 		// UMImage resImage = new UMImage(activity, R.drawable.icon);
-
+		
+		String sharedUrl = handleUrl(shareObj.getTitleurl());
+		
 		// 视频分享
 		UMVideo video = new UMVideo(shareObj.getTitleurl());
 		video.setMediaUrl(shareObj.getTitleurl());
@@ -132,7 +135,7 @@ public class ShareUtil {
 				.setShareContent(shareObj.getTitle() == null ? shareObj
 						.getTitlelist() : shareObj.getTitle());
 		weixinContent.setTitle(shareObj.getTitlelist());
-		weixinContent.setTargetUrl(shareObj.getTitleurl());
+		weixinContent.setTargetUrl(sharedUrl);
 		weixinContent.setShareMedia(titlePic);
 		mController.setShareMedia(weixinContent);
 
@@ -143,7 +146,7 @@ public class ShareUtil {
 		circleMedia.setShareImage(titlePic);
 		// circleMedia.setShareMedia(uMusic);
 		// circleMedia.setShareMedia(video);
-		circleMedia.setTargetUrl(shareObj.getTitleurl());
+		circleMedia.setTargetUrl(sharedUrl);
 		mController.setShareMedia(circleMedia);
 
 		// 设置QQ空间分享内容
@@ -164,7 +167,7 @@ public class ShareUtil {
 		qqShareContent.setShareImage(titlePic);
 		// qqShareContent.setShareMusic(uMusic);
 		// qqShareContent.setShareVideo(video);
-		qqShareContent.setTargetUrl(shareObj.getTitleurl());
+		qqShareContent.setTargetUrl(sharedUrl);
 		mController.setShareMedia(qqShareContent);
 
 		// 视频分享
@@ -189,7 +192,7 @@ public class ShareUtil {
 		// UMImage maillocalImage = new
 		// UMImage(activity,R.drawable.ic_launcher);
 		mail.setTitle(shareObj.getTitlelist());
-		mail.setShareContent(shareObj.getTitleurl());
+		mail.setShareContent(sharedUrl);
 		// 设置tencent分享内容
 		mController.setShareMedia(mail);
 
@@ -197,9 +200,10 @@ public class ShareUtil {
 		SinaShareContent sinaContent = new SinaShareContent(titlePic);
 		// sinaContent.setShareMedia(video);
 		sinaContent.setShareImage(titlePic);
+//		sinaContent.setShareImage(new UMImage(activity, "http://static.statickksmg.com/image/2015/05/07/ad7b6608ed69b909356b605db8924891.jpg"));
 		// TODO
 		sinaContent.setShareContent(shareObj.getTitlelist() + "-看看新闻 "
-				+ shareObj.getTitleurl() + " （分享自@看看新闻网） ");
+				+ sharedUrl + " （分享自@看看新闻网） ");
 		mController.setShareMedia(sinaContent);
 	}
 
@@ -226,13 +230,20 @@ public class ShareUtil {
 	// SHARE_MEDIA.YIXIN_CIRCLE, SHARE_MEDIA.YNOTE);
 	// mController.openShare(activity, false);
 	// }
-
+	
+	private String handleUrl(String srcUrl){
+		if(srcUrl.contains("?")){
+			return srcUrl + "&utm_source=kankanapp";
+		}
+		return srcUrl + "?utm_source=kankanapp";
+	}
+	
 	/**
 	 * 配置分享平台参数</br>
 	 */
 	private void configPlatforms() {
 		// 添加新浪SSO授权
-		// mController.getConfig().setSsoHandler(new SinaSsoHandler());
+		 mController.getConfig().setSsoHandler(new SinaSsoHandler());
 		// 添加腾讯微博SSO授权
 		// mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
 		// 添加人人网SSO授权

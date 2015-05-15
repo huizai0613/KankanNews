@@ -15,6 +15,7 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 	private String title;
 	private String titleurl;
 	private String titlepic;
+	private String sharedPic;
 	private String type;
 	private String sourceid;
 	private String newstime;
@@ -22,7 +23,7 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 	private String ztid;
 	// private String mid;
 
-	private String titlepiclist;// 列表页的图片，用于作为分享的图片
+//	private String titlepiclist;// 列表页的图片，用于作为分享的图片
 	private String titlelist;//列表页的title
 
 	// 新闻详情
@@ -49,6 +50,7 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 		title = jsonObj.optString("title");
 		titleurl = jsonObj.optString("titleurl");
 		titlepic = jsonObj.optString("titlepic");
+		sharedPic = jsonObj.optString("titlepic");
 		type = jsonObj.optString("type");
 		sourceid = jsonObj.optString("sourceid");
 		newstime = jsonObj.optString("newstime");
@@ -220,14 +222,6 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 		this.newstext = newstext;
 	}
 
-	public String getTitlepiclist() {
-		return titlepiclist;
-	}
-
-	public void setTitlepiclist(String titlepiclist) {
-		this.titlepiclist = titlepiclist;
-	}
-
 	public String getTitlelist() {
 		return titlelist;
 	}
@@ -236,6 +230,14 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 		this.titlelist = titlelist;
 	}
 
+	public String getSharedPic() {
+		return sharedPic;
+	}
+
+	public void setSharedPic(String sharedPic) {
+		this.sharedPic = sharedPic;
+	}
+	
 	// public ArrayList<String> getParagraph() {
 	// return paragraph;
 	// }

@@ -1,5 +1,6 @@
 package com.kankan.kankanews.base;
 
+import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.IA.CrashApplication;
+import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.interfaz.CanSharedBySina;
 import com.kankan.kankanews.dialog.Loading_Dialog;
 import com.kankan.kankanews.dialog.TishiMsgHint;
@@ -271,8 +273,8 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 	}
 
 	public void startAnimActivityByParameter(Class<?> cla, String mid,
-			String type, String titleurl, String newstime, String titlepiclist,
-			String titlelist) {
+			String type, String titleurl, String newstime,
+			String titlelist, String titlePic, String sharedPic) {
 		Intent intent = new Intent(this, cla);
 		intent.setAction("com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY");
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -280,19 +282,30 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 		intent.putExtra("type", type);
 		intent.putExtra("titleurl", titleurl);
 		intent.putExtra("newstime", newstime);
-		intent.putExtra("titlepiclist", titlepiclist);
 		intent.putExtra("titlelist", titlelist);
+		intent.putExtra("titlePic", titlePic);
+		intent.putExtra("sharedPic", sharedPic);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}
-
+	
+	public void startAnimActivityByParameter(Class<?> cla,New_News_Home mews) {
+		Intent intent = new Intent(this, cla);
+		intent.addCategory(Intent.CATEGORY_DEFAULT);
+		intent.putExtra("HOME_NEWS", (Serializable) mews);
+		this.startActivity(intent);
+		this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+	}
+	
 	public void startSubjectActivityByParameter(Class<?> cla, String ztid,
-			String title, String titlepic, String titleurl) {
+			String title, String titlepic, String titleurl, String titlePic, String sharedPic) {
 		Intent intent = new Intent(this, cla);
 		intent.putExtra("ztid", ztid);
 		intent.putExtra("title", title);
 		intent.putExtra("titlepic", titlepic);
 		intent.putExtra("titleurl", titleurl);
+		intent.putExtra("titlePic", titlePic);
+		intent.putExtra("sharedPic", sharedPic);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}
@@ -559,10 +572,6 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 			return runningTaskInfos.get(0).topActivity.toString();
 		else
 			return null;
-	}
-
-	public void sendSingleMessage() {
-
 	}
 
 	public void refresh(){

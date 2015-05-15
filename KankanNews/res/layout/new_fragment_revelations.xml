@@ -151,6 +151,7 @@
                     android:phoneNumber="true"
                     android:inputType="phone"
                     android:padding="10dp"
+               		android:textSize="18dp"
                     android:singleLine="true" />
             
             <Button
