@@ -259,14 +259,6 @@ public class New_HomeFragment extends BaseFragment implements
 			LinearLayout layout = (LinearLayout) mRadioGroup_content
 					.getChildAt(tab_postion);
 			TextView checkView = (TextView) layout.getChildAt(0);
-			// int k = checkView.getMeasuredWidth();
-			// int l = checkView.getLeft();
-			// int i2 = l + k / 2 - mActivity.mScreenWidth / 2;
-			// rg_nav_content.getParent()).smoothScrollTo(i2, 0);
-			// mColumnHorizontalScrollView.smoothScrollTo(i2, 0);
-			// mColumnHorizontalScrollView.smoothScrollTo((position - 2) *
-			// mItemWidth , 0);
-			//
 		}
 		// 判断是否选中
 		for (int j = 0; j < mRadioGroup_content.getChildCount(); j++) {

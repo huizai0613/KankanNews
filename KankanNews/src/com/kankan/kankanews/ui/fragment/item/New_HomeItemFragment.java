@@ -230,12 +230,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 			main_bg.setVisibility(View.VISIBLE);
 		}
 		screnn_pb.setVisibility(View.GONE);
-		
 		if (CommonUtils.isNetworkAvailable(mActivity) && !hasLoaded) {
-//			myClickEvent(listview, this.mActivity.mScreenWidth / 2 ,100, this.mActivity.mScreenWidth / 2,this.mActivity.mScreenHeight / 2 );
 			listview.showHeadLoadingView();
-//			listview.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
-//	                MotionEvent.ACTION_DOWN, this.mActivity.mScreenWidth / 2, this.mActivity.mScreenHeight / 2, 0));
 			if (!initLocalDate) {
 				screnn_pb.setVisibility(View.VISIBLE);
 				main_bg.setVisibility(View.GONE);
@@ -309,7 +305,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			}
 
 		} catch (DbException e) {
-			e.printStackTrace();
+			Log.e("initLocalDate", e.getLocalizedMessage());
 		}
 		return false;
 	}
@@ -455,7 +451,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 	protected void refreshNetDate() {
 
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
-			Log.e("hasLoaded", "loading");
 			refreshStartTime = System.currentTimeMillis();
 			isLoadMore = false;
 			noMoreNews = false;

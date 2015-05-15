@@ -18,7 +18,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.view.Display;
 import android.view.WindowManager;
@@ -26,6 +25,14 @@ import android.widget.Toast;
 
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.download.MyRequestCallBack;
+import com.kankan.kankanews.bean.Content_News;
+import com.kankan.kankanews.bean.New_Colums;
+import com.kankan.kankanews.bean.New_Colums_Info;
+import com.kankan.kankanews.bean.New_LivePlay;
+import com.kankan.kankanews.bean.New_News;
+import com.kankan.kankanews.bean.New_News_Home;
+import com.kankan.kankanews.bean.New_News_Top;
+import com.kankan.kankanews.bean.New_Recommend;
 import com.kankan.kankanews.bean.User;
 import com.kankan.kankanews.bean.User_Collect_Offline;
 import com.kankan.kankanews.config.AndroidConfig;
@@ -33,6 +40,7 @@ import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.SharePreferenceUtil;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.DbUtils.DbUpgradeListener;
+import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.http.HttpHandler;
 import com.nostra13.universalimageloader.cache.disc.impl.BaseDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
@@ -40,7 +48,6 @@ import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.process.BitmapProcessor;
 import com.nostra13.universalimageloader.utils.L;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UmengMessageHandler;
@@ -122,10 +129,31 @@ public class CrashApplication extends Application {
 		int height = display.getHeight();
 		AssetManager mgr = getAssets();
 		tf = Typeface.createFromAsset(mgr, "nomal.TTF");
-		dbUtils = DbUtils.create(this, "kankan", 1, new DbUpgradeListener() {
+		
+		
+		dbUtils = DbUtils.create(this, "kankan", 2, new DbUpgradeListener() {
 			@Override
 			public void onUpgrade(DbUtils arg0, int arg1, int arg2) {
 				// TODO Auto-generated method stub
+				try {
+					arg0.dropTable(New_News_Home.class);
+					arg0.dropTable(New_News_Top.class);
+					arg0.dropTable(New_News.class);
+					arg0.dropTable(New_Recommend.class);
+					arg0.dropTable(New_LivePlay.class);
+					arg0.dropTable(New_Colums_Info.class);
+					arg0.dropTable(Content_News.class);
+					arg0.createTableIfNotExist(New_News_Home.class);
+					arg0.createTableIfNotExist(New_News_Top.class);
+					arg0.createTableIfNotExist(New_News.class);
+					arg0.createTableIfNotExist(New_Recommend.class);
+					arg0.createTableIfNotExist(New_LivePlay.class);
+					arg0.createTableIfNotExist(New_Colums_Info.class);
+					arg0.createTableIfNotExist(Content_News.class);
+				} catch (DbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		dbUtils.configAllowTransaction(true);
