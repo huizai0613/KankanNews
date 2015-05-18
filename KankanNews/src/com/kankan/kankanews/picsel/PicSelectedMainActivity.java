@@ -320,6 +320,8 @@ public class PicSelectedMainActivity extends Activity implements OnImageDirSelec
 		            	File file2 = new File(arg1);
 		            	if(file1.lastModified() > file2.lastModified())
 		            		return  -1;
+		            	if(file1.lastModified() == file2.lastModified())
+		            		return  0;
 		            	return 1;
 		            }
 		        });

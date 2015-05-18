@@ -14,5 +14,6 @@
     <string name="isTop">isTop</string>
     <string name="whb">whb</string>
     <string name="graphic">graphic</string>
+    <string name="video_layout_loading">正在缓冲...</string>
 
 </resources>

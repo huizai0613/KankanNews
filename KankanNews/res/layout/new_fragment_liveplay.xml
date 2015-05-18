@@ -39,7 +39,7 @@
                 android:src="@drawable/ic_liveplay" />
 
             <LinearLayout
-                android:id="@+id/video_pb"
+                android:id="@+id/mVideoLoadingLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#000000"
@@ -47,11 +47,26 @@
                 android:visibility="visible" >
 
                 <ProgressBar
-                    android:layout_width="40dip"
-                    android:layout_height="40dip"
+                    android:id="@+id/video_loading_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
                     android:indeterminateBehavior="repeat"
                     android:indeterminateDrawable="@drawable/iamge_progress"
-                    android:indeterminateOnly="true"
+                    android:indeterminateOnly="false"
+                    android:visibility="visible" />
+
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:id="@+id/video_loading_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/video_loading_progress"
+                    android:layout_centerHorizontal="true"
+                    android:paddingTop="7.0dip"
+                    android:text="@string/video_layout_loading"
+                    android:textColor="@android:color/white"
+                    android:textSize="25dp"
                     android:visibility="visible" />
             </LinearLayout>
 
@@ -96,14 +111,14 @@
                 android:paddingLeft="10dip"
                 android:singleLine="true"
                 android:textSize="16dip" />
-            
+
             <ImageView
                 android:id="@+id/live_share_but"
-            android:layout_width="wrap_content"
-            android:layout_height="40dip"
-            android:layout_gravity="right|center"
-            android:layout_marginRight="5dp"
-            android:src="@drawable/liveshare" />
+                android:layout_width="wrap_content"
+                android:layout_height="40dip"
+                android:layout_gravity="right|center"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/liveshare" />
         </LinearLayout>
 
         <View

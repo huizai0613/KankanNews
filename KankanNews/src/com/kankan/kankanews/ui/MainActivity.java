@@ -160,7 +160,7 @@ public class MainActivity extends BaseActivity {
 			}
 		}
 	}
-
+	
 	long lastTime;
 
 	@Override

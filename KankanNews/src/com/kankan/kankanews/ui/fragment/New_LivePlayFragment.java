@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
@@ -67,19 +68,6 @@ import com.kankan.kankanews.utils.ToastUtils;
 import com.kankan.kankanews.utils.XunaoLog;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.exception.DbException;
-//import com.sina.weibo.sdk.api.ImageObject;
-//import com.sina.weibo.sdk.api.TextObject;
-//import com.sina.weibo.sdk.api.WeiboMultiMessage;
-//import com.sina.weibo.sdk.api.share.BaseResponse;
-//import com.sina.weibo.sdk.api.share.IWeiboHandler;
-//import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-//import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
-//import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-//import com.sina.weibo.sdk.auth.AuthInfo;
-//import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-//import com.sina.weibo.sdk.auth.WeiboAuthListener;
-//import com.sina.weibo.sdk.constant.WBConstants;
-//import com.sina.weibo.sdk.exception.WeiboException;
 
 public class New_LivePlayFragment extends BaseFragment implements
 		OnInfoListener, OnCompletionListener, OnErrorListener, OnClickListener,
@@ -94,12 +82,17 @@ public class New_LivePlayFragment extends BaseFragment implements
 	private ImageView video_player;
 	private ImageView smallscrenn_but;
 	private MyTextView livePlayTitle;
-	private LinearLayout video_pb;
+	private LinearLayout mVideoLoadingLayout;
 	private LinearLayout screnn_pb;
 	private ImageView fullscrenn_but;
 	private ArrayList<New_LivePlay> mLivePlayList = new ArrayList<New_LivePlay>();
 	private MyAdapter myAdapter;
 	private ImageView liveShareBut;
+	private MyTextView loadingText;
+	
+	private static final int BUFFER_START = 11;
+	private static final int BUFFER_PROGRESS = 12;
+	private static final int BUFFER_COMPLETE = 13;
 	
 
 	private boolean isFullstate;
@@ -194,15 +187,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 		super.onResume();
 		if (!isFirst && mActivity.curTouchTab == mActivity.tab_two) {
 			if (CommonUtils.isNetworkAvailable(mActivity)) {
-				// if (!isSelectPlay) {
-				// Uri getmUri = video_view.getmUri();
-				// if (getmUri != null) {
-				// video_view.release(true);
-				// video_view.setVideoURI(getmUri);
-				// }
-				// } else {
+
 				refreshNetDate();
-				// }
 			} else {
 				ToastUtils.ErrorToastNoNet(mActivity);
 			}
@@ -222,11 +208,14 @@ public class New_LivePlayFragment extends BaseFragment implements
 				.findViewById(R.id.smallrootview);
 		rootview = (RelativeLayout) inflate.findViewById(R.id.rootview);
 		video_view = (VideoView) inflate.findViewById(R.id.video_view);
+		video_view.setBufferSize(512*1024);
+		
 		video_view_click = inflate.findViewById(R.id.video_view_click);
 		main_bg = inflate.findViewById(R.id.main_bg);
 		video_player = (ImageView) inflate.findViewById(R.id.video_player);
 		livePlayTitle = (MyTextView) inflate.findViewById(R.id.livePlayTitle);
-		video_pb = (LinearLayout) inflate.findViewById(R.id.video_pb);
+		loadingText = (MyTextView) inflate.findViewById(R.id.video_loading_text);
+		mVideoLoadingLayout = (LinearLayout) inflate.findViewById(R.id.mVideoLoadingLayout);
 		screnn_pb = (LinearLayout) inflate.findViewById(R.id.screnn_pb);
 		fullscrenn_but = (ImageView) inflate.findViewById(R.id.fullscrenn_but);
 		smallscrenn_but = (ImageView) inflate
@@ -261,10 +250,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 			}
 		});
 		
-		// 初始化头部
-//		initTitle_Right_Left_bar(inflate, "看看直播", "", "", "#ffffff", R.drawable.new_ic_more, 0,
-//				"#000000", "#000000");
-		
 		listview.setAdapter(new MyAdapter());
 		initViewLayout();
 		initLinsenter();
@@ -276,23 +261,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 			screnn_pb.setVisibility(View.GONE);
 			main_bg.setVisibility(View.VISIBLE);
 		}
-		
-
-		// mShareType = getIntent().getIntExtra(KEY_SHARE_TYPE, SHARE_CLIENT);
-//		// 创建微博分享接口实例
-//		mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this.getActivity(), Constants.APP_KEY);
-//		// 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
-//		// 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
-//		// NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
-//		mWeiboShareAPI.registerApp();
-//		// 当 Activity 被重新初始化时（该 Activity 处于后台时，可能会由于内存不足被杀掉了），
-//		// 需要调用 {@link IWeiboShareAPI#handleWeiboResponse} 来接收微博客户端返回的数据。
-//		// 执行成功，返回 true，并调用 {@link IWeiboHandler.Response#onResponse}；
-//		// 失败返回 false，不调用上述回调
-//		if (savedInstanceState != null) {
-//			mWeiboShareAPI.handleWeiboResponse(this.getActivity().getIntent(), this);
-//		}
-		
 		return inflate;
 	}
 
@@ -313,8 +281,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 		fullscrenn_but.setOnClickListener(this);
 		smallscrenn_but.setOnClickListener(this);
 		liveShareBut.setOnClickListener(this);
-// 		头部的左右点击事件
-//		setOnRightClickLinester(this);
 	}
 
 	@Override
@@ -322,7 +288,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 		try {
 			localDate = mActivity.dbUtils.findAll(New_LivePlay.class);
 		} catch (DbException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return true;
@@ -633,10 +598,11 @@ public class New_LivePlayFragment extends BaseFragment implements
 								livePlayTitle.setText("正在播放:"
 										+ new_LivePlay.getTitle());
 								// 更改直播频道
-								video_view.release(true);
+//								video_view.release(true);
+								video_view.stopPlayback();
 								video_view.setVideoPath(new_LivePlay
 										.getStreamurl());
-								video_player.setVisibility(View.VISIBLE);
+								setVideoLoadingLayoutVisibility(View.VISIBLE);
 								nowLiveNew = new_LivePlay;
 							}
 						});
@@ -855,23 +821,30 @@ public class New_LivePlayFragment extends BaseFragment implements
 		switch (what) {
 		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
 			XunaoLog.yLog().d("视频开始加载");
-			video_pb.setVisibility(View.VISIBLE);
+			setVideoLoadingLayoutVisibility(View.VISIBLE);
+			vPlayerHandler.sendEmptyMessage(BUFFER_START);
+			if(video_view.isPlaying())
+				video_view.pause();
 			// video_view.pause();
 			break;
 		case MediaPlayer.MEDIA_INFO_BUFFERING_END:
 			XunaoLog.yLog().d("视频加载完毕");
-			video_pb.setVisibility(View.GONE);
+			setVideoLoadingLayoutVisibility(View.GONE);
 			if (mActivity.curTouchTab == mActivity.tab_two) {
 				video_view.start();
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						video_view.pause();
-					}
-				}, 100);
+//				new Handler().postDelayed(new Runnable() {
+//					@Override
+//					public void run() {
+//						video_view.pause();
+//					}
+//				}, 100);
 			}
 			// video_view.start();
 			break;
+		  case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
+	            //显示 下载速度
+	            Log.e("OnInfo", "download rate:" + extra);
+	            break;
 		}
 		return false;
 	}
@@ -925,7 +898,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 		if (video_player != null) {
 			video_player.setVisibility(View.VISIBLE);
 		}
-
 	}
 
 	public VideoView getVideoView() {
@@ -937,5 +909,41 @@ public class New_LivePlayFragment extends BaseFragment implements
 	public void refresh() {
 		listview.setRefreshing(false);
 	}
-
+	
+	private void setVideoLoadingLayoutVisibility(int visibility) {
+		if (mVideoLoadingLayout != null) {
+			// if (visibility == View.VISIBLE)
+			// mLoadingProgressView.startAnimation(mLoadingAnimation);
+			mVideoLoadingLayout.setVisibility(visibility);
+		}
+	}
+	
+	private Handler vPlayerHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case BUFFER_START:
+				
+				setVideoLoadingLayoutVisibility(View.VISIBLE);
+				vPlayerHandler.sendEmptyMessageDelayed(BUFFER_PROGRESS, 1000);
+				break;
+			case BUFFER_PROGRESS:
+				if (New_LivePlayFragment.this.video_view.getMediaPlayer().getBufferProgress() >= 100) {
+					setVideoLoadingLayoutVisibility(View.GONE);
+				} else {
+					loadingText.setText(getString(
+							R.string.video_layout_loading) +
+							New_LivePlayFragment.this.video_view.getMediaPlayer().getBufferProgress() + "%");
+					vPlayerHandler.sendEmptyMessageDelayed(BUFFER_PROGRESS,
+							500);
+					New_LivePlayFragment.this.video_view.pause();
+				}
+				break;
+			case BUFFER_COMPLETE:
+				setVideoLoadingLayoutVisibility(View.GONE);
+				vPlayerHandler.removeMessages(BUFFER_PROGRESS);
+				break;
+			}
+		}
+	};
 }

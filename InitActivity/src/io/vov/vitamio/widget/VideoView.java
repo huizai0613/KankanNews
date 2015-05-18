@@ -898,4 +898,8 @@ public class VideoView extends SurfaceView implements
 		return (mMediaPlayer != null && mCurrentState != STATE_ERROR
 				&& mCurrentState != STATE_IDLE && mCurrentState != STATE_PREPARING);
 	}
+	
+	public MediaPlayer getMediaPlayer(){
+		return mMediaPlayer;
+	}
 }
