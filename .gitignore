@@ -1,1 +1,8 @@
-/InitActivity/bin/classes
+/InitActivity/bin/
+/InitActivity/gen/
+/library_SlidingMenu/bin/
+/library_SlidingMenu/gen/
+/social_sdk_library_project/bin/
+/social_sdk_library_project/gen/
+/KankanNews/bin/
+/KankanNews/gen/
