@@ -923,7 +923,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case BUFFER_START:
-				
 				setVideoLoadingLayoutVisibility(View.VISIBLE);
 				vPlayerHandler.sendEmptyMessageDelayed(BUFFER_PROGRESS, 1000);
 				break;
