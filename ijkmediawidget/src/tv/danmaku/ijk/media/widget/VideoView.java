@@ -224,6 +224,7 @@ public class VideoView extends SurfaceView implements
     public void stopPlayback() {
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
+        	mMediaPlayer.reset();
             mMediaPlayer.release();
             mMediaPlayer = null;
             mCurrentState = STATE_IDLE;

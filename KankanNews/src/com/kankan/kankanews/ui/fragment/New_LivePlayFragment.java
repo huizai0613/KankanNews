@@ -1,12 +1,5 @@
 package com.kankan.kankanews.ui.fragment;
 
-import io.vov.vitamio.MediaPlayer;
-import io.vov.vitamio.MediaPlayer.OnCompletionListener;
-import io.vov.vitamio.MediaPlayer.OnErrorListener;
-import io.vov.vitamio.MediaPlayer.OnInfoListener;
-import io.vov.vitamio.MediaPlayer.OnPreparedListener;
-import io.vov.vitamio.widget.VideoView;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,6 +9,13 @@ import java.util.TimeZone;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import tv.danmaku.ijk.media.player.IMediaPlayer;
+import tv.danmaku.ijk.media.player.IMediaPlayer.OnCompletionListener;
+import tv.danmaku.ijk.media.player.IMediaPlayer.OnErrorListener;
+import tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener;
+import tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener;
+import tv.danmaku.ijk.media.widget.VideoView;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -34,6 +34,7 @@ import android.os.SystemClock;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -61,6 +62,7 @@ import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -76,19 +78,19 @@ public class New_LivePlayFragment extends BaseFragment implements
 	private View inflate;
 	private RelativeLayout smallrootview;
 	private RelativeLayout rootview;
-	private VideoView video_view;
-	private View video_view_click;
+	private VideoView liveVideoView;
+	private View livePause;
 	private View main_bg;
-	private ImageView video_player;
+	private ImageView liveStart;
 	private ImageView smallscrenn_but;
 	private MyTextView livePlayTitle;
+	private MyTextView fullScreenLivePlayTitle;
 	private LinearLayout mVideoLoadingLayout;
 	private LinearLayout screnn_pb;
 	private ImageView fullscrenn_but;
 	private ArrayList<New_LivePlay> mLivePlayList = new ArrayList<New_LivePlay>();
 	private MyAdapter myAdapter;
 	private ImageView liveShareBut;
-	private MyTextView loadingText;
 	
 	private static final int BUFFER_START = 11;
 	private static final int BUFFER_PROGRESS = 12;
@@ -104,33 +106,22 @@ public class New_LivePlayFragment extends BaseFragment implements
 	private boolean isFirst = true;
 	private AlarmManager manager;
 	private List<New_LivePlay> localDate;
+	
 	private New_LivePlay nowLiveNew;
 
 	private static CustomShareBoard shareBoard;
-	/** 微博微博分享接口实例 */
-//	private IWeiboShareAPI mWeiboShareAPI = null;
 	
 	private ShareUtil shareUtil = null;
-
-	public boolean isSelectPlay() {
-		return isSelectPlay;
-	}
-
-	public void setSelectPlay(boolean isSelectPlay) {
-		this.isSelectPlay = isSelectPlay;
-	}
-
-	public int getSelectPlayID() {
-		return selectPlayID;
-	}
-
-	public void setSelectPlayID(int selectPlayID) {
-		this.selectPlayID = selectPlayID;
-	}
-
-	public boolean isFullstate() {
-		return isFullstate;
-	}
+	
+	private OrientationEventListener mOrientationListener; // 屏幕方向改变监听器
+	private int startRotation;
+	
+	Handler orientationHandler = new Handler(){
+		public void handleMessage(Message msg) {
+			startRotation = -2;
+			mOrientationListener.enable();
+		};
+	};
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -140,11 +131,13 @@ public class New_LivePlayFragment extends BaseFragment implements
 		WindowManager.LayoutParams attrs = mActivity.getWindow()
 				.getAttributes();
 		if (width > height) {
+			//全屏
 			if (shareBoard != null && shareBoard.isShowing()) {
 				shareBoard.dismiss();
 			}
 			fullscrenn_but.setVisibility(View.GONE);
 			smallscrenn_but.setVisibility(View.VISIBLE);
+			fullScreenLivePlayTitle.setVisibility(View.VISIBLE);
 			mActivity.bottomBarVisible(View.GONE);
 			attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
 			mActivity.getWindow().setAttributes(attrs);
@@ -152,17 +145,13 @@ public class New_LivePlayFragment extends BaseFragment implements
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 			smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-			video_view.setFull(true);
+			liveVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullstate = true;
-			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
-			if(video_view.isPlaying()){
-				video_view.pause();
-				video_player.setVisibility(View.VISIBLE);
-			}
-//			video_view.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+			liveVideoView.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 		} else {
 			fullscrenn_but.setVisibility(View.VISIBLE);
 			smallscrenn_but.setVisibility(View.GONE);
+			fullScreenLivePlayTitle.setVisibility(View.GONE);
 			mActivity.bottomBarVisible(View.VISIBLE);
 			attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			mActivity.getWindow().setAttributes(attrs);
@@ -172,13 +161,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 			smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT,
 					(int) (mActivity.mScreenWidth / 16 * 9)));
-			video_view.setFull(false);
 			isFullstate = false;
-			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
-			if(video_view.isPlaying()){
-				video_view.pause();
-				video_player.setVisibility(View.VISIBLE);
-			}
+			liveVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
 		}
 	}
 
@@ -207,15 +191,18 @@ public class New_LivePlayFragment extends BaseFragment implements
 		smallrootview = (RelativeLayout) inflate
 				.findViewById(R.id.smallrootview);
 		rootview = (RelativeLayout) inflate.findViewById(R.id.rootview);
-		video_view = (VideoView) inflate.findViewById(R.id.video_view);
-		video_view.setBufferSize(512*1024);
+		liveVideoView = (VideoView) inflate.findViewById(R.id.live_video_view);
 		
-		video_view_click = inflate.findViewById(R.id.video_view_click);
+		livePause = inflate.findViewById(R.id.live_pause);
 		main_bg = inflate.findViewById(R.id.main_bg);
-		video_player = (ImageView) inflate.findViewById(R.id.video_player);
+		liveStart = (ImageView) inflate.findViewById(R.id.live_start);
 		livePlayTitle = (MyTextView) inflate.findViewById(R.id.livePlayTitle);
-		loadingText = (MyTextView) inflate.findViewById(R.id.video_loading_text);
-		mVideoLoadingLayout = (LinearLayout) inflate.findViewById(R.id.mVideoLoadingLayout);
+		fullScreenLivePlayTitle = (MyTextView) inflate.findViewById(R.id.fullScreenLivePlayTitle);
+//		loadingText = (MyTextView) inflate.findViewById(R.id.video_loading_text);
+//		mVideoLoadingLayout = (LinearLayout) inflate.findViewById(R.id.mVideoLoadingLayout);
+		mVideoLoadingLayout = (LinearLayout) inflate.findViewById(R.id.buffering_indicator);
+		liveVideoView.setMediaBufferingIndicator(mVideoLoadingLayout);
+		liveVideoView.setUserAgent("KKApp");
 		screnn_pb = (LinearLayout) inflate.findViewById(R.id.screnn_pb);
 		fullscrenn_but = (ImageView) inflate.findViewById(R.id.fullscrenn_but);
 		smallscrenn_but = (ImageView) inflate
@@ -261,6 +248,25 @@ public class New_LivePlayFragment extends BaseFragment implements
 			screnn_pb.setVisibility(View.GONE);
 			main_bg.setVisibility(View.VISIBLE);
 		}
+		
+		mOrientationListener = new OrientationEventListener(this.mActivity) {
+            @Override
+            public void onOrientationChanged(int rotation) {
+
+            	if (startRotation == -2) {//初始化角度
+					startRotation = rotation;
+				}
+            	//变化角度大于30时，开启自动旋转，并关闭监听
+            	int r = Math.abs(startRotation - rotation);
+            	r = r > 180 ? 360 - r : r;
+            	if (r > 30) {
+            		//开启自动旋转，响应屏幕旋转事件
+            		mActivity
+					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+            		this.disable();
+				}
+            }
+		};
 		return inflate;
 	}
 
@@ -271,13 +277,13 @@ public class New_LivePlayFragment extends BaseFragment implements
 	}
 
 	public void initLinsenter() {
-		video_view.setOnErrorListener(this);
-		video_view.setOnCompletionListener(this);
-		video_view.setOnPreparedListener(this);
-		video_view.setOnInfoListener(this);
-		video_view.setOnClickListener(this);
-		video_player.setOnClickListener(this);
-		video_view_click.setOnClickListener(this);
+		liveVideoView.setOnErrorListener(this);
+//		liveVideoView.setOnCompletionListener(this);
+		liveVideoView.setOnPreparedListener(this);
+//		liveVideoView.setOnInfoListener(this);
+		liveVideoView.setOnClickListener(this);
+		livePause.setOnClickListener(this);
+		liveStart.setOnClickListener(this);
 		fullscrenn_but.setOnClickListener(this);
 		smallscrenn_but.setOnClickListener(this);
 		liveShareBut.setOnClickListener(this);
@@ -353,36 +359,36 @@ public class New_LivePlayFragment extends BaseFragment implements
 	private void showData() {
 		boolean unStart = false;
 		for (New_LivePlay news : mLivePlayList) {
-			Log.e("isSelectPlay", "已播放" + selectPlayID + " " + news.getZid() + " " + isSelectPlay);
 
 			if (isSelectPlay
 					&& Integer.parseInt(news.getZid()) == selectPlayID) {
 				unStart = true;
-				Log.e("isSelectPlay", "已播放" + selectPlayID);
 			}
 
 			if (!news.getType().equals("直播预告")) {
 				if (!isSelectPlay) {
 					livePlayTitle.setText("正在播放:" + news.getTitle());
-					video_view.pause();
-					video_player.setVisibility(View.VISIBLE);
-					Uri getmUri = video_view.getmUri();
-					if (getmUri != null) {
-						video_view.release(true);
-					}
-					video_view.setVideoPath(news.getStreamurl());
+					fullScreenLivePlayTitle.setText("正在播放:" + news.getTitle());
+//					video_view.pause();
+					liveStart.setVisibility(View.GONE); 
+					liveVideoView.stopPlayback();
+//					Uri getmUri = video_view.
+//					if (getmUri != null) {
+//						video_view.release(true);
+//					}
+					liveVideoView.setVideoPath(news.getStreamurl());
 					mActivity
 							.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 					nowLiveNew = news;
 					break;
 				} else {
 					if (Integer.parseInt(news.getZid()) == selectPlayID) {
-						Log.e("isSelectPlay", "已播放" + selectPlayID);
 						unStart = false;
 						livePlayTitle.setText("正在播放:" + news.getTitle());
+						fullScreenLivePlayTitle.setText("正在播放:" + news.getTitle());
 						isSelectPlay = false;
-						video_view.release(true);
-						video_view.setVideoPath(news.getStreamurl());
+						liveVideoView.stopPlayback();
+						liveVideoView.setVideoPath(news.getStreamurl());
 						mActivity
 								.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 						break;
@@ -597,12 +603,13 @@ public class New_LivePlayFragment extends BaseFragment implements
 							public void onClick(View v) {
 								livePlayTitle.setText("正在播放:"
 										+ new_LivePlay.getTitle());
+								fullScreenLivePlayTitle.setText("正在播放:" + new_LivePlay.getTitle());
 								// 更改直播频道
 //								video_view.release(true);
-								video_view.stopPlayback();
-								video_view.setVideoPath(new_LivePlay
+								liveVideoView.stopPlayback();
+								liveVideoView.setVideoPath(new_LivePlay
 										.getStreamurl());
-								setVideoLoadingLayoutVisibility(View.VISIBLE);
+//								setVideoLoadingLayoutVisibility(View.VISIBLE);
 								nowLiveNew = new_LivePlay;
 							}
 						});
@@ -800,52 +807,23 @@ public class New_LivePlayFragment extends BaseFragment implements
 	}
 
 	@Override
-	public void onPrepared(MediaPlayer mp) {
-
-	}
-
-	@Override
-	public boolean onError(MediaPlayer mp, int what, int extra) {
-		video_player.setVisibility(View.VISIBLE);
+	public boolean onError(IMediaPlayer mp, int what, int extra) {
+		// TODO Auto-generated method stub
+		liveStart.setVisibility(View.VISIBLE);
+		DebugLog.e("onError", what + " " + extra);
 		ToastUtils.Errortoast(mActivity, "视频播放有误请重新刷新");
 		return true;
 	}
-
+	
 	@Override
-	public void onCompletion(MediaPlayer mp) {
-		video_player.setVisibility(View.VISIBLE);
+	public void onCompletion(IMediaPlayer mp) {
+		liveStart.setVisibility(View.VISIBLE);
+		liveVideoPause();
 	}
 
 	@Override
-	public boolean onInfo(MediaPlayer mp, int what, int extra) {
-		switch (what) {
-		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-			XunaoLog.yLog().d("视频开始加载");
-			setVideoLoadingLayoutVisibility(View.VISIBLE);
-			vPlayerHandler.sendEmptyMessage(BUFFER_START);
-			if(video_view.isPlaying())
-				video_view.pause();
-			// video_view.pause();
-			break;
-		case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-			XunaoLog.yLog().d("视频加载完毕");
-			setVideoLoadingLayoutVisibility(View.GONE);
-			if (mActivity.curTouchTab == mActivity.tab_two) {
-				video_view.start();
-//				new Handler().postDelayed(new Runnable() {
-//					@Override
-//					public void run() {
-//						video_view.pause();
-//					}
-//				}, 100);
-			}
-			// video_view.start();
-			break;
-		  case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
-	            //显示 下载速度
-	            Log.e("OnInfo", "download rate:" + extra);
-	            break;
-		}
+	public boolean onInfo(IMediaPlayer mp, int what, int extra) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -866,23 +844,22 @@ public class New_LivePlayFragment extends BaseFragment implements
 		}
 		
 		switch (id) {
-		case R.id.video_player:// 播放视频
-			video_view.start();
-			video_player.setVisibility(View.GONE);
+		case R.id.live_start:// 播放视频
+			liveVideoView.start();
+			liveStart.setVisibility(View.GONE);
 			break;
-		case R.id.video_view_click:// 暂停
-			if (video_view.isPlaying()) {
-				video_view.pause();
-			}
-			video_player.setVisibility(View.VISIBLE);
+		case R.id.live_pause:// 暂停
+			liveVideoPause();
 			break;
 		case R.id.fullscrenn_but:// 大屏
 			mActivity
 					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+			orientationHandler.sendEmptyMessageDelayed(0, 1000);
 			break;
 		case R.id.smallscrenn_but:// 小屏
 			mActivity
 					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			orientationHandler.sendEmptyMessageDelayed(0, 1000);
 			break;
 		}
 	}
@@ -890,59 +867,51 @@ public class New_LivePlayFragment extends BaseFragment implements
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (video_view != null) {
-			if (video_view.isPlaying()) {
-				video_view.pause();
-			}
-		}
-		if (video_player != null) {
-			video_player.setVisibility(View.VISIBLE);
-		}
+		liveVideoPause();
 	}
 
 	public VideoView getVideoView() {
 		// video_view.release(true);
-		return video_view;
+		return liveVideoView;
 	}
 
 	// 刷新
 	public void refresh() {
 		listview.setRefreshing(false);
 	}
+
+	@Override
+	public void onPrepared(IMediaPlayer mp) {
+		// TODO Auto-generated method stub
+//		liveVideoView.start();
+	}
 	
-	private void setVideoLoadingLayoutVisibility(int visibility) {
-		if (mVideoLoadingLayout != null) {
-			// if (visibility == View.VISIBLE)
-			// mLoadingProgressView.startAnimation(mLoadingAnimation);
-			mVideoLoadingLayout.setVisibility(visibility);
+	public void liveVideoPause(){
+		if (liveVideoView.isPlaying()) {
+			liveVideoView.pause();
+		}
+		if (liveStart != null) {
+			liveStart.setVisibility(View.VISIBLE);
 		}
 	}
 	
-	private Handler vPlayerHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case BUFFER_START:
-				setVideoLoadingLayoutVisibility(View.VISIBLE);
-				vPlayerHandler.sendEmptyMessageDelayed(BUFFER_PROGRESS, 1000);
-				break;
-			case BUFFER_PROGRESS:
-				if (New_LivePlayFragment.this.video_view.getMediaPlayer().getBufferProgress() >= 100) {
-					setVideoLoadingLayoutVisibility(View.GONE);
-				} else {
-					loadingText.setText(getString(
-							R.string.video_layout_loading) +
-							New_LivePlayFragment.this.video_view.getMediaPlayer().getBufferProgress() + "%");
-					vPlayerHandler.sendEmptyMessageDelayed(BUFFER_PROGRESS,
-							500);
-					New_LivePlayFragment.this.video_view.pause();
-				}
-				break;
-			case BUFFER_COMPLETE:
-				setVideoLoadingLayoutVisibility(View.GONE);
-				vPlayerHandler.removeMessages(BUFFER_PROGRESS);
-				break;
-			}
-		}
-	};
+	public boolean isSelectPlay() {
+		return isSelectPlay;
+	}
+
+	public void setSelectPlay(boolean isSelectPlay) {
+		this.isSelectPlay = isSelectPlay;
+	}
+
+	public int getSelectPlayID() {
+		return selectPlayID;
+	}
+
+	public void setSelectPlayID(int selectPlayID) {
+		this.selectPlayID = selectPlayID;
+	}
+
+	public boolean isFullstate() {
+		return isFullstate;
+	}
 }

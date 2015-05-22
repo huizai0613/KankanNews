@@ -301,7 +301,7 @@ public class MainActivity extends BaseActivity {
 		New_LivePlayFragment fragment = (New_LivePlayFragment) fragments.get(1);
 		if (curTab != 1) {
 			if (fragment.getVideoView() != null) {
-				fragment.getVideoView().release(true);
+				fragment.getVideoView().stopPlayback();
 			}
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		} else {
