@@ -30,6 +30,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import com.android.volley.VolleyError;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.kankan.kankanews.base.BaseActivity;
+import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.base.download.MyRequestCallBack;
 import com.kankan.kankanews.bean.MyCollect;
 import com.kankan.kankanews.bean.New_LivePlay;
@@ -51,7 +52,7 @@ import com.networkbench.agent.impl.NBSAppAgent;
 import com.umeng.message.PushAgent;
 import com.umeng.update.UmengUpdateAgent;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseVideoActivity {
 	public WindowManager wm;
 	private int curTab;
 	private int lastTab;
@@ -304,6 +305,8 @@ public class MainActivity extends BaseActivity {
 				fragment.getVideoView().stopPlayback();
 			}
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			New_LivePlayFragment liveFragment = (New_LivePlayFragment) fragments.get(1);
+			fragment.isFirst = false;
 		} else {
 			if (fragment.isResumed()) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
@@ -375,6 +378,7 @@ public class MainActivity extends BaseActivity {
 		if (curTab == 1) {
 			if (((New_LivePlayFragment) fragments.get(1)).isFullstate()) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+				((New_LivePlayFragment) fragments.get(1)).orientationHandler.sendEmptyMessageDelayed(0, 1000);
 				return;
 			}
 		}
@@ -473,4 +477,13 @@ public class MainActivity extends BaseActivity {
 		fragment.refresh();
 	}
 
+	@Override
+	public void shareReBack() {
+		// TODO Auto-generated method stub
+		super.shareReBack();
+		New_LivePlayFragment fragment = (New_LivePlayFragment) fragments.get(1);
+		fragment.isFirst = false;
+	}
+	
+	
 }

@@ -79,6 +79,8 @@ public class VideoView extends SurfaceView implements
 
     private int mCurrentState = STATE_IDLE;
     private int mTargetState = STATE_IDLE;
+    
+    private boolean isNeedRelease = true;
 
     private int mVideoLayout = VIDEO_LAYOUT_SCALE;
     public static final int VIDEO_LAYOUT_ORIGIN = 0;
@@ -216,6 +218,10 @@ public class VideoView extends SurfaceView implements
         requestLayout();
         invalidate();
     }
+    
+    public Uri getVideoURI(){
+    	return mUri;
+    }
 
     public void setUserAgent(String ua) {
     	mUserAgent = ua;
@@ -239,8 +245,9 @@ public class VideoView extends SurfaceView implements
         Intent i = new Intent("com.android.music.musicservicecommand");
         i.putExtra("command", "pause");
         mContext.sendBroadcast(i);
-
-        release(false);
+        
+        if(isNeedRelease)
+        	release(false);
         try {
             mDuration = -1;
             mCurrentBufferPercentage = 0;
@@ -488,39 +495,39 @@ public class VideoView extends SurfaceView implements
                 mMediaPlayer.setDisplay(mSurfaceHolder);
             }
 
-            mSurfaceWidth = w;
-            mSurfaceHeight = h;
-            boolean isValidState = (mTargetState == STATE_PLAYING);
-            boolean hasValidSize = (mVideoWidth == w && mVideoHeight == h);
-            if (mMediaPlayer != null && isValidState && hasValidSize) {
-                if (mSeekWhenPrepared != 0)
-                    seekTo(mSeekWhenPrepared);
-                start();
-                if (mMediaController != null) {
-                    if (mMediaController.isShowing())
-                        mMediaController.hide();
-                    mMediaController.show();
-                }
-            }
+//            mSurfaceWidth = w;
+//            mSurfaceHeight = h;
+//            boolean isValidState = (mTargetState == STATE_PLAYING);
+//            boolean hasValidSize = (mVideoWidth == w && mVideoHeight == h);
+//            if (mMediaPlayer != null && isValidState && hasValidSize) {
+//                if (mSeekWhenPrepared != 0)
+//                    seekTo(mSeekWhenPrepared);
+//                start();
+//                if (mMediaController != null) {
+//                    if (mMediaController.isShowing())
+//                        mMediaController.hide();
+//                    mMediaController.show();
+//                }
+//            }
         }
 
         public void surfaceCreated(SurfaceHolder holder) {
             mSurfaceHolder = holder;
-            if (mMediaPlayer != null && mCurrentState == STATE_SUSPEND
-                    && mTargetState == STATE_RESUME) {
-                mMediaPlayer.setDisplay(mSurfaceHolder);
-                resume();
-            } else {
-                openVideo();
-            }
+//            if (mMediaPlayer != null && mCurrentState == STATE_SUSPEND
+//                    && mTargetState == STATE_RESUME) {
+//                mMediaPlayer.setDisplay(mSurfaceHolder);
+//                resume();
+//            } else {
+//                openVideo();
+//            }
         }
 
         public void surfaceDestroyed(SurfaceHolder holder) {
             mSurfaceHolder = null;
             if (mMediaController != null)
                 mMediaController.hide();
-            if (mCurrentState != STATE_SUSPEND)
-                release(true);
+//            if (mCurrentState != STATE_SUSPEND && isNeedRelease)
+//                release(true);
         }
     };
 
@@ -685,4 +692,12 @@ public class VideoView extends SurfaceView implements
     public boolean canSeekForward() {
         return mCanSeekForward;
     }
+
+    public boolean isNeedRelease() {
+		return isNeedRelease;
+	}
+
+	public void setIsNeedRelease(boolean isNeedRelease) {
+		this.isNeedRelease = isNeedRelease;
+	}
 }

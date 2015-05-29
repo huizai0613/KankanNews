@@ -53,6 +53,8 @@ import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.bean.interfaz.CanSharedBySina;
+import com.kankan.kankanews.dialog.InfoMsgHint;
+import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.receiver.AlarmReceiver;
@@ -61,9 +63,11 @@ import com.kankan.kankanews.sina.Constants;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.SharePreferenceUtil;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
@@ -75,51 +79,71 @@ public class New_LivePlayFragment extends BaseFragment implements
 		OnInfoListener, OnCompletionListener, OnErrorListener, OnClickListener,
 		OnPreparedListener, CanSharedBySina {
 
+	public SharePreferenceUtil spUtil;
 	private View inflate;
 	private RelativeLayout smallrootview;
 	private RelativeLayout rootview;
 	private VideoView liveVideoView;
+//	private VideoViewController liveVideoController;
 	private View livePause;
 	private View main_bg;
 	private ImageView liveStart;
+	private ImageView fullLiveStart;
 	private ImageView smallscrenn_but;
+	private ImageView liveVideoImage;
 	private MyTextView livePlayTitle;
 	private MyTextView fullScreenLivePlayTitle;
 	private LinearLayout mVideoLoadingLayout;
+	private LinearLayout fullScreenLayout;
 	private LinearLayout screnn_pb;
 	private ImageView fullscrenn_but;
 	private ArrayList<New_LivePlay> mLivePlayList = new ArrayList<New_LivePlay>();
 	private MyAdapter myAdapter;
 	private ImageView liveShareBut;
-	
+
 	private static final int BUFFER_START = 11;
 	private static final int BUFFER_PROGRESS = 12;
 	private static final int BUFFER_COMPLETE = 13;
-	
 
 	private boolean isFullstate;
+	private boolean isFullShowLayout = false;
 
 	private int curPosition;
 	private boolean isShow;
 	private boolean isSelectPlay;
 	private int selectPlayID;
-	private boolean isFirst = true;
+	public boolean isFirst = true;
 	private AlarmManager manager;
 	private List<New_LivePlay> localDate;
-	
+
 	private New_LivePlay nowLiveNew;
 
 	private static CustomShareBoard shareBoard;
-	
+
 	private ShareUtil shareUtil = null;
-	
+
 	private OrientationEventListener mOrientationListener; // 屏幕方向改变监听器
 	private int startRotation;
+
+	private static final int HIDE_VIDEO_CONTROLLER = 1;
 	
-	Handler orientationHandler = new Handler(){
+	private static final int FULL_SCREEN_CHANGE = 2;
+	
+	private static final int hideTimeOut = 5000;
+
+	public Handler orientationHandler = new Handler() {
 		public void handleMessage(Message msg) {
-			startRotation = -2;
-			mOrientationListener.enable();
+			switch (msg.what) {
+			case HIDE_VIDEO_CONTROLLER:
+				fullScreenLayout.setVisibility(View.GONE);
+				fullLiveStart.setVisibility(View.GONE);
+				isFullShowLayout = false;
+				break;
+			case FULL_SCREEN_CHANGE:
+				startRotation = -2;
+				mOrientationListener.enable();
+				break;
+			}
 		};
 	};
 
@@ -131,14 +155,14 @@ public class New_LivePlayFragment extends BaseFragment implements
 		WindowManager.LayoutParams attrs = mActivity.getWindow()
 				.getAttributes();
 		if (width > height) {
-			//全屏
+			// 全屏
 			if (shareBoard != null && shareBoard.isShowing()) {
 				shareBoard.dismiss();
 			}
 			fullscrenn_but.setVisibility(View.GONE);
-			smallscrenn_but.setVisibility(View.VISIBLE);
-			fullScreenLivePlayTitle.setVisibility(View.VISIBLE);
 			mActivity.bottomBarVisible(View.GONE);
+			updateFullStartBut(liveVideoView.isPlaying());
+			liveStart.setVisibility(View.GONE);
 			attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
 			mActivity.getWindow().setAttributes(attrs);
 			mActivity.getWindow().addFlags(
@@ -147,11 +171,15 @@ public class New_LivePlayFragment extends BaseFragment implements
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			liveVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullstate = true;
-			liveVideoView.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+			liveVideoView.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,
+					LayoutParams.MATCH_PARENT);
 		} else {
 			fullscrenn_but.setVisibility(View.VISIBLE);
-			smallscrenn_but.setVisibility(View.GONE);
-			fullScreenLivePlayTitle.setVisibility(View.GONE);
+			fullScreenLayout.setVisibility(View.GONE);
+			fullLiveStart.setVisibility(View.GONE);
+			if(!liveVideoView.isPlaying())
+				liveStart.setVisibility(View.VISIBLE);
+			isFullShowLayout = false;
 			mActivity.bottomBarVisible(View.VISIBLE);
 			attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			mActivity.getWindow().setAttributes(attrs);
@@ -173,11 +201,16 @@ public class New_LivePlayFragment extends BaseFragment implements
 			if (CommonUtils.isNetworkAvailable(mActivity)) {
 
 				refreshNetDate();
+				isFirst = true;
 			} else {
 				ToastUtils.ErrorToastNoNet(mActivity);
 			}
 		} else {
-			isFirst = false;
+//			isFirst = false;
+			if(liveVideoView != null){
+				liveVideoView.start();
+				liveStart.setVisibility(View.GONE);
+			}
 		}
 
 	}
@@ -185,6 +218,26 @@ public class New_LivePlayFragment extends BaseFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		
+		spUtil = this.mActivity.mApplication.getSpUtil();
+		initView();
+		initDate();
+		initViewLayout();
+		initLinsenter();
+		initLocalDate();
+
+		if (CommonUtils.isNetworkAvailable(mActivity)) {
+			refreshNetDate();
+		} else {
+			screnn_pb.setVisibility(View.GONE);
+			main_bg.setVisibility(View.VISIBLE);
+		}
+
+		return inflate;
+	}
+
+	public void initView() {
 		manager = (AlarmManager) mActivity
 				.getSystemService(Context.ALARM_SERVICE);
 		inflate = inflater.inflate(R.layout.new_fragment_liveplay, null);
@@ -192,25 +245,58 @@ public class New_LivePlayFragment extends BaseFragment implements
 				.findViewById(R.id.smallrootview);
 		rootview = (RelativeLayout) inflate.findViewById(R.id.rootview);
 		liveVideoView = (VideoView) inflate.findViewById(R.id.live_video_view);
-		
+
 		livePause = inflate.findViewById(R.id.live_pause);
 		main_bg = inflate.findViewById(R.id.main_bg);
 		liveStart = (ImageView) inflate.findViewById(R.id.live_start);
+		fullLiveStart = (ImageView) inflate.findViewById(R.id.full_live_start);
+		liveVideoImage = (ImageView) inflate.findViewById(R.id.live_video_image);
 		livePlayTitle = (MyTextView) inflate.findViewById(R.id.livePlayTitle);
-		fullScreenLivePlayTitle = (MyTextView) inflate.findViewById(R.id.fullScreenLivePlayTitle);
-//		loadingText = (MyTextView) inflate.findViewById(R.id.video_loading_text);
-//		mVideoLoadingLayout = (LinearLayout) inflate.findViewById(R.id.mVideoLoadingLayout);
-		mVideoLoadingLayout = (LinearLayout) inflate.findViewById(R.id.buffering_indicator);
+		fullScreenLivePlayTitle = (MyTextView) inflate
+				.findViewById(R.id.fullScreenLivePlayTitle);
+//		liveVideoController = (VideoViewController) inflate
+//				.findViewById(R.id.live_video_controller);
+		mVideoLoadingLayout = (LinearLayout) inflate
+				.findViewById(R.id.buffering_indicator);
+		mVideoLoadingLayout.bringToFront();
 		liveVideoView.setMediaBufferingIndicator(mVideoLoadingLayout);
+		fullScreenLayout = (LinearLayout) inflate
+				.findViewById(R.id.fullscreen_layout);
 		liveVideoView.setUserAgent("KKApp");
 		screnn_pb = (LinearLayout) inflate.findViewById(R.id.screnn_pb);
 		fullscrenn_but = (ImageView) inflate.findViewById(R.id.fullscrenn_but);
 		smallscrenn_but = (ImageView) inflate
 				.findViewById(R.id.smallscrenn_but);
-		liveShareBut = (ImageView) inflate
-				.findViewById(R.id.live_share_but);
+		liveShareBut = (ImageView) inflate.findViewById(R.id.live_share_but);
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 		initListView(Mode.PULL_DOWN_TO_REFRESH);
+	}
+
+	public void initDate() {
+		listview.setAdapter(new MyAdapter());
+//		liveVideoController.setPlayerControl(liveVideoView);
+//		liveVideoController.setActivity_Content(this.mActivity);
+	}
+
+	public void initViewLayout() {
+		smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT,
+				(int) (mActivity.mScreenWidth / 16 * 9)));
+	}
+
+	public void initLinsenter() {
+		liveVideoView.setOnErrorListener(this);
+		// liveVideoView.setOnCompletionListener(this);
+		liveVideoView.setOnPreparedListener(this);
+		// liveVideoView.setOnInfoListener(this);
+//		liveVideoView.setOnClickListener(this);
+		livePause.setOnClickListener(this);
+		liveStart.setOnClickListener(this);
+		fullLiveStart.setOnClickListener(this);
+		fullscrenn_but.setOnClickListener(this);
+		smallscrenn_but.setOnClickListener(this);
+		liveShareBut.setOnClickListener(this);
+//		liveVideoController.setOnClickListener(this);
 		listview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
 
 			@Override
@@ -236,57 +322,24 @@ public class New_LivePlayFragment extends BaseFragment implements
 				refreshNetDate();
 			}
 		});
-		
-		listview.setAdapter(new MyAdapter());
-		initViewLayout();
-		initLinsenter();
-
-		initLocalDate();
-		if (CommonUtils.isNetworkAvailable(mActivity)) {
-			refreshNetDate();
-		} else {
-			screnn_pb.setVisibility(View.GONE);
-			main_bg.setVisibility(View.VISIBLE);
-		}
-		
 		mOrientationListener = new OrientationEventListener(this.mActivity) {
-            @Override
-            public void onOrientationChanged(int rotation) {
+			@Override
+			public void onOrientationChanged(int rotation) {
 
-            	if (startRotation == -2) {//初始化角度
+				if (startRotation == -2) {// 初始化角度
 					startRotation = rotation;
 				}
-            	//变化角度大于30时，开启自动旋转，并关闭监听
-            	int r = Math.abs(startRotation - rotation);
-            	r = r > 180 ? 360 - r : r;
-            	if (r > 30) {
-            		//开启自动旋转，响应屏幕旋转事件
-            		mActivity
-					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-            		this.disable();
+				// 变化角度大于30时，开启自动旋转，并关闭监听
+				int r = Math.abs(startRotation - rotation);
+				r = r > 180 ? 360 - r : r;
+				if (r > 30) {
+					// 开启自动旋转，响应屏幕旋转事件
+					mActivity
+							.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+					this.disable();
 				}
-            }
+			}
 		};
-		return inflate;
-	}
-
-	public void initViewLayout() {
-		smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT,
-				(int) (mActivity.mScreenWidth / 16 * 9)));
-	}
-
-	public void initLinsenter() {
-		liveVideoView.setOnErrorListener(this);
-//		liveVideoView.setOnCompletionListener(this);
-		liveVideoView.setOnPreparedListener(this);
-//		liveVideoView.setOnInfoListener(this);
-		liveVideoView.setOnClickListener(this);
-		livePause.setOnClickListener(this);
-		liveStart.setOnClickListener(this);
-		fullscrenn_but.setOnClickListener(this);
-		smallscrenn_but.setOnClickListener(this);
-		liveShareBut.setOnClickListener(this);
 	}
 
 	@Override
@@ -352,16 +405,69 @@ public class New_LivePlayFragment extends BaseFragment implements
 			}
 			screnn_pb.setVisibility(View.GONE);
 			main_bg.setVisibility(View.GONE);
-			showData();
+			playerVideo();
 		}
 	}
+	
+	private void playerVideo() {
+		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
+			if (!CommonUtils.isWifi(this.mActivity)) {
+				if (!spUtil.isFlow()) {
+					final TishiMsgHint dialog = new TishiMsgHint(this.mActivity,
+							R.style.MyDialog1);
+					dialog.setContent("您已设置2G/3G/4G网络下不允许播放/缓存视频", "我知道了");
+					dialog.setCancleListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialog.dismiss();
+						}
+					});
+					dialog.show();
+				} else {
+					final InfoMsgHint dialog = new InfoMsgHint(this.mActivity,
+							R.style.MyDialog1);
+					dialog.setContent(
+							"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络", "",
+							"继续播放", "取消");
+					dialog.setCancleListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialog.dismiss();
+						}
+					});
+					dialog.setOKListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							showData();
+							dialog.dismiss();
+						}
+					});
+					dialog.show();
 
+				}
+
+			} else {
+				showData();
+			}
+		} else {
+			final TishiMsgHint dialog = new TishiMsgHint(this.mActivity,
+					R.style.MyDialog1);
+			dialog.setContent("当前无可用网络", "我知道了");
+			dialog.setCancleListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+			dialog.show();
+		}
+	}
+	
 	private void showData() {
 		boolean unStart = false;
 		for (New_LivePlay news : mLivePlayList) {
 
-			if (isSelectPlay
-					&& Integer.parseInt(news.getZid()) == selectPlayID) {
+			if (isSelectPlay && Integer.parseInt(news.getZid()) == selectPlayID) {
 				unStart = true;
 			}
 
@@ -369,13 +475,15 @@ public class New_LivePlayFragment extends BaseFragment implements
 				if (!isSelectPlay) {
 					livePlayTitle.setText("正在播放:" + news.getTitle());
 					fullScreenLivePlayTitle.setText("正在播放:" + news.getTitle());
-//					video_view.pause();
-					liveStart.setVisibility(View.GONE); 
+					liveStart.setVisibility(View.GONE);
+					mVideoLoadingLayout.setVisibility(View.GONE);
+					// video_view.pause();
+					liveStart.setVisibility(View.GONE);
 					liveVideoView.stopPlayback();
-//					Uri getmUri = video_view.
-//					if (getmUri != null) {
-//						video_view.release(true);
-//					}
+					// Uri getmUri = video_view.
+					// if (getmUri != null) {
+					// video_view.release(true);
+					// }
 					liveVideoView.setVideoPath(news.getStreamurl());
 					mActivity
 							.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
@@ -385,10 +493,13 @@ public class New_LivePlayFragment extends BaseFragment implements
 					if (Integer.parseInt(news.getZid()) == selectPlayID) {
 						unStart = false;
 						livePlayTitle.setText("正在播放:" + news.getTitle());
-						fullScreenLivePlayTitle.setText("正在播放:" + news.getTitle());
+						fullScreenLivePlayTitle.setText("正在播放:"
+								+ news.getTitle());
+						liveStart.setVisibility(View.GONE);
 						isSelectPlay = false;
 						liveVideoView.stopPlayback();
 						liveVideoView.setVideoPath(news.getStreamurl());
+						mVideoLoadingLayout.setVisibility(View.GONE);
 						mActivity
 								.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 						break;
@@ -519,7 +630,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 					mViewHolderLive.new_item_liveplay_live_bg
 							.setBackgroundResource(R.drawable.livebg4);
 					mViewHolderLive.new_item_liveplay_content
-					.setVisibility(View.GONE);
+							.setVisibility(View.GONE);
 				} else {
 					mViewHolderLive.new_item_liveplay_live_ic
 							.setVisibility(View.GONE);
@@ -603,13 +714,19 @@ public class New_LivePlayFragment extends BaseFragment implements
 							public void onClick(View v) {
 								livePlayTitle.setText("正在播放:"
 										+ new_LivePlay.getTitle());
-								fullScreenLivePlayTitle.setText("正在播放:" + new_LivePlay.getTitle());
+								fullScreenLivePlayTitle.setText("正在播放:"
+										+ new_LivePlay.getTitle());
 								// 更改直播频道
-//								video_view.release(true);
+								// video_view.release(true);
+								mVideoLoadingLayout.setVisibility(View.GONE);
 								liveVideoView.stopPlayback();
+								liveVideoImage.setVisibility(View.VISIBLE);
+								liveStart.setVisibility(View.GONE);
 								liveVideoView.setVideoPath(new_LivePlay
 										.getStreamurl());
-//								setVideoLoadingLayoutVisibility(View.VISIBLE);
+								Log.e("liveVideoView", new_LivePlay.getStreamurl());
+								
+								// setVideoLoadingLayoutVisibility(View.VISIBLE);
 								nowLiveNew = new_LivePlay;
 							}
 						});
@@ -679,7 +796,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 				final boolean new_item_liveplay_content_show1 = mViewHolderLive.new_item_liveplay_content
 						.getVisibility() == View.VISIBLE;
 
-				mViewHolderLive.new_item_liveplay_content.setText(new_LivePlay.getIntro());
+				mViewHolderLive.new_item_liveplay_content.setText(new_LivePlay
+						.getIntro());
 				mViewHolderLive.new_item_liveplay_but
 						.setOnClickListener(new OnClickListener() {
 							@Override
@@ -724,9 +842,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 												.elapsedRealtime());
 										calendar.setTimeZone(TimeZone
 												.getTimeZone("GMT+8"));
-										 calendar.add(Calendar.SECOND,
-										 (int) (time / 1000));
-//										calendar.add(Calendar.SECOND, 10);
+										calendar.add(Calendar.SECOND,
+												(int) (time / 1000));
+										// calendar.add(Calendar.SECOND, 10);
 
 										Intent intent = new Intent(mActivity,
 												AlarmReceiver.class);
@@ -814,7 +932,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 		ToastUtils.Errortoast(mActivity, "视频播放有误请重新刷新");
 		return true;
 	}
-	
+
 	@Override
 	public void onCompletion(IMediaPlayer mp) {
 		liveStart.setVisibility(View.VISIBLE);
@@ -830,38 +948,70 @@ public class New_LivePlayFragment extends BaseFragment implements
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		
+
 		switch (id) {
 		case R.id.live_share_but:
 			nowLiveNew.setSharedPic(null);
 			shareUtil = new ShareUtil(nowLiveNew, this.getActivity());
 			// 一键分享
-			shareBoard = new CustomShareBoard((BaseActivity)this.mActivity, shareUtil, this);
+			shareBoard = new CustomShareBoard((BaseActivity) this.mActivity,
+					shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
-			shareBoard.showAtLocation(this.getActivity().getWindow().getDecorView(),
-					Gravity.BOTTOM, 0, 0);
+			shareBoard.showAtLocation(this.getActivity().getWindow()
+					.getDecorView(), Gravity.BOTTOM, 0, 0);
+			isFirst = true;
 			break;
-		}
-		
-		switch (id) {
 		case R.id.live_start:// 播放视频
 			liveVideoView.start();
 			liveStart.setVisibility(View.GONE);
 			break;
+		case R.id.full_live_start:// 播放视频
+			if(liveVideoView.isPlaying()){
+				liveVideoView.pause();
+				updateFullStartBut(false);
+			}
+			else{
+				liveVideoView.start();
+				updateFullStartBut(true);
+			}
+			break;
 		case R.id.live_pause:// 暂停
-			liveVideoPause();
+			if (isFullstate) {
+				if (isFullShowLayout) {
+					fullScreenLayout.setVisibility(View.GONE);
+					fullLiveStart.setVisibility(View.GONE);
+					isFullShowLayout = false;
+					orientationHandler.removeMessages(HIDE_VIDEO_CONTROLLER);
+				}else{
+					fullScreenLayout.setVisibility(View.VISIBLE);
+					fullLiveStart.setVisibility(View.VISIBLE);
+					isFullShowLayout = true;
+					orientationHandler.sendEmptyMessageDelayed(HIDE_VIDEO_CONTROLLER, hideTimeOut);
+				}
+			} else {
+				liveVideoPause();
+			}
 			break;
 		case R.id.fullscrenn_but:// 大屏
 			mActivity
 					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-			orientationHandler.sendEmptyMessageDelayed(0, 1000);
+			orientationHandler.sendEmptyMessageDelayed(FULL_SCREEN_CHANGE, 1000);
 			break;
 		case R.id.smallscrenn_but:// 小屏
 			mActivity
 					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			orientationHandler.sendEmptyMessageDelayed(0, 1000);
+			orientationHandler.sendEmptyMessageDelayed(FULL_SCREEN_CHANGE, 1000);
 			break;
+//		case R.id.live_video_controller:
+//			// if (video_view.isPlaying() || hasBeenPaly) {
+//			if (!liveVideoController.isShow())
+////					&& video_pb.getVisibility() != View.VISIBLE
+////					&& small_video_pb.getVisibility() != View.VISIBLE)
+//				liveVideoController.show();
+//			// }
+//			break;
 		}
+		
 	}
 
 	@Override
@@ -883,18 +1033,31 @@ public class New_LivePlayFragment extends BaseFragment implements
 	@Override
 	public void onPrepared(IMediaPlayer mp) {
 		// TODO Auto-generated method stub
-//		liveVideoView.start();
+		// liveVideoView.start();
+		liveVideoView.pause();
+		liveVideoImage.setVisibility(View.GONE);
+		if(mActivity.curTouchTab == mActivity.tab_two)
+			liveVideoView.start();
 	}
-	
-	public void liveVideoPause(){
-		if (liveVideoView.isPlaying()) {
+
+	public void liveVideoPause() {
+//		if (liveVideoView.isPlaying()) {
+		if(liveVideoView != null){
 			liveVideoView.pause();
 		}
+//		}
 		if (liveStart != null) {
 			liveStart.setVisibility(View.VISIBLE);
 		}
 	}
 	
+	public void updateFullStartBut(boolean isplaying){
+		if(isplaying)
+			fullLiveStart.setImageResource(R.drawable.ic_stopplay); 
+		else
+			fullLiveStart.setImageResource(R.drawable.ic_liveplay); 
+	}
+
 	public boolean isSelectPlay() {
 		return isSelectPlay;
 	}
@@ -914,4 +1077,5 @@ public class New_LivePlayFragment extends BaseFragment implements
 	public boolean isFullstate() {
 		return isFullstate;
 	}
+	
 }

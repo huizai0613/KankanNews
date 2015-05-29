@@ -1,24 +1,21 @@
 package com.kankan.kankanews.ui.item;
 
-import io.vov.vitamio.MediaPlayer;
-import io.vov.vitamio.MediaPlayer.OnCompletionListener;
-import io.vov.vitamio.MediaPlayer.OnErrorListener;
-import io.vov.vitamio.MediaPlayer.OnInfoListener;
-import io.vov.vitamio.MediaPlayer.OnPreparedListener;
-import io.vov.vitamio.widget.VideoView;
+//import io.vov.vitamio.MediaPlayer;
+import tv.danmaku.ijk.media.player.IMediaPlayer;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
+import tv.danmaku.ijk.media.player.IMediaPlayer.OnCompletionListener;
+import tv.danmaku.ijk.media.player.IMediaPlayer.OnErrorListener;
+import tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener;
+import tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import tv.danmaku.ijk.media.widget.VideoView;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,8 +23,6 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -38,6 +33,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -47,7 +43,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -70,8 +65,6 @@ import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
-import com.kankan.kankanews.sina.AccessTokenKeeper;
-import com.kankan.kankanews.sina.Constants;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
@@ -91,28 +84,12 @@ import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.http.HttpHandler;
-import com.nostra13.universalimageloader.utils.L;
-//import com.sina.weibo.sdk.api.ImageObject;
-//import com.sina.weibo.sdk.api.TextObject;
-//import com.sina.weibo.sdk.api.VideoObject;
-//import com.sina.weibo.sdk.api.WeiboMultiMessage;
-//import com.sina.weibo.sdk.api.share.BaseResponse;
-//import com.sina.weibo.sdk.api.share.IWeiboHandler;
-//import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-//import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
-//import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-//import com.sina.weibo.sdk.auth.AuthInfo;
-//import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-//import com.sina.weibo.sdk.auth.WeiboAuthListener;
-//import com.sina.weibo.sdk.constant.WBConstants;
-//import com.sina.weibo.sdk.exception.WeiboException;
-//import com.sina.weibo.sdk.utils.Utility;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.sso.UMSsoHandler;
 
 public class New_Activity_Content_Video extends BaseVideoActivity implements
-		OnInfoListener, OnClickListener,
-		OnPreparedListener, OnCompletionListener, OnErrorListener {
+		OnInfoListener, OnClickListener, OnPreparedListener,
+		OnCompletionListener, OnErrorListener {
 
 	private ArrayList<New_Recommend> recommends = new ArrayList<New_Recommend>();
 
@@ -128,7 +105,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	private LinearLayout content_comment_list_list;
 
 	/** 微博微博分享接口实例 */
-//	private IWeiboShareAPI mWeiboShareAPI = null;
+	// private IWeiboShareAPI mWeiboShareAPI = null;
 	// private int mShareType = SHARE_CLIENT;
 	/** 最大声音 */
 	private int mMaxVolume;
@@ -214,8 +191,11 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	private View player_guide;
 	private boolean videoIsDownload;
 	private HttpHandler downloadVideo;
+	private int needSeekTo;
 
 	private int childCount;
+
+	private boolean isGoShare = false;
 
 	public HttpHandler getDownloadVideo() {
 		return downloadVideo;
@@ -237,42 +217,48 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
+		Log.e("onConfigurationChanged", "onConfigurationChanged");
 		int width = wm.getDefaultDisplay().getWidth();
 		int height = wm.getDefaultDisplay().getHeight();
 		WindowManager.LayoutParams attrs = getWindow().getAttributes();
 		if (width > height) {
 			if (shareBoard != null && shareBoard.isShowing()) {
 				shareBoard.dismiss();
+				isGoShare = false;
 			}
-			video_view.setFull(true);
-			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
+			// video_view.setFull(true);
+			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			CommonUtils.clickevent(mContext, "action", "放大",
 					AndroidConfig.video_fullscreen_event);
-			
+
 			full_screen_guide.setVisibility(View.GONE);
 			spUtil.setFirstContent(false);
-			if (video_view.isPlaying()) {
-				video_view.pause();
-			}
 			if (isload || spUtil.getFirstFull()) {
 				isPlayer = false;
 			} else {
 				isPlayer = true;
 			}
 
-			if (video_view.getmUri() == null) {
+			// TODO
+			if (video_view.getVideoURI() == null) {
 				goneContentVideoTempImage();
 				isload = true;
 				playState();
-				play();
+				isCom = true;
+				if(!spUtil.getFirstFull()){
+					play();
+				}
 			}
 
-			if (spUtil.getFirstFull() && !isload) {
+			if (spUtil.getFirstFull()) {
 				isPlayer = false;
 				player_guide.setVisibility(View.VISIBLE);
 				noShowPB = true;
+				spUtil.setFirstFull(false);
 			}
-
+//			if (video_view.isPlaying()) {
+//				video_view.pause();
+//			}
 			if (smallWidth == 0) {
 				smallWidth = video_view.getWidth();
 				smallHeight = video_view.getHeight();
@@ -294,25 +280,30 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			rootview.setVisibility(View.VISIBLE);
 			scollView.setVisibility(View.GONE);
 			// bottom_bar.setVisibility(View.GONE);
-			video_view.setOrentation(true);
+			// TODO
+			// video_view.setOrentation(true);
 			rootview.addView(video_view, 0);
 			rootview.addView(video_controller, 1,
 					new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
 							LayoutParams.MATCH_PARENT));
 			video_controller.changeView();
 			if (isPlayer) {
-
+				Log.e("isPlayer", "isPlayer");
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
 						isPlayer = false;
 						if (video_view != null) {
 							if (isCom) {
+								Log.e("isCom", isCom + "");
 								playState();
-								play();
+								// play();
 								isCom = false;
 							}
-							video_view.start();
+							// if(needSeekTo != 0)
+							// video_view.seekTo(needSeekTo);
+							if (!isGoShare && !spUtil.getFirstFull())
+								video_view.start();
 						}
 						video_controller.getContent_video_temp_image()
 								.setVisibility(View.GONE);
@@ -323,16 +314,17 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 		} else {
 
-			video_view.setFull(false);
-			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE, 0);
+			// video_view.setFull(false);
+			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
 			if (video_view.isPlaying()) {
 				video_view.pause();
 				isPlayer = true;
 			} else {
 				video_controller.getContent_video_temp_image().setVisibility(
 						View.VISIBLE);
-				video_controller.getContent_video_temp_image().setImageBitmap(
-						video_view.getCurrentFrame());
+				// TODO
+				// video_controller.getContent_video_temp_image().setImageBitmap(
+				// video_view.getCurrentFrame());
 			}
 
 			attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -349,37 +341,48 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			// bottom_bar.setVisibility(View.VISIBLE);
 			rootview.removeView(video_view);
 			rootview.removeView(video_controller);
-
-			video_view.setOrentation(true);
+			// TODO
+			// video_view.setOrentation(true);
 			smallrootview.addView(video_view, 0);
 			smallrootview.addView(video_controller, 1);
 			video_controller.changeView();
-
+			if (video_view.getVideoURI() == null) {
+				isPlayer = true;
+			}
 			if (isPlayer) {
 
 				new Handler().postDelayed(new Runnable() {
 					@Override
 					public void run() {
 						isPlayer = false;
-						video_view.start();
+						if (video_view.getVideoURI() == null) {
+							Log.e("video_view", "video_view");
+							playState();
+							play();
+						}else{
+							video_view.start();
+						}
 
 						video_controller.show();
+						// if(needSeekTo != 0)
+						// video_view.seekTo(needSeekTo);
 					}
 				}, 100);
 
 			}
 		}
 	}
-	
-	@Override 
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    /**使用SSO授权必须添加如下代码 */
-	    
-	    UMSsoHandler ssoHandler = shareUtil.getmController().getConfig().getSsoHandler(requestCode) ;
-	    if(ssoHandler != null){
-	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-	    }
+		super.onActivityResult(requestCode, resultCode, data);
+		/** 使用SSO授权必须添加如下代码 */
+
+		UMSsoHandler ssoHandler = shareUtil.getmController().getConfig()
+				.getSsoHandler(requestCode);
+		if (ssoHandler != null) {
+			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+		}
 	}
 
 	@Override
@@ -393,8 +396,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		wm = (WindowManager) getApplicationContext().getSystemService(
 				Context.WINDOW_SERVICE);
 		mAM = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-		mMaxVolume = mMaxVolume = mAM
-				.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		mMaxVolume = mAM.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 
 		animation = AnimationUtils.loadAnimation(this, R.anim.paly_alpha);
 		animation.setAnimationListener(new AnimationListener() {
@@ -415,24 +417,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		});
 		setContentView(R.layout.new_activity_content_video);
 
-		// mShareType = getIntent().getIntExtra(KEY_SHARE_TYPE, SHARE_CLIENT);
-		// 创建微博分享接口实例
-//		mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this, Constants.APP_KEY);
-		// 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
-		// 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
-		// NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
-//		mWeiboShareAPI.registerApp();
-		// 当 Activity 被重新初始化时（该 Activity 处于后台时，可能会由于内存不足被杀掉了），
-		// 需要调用 {@link IWeiboShareAPI#handleWeiboResponse} 来接收微博客户端返回的数据。
-		// 执行成功，返回 true，并调用 {@link IWeiboHandler.Response#onResponse}；
-		// 失败返回 false，不调用上述回调
-		if (savedInstanceState != null) {
-//			mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
-		}
-
-		// upDataDownUI(true);
-
-		// 注册广播
 		IntentFilter mFilter = new IntentFilter();
 		mFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
 		registerReceiver(mReceiver, mFilter);
@@ -449,11 +433,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
-		// 从当前应用唤起微博并进行分享后，返回到当前应用时，需要在此处调用该函数
-		// 来接收微博客户端返回的数据；执行成功，返回 true，并调用
-		// {@link IWeiboHandler.Response#onResponse}；失败返回 false，不调用上述回调
-//		mWeiboShareAPI.handleWeiboResponse(intent, this);
-
 	}
 
 	@Override
@@ -527,7 +506,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		mGestureDetector = new GestureDetector(this, new MyGestureListener());
 		video_controller.setPlayerControl(video_view);
 		video_controller.setActivity_Content(this);
-
+		video_view.setIsNeedRelease(false);
 		// new_news = (New_News)
 		// getIntent().getSerializableExtra("news_content");
 		// 获取上个页面传来的数据
@@ -800,7 +779,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		new_news.setIntro(intro);
 		new_news.setNewstext(newstext);
 		new_news.setTitle(title);
-//		new_news.setTitlepic(titlepic);
+		// new_news.setTitlepic(titlepic);
 
 		new_news.setLooktime(Long.toString(TimeUtil.now()));
 
@@ -854,6 +833,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		case R.id.com_title_bar_right_bt:
 		case R.id.com_title_bar_right_tv:
 			shareUtil = new ShareUtil(new_news, mContext);
+			isGoShare = true;
 			break;
 		}
 
@@ -869,6 +849,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
+			isGoShare = true;
 			break;
 
 		case R.id.video_controller:
@@ -892,7 +873,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// 微博分享
 		case R.id.content_share_shina_layout:
 			shareUtil.directShare(SHARE_MEDIA.SINA);
-//			sendSingleMessage();
+			// sendSingleMessage();
 			break;
 		// qq分享
 		case R.id.content_share_qq_layout:
@@ -922,7 +903,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			player_guide.setVisibility(View.GONE);
 			small_video_pb.setVisibility(View.GONE);
 			goneContentVideoTempImage();
-			spUtil.setFirstFull(false);
+//			spUtil.setFirstFull(false);
 			noShowPB = false;
 			if (video_view != null) {
 				if (isCom) {
@@ -998,11 +979,13 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 	private void play() {
 		isCom = false;
-		video_view.release(true);
+		// video_view.release(true);
+		video_view.stopPlayback();
 		video_controller.reset();
 		video_view.setVideoPath(new_news.getVideourl());
 		video_view.requestFocus();
 		video_view.start();
+		content_video.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -1085,8 +1068,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			content_intro.setText(new_news.getIntro().equals("") ? "暂无简介 "
 					: new_news.getIntro());
 
-			ImgUtils.imageLoader.displayImage(new_news.getTitlepic(), content_video,
-					Options.getBigImageOptions(createFromPath));
+			ImgUtils.imageLoader.displayImage(new_news.getTitlepic(),
+					content_video, Options.getBigImageOptions(createFromPath));
 		}
 
 	}
@@ -1124,13 +1107,14 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// video_view.pause();
 		// isPlayer = true;
 		// } else {
-		if (video_view.getCurrentPosition() > 0) {
-			Bitmap currentFrame = getCurrentFrame();
-			video_controller.getContent_video_temp_image().setVisibility(
-					View.VISIBLE);
-			video_controller.getContent_video_temp_image().setImageBitmap(
-					currentFrame);
-		}
+		// TODO
+		// if (video_view.getCurrentPosition() > 0) {
+		// Bitmap currentFrame = getCurrentFrame();
+		// video_controller.getContent_video_temp_image().setVisibility(
+		// View.VISIBLE);
+		// video_controller.getContent_video_temp_image().setImageBitmap(
+		// currentFrame);
+		// }
 
 		video_view.pause();
 		isPause = true;
@@ -1141,21 +1125,25 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 	@Override
 	protected void onResume() {
+		Log.e("onResume", "onResume");
 		super.onResume();
 		isPause = false;
+		isGoShare = false;
+		if (content_video.getVisibility() == View.GONE)
+			video_view.start();
 	}
 
-	private Bitmap getCurrentFrame() {
-		try {
-			Bitmap currentFrame = video_view.getCurrentFrame();
-			return currentFrame;
-		} catch (OutOfMemoryError e) {
-			ImgUtils.imageLoader.clearMemoryCache();
-			System.gc();
-			getCurrentFrame();
-		}
-		return null;
-	}
+	// private Bitmap getCurrentFrame() {
+	// try {
+	// Bitmap currentFrame = video_view.getCurrentFrame();
+	// return currentFrame;
+	// } catch (OutOfMemoryError e) {
+	// ImgUtils.imageLoader.clearMemoryCache();
+	// System.gc();
+	// getCurrentFrame();
+	// }
+	// return null;
+	// }
 
 	@Override
 	protected void onDestroy() {
@@ -1163,7 +1151,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		super.onDestroy();
 		// handler.removeMessages(1);
 		unregisterReceiver(mReceiver);
-		video_view.release(true);
+		// video_view.release(true);
+		video_view.stopPlayback();
 	}
 
 	private File videoFile;
@@ -1177,14 +1166,38 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	private Drawable createFromPath;
 	private boolean isPause;
 
+	// @Override
+	// public boolean onError(MediaPlayer mp, int what, int extra) {
+	// ToastUtils.Errortoast(mContext, "视频播放有误,请稍候重试");
+	// return true;
+	// }
 	@Override
-	public boolean onError(MediaPlayer mp, int what, int extra) {
+	public boolean onError(IMediaPlayer mp, int what, int extra) {
 		ToastUtils.Errortoast(mContext, "视频播放有误,请稍候重试");
 		return true;
 	}
 
+	// @Override
+	// public void onCompletion(MediaPlayer mp) {
+	// if (isFullScrenn) {
+	// if (getRequestedOrientation() !=
+	// ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+	// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+	// new Handler().postDelayed(new Runnable() {
+	// @Override
+	// public void run() {
+	// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+	// }
+	// }, 3000);
+	// }
+	// }
+	// isCom = true;
+	// resetVideo(false);
+	// }
+
 	@Override
-	public void onCompletion(MediaPlayer mp) {
+	public void onCompletion(IMediaPlayer mp) {
+		// TODO Auto-generated method stub
 		if (isFullScrenn) {
 			if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -1200,9 +1213,18 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		resetVideo(false);
 	}
 
+	// @Override
+	// public void onPrepared(MediaPlayer mp) {
+	// hasBeenPaly = true;
+	// }
+
 	@Override
-	public void onPrepared(MediaPlayer mp) {
+	public void onPrepared(IMediaPlayer mp) {
+		// TODO Auto-generated method stub
+		Log.e("onPrepared", "onPrepared");
 		hasBeenPaly = true;
+		small_video_pb.setVisibility(View.GONE);
+		video_pb.setVisibility(View.GONE);
 	}
 
 	// 播放完成回到初始状态
@@ -1217,34 +1239,91 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// Options.getSmallImageOptions());// 视频
 		// }
 		if (isResetpalyer) {
-			video_view.release(true);
+			// video_view.release(true);
+			video_view.stopPlayback();
 		}
 	}
 
 	// 播放视频状态
 	private void playState() {
 		video_pb.setVisibility(View.VISIBLE);
-		small_video_pb.setVisibility(View.VISIBLE);
+		// small_video_pb.setVisibility(View.VISIBLE);
 		video_player.setVisibility(View.GONE);
 	}
 
-	@Override
-	public boolean onInfo(MediaPlayer mp, int what, int extra) {
+	// @Override
+	// public boolean onInfo(MediaPlayer mp, int what, int extra) {
+	//
+	// switch (what) {
+	//
+	// case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+	// video_view.pause();
+	// isload = true;
+	// if (!noShowPB) {
+	// video_pb.setVisibility(View.VISIBLE);
+	// small_video_pb.setVisibility(View.VISIBLE);
+	// video_controller.setEnabled(false);
+	// noShowPB = false;
+	// }
+	// break;
+	// case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+	//
+	// if (!New_Activity_Content_Video.this.isPause) {
+	// if (content_video.getVisibility() == View.VISIBLE) {
+	// content_video.setVisibility(View.GONE);
+	// }
+	// isload = false;
+	// if (spUtil.getFirstFull() && isFullScrenn) {
+	// isPlayer = false;
+	// player_guide.setVisibility(View.VISIBLE);
+	// noShowPB = true;
+	// } else {
+	// video_view.start();
+	// }
+	// video_controller.setEnabled(true);
+	// goneContentVideoTempImage();
+	// video_pb.setVisibility(View.GONE);
+	// small_video_pb.setVisibility(View.GONE);
+	//
+	// } else {
+	// if (content_video.getVisibility() == View.VISIBLE) {
+	// content_video.setVisibility(View.GONE);
+	// }
+	// isload = false;
+	// if (spUtil.getFirstFull() && isFullScrenn) {
+	// isPlayer = false;
+	// player_guide.setVisibility(View.VISIBLE);
+	// noShowPB = true;
+	// }
+	// video_controller.setEnabled(true);
+	// goneContentVideoTempImage();
+	// video_pb.setVisibility(View.GONE);
+	// small_video_pb.setVisibility(View.GONE);
+	// }
+	// break;
+	// }
+	// return true;
+	// // TODO Auto-generated method stub
+	// }
 
+	@Override
+	public boolean onInfo(IMediaPlayer mp, int what, int extra) {
+		// TODO Auto-generated method stub
 		switch (what) {
 
-		case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+		case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
+			Log.e("MEDIA_INFO_BUFFERING_START", "MEDIA_INFO_BUFFERING_START");
 			video_view.pause();
 			isload = true;
 			if (!noShowPB) {
 				video_pb.setVisibility(View.VISIBLE);
-				small_video_pb.setVisibility(View.VISIBLE);
+				// small_video_pb.setVisibility(View.VISIBLE);
 				video_controller.setEnabled(false);
 				noShowPB = false;
 			}
 			break;
-		case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-
+		case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
+			Log.e("MEDIA_INFO_BUFFERING_END", "MEDIA_INFO_BUFFERING_END");
 			if (!New_Activity_Content_Video.this.isPause) {
 				if (content_video.getVisibility() == View.VISIBLE) {
 					content_video.setVisibility(View.GONE);
@@ -1280,7 +1359,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			break;
 		}
 		return true;
-		// TODO Auto-generated method stub
 	}
 
 	// 无网络提示
@@ -1345,7 +1423,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			}
 			content_video.setVisibility(View.VISIBLE);
 			goneContentVideoTempImage();
-			video_view.release(true);
+			// video_view.release(true);
+			video_view.stopPlayback();
 			video_view.setVideoURI(null);
 			video_pb.setVisibility(View.GONE);
 			small_video_pb.setVisibility(View.GONE);
@@ -1421,7 +1500,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		for (int i = 0; i < recommends.size(); i++) {
 
 			final New_Recommend mNew_Recommend = recommends.get(i);
-			mNew_Recommend.setTitlepic(CommonUtils.doWebpUrl(mNew_Recommend.getTitlepic()));
+			mNew_Recommend.setTitlepic(CommonUtils.doWebpUrl(mNew_Recommend
+					.getTitlepic()));
 			View v = LayoutInflater.from(mContext).inflate(
 					R.layout.new_recommend_item, null);
 			ImageView home_news_titlepic = (ImageView) v
@@ -1433,11 +1513,11 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			TextView home_news_newstime = (TextView) v
 					.findViewById(R.id.home_news_newstime);
 			home_news_titlepic.setTag(R.string.viewwidth, PixelUtil.dp2px(100));
-//			CommonUtils.zoomImage(imageLoader, mNew_Recommend.getTitlepic(),
-//					home_news_titlepic, mContext);
+			// CommonUtils.zoomImage(imageLoader, mNew_Recommend.getTitlepic(),
+			// home_news_titlepic, mContext);
 			ImgUtils.imageLoader.displayImage(mNew_Recommend.getTitlepic(),
 					home_news_titlepic, ImgUtils.homeImageOptions);
-			
+
 			home_news_title.setText(mNew_Recommend.getTitle());
 			home_news_newstime.setText(TimeUtil.unix2date(
 					Long.valueOf(mNew_Recommend.getNewstime()), "yyyy-MM-dd"));
@@ -1450,7 +1530,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 					}
 					content_video.setVisibility(View.VISIBLE);
 					goneContentVideoTempImage();
-					video_view.release(true);
+					// video_view.release(true);
+					video_view.stopPlayback();
 					video_view.setVideoURI(null);
 					video_pb.setVisibility(View.GONE);
 					small_video_pb.setVisibility(View.GONE);
@@ -1502,12 +1583,20 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			content_comment_list_list.addView(v);
 		}
 	}
-	
+
 	@Override
-	public void finish(){
-		if(content_video != null)
+	public void finish() {
+		if (content_video != null)
 			content_video.setBackground(null);
 		System.gc();
 		super.finish();
 	}
+
+	@Override
+	public void shareReBack() {
+		// TODO Auto-generated method stub
+		super.shareReBack();
+		isGoShare = false;
+	}
+
 }

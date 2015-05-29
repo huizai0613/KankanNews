@@ -51,7 +51,7 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 
 	public DbUtils dbUtils;
 	protected Loading_Dialog loading_dialog;
-	protected CrashApplication mApplication;
+	public CrashApplication mApplication;
 	public SharePreferenceUtil spUtil;
 	public int mScreenWidth;
 	public int mScreenHeight;
@@ -579,6 +579,10 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 	}
 
 	public void Commit_Share(SHARE_MEDIA platform) {
+
+	}
+	
+	public void shareReBack() {
 
 	}
 }

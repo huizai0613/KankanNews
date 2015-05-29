@@ -1,6 +1,6 @@
 package com.kankan.kankanews.base.IA;
 
-import io.vov.vitamio.Vitamio;
+//import io.vov.vitamio.Vitamio;
 
 import java.io.File;
 import java.math.BigInteger;
@@ -158,8 +158,8 @@ public class CrashApplication extends Application {
 		});
 		dbUtils.configAllowTransaction(true);
 
-		Vitamio.initialize(this,
-				getResources().getIdentifier("libarm", "raw", getPackageName()));
+//		Vitamio.initialize(this,
+//				getResources().getIdentifier("libarm", "raw", getPackageName()));
 		checkLogin();
 		File cacheDir = CommonUtils.getImageCachePath(getApplicationContext());
 		initImageLoader(this, cacheDir);

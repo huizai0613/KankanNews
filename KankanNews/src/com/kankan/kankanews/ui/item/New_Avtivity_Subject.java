@@ -126,21 +126,6 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.subject);
-
-		// 创建微博分享接口实例
-		// mWeiboShareAPI = WeiboShareSDK.createWeiboAPI(this,
-		// Constants.APP_KEY);
-		// // 注册第三方应用到微博客户端中，注册成功后该应用将显示在微博的应用列表中。
-		// // 但该附件栏集成分享权限需要合作申请，详情请查看 Demo 提示
-		// // NOTE：请务必提前注册，即界面初始化的时候或是应用程序初始化时，进行注册
-		// mWeiboShareAPI.registerApp();
-		// // 当 Activity 被重新初始化时（该 Activity 处于后台时，可能会由于内存不足被杀掉了），
-		// // 需要调用 {@link IWeiboShareAPI#handleWeiboResponse} 来接收微博客户端返回的数据。
-		// // 执行成功，返回 true，并调用 {@link IWeiboHandler.Response#onResponse}；
-		// // 失败返回 false，不调用上述回调
-		// if (savedInstanceState != null) {
-		// mWeiboShareAPI.handleWeiboResponse(getIntent(), this);
-		// }
 	}
 	
 	@Override 
@@ -295,14 +280,6 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// PhotoView photoView = (PhotoView) headerView
-			// .findViewById(R.id.titlepic);
-			// imageLoader.displayImage(subjectList.getTitlePic(), photoView,
-			// Options.getSmallImageOptions(false));
-			//
-			// MyTextView title = (MyTextView)
-			// headerView.findViewById(R.id.intro);
-			// title.setText("　　　" + subjectList.getIntro());
 
 			if (subjectList.getList().size() > 0) {
 				String midtype = "";
@@ -325,14 +302,6 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 			} else {
 				new_news_clicks = new ArrayList<New_News_Click>();
 			}
-
-			// // 点击量
-			// for (int i = 0; new_news_clicks != null
-			// && i < new_news_clicks.size(); i++) {
-			// mClicks.put(new_news_clicks.get(i).getId(), new_news_clicks
-			// .get(i).getClickTime());
-			// }
-			// mAdapter.notifyDataSetChanged();
 
 		} catch (NetRequestException e) {
 			// TODO Auto-generated catch block
@@ -517,16 +486,6 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 
 							convertView.setTag(albumsHolder);
 						}
-
-						// viewHolder = new ViewHolder();
-						// convertView =
-						// mInflater.inflate(R.layout.subject_item,
-						// parent, false);
-						// viewHolder.title = (MyTextView) convertView
-						// .findViewById(R.id.title);
-						// viewHolder.titlePic = (PhotoView) convertView
-						// .findViewById(R.id.titlepic);
-						// convertView.setTag(viewHolder);
 					}
 				} else {
 					if (dataType == 1) {
@@ -538,14 +497,8 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 							albumsHolder = (NewAlbumsHolder) convertView
 									.getTag();
 						}
-
-						// viewHolder = (ViewHolder) convertView.getTag();
 					}
 				}
-
-				// View line = (View)convertView
-				// .findViewById(R.id.listView_divider_line);
-				// line.setVisibility(View.GONE);
 
 				final Subject_Item item = subjectList.getList().get(position);
 				item.setTitlepic(CommonUtils.doWebpUrl(item.getTitlepic()));
@@ -561,9 +514,6 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 						final int news_type = Integer.valueOf(item.getType());
 						newHolder.titlepic.setTag(R.string.viewwidth,
 								PixelUtil.dp2px(80));
-						// CommonUtils.zoomImage(imageLoader,
-						// item.getTitlepic(),
-						// newHolder.titlepic, mContext, imageCache);
 						imageLoader.displayImage(item.getTitlepic(),
 								newHolder.titlepic, ImgUtils.homeImageOptions);
 						newHolder.title.setText(item.getTitle());
@@ -652,14 +602,6 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 											item.getTitlepic(), 
 											item.getSharedPic());
 								} else if (news_type % 10 == 6) {// 直播
-									// New_LivePlayFragment fragment =
-									// (New_LivePlayFragment)
-									// mActivity.fragments
-									// .get(1);
-									// fragment.setSelectPlay(true);
-									// fragment.setSelectPlayID(Integer.parseInt(news
-									// .getId()));
-									// mActivity.touchTab(mActivity.tab_two);
 
 								} else {
 									startAnimActivityByParameter(

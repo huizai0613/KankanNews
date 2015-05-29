@@ -1,8 +1,9 @@
 package com.kankan.kankanews.ui.view;
 
-import io.vov.vitamio.utils.StringUtils;
-import io.vov.vitamio.widget.MediaController.MediaPlayerControl;
-import io.vov.vitamio.widget.VideoView;
+import tv.danmaku.ijk.media.widget.VideoView;
+import com.kankan.kankanews.utils.StringUtils;
+//import io.vov.vitamio.widget.MediaController.MediaPlayerControl;
+//import io.vov.vitamio.widget.VideoView;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Handler;
@@ -17,8 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
-import com.kankan.kankanews.base.BaseVideoActivity;
-import com.kankan.kankanews.ui.item.Activity_OffLinePlay;
+import com.kankan.kankanews.base.BaseVideoActivity; 
 import com.kankanews.kankanxinwen.R;
 
 public class VideoViewController extends RelativeLayout implements
@@ -39,8 +39,7 @@ public class VideoViewController extends RelativeLayout implements
 	private ControllerType mControllerType;
 
 	private VideoView video;
-	private BaseVideoActivity activity_Content;
-	private Activity_OffLinePlay activity_OffLinePlay;
+	private BaseVideoActivity activity_Content; 
 	private LayoutInflater inflater;
 	private View inflate;
 	private ImageView video_controller_player;
@@ -49,16 +48,7 @@ public class VideoViewController extends RelativeLayout implements
 	private SeekBar video_controller_seek;
 	private SeekBar video_controller_seek_full;
 	private VerticalBar video_controller_volume_seek;
-	private ImageView video_controller_full_screen;
-
-	public Activity_OffLinePlay getActivity_OffLinePlay() {
-		return activity_OffLinePlay;
-	}
-
-	public void setActivity_OffLinePlay(
-			Activity_OffLinePlay activity_OffLinePlay) {
-		this.activity_OffLinePlay = activity_OffLinePlay;
-	}
+	private ImageView video_controller_full_screen;  
 
 	public BaseVideoActivity getActivity_Content() {
 		return activity_Content;
@@ -84,9 +74,9 @@ public class VideoViewController extends RelativeLayout implements
 		this.isShow = isShow;
 	}
 
-	public MediaPlayerControl getPlayerControl() {
-		return video;
-	}
+//	public MediaPlayerControl getPlayerControl() {
+//		return video;
+//	}
 
 	public void setPlayerControl(VideoView playerControl) {
 		this.video = playerControl;
@@ -413,9 +403,10 @@ public class VideoViewController extends RelativeLayout implements
 		public void onStopTrackingTouch(SeekBar bar) {
 			if (!mInstantSeeking) {
 				long seek = (mDuration * bar.getProgress()) / 1000;
-				for (long i = seek - 1000; i < seek + 1000; i++) {
-					video.seekTo(i);
-				}
+//				for (long i = seek - 1000; i < seek + 1000; i++) {
+//					video.seekTo(i);
+//				}
+				video.seekTo(seek);
 			}
 			show(sDefaultTimeout);
 			mHandler.removeMessages(SHOW_PROGRESS);
@@ -503,10 +494,6 @@ public class VideoViewController extends RelativeLayout implements
 		case R.id.video_controller_back:// 后退
 			if (activity_Content != null) {
 				activity_Content.fullScrenntoSamll();
-			}
-
-			if (activity_OffLinePlay != null) {
-				activity_OffLinePlay.AnimFinsh();
 			}
 
 			break;

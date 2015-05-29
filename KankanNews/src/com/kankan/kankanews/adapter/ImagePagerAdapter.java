@@ -26,6 +26,7 @@ import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
 import com.kankan.kankanews.ui.view.AutoImageTag;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankanews.kankanxinwen.R;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -128,7 +129,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								New_Activity_Content_Video.class,
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
-								news.getTitle(), news.getTitlepic(), news.getSharedPic());
+								news.getTitle(), news.getTitlepic(),
+								news.getSharedPic());
 						break;
 					// 图集
 					case 2:
@@ -136,7 +138,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								New_Activity_Content_PicSet.class,
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
-								news.getTitle(), news.getTitlepic(), news.getSharedPic());
+								news.getTitle(), news.getTitlepic(),
+								news.getSharedPic());
 						break;
 					case 6:
 						New_LivePlayFragment f = (New_LivePlayFragment) fragment.mActivity.fragments
@@ -150,8 +153,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 						fragment.mActivity.startAnimActivityByParameter(
 								New_Activity_Content_Web.class, news.getMid(),
 								news.getType(), news.getTitleurl(),
-								news.getNewstime(),
-								news.getTitle(), news.getTitlepic(), news.getSharedPic());
+								news.getNewstime(), news.getTitle(),
+								news.getTitlepic(), news.getSharedPic());
 						break;
 					}
 				}
@@ -164,10 +167,13 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 			v.setTag(R.string.viewwidth,
 					(int) (fragment.mActivity.topNewW / 1.7));
 			v.setTag(R.string.isTop, true);
-			CommonUtils.zoomImage(
-					imageLoader,
+			ImgUtils.imageLoader.displayImage(
 					imageIdList.get(getPosition(position)).getUrlPath()
-							.split("::::::")[0], v, context);
+							.split("::::::")[0], v, ImgUtils.homeImageOptions);
+//			CommonUtils.zoomImage(
+//					imageLoader,
+//					imageIdList.get(getPosition(position)).getUrlPath()
+//							.split("::::::")[0], v, context);
 
 			v.setOnClickListener(new OnClickListener() {
 
@@ -183,7 +189,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								New_Activity_Content_Video.class,
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
-								news.getTitle(), news.getTitlepic(), news.getSharedPic());
+								news.getTitle(), news.getTitlepic(),
+								news.getSharedPic());
 						break;
 					// 图集
 					case 2:
@@ -191,7 +198,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								New_Activity_Content_PicSet.class,
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
-								news.getTitle(), news.getTitlepic(), news.getSharedPic());
+								news.getTitle(), news.getTitlepic(),
+								news.getSharedPic());
 						break;
 					case 6:
 						New_LivePlayFragment f = (New_LivePlayFragment) fragment.mActivity.fragments
@@ -205,8 +213,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 						fragment.mActivity.startAnimActivityByParameter(
 								New_Activity_Content_Web.class, news.getMid(),
 								news.getType(), news.getTitleurl(),
-								news.getNewstime(),
-								news.getTitle(), news.getTitlepic(), news.getSharedPic());
+								news.getNewstime(), news.getTitle(),
+								news.getTitlepic(), news.getSharedPic());
 						break;
 					}
 				}

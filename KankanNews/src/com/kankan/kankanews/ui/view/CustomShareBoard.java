@@ -78,6 +78,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			shareObj.refresh();
 			break;
 		default:
+			mActivity.shareReBack();
 			break;
 		}
 		dismiss();

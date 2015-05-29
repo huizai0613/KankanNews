@@ -38,7 +38,7 @@ public class VideoPlayerActivity extends Activity {
         setContentView(R.layout.activity_player);
 
         mVideoPath = getIntent().getStringExtra("videoPath");
-        mVideoPath = "rtmp://live.kksmg.com:80/live/mp4:Stream_1";
+        mVideoPath = "http://domhttp.kksmg.com/2015/05/27/h264_450k_mp4_CCTVNEWS15000002015052713261874091_aac.mp4";
         //http://live-cdn.kksmg.com/channels/tvie/xn_dfws/flv:sd
         //rtmp://live.kksmg.com:80/live/mp4:Stream_1             
         //http://live-cdn.kksmg.com/channels/tvie/xwzh/m3u8:sd   xinwenzonghe

@@ -1,6 +1,6 @@
 package com.kankan.kankanews.ui.item;
 
-import io.vov.vitamio.utils.StringUtils;
+import com.kankan.kankanews.utils.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 
