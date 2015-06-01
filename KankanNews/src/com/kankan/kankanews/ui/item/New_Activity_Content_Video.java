@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -1586,8 +1587,13 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 	@Override
 	public void finish() {
-		if (content_video != null)
-			content_video.setBackground(null);
+		if (content_video != null){
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+				content_video.setBackground(null);
+		    } else {
+		    	content_video.setBackgroundDrawable(null);
+		    }
+		}
 		System.gc();
 		super.finish();
 	}

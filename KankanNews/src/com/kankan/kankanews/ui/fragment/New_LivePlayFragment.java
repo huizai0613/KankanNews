@@ -1027,7 +1027,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 	// 刷新
 	public void refresh() {
-		listview.setRefreshing(false);
+		if(listview != null)
+			listview.setRefreshing(false);
 	}
 
 	@Override

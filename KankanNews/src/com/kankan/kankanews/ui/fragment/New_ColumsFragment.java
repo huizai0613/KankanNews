@@ -35,12 +35,13 @@ import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.umeng.socialize.utils.Log;
 
 public class New_ColumsFragment extends BaseFragment {
 
 	private ItnetUtils instance;
 	private View inflate;
-	private ImageAdapter adapter;
+	private ImageAdapter adapter = new ImageAdapter();;
 
 	private ArrayList<New_Colums> new_colums = new ArrayList<New_Colums>();
 
@@ -74,11 +75,11 @@ public class New_ColumsFragment extends BaseFragment {
 		});
 
 		instance = ItnetUtils.getInstance(mActivity);
-
-		boolean initLocalDate = initLocalDate();
-
+		
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			initNetData();
+		}else{
+			initLocalDate();
 		}
 		return inflate;
 	}
@@ -100,7 +101,7 @@ public class New_ColumsFragment extends BaseFragment {
 			}
 		} catch (DbException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e(this.getClass().getName(), e.getLocalizedMessage());
 		}
 		return false;
 	}
@@ -108,7 +109,7 @@ public class New_ColumsFragment extends BaseFragment {
 	@Override
 	protected void saveLocalDate() {
 		try {
-			mActivity.dbUtils.saveOrUpdateAll(new_colums);
+			mActivity.dbUtils.saveAll(new_colums);
 		} catch (DbException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -166,7 +167,7 @@ public class New_ColumsFragment extends BaseFragment {
 			}
 
 			saveLocalDate();
-			adapter = new ImageAdapter();
+//			adapter = new ImageAdapter();
 			listview.setAdapter(adapter);
 		}
 

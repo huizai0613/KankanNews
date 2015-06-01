@@ -74,43 +74,12 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.kankan.kankanews.ui.item.Activity_Login"
-            android:exported="false"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_My_About"
             android:exported="false"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.kankan.kankanews.ui.item.ActivityBodyProcotol"
-            android:exported="false"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_My_FanKui"
-            android:exported="false"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.kankan.kankanews.ui.item.Activity_My_Comment"
-            android:exported="false"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.kankan.kankanews.ui.item.Activity_My_Collect"
-            android:exported="false"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.kankan.kankanews.ui.item.Activity_My_Foot"
-            android:exported="false"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.kankan.kankanews.ui.item.Activity_OffLine"
             android:exported="false"
             android:screenOrientation="portrait" >
         </activity>
