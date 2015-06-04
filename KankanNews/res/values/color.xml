@@ -21,8 +21,14 @@
     <!-- 我的关注页面的字体颜色 -->
     <color name="text_myAttention_normal">#363636</color>
 
+    <!-- 我的关注页面的字体颜色 -->
+    <color name="colums_title_background">#363636</color>
+    
     <!-- listview 空隙颜色 -->
     <color name="listView_divider_color">#dbdbdb</color>
+    
+    <!-- listview 空隙颜色 -->
+    <color name="light_gray">#ededed</color>
     
     <color name="calendar_active_month_bg">#fff5f7f9</color>
   <color name="calendar_bg">#ffffffff</color>

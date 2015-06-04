@@ -18,6 +18,8 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> {
 	private String type;
 	private String newstime;
 	private String date;
+	private String tvLogo;
+	private String videoUrl;
 	
 	private String myType;//用来区分是什么栏目上的新闻
 
@@ -36,9 +38,11 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> {
 		sharedPic = jsonObj.optString("titlepic");
 		titleurl = jsonObj.optString("titleurl");
 		videoscale = jsonObj.optString("videoscale");
+		videoUrl = jsonObj.optString("videourl");
 		type = jsonObj.optString("type");
 		newstime = jsonObj.optString("newstime");
 		date = jsonObj.optString("date");
+		tvLogo = jsonObj.optString("tvlogo");
 		
 		return this;
 	}
@@ -123,7 +127,21 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> {
 	public void setSharedPic(String sharedPic) {
 		this.sharedPic = sharedPic;
 	}
-	
-	
+
+	public String getTvLogo() {
+		return tvLogo;
+	}
+
+	public void setTvLogo(String tvLogo) {
+		this.tvLogo = tvLogo;
+	}
+
+	public String getVideoUrl() {
+		return videoUrl;
+	}
+
+	public void setVideoUrl(String videoUrl) {
+		this.videoUrl = videoUrl;
+	}
 	
 }
