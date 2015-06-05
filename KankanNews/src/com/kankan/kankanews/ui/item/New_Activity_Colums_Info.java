@@ -25,6 +25,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -53,14 +54,18 @@ import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.bean.New_Colums_Info;
 import com.kankan.kankanews.config.AndroidConfig;
+import com.kankan.kankanews.dialog.InfoMsgHint;
+import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
+import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.PixelUtil;
+import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
@@ -74,6 +79,9 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 	private boolean noMoreNews = false;
 
+	private ShareUtil shareUtil = null;
+	private static CustomShareBoard shareBoard;
+
 	private ItnetUtils instance;
 	private List<New_Colums_Info> new_colums_infos = new ArrayList<New_Colums_Info>();
 	private MyAdapter myAdapter;
@@ -86,11 +94,12 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	private VideoView columsVideoView;
 	private VideoViewController columsVideoController;
 	private ImageView columsVideoImage;
+	private ImageView columsVideoStart;
 	private LinearLayout screen_pb;
 	private ImageView columsImage;
 	private MyTextView columsTitle;
 	private ImageView calendarBut;
-	private ImageView liveShareBut;
+	private ImageView columsShareBut;
 	private ImageView backBut;
 
 	private int curPlayNo = 0;
@@ -115,15 +124,16 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 
-		Log.e("onConfigurationChanged", "onConfigurationChanged");
 		int width = wm.getDefaultDisplay().getWidth();
 		int height = wm.getDefaultDisplay().getHeight();
 		WindowManager.LayoutParams attrs = getWindow().getAttributes();
 		if (width > height) {
-			// if (shareBoard != null && shareBoard.isShowing()) {
-			// shareBoard.dismiss();
-			// isGoShare = false;
-			// }
+			if (shareBoard != null && shareBoard.isShowing()) {
+				shareBoard.dismiss();
+			}
+			columsVideoController
+					.setmControllerType(ControllerType.FullScrennController);
+			columsVideoController.changeView();
 			backBut.setVisibility(View.GONE);
 			setRightFinsh(false);
 			CommonUtils.clickevent(mContext, "action", "放大",
@@ -136,10 +146,16 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			columsVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullScrenn = true;
+			if (columsVideoView != null
+					&& columsVideoImage.getVisibility() == View.GONE)
+				columsVideoView.start();
 			columsVideoView.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,
 					LayoutParams.MATCH_PARENT);
 
 		} else {
+			columsVideoController
+					.setmControllerType(ControllerType.SmallController);
+			columsVideoController.changeView();
 			backBut.setVisibility(View.VISIBLE);
 			setRightFinsh(true);
 			isFullScrenn = false;
@@ -173,10 +189,11 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		columsVideoView = (VideoView) findViewById(R.id.colums_video_view);
 		columsVideoController = (VideoViewController) findViewById(R.id.colums_video_controller);
 		columsVideoImage = (ImageView) findViewById(R.id.colums_video_image);
+		columsVideoStart = (ImageView) findViewById(R.id.colums_video_start);
 		columsImage = (ImageView) findViewById(R.id.colums_image);
 		columsTitle = (MyTextView) findViewById(R.id.colums_title);
 		calendarBut = (ImageView) findViewById(R.id.calendar_but);
-		liveShareBut = (ImageView) findViewById(R.id.live_share_but);
+		columsShareBut = (ImageView) findViewById(R.id.colums_share_but);
 		backBut = (ImageView) findViewById(R.id.colums_info_back);
 
 		screen_pb = (LinearLayout) findViewById(R.id.screnn_pb);
@@ -234,9 +251,9 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	@Override
 	protected void setListener() {
 		calendarBut.setOnClickListener(this);
-		liveShareBut.setOnClickListener(this);
+		columsShareBut.setOnClickListener(this);
 		backBut.setOnClickListener(this);
-
+		columsVideoStart.setOnClickListener(this);
 		columsVideoView.setOnCompletionListener(this);
 		columsVideoView.setOnErrorListener(this);
 		columsVideoView.setOnPreparedListener(this);
@@ -316,12 +333,25 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.colums_video_start:
+			videoPlay();
+			columsVideoStart.setVisibility(View.GONE);
+			break;
+		case R.id.colums_share_but:
+			if (new_colums_infos.size() == 0 && curPlayNo >= new_colums_infos.size())
+				break;
+			shareUtil = new ShareUtil(new_colums_infos.get(curPlayNo), this);
+			// 一键分享
+			shareBoard = new CustomShareBoard((BaseActivity) this, shareUtil,
+					this);
+			shareBoard.closeRefresh();
+			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
+			shareBoard.showAtLocation(this.getWindow().getDecorView(),
+					Gravity.BOTTOM, 0, 0);
+			break;
 		case R.id.colums_info_back:
 			onBackPressed();
 			break;
-		// case R.id.colums_video_view:
-		// onBackPressed();
-		// break;
 		case R.id.colums_video_controller:
 			// if (video_view.isPlaying() || hasBeenPaly) {
 			Log.e("colums_video_controller", "colums_video_controller");
@@ -395,19 +425,29 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 						ImgUtils.imageLoader.displayImage(
 								new_colums_infos.get(0).getTvLogo(),
 								columsImage);
+						columsVideoStart.setVisibility(View.GONE);
 						videoPlay();
 					}
 				} else {
 					new_colums_infos.addAll(mnew_colums_infos);
+					if (columsVideoImage.getVisibility() == View.VISIBLE) {
+						curPlayNo++;
+						columsVideoStart.setVisibility(View.GONE);
+						videoPlay();
+						video_pb.setVisibility(View.VISIBLE);
+					}
 					myAdapter.notifyDataSetChanged();
 				}
 				nodata.setVisibility(View.GONE);
 			} else {
 				if (!isLoadMore) {
 					// ToastUtils.Infotoast(mContext, "暂无"+time+"记录");
-					nodata.setVisibility(View.VISIBLE);
-					nodata.setText("暂无" + time + "记录");
-					new_colums_infos.clear();
+					// nodata.setVisibility(View.VISIBLE);
+					// nodata.setText("暂无" + time + "记录");
+					// columsVideoView.stopPlayback();
+					// columsVideoImage.setVisibility(View.VISIBLE);
+					// new_colums_infos.clear();
+					ToastUtils.Infotoast(mContext, "该日期暂无内容");
 				} else {
 					noMoreNews = true;
 					// ToastUtils.Infotoast(mContext, "暂无更多信息");
@@ -435,7 +475,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 	NewsItemHolder newsItemHolder = null;
 	ViewHolderInfo holderInfo = null;
-	ColumsInfoDetailHolder columsInfoDetailHolder = null;
+	static ColumsInfoDetailHolder columsInfoDetailHolder = null;
 
 	class MyAdapter extends BaseAdapter {
 
@@ -489,10 +529,20 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 					convertView = LayoutInflater.from(mContext).inflate(
 							R.layout.colums_info_detail_item, null);
 					columsInfoDetailHolder = new ColumsInfoDetailHolder();
+					columsInfoDetailHolder.detailTitleRootView = (RelativeLayout) convertView
+							.findViewById(R.id.colums_detail_title_root_view);
 					columsInfoDetailHolder.detailTitle = (TextView) convertView
 							.findViewById(R.id.colums_detail_title);
 					columsInfoDetailHolder.showBut = (ImageView) convertView
 							.findViewById(R.id.colums_detail_show);
+					columsInfoDetailHolder.detailTime = (TextView) convertView
+							.findViewById(R.id.colums_detail_time);
+					columsInfoDetailHolder.detailCal = (TextView) convertView
+							.findViewById(R.id.colums_detail_cal);
+					columsInfoDetailHolder.detailContentOmit = (TextView) convertView
+							.findViewById(R.id.colums_detail_content_omit);
+					columsInfoDetailHolder.detailContent = (TextView) convertView
+							.findViewById(R.id.colums_detail_content);
 					convertView.setTag(columsInfoDetailHolder);
 				} else if (itemViewType == 1) {
 					convertView = LayoutInflater.from(mContext).inflate(
@@ -528,6 +578,63 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			if (itemViewType == 0) {
 				columsInfoDetailHolder.detailTitle.setText(new_colums_infos
 						.get(curPlayNo).getTitle());
+				columsInfoDetailHolder.detailTime.setText(TimeUtil.unix2date(
+						Long.valueOf(new_colums_infos.get(curPlayNo)
+								.getNewstime()), "yyyy-MM-dd HH:mm"));
+				columsInfoDetailHolder.detailCal.setText(new_colums_infos.get(
+						curPlayNo).getEpisode()
+						+ "期");
+				if (new_colums_infos.get(curPlayNo).getIntro() == null
+						|| new_colums_infos.get(curPlayNo).getIntro().trim()
+								.equals("")) {
+					columsInfoDetailHolder.showBut.setVisibility(View.GONE);
+					columsInfoDetailHolder.detailContentOmit
+							.setVisibility(View.GONE);
+					columsInfoDetailHolder.detailContent
+							.setVisibility(View.GONE);
+					columsInfoDetailHolder.detailTitleRootView
+							.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+								}
+							});
+				} else {
+					columsInfoDetailHolder.showBut.setVisibility(View.VISIBLE);
+					columsInfoDetailHolder.detailContentOmit
+							.setVisibility(View.VISIBLE);
+					columsInfoDetailHolder.detailContent
+							.setVisibility(View.GONE);
+					columsInfoDetailHolder.detailContent
+							.setText(new_colums_infos.get(curPlayNo).getIntro());
+					columsInfoDetailHolder.detailContentOmit
+							.setText(new_colums_infos.get(curPlayNo).getIntro());
+					columsInfoDetailHolder.detailTitleRootView
+							.setOnClickListener(new OnClickListener() {
+
+								@Override
+								public void onClick(View v) {
+									// TODO Auto-generated method stub
+									if (columsInfoDetailHolder.detailContentOmit
+											.getVisibility() == View.GONE) {
+										columsInfoDetailHolder.showBut
+												.setBackgroundResource(R.drawable.ic_arrowshow);
+										columsInfoDetailHolder.detailContentOmit
+												.setVisibility(View.VISIBLE);
+										columsInfoDetailHolder.detailContent
+												.setVisibility(View.GONE);
+									} else {
+										columsInfoDetailHolder.showBut
+												.setBackgroundResource(R.drawable.ic_arrowdown);
+										columsInfoDetailHolder.detailContentOmit
+												.setVisibility(View.GONE);
+										columsInfoDetailHolder.detailContent
+												.setVisibility(View.VISIBLE);
+									}
+								}
+							});
+				}
+
 			} else if (itemViewType == 1) {
 				final New_Colums_Info mcolums_info = new_colums_infos
 						.get(position - 1);
@@ -608,6 +715,11 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	class ColumsInfoDetailHolder {
 		TextView detailTitle;
 		ImageView showBut;
+		TextView detailTime;
+		TextView detailCal;
+		TextView detailContentOmit;
+		TextView detailContent;
+		RelativeLayout detailTitleRootView;
 	}
 
 	@Override
@@ -625,13 +737,75 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 		columsVideoImage.setVisibility(View.VISIBLE);
 		video_pb.setVisibility(View.VISIBLE);
-		if (columsVideoView != null) {
-			columsVideoView.stopPlayback();
-			columsVideoController.reset();
-			columsVideoView.setVideoPath(new_colums_infos.get(curPlayNo)
-					.getVideoUrl());
-			columsVideoView.requestFocus();
-			columsVideoView.start();
+
+		if (CommonUtils.isNetworkAvailable(this)) {
+			if (!CommonUtils.isWifi(this)) {
+				if (!spUtil.isFlow()) {
+					final TishiMsgHint dialog = new TishiMsgHint(this,
+							R.style.MyDialog1);
+					dialog.setContent("您已设置2G/3G/4G网络下不允许播放/缓存视频", "我知道了");
+					dialog.setCancleListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialog.dismiss();
+						}
+					});
+					dialog.show();
+				} else {
+					final InfoMsgHint dialog = new InfoMsgHint(this,
+							R.style.MyDialog1);
+					dialog.setContent(
+							"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络", "",
+							"继续播放", "取消");
+					dialog.setCancleListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialog.dismiss();
+						}
+					});
+					dialog.setOKListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (columsVideoView != null) {
+								columsVideoView.stopPlayback();
+								columsVideoController.reset();
+								columsVideoView.setVideoPath(new_colums_infos
+										.get(curPlayNo).getVideoUrl());
+								columsVideoController.setTitle(new_colums_infos
+										.get(curPlayNo).getTitle());
+								columsVideoView.requestFocus();
+								columsVideoView.start();
+							}
+							dialog.dismiss();
+						}
+					});
+					dialog.show();
+
+				}
+
+			} else {
+				if (columsVideoView != null) {
+					columsVideoView.stopPlayback();
+					columsVideoController.reset();
+					columsVideoView.setVideoPath(new_colums_infos
+							.get(curPlayNo).getVideoUrl());
+					columsVideoController.setTitle(new_colums_infos.get(
+							curPlayNo).getTitle());
+					columsVideoView.requestFocus();
+					columsVideoView.start();
+				}
+			}
+		} else {
+			final TishiMsgHint dialog = new TishiMsgHint(this,
+					R.style.MyDialog1);
+			dialog.setContent("当前无可用网络", "我知道了");
+			dialog.setCancleListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dialog.dismiss();
+				}
+			});
+			dialog.show();
 		}
 	}
 
@@ -654,9 +828,6 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	@Override
 	public void onCompletion(IMediaPlayer mp) {
 		// TODO
-		if (isFullScrenn) {
-
-		}
 		columsVideoImage.setVisibility(View.VISIBLE);
 		if (curPlayNo < new_colums_infos.size() - 1) {
 			curPlayNo++;
@@ -664,7 +835,19 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			video_pb.setVisibility(View.VISIBLE);
 			myAdapter.notifyDataSetChanged();
 		} else {
+			columsVideoStart.setVisibility(View.VISIBLE);
 			columsVideoView.stopPlayback();
+			if (isFullScrenn) {
+				if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+					setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+					new Handler().postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+						}
+					}, 1000);
+				}
+			}
 		}
 
 	}
@@ -788,7 +971,11 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		@Override
 		public boolean onScroll(MotionEvent e1, MotionEvent e2,
 				float distanceX, float distanceY) {
-			float mOldX = e1.getX(), mOldY = e1.getY();
+			float mOldX = 0, mOldY = 0;
+			if (e1 != null) {
+				mOldX = e1.getX();
+				mOldY = e1.getY();
+			}
 			int y = (int) e2.getRawY();
 			int x = (int) e2.getRawX();
 

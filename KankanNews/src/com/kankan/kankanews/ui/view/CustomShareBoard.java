@@ -27,7 +27,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	private BaseActivity mActivity;
 	private ShareUtil shareUtil;
 	private CanSharedBySina shareObj;
-
+	private View refreshBox;
 	public CustomShareBoard(BaseActivity activity, ShareUtil shareUtil, CanSharedBySina shareObj) {
 		super(activity);
 		this.mActivity = activity;
@@ -45,7 +45,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		rootView.findViewById(R.id.qq_box).setOnClickListener(this);
 		rootView.findViewById(R.id.sina_box).setOnClickListener(this);
 		rootView.findViewById(R.id.email_box).setOnClickListener(this);
-		rootView.findViewById(R.id.refresh_box).setOnClickListener(this);
+		refreshBox = rootView.findViewById(R.id.refresh_box);
+		refreshBox.setOnClickListener(this);
 		setContentView(rootView);
 		setWidth(LayoutParams.MATCH_PARENT);
 		setHeight(LayoutParams.WRAP_CONTENT);
@@ -83,5 +84,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		}
 		dismiss();
 	}
-
+	
+	public void closeRefresh(){
+		refreshBox.setVisibility(View.INVISIBLE);
+	}
 }

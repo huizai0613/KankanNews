@@ -246,7 +246,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 				isload = true;
 				playState();
 				isCom = true;
-				if(!spUtil.getFirstFull()){
+				if (!spUtil.getFirstFull()) {
 					play();
 				}
 			}
@@ -257,9 +257,9 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 				noShowPB = true;
 				spUtil.setFirstFull(false);
 			}
-//			if (video_view.isPlaying()) {
-//				video_view.pause();
-//			}
+			// if (video_view.isPlaying()) {
+			// video_view.pause();
+			// }
 			if (smallWidth == 0) {
 				smallWidth = video_view.getWidth();
 				smallHeight = video_view.getHeight();
@@ -360,7 +360,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 							Log.e("video_view", "video_view");
 							playState();
 							play();
-						}else{
+						} else {
 							video_view.start();
 						}
 
@@ -620,7 +620,11 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		@Override
 		public boolean onScroll(MotionEvent e1, MotionEvent e2,
 				float distanceX, float distanceY) {
-			float mOldX = e1.getX(), mOldY = e1.getY();
+			float mOldX = 0, mOldY = 0;
+			if (e1 != null)
+				mOldX = e1.getX();
+			if (e1 != null)
+				mOldY = e1.getY();
 			int y = (int) e2.getRawY();
 			int x = (int) e2.getRawX();
 
@@ -904,7 +908,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			player_guide.setVisibility(View.GONE);
 			small_video_pb.setVisibility(View.GONE);
 			goneContentVideoTempImage();
-//			spUtil.setFirstFull(false);
+			// spUtil.setFirstFull(false);
 			noShowPB = false;
 			if (video_view != null) {
 				if (isCom) {
@@ -1587,12 +1591,12 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 	@Override
 	public void finish() {
-		if (content_video != null){
+		if (content_video != null) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 				content_video.setBackground(null);
-		    } else {
-		    	content_video.setBackgroundDrawable(null);
-		    }
+			} else {
+				content_video.setBackgroundDrawable(null);
+			}
 		}
 		System.gc();
 		super.finish();

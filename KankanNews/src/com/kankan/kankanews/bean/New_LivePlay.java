@@ -32,6 +32,7 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements
 	private String time;
 	private String datetime;
 	private String titleurl;
+	private String appBgPic;
 	private boolean isOrder;
 
 	public boolean isOrder() {
@@ -126,7 +127,7 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements
 	public String getTitlelist() {
 		// TODO Auto-generated method stub
 		return this.title;
-	} 
+	}
 
 	@Override
 	public JSONObject toJSON() {
@@ -140,6 +141,14 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements
 
 	public void setSharedPic(String sharedPic) {
 		this.sharedPic = sharedPic;
+	}
+
+	public String getAppBgPic() {
+		return appBgPic;
+	}
+
+	public void setAppBgPic(String appBgPic) {
+		this.appBgPic = appBgPic;
 	}
 
 	@Override
@@ -156,6 +165,7 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements
 		time = jsonObj.optString("time");
 		datetime = jsonObj.optString("datetime");
 		titleurl = jsonObj.optString("titleurl");
+		appBgPic = jsonObj.optString("appbgpic");
 		return this;
 	}
 

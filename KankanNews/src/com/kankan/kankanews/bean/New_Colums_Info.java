@@ -3,10 +3,12 @@ package com.kankan.kankanews.bean;
 import org.json.JSONObject;
 
 import com.kankan.kankanews.base.BaseBean;
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.lidroid.xutils.db.annotation.Id;
 
-public class New_Colums_Info extends BaseBean<New_Colums_Info> {
+public class New_Colums_Info extends BaseBean<New_Colums_Info>implements
+CanSharedObject {
 	@Id
 	private int id;
 	private String mid;
@@ -20,8 +22,10 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> {
 	private String date;
 	private String tvLogo;
 	private String videoUrl;
-	
-	private String myType;//用来区分是什么栏目上的新闻
+	private String intro;
+	private String episode;
+
+	private String myType;// 用来区分是什么栏目上的新闻
 
 	@Override
 	public JSONObject toJSON() {
@@ -30,8 +34,9 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> {
 	}
 
 	@Override
-	public New_Colums_Info parseJSON(JSONObject jsonObj) throws NetRequestException {
-		
+	public New_Colums_Info parseJSON(JSONObject jsonObj)
+			throws NetRequestException {
+
 		mid = jsonObj.optString("id");
 		title = jsonObj.optString("title");
 		titlepic = jsonObj.optString("titlepic");
@@ -43,10 +48,10 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> {
 		newstime = jsonObj.optString("newstime");
 		date = jsonObj.optString("date");
 		tvLogo = jsonObj.optString("tvlogo");
-		
+		intro = jsonObj.optString("intro");
+		episode = jsonObj.optString("episode");
 		return this;
 	}
-
 
 	public String getId() {
 		return mid;
@@ -143,5 +148,27 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> {
 	public void setVideoUrl(String videoUrl) {
 		this.videoUrl = videoUrl;
 	}
-	
+
+	public String getIntro() {
+		return intro;
+	}
+
+	public void setIntro(String intro) {
+		this.intro = intro;
+	}
+
+	public String getEpisode() {
+		return episode;
+	}
+
+	public void setEpisode(String episode) {
+		this.episode = episode;
+	}
+
+	@Override
+	public String getTitlelist() {
+		// TODO Auto-generated method stub
+		return this.title;
+	}
+
 }

@@ -42,8 +42,8 @@
 
             <ImageView
                 android:id="@+id/colums_info_back"
-                android:layout_width="60dip"
-                android:layout_height="60dip"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:paddingLeft="15dip"
@@ -51,6 +51,15 @@
                 android:src="@drawable/full_screen_back"
                 android:visibility="visible" />
 
+            <ImageView
+                android:id="@+id/colums_video_start"
+                android:layout_width="90dip"
+                android:layout_height="90dip"
+                android:layout_centerInParent="true"
+                android:padding="10dip"
+                android:src="@drawable/ic_liveplay"
+                android:visibility="gone" />
+            
             <LinearLayout
                 android:id="@+id/video_pb"
                 android:layout_width="80dip"
@@ -233,7 +242,7 @@
 
             <ImageView
                 android:id="@+id/colums_image"
-                android:layout_width="wrap_content"
+                android:layout_width="30dip"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="center"
@@ -270,7 +279,7 @@
                 android:background="@android:color/white" />
 
             <ImageView
-                android:id="@+id/live_share_but"
+                android:id="@+id/colums_share_but"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_toLeftOf="@id/horizontal_white"
