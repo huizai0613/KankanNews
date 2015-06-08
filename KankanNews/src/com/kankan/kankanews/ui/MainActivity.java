@@ -117,7 +117,6 @@ public class MainActivity extends BaseVideoActivity {
 		spUtil.setFristComing(false);
 		wm = (WindowManager) getApplicationContext().getSystemService(
 				Context.WINDOW_SERVICE);
-		Log.e("SystemMemory", CommonUtils.getSystemMemoryInfo(this) + "");
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		// 自动更新提示

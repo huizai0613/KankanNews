@@ -107,9 +107,9 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		String appCaceDir = this.getApplicationContext()
 				.getDir("cache", Context.MODE_PRIVATE).getPath();
 		webSettings.setAppCachePath(appCaceDir);
-		  //适应屏幕 
+		// 适应屏幕
 		webSettings.setUseWideViewPort(true);
-		webSettings.setLoadWithOverviewMode(true);  
+		webSettings.setLoadWithOverviewMode(true);
 		if (CommonUtils.isNetworkAvailable(mContext)) {
 			webSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
 		} else {
@@ -126,28 +126,28 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
-		
 
 	}
-	
-	@Override 
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    /**使用SSO授权必须添加如下代码 */
-	    
-	    UMSsoHandler ssoHandler = shareUtil.getmController().getConfig().getSsoHandler(requestCode) ;
-	    if(ssoHandler != null){
-	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-	    }
+		super.onActivityResult(requestCode, resultCode, data);
+		/** 使用SSO授权必须添加如下代码 */
+
+		UMSsoHandler ssoHandler = shareUtil.getmController().getConfig()
+				.getSsoHandler(requestCode);
+		if (ssoHandler != null) {
+			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+		}
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
 
 		switch (id) {
 		case R.id.com_title_bar_left_bt:
-			if(webView.canGoBack()){
+			if (webView.canGoBack()) {
 				webView.goBack();
 				break;
 			}
@@ -156,12 +156,13 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		case R.id.com_title_bar_right_bt:
 		case R.id.com_title_bar_right_tv:
 			// 一键分享
-			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil, this);
+			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
+					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
 			break;
-	
+
 		}
 	}
 
@@ -187,10 +188,9 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		new_news.setSharedPic(sharedPic);
 		new_news.setTitlelist(titlelist);
 		new_news.setLooktime(Long.toString(TimeUtil.now()));
-		
-		//提交点击
-		ItnetUtils.getInstance(mContext).addNewNewsClickData("id="+mid);
-		
+
+		// 提交点击
+		ItnetUtils.getInstance(mContext).addNewNewsClickData("id=" + mid);
 
 		// 更新数据
 		try {
@@ -227,8 +227,26 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if(webView.canGoBack()){
+		AudioManager mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		switch (keyCode) {
+		// 音量减小
+		case KeyEvent.KEYCODE_VOLUME_DOWN:
+			Log.e("KEYCODE_VOLUME_DOWN", "KEYCODE_VOLUME_DOWN");
+			mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+					AudioManager.ADJUST_LOWER,
+					AudioManager.FX_FOCUS_NAVIGATION_UP);
+			return true;
+
+			// 音量增大
+		case KeyEvent.KEYCODE_VOLUME_UP:
+			Log.e("KEYCODE_VOLUME_UP", "KEYCODE_VOLUME_UP");
+			mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+					AudioManager.ADJUST_RAISE,
+					AudioManager.FX_FOCUS_NAVIGATION_UP);
+			return true;
+
+		case KeyEvent.KEYCODE_BACK:
+			if (webView.canGoBack()) {
 				webView.goBack();
 				return true;
 			}
@@ -238,16 +256,17 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 			} else {
 				// 退出时加载空网址防止退出时还在播放视频
 				webFinish();
+
 			}
 		}
 		return true;
 	}
-	
-	private void webFinish(){
+
+	private void webFinish() {
 		webView.loadUrl("about:blank");
 		finish();
 	}
-	
+
 	/**
 	 * 判断是否是全屏
 	 * 
@@ -366,14 +385,14 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 	@Override
 	public void refresh() {
 		webView.reload();
-//		webView.loadUrl(titleurl + "?fromkkApp=1");
+		// webView.loadUrl(titleurl + "?fromkkApp=1");
 	}
-	
+
 	@Override
 	public void onBackPressed() {
-		if(webView.canGoBack()){
+		if (webView.canGoBack()) {
 			webView.goBack();
-		}else {
+		} else {
 			webView.loadUrl("about:blank");
 			super.onBackPressed();
 		}

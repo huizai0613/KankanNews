@@ -65,6 +65,7 @@ import com.kankan.kankanews.ui.view.AutoScrollViewPager;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
@@ -113,8 +114,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 	private boolean noMoreNews = false;
 
 	private boolean hasLoaded = false;
-
-	private ArrayList<String> new_has_click = new ArrayList<String>();
 
 	int[] textNomalSize = { R.dimen.news_textsize_1, R.dimen.news_textsize_2,
 			R.dimen.news_textsize_3, R.dimen.news_textsize_4 };
@@ -851,7 +850,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 				newHolder.title.setText(news.getTitle());
 				newHolder.newstime.setText(clicktime);
-				if (new_has_click.contains(news.getId())) {
+				if (NewsBrowseUtils.isBrowed(news.getId())) {
 					newHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
 				} else {
 					newHolder.title.setTextColor(Color.parseColor("#000000"));
@@ -912,10 +911,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 					public void onClick(View v) {
 						//
 						openNews(news);
-						if (!new_has_click.contains(news.getId())) {
+						if (!NewsBrowseUtils.isBrowed(news.getId())) {
 							MyTextView textView = (MyTextView) v
 									.findViewById(R.id.home_news_title);
-							new_has_click.add(news.getId());
+							NewsBrowseUtils.hasBrowedNews(news.getId());
 							textView.setTextColor(Color.parseColor("#B0B0B0"));
 						}
 					}
@@ -931,7 +930,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final String[] pics = news.getTitlepic().split("::::::");
 				ArrayList<ImageView> image_view_list = new ArrayList<ImageView>();
 
-				if (new_has_click.contains(news.getId())) {
+				if (NewsBrowseUtils.isBrowed(news.getId())) {
 					albumsHolder.title
 							.setTextColor(Color.parseColor("#B0B0B0"));
 				} else {
@@ -969,10 +968,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 					@Override
 					public void onClick(View v) {
 						openNews(news);
-						if (!new_has_click.contains(news.getId())) {
+						if (!NewsBrowseUtils.isBrowed(news.getId())) {
 							MyTextView textView = (MyTextView) v
 									.findViewById(R.id.home_albums_title);
-							new_has_click.add(news.getId());
+							NewsBrowseUtils.hasBrowedNews(news.getId());
 							textView.setTextColor(Color.parseColor("#B0B0B0"));
 						}
 					}
@@ -982,7 +981,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final New_News_Home news = getmNewsList.get(newsPosition);
 				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
 				newZhuanTiHolder.title.setText(news.getTitle());
-				if (new_has_click.contains(news.getId())) {
+				if (NewsBrowseUtils.isBrowed(news.getId())) {
 					newZhuanTiHolder.title.setTextColor(Color
 							.parseColor("#B0B0B0"));
 				} else {
@@ -1002,10 +1001,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 					public void onClick(View v) {
 						// 专题
 						openNews(news);
-						if (!new_has_click.contains(news.getId())) {
+						if (!NewsBrowseUtils.isBrowed(news.getId())) {
 							MyTextView textView = (MyTextView) v
 									.findViewById(R.id.title);
-							new_has_click.add(news.getId());
+							NewsBrowseUtils.hasBrowedNews(news.getId());
 							textView.setTextColor(Color.parseColor("#B0B0B0"));
 						}
 					}

@@ -19,6 +19,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,6 +57,7 @@ import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
@@ -506,6 +508,12 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 					headerHolder.title.setText(item.getTitle());
 				} else {
 					if (itemViewType == 1) {
+						if (NewsBrowseUtils.isBrowed(item.getId())) {
+							newHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
+						} else {
+							newHolder.title.setTextColor(Color.parseColor("#000000"));
+						}
+						
 						String clicktime = mClicks.get(item.getMid());
 						clicktime = TextUtils.isEmpty(clicktime) ? "0次"
 								: clicktime + "次";
@@ -584,6 +592,12 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
 								if (news_type % 10 == 1) {
+									
+									MyTextView textView = (MyTextView) v
+											.findViewById(R.id.home_news_title);
+									NewsBrowseUtils.hasBrowedNews(item.getId());
+									textView.setTextColor(Color.parseColor("#B0B0B0"));
+									
 									startAnimActivityByParameter(
 											New_Activity_Content_Video.class,
 											item.getMid(), item.getType(),
@@ -594,6 +608,11 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 											item.getSharedPic());
 								} else if (news_type % 10 == 5) {
 									// 专题
+									MyTextView textView = (MyTextView) v
+											.findViewById(R.id.home_news_title);
+									NewsBrowseUtils.hasBrowedNews(item.getId());
+									textView.setTextColor(Color.parseColor("#B0B0B0"));
+									
 									startSubjectActivityByParameter(
 											New_Avtivity_Subject.class,
 											item.getZtid(), item.getTitle(),
@@ -604,6 +623,11 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 								} else if (news_type % 10 == 6) {// 直播
 
 								} else {
+									MyTextView textView = (MyTextView) v
+											.findViewById(R.id.home_news_title);
+									NewsBrowseUtils.hasBrowedNews(item.getId());
+									textView.setTextColor(Color.parseColor("#B0B0B0"));
+									
 									startAnimActivityByParameter(
 											New_Activity_Content_Web.class,
 											item.getMid(), item.getType(),
@@ -616,6 +640,12 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 							}
 						});
 					} else if (itemViewType == 3) {
+						if (NewsBrowseUtils.isBrowed(item.getId())) {
+							albumsHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
+						} else {
+							albumsHolder.title.setTextColor(Color.parseColor("#000000"));
+						}
+						
 						albumsHolder.title.setText(item.getTitle());
 						final String[] pics = item.getTitlepic()
 								.split("::::::");
@@ -646,6 +676,11 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 						convertView.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View arg0) {
+								MyTextView textView = (MyTextView) arg0
+										.findViewById(R.id.home_albums_title);
+								NewsBrowseUtils.hasBrowedNews(item.getId());
+								textView.setTextColor(Color.parseColor("#B0B0B0"));
+								
 								startAnimActivityByParameter(
 										New_Activity_Content_PicSet.class,
 										item.getMid(), item.getType(),
@@ -686,37 +721,6 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 			headerHolder.title.setText(title);
 
 			return convertView;
-
-			/*
-			 * TagViewHolder holder; if (convertView == null) { holder = new
-			 * TagViewHolder(); convertView =
-			 * mInflater.inflate(R.layout.subject_tag_view, parent, false);
-			 * holder.tagview = (LinearLayout) convertView
-			 * .findViewById(R.id.tagview); String[] keys =
-			 * subjectList.getKeys(); int[] ps = subjectList.getSections(); for
-			 * (int i = 0; i < keys.length; i++) { String name = keys[i]; int p
-			 * = ps[i]; MyTextView item = new MyTextView(mContext);
-			 * item.setBackgroundResource(R.drawable.zt_label);
-			 * item.setTextColor(Color.parseColor("#5878fc"));
-			 * item.setText(name);
-			 * item.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-			 * item.setPadding(8, 0, 8, 0); item.setGravity(Gravity.CENTER);
-			 * item.setId(p + 1);
-			 * 
-			 * LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-			 * LinearLayout.LayoutParams.FILL_PARENT,
-			 * LinearLayout.LayoutParams.WRAP_CONTENT); lp.setMargins(10, 0, 10,
-			 * 0); item.setLayoutParams(lp);
-			 * 
-			 * item.setClickable(true); item.setOnClickListener(new
-			 * View.OnClickListener() {
-			 * 
-			 * @Override public void onClick(View v) { int p = v.getId();
-			 * stickyList.smoothScrollToPositionFromTop(p, 0); } });
-			 * holder.tagview.addView(item); } convertView.setTag(holder); }
-			 * else { holder = (TagViewHolder) convertView.getTag(); } return
-			 * convertView;
-			 */
 		}
 
 		/**
@@ -884,64 +888,6 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		content_loading.setVisibility(View.GONE);
 	}
 
-	public void sendSingleMessage() {
-		// new Thread(new Runnable() {
-		//
-		// @Override
-		// public void run() {
-		// // 1. 初始化微博的分享消息
-		// WeiboMultiMessage weiboMultiMessage = new WeiboMultiMessage();
-		// // 创建媒体消息
-		// // weiboMultiMessage.mediaObject = getVideoObj();
-		// TextObject textObject = new TextObject();
-		// textObject.text = title + "-看看新闻 " + titleurl + " （分享自@看看新闻网） ";
-		// ImageObject imageObject = new ImageObject();
-		// imageObject.setImageObject(getThumbBitmap());
-		// weiboMultiMessage.textObject = textObject;
-		// weiboMultiMessage.imageObject = imageObject;
-		// // 2. 初始化从第三方到微博的消息请求
-		// SendMultiMessageToWeiboRequest request = new
-		// SendMultiMessageToWeiboRequest();
-		// // 用transaction唯一标识一个请求
-		// request.transaction = String
-		// .valueOf(System.currentTimeMillis());
-		// request.multiMessage = weiboMultiMessage;
-		//
-		// AuthInfo authInfo = new AuthInfo(New_Avtivity_Subject.this,
-		// Constants.APP_KEY, Constants.REDIRECT_URL,
-		// Constants.SCOPE);
-		// Oauth2AccessToken accessToken = AccessTokenKeeper
-		// .readAccessToken(getApplicationContext());
-		// String token = "";
-		// if (accessToken != null) {
-		// token = accessToken.getToken();
-		// }
-		// mWeiboShareAPI.sendRequest(New_Avtivity_Subject.this, request,
-		// authInfo, token, new WeiboAuthListener() {
-		//
-		// @Override
-		// public void onWeiboException(WeiboException arg0) {
-		// }
-		//
-		// @Override
-		// public void onComplete(Bundle bundle) {
-		// Oauth2AccessToken newToken = Oauth2AccessToken
-		// .parseAccessToken(bundle);
-		// AccessTokenKeeper.writeAccessToken(
-		// getApplicationContext(), newToken);
-		// ToastUtils.Infotoast(New_Avtivity_Subject.this, "分享成功");
-		// }
-		//
-		// @Override
-		// public void onCancel() {
-		// ToastUtils.Infotoast(New_Avtivity_Subject.this, "分享取消");
-		// }
-		// });
-		//
-		// }
-		// }).start();
-	}
-
 	/**
 	 * 获取当前新闻的缩略图对应的 Bitmap。
 	 */
@@ -993,21 +939,6 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 				byteArray.length);
 		return decodeByteArray;
 	}
-
-	// @Override
-	// public void onResponse(BaseResponse arg0) {
-	// switch (arg0.errCode) {
-	// case WBConstants.ErrorCode.ERR_OK:
-	// ToastUtils.Infotoast(mContext, "分享成功");
-	// break;
-	// case WBConstants.ErrorCode.ERR_CANCEL:
-	// // ToastUtils.Infotoast(mContext, "分享取消");
-	// break;
-	// case WBConstants.ErrorCode.ERR_FAIL:
-	// ToastUtils.Infotoast(mContext, "分享失败");
-	// break;
-	// }
-	// }
 
 	@Override
 	public void refresh() {
