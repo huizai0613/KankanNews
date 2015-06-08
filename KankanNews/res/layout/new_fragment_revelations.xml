@@ -7,139 +7,140 @@
     <include
         layout="@layout/com_title_bar"
         android:background="#000000" />
-	
-    <com.kankan.kankanews.ui.view.ReboundScrollView
+
+    <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ededed"
         android:scrollbars="none" >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ededed" >
 
         <LinearLayout
-            android:id="@+id/scroll_child"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginTop="10dp"
-                android:text="报料内容(必填)"
-                android:textSize="16dp"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"  >
-
-                <EditText
-                    android:id="@+id/revelations_post_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/revelations_post_content_edittext_shape"
-                    android:gravity="left|top"
-                    android:hint="上海电视台的记者会尽快处理"
-                    android:inputType="textMultiLine"
-                    android:maxLines="6"
-                    android:minLines="5"
-                    android:paddingTop="10dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="20dp"
-                    android:singleLine="false" />
-
-                <TextView
-                    android:id="@+id/revelations_post_content_num"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/revelations_post_content"
-                    android:layout_alignRight="@+id/revelations_post_content"
-                    android:textColor="#D6D6D6"
-                    android:text="0/300字"
-                    android:textSize="14dp"
-                    android:padding="5dp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginTop="8dp"
-                android:text="照片(选填、最多上传4张)"
-                android:textSize="16dp" />
+            android:background="#ededed" >
 
             <LinearLayout
+                android:id="@+id/scroll_child"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/revelations_post_content_edittext_shape"
-                android:orientation="horizontal" >
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
 
-                <ImageView
-                    android:id="@+id/revelations_image_one"
-                    android:layout_width="60dip"
-                    android:layout_height="60dip"
-                    android:layout_marginTop="10dip"
-                    android:layout_marginLeft="16dip"
-                    android:layout_marginBottom="10dip"
-                    android:visibility="visible"
-                    android:src="@drawable/revelations_add_pic"
-        			android:scaleType="centerCrop" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="10dp"
+                    android:text="报料内容(必填)"
+                    android:textSize="16dp" />
 
-                <ImageView
-                    android:id="@+id/revelations_image_two"
-                    android:layout_width="60dip"
-                    android:layout_height="60dip"
-                    android:layout_marginTop="10dip"
-                    android:layout_marginLeft="16dip"
-                    android:layout_marginBottom="10dip"
-                    android:visibility="invisible"
-                    android:src="@drawable/revelations_add_pic"
-        			android:scaleType="centerCrop"  />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp" >
 
-                <ImageView
-                    android:id="@+id/revelations_image_three"
-                    android:layout_width="60dip"
-                    android:layout_height="60dip"
-                    android:layout_marginTop="10dip"
-                    android:layout_marginLeft="16dip"
-                    android:layout_marginBottom="10dip"
-                    android:visibility="invisible"
-                    android:src="@drawable/revelations_add_pic"
-        			android:scaleType="centerCrop"  />
+                    <EditText
+                        android:id="@+id/revelations_post_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/revelations_post_content_edittext_shape"
+                        android:gravity="left|top"
+                        android:hint="上海电视台的记者会尽快处理"
+                        android:inputType="textMultiLine"
+                        android:maxLines="6"
+                        android:minLines="5"
+                        android:paddingBottom="20dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="10dp"
+                        android:singleLine="false" />
 
-                <ImageView
-                    android:id="@+id/revelations_image_four"
-                    android:layout_width="60dip"
-                    android:layout_height="60dip"
-                    android:layout_marginTop="10dip"
-                    android:layout_marginLeft="16dip"
-                    android:layout_marginBottom="10dip"
-                    android:visibility="invisible"
-                    android:src="@drawable/revelations_add_pic"
-        			android:scaleType="centerCrop"  />
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/revelations_post_content_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/revelations_post_content"
+                        android:layout_alignRight="@+id/revelations_post_content"
+                        android:padding="5dp"
+                        android:text="0/300字"
+                        android:textColor="#D6D6D6"
+                        android:textSize="14dp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginTop="8dp"
-                android:text="联系电话(必填)"
-                android:textSize="16dp" />
-			
-            <EditText
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="8dp"
+                    android:text="照片(选填、最多上传4张)"
+                    android:textSize="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/revelations_post_content_edittext_shape"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/revelations_image_one"
+                        android:layout_width="60dip"
+                        android:layout_height="60dip"
+                        android:layout_marginBottom="10dip"
+                        android:layout_marginLeft="16dip"
+                        android:layout_marginTop="10dip"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/revelations_add_pic"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/revelations_image_two"
+                        android:layout_width="60dip"
+                        android:layout_height="60dip"
+                        android:layout_marginBottom="10dip"
+                        android:layout_marginLeft="16dip"
+                        android:layout_marginTop="10dip"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/revelations_add_pic"
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/revelations_image_three"
+                        android:layout_width="60dip"
+                        android:layout_height="60dip"
+                        android:layout_marginBottom="10dip"
+                        android:layout_marginLeft="16dip"
+                        android:layout_marginTop="10dip"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/revelations_add_pic"
+                        android:visibility="invisible" />
+
+                    <ImageView
+                        android:id="@+id/revelations_image_four"
+                        android:layout_width="60dip"
+                        android:layout_height="60dip"
+                        android:layout_marginBottom="10dip"
+                        android:layout_marginLeft="16dip"
+                        android:layout_marginTop="10dip"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/revelations_add_pic"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:layout_marginTop="8dp"
+                    android:text="联系电话(必填)"
+                    android:textSize="16dp" />
+
+                <EditText
                     android:id="@+id/revelations_post_tel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -147,26 +148,27 @@
                     android:background="@drawable/revelations_post_content_edittext_shape"
                     android:gravity="left|top"
                     android:hint="手机或固定电话，让我们找到您"
-                    android:maxLength="11"
-                    android:phoneNumber="true"
                     android:inputType="phone"
+                    android:maxLength="11"
                     android:padding="10dp"
-               		android:textSize="18dp"
-                    android:singleLine="true" />
-            
-            <Button
-                android:id="@+id/revelations_post_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/revelations_post_button_shape"
-                android:textSize="22dp"
-                android:padding="10dp"
-                android:textColor="#FFFFFF"
-                android:text="提交" />
+                    android:phoneNumber="true"
+                    android:singleLine="true"
+                    android:textSize="18dp" />
+
+                <Button
+                    android:id="@+id/revelations_post_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/revelations_post_button_shape"
+                    android:padding="10dp"
+                    android:text="提交"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22dp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-	</com.kankan.kankanews.ui.view.ReboundScrollView>
+    </ScrollView>
+
 </LinearLayout>

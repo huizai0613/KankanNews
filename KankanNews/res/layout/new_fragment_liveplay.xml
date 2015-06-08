@@ -143,34 +143,37 @@
             --> 
             <LinearLayout
                 android:id="@+id/fullscreen_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="60dip"
                 android:layout_alignParentTop="true"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:orientation="horizontal"
+                android:background="#88000000"
                 android:visibility="gone" > 
 
                 <ImageView
                     android:id="@+id/smallscrenn_but"
-                    android:layout_width="60dip"
-                    android:layout_height="60dip"
+                    android:layout_width="50dip"
+                    android:layout_height="50dip"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:paddingLeft="15dip"
-                    android:paddingTop="15dip"
+                    android:paddingTop="10dip"
                     android:src="@drawable/full_screen_back"
                     android:visibility="visible" />
 
                 <com.kankan.kankanews.ui.view.MyTextView
                     android:id="@+id/fullScreenLivePlayTitle"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dip"
+                    android:layout_height="50dip"
                     android:layout_toRightOf="@+id/smallscrenn_but"
                     android:background="#00000000"
-                    android:gravity="center"
+                    android:gravity="left|center"
                     android:paddingLeft="15dip"
-                    android:paddingTop="15dip"
+                    android:paddingTop="10dip"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:textColor="#ffffff"
                     android:textSize="20dp"
                     android:visibility="visible" />
@@ -215,7 +218,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/play"
         android:divider="@null"
-        android:listSelector="#ffffff"
+        android:scrollingCache="false"
         android:scrollbars="none" >
     </com.iss.view.pulltorefresh.PullToRefreshListView>
 

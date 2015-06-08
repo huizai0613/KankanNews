@@ -163,7 +163,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 			}
 			fullscrenn_but.setVisibility(View.GONE);
 			mActivity.bottomBarVisible(View.GONE);
-			updateFullStartBut(liveVideoView.isPlaying());
 			liveStart.setVisibility(View.GONE);
 			attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
 			mActivity.getWindow().setAttributes(attrs);
@@ -173,10 +172,14 @@ public class New_LivePlayFragment extends BaseFragment implements
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			liveVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullstate = true;
+			updateFullStartBut(true);
 			if (!liveVideoView.isPlaying()) {
 				fullScreenLayout.setVisibility(View.VISIBLE);
 				fullLiveStart.setVisibility(View.VISIBLE);
+				orientationHandler.sendEmptyMessageDelayed(
+						HIDE_VIDEO_CONTROLLER, hideTimeOut);
 			}
+			liveVideoView.start();
 			liveVideoView.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,
 					LayoutParams.MATCH_PARENT);
 		} else {
@@ -593,11 +596,19 @@ public class New_LivePlayFragment extends BaseFragment implements
 						.findViewById(R.id.new_item_liveplay_live_but);
 				mViewHolderLive.new_item_liveplay_live_ic = (ImageView) convertView
 						.findViewById(R.id.new_item_liveplay_live_ic);
-				mViewHolderLive.new_item_liveplay_live_bg = (ImageView) convertView
+				mViewHolderLive.new_item_liveplay_live_bg = (LinearLayout) convertView
 						.findViewById(R.id.new_item_liveplay_live_bg);
 				mViewHolderLive.new_item_liveplay_live_status = convertView
 						.findViewById(R.id.new_item_liveplay_live_statue);
 				convertView.setTag(mViewHolderLive);
+				convertView.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						return;
+					}
+				});
 			} else {
 				mViewHolderLive = (ViewHolderLive) convertView.getTag();
 			}
@@ -625,19 +636,54 @@ public class New_LivePlayFragment extends BaseFragment implements
 					// mViewHolderLive.new_item_liveplay_live_bg
 					// .setBackgroundResource(R.drawable.livebg3);
 					// Log.e("getAppBgPic", new_LivePlay.getAppBgPic());
-//					Bitmap bgMap = ImgUtils.getNetImage(new_LivePlay
-//							.getAppBgPic());
-//					mViewHolderLive.new_item_liveplay_live_bg
-//							.setBackground(new BitmapDrawable(getResources(),
-//									bgMap));
-//					mViewHolderLive.new_item_liveplay_content
-//							.setVisibility(View.GONE);
-//					mViewHolderLive.new_item_liveplay_live_bg
-//							.setImageBitmap(null);
-					ImgUtils.imageLoader.displayImage(
-							new_LivePlay.getAppBgPic(),
-							mViewHolderLive.new_item_liveplay_live_bg,
-							ImgUtils.liveImageOptions);
+					// Bitmap bgMap = ImgUtils.getNetImage(new_LivePlay
+					// .getAppBgPic());
+					// mViewHolderLive.new_item_liveplay_live_bg
+					// .setBackground(new BitmapDrawable(getResources(),
+					// bgMap));
+					// mViewHolderLive.new_item_liveplay_content
+					// .setVisibility(View.GONE);
+					// mViewHolderLive.new_item_liveplay_live_bg
+					// .setImageBitmap(null);
+					ImgUtils.imageLoader.loadImage(new_LivePlay.getAppBgPic(),
+							ImgUtils.liveImageOptions,
+							new ImageLoadingListener() {
+
+								@Override
+								public void onLoadingStarted(String imageUri,
+										View view) {
+									// TODO Auto-generated method stub
+
+								}
+
+								@Override
+								public void onLoadingFailed(String imageUri,
+										View view, FailReason failReason) {
+									// TODO Auto-generated method stub
+									mViewHolderLive.new_item_liveplay_live_bg
+									.setBackgroundResource(R.drawable.livebg2);
+								}
+
+								@Override
+								public void onLoadingComplete(String imageUri,
+										View view, Bitmap loadedImage) {
+									// TODO Auto-generated method stub
+									mViewHolderLive.new_item_liveplay_live_bg
+											.setBackground(new BitmapDrawable(
+													getResources(), loadedImage));
+								}
+
+								@Override
+								public void onLoadingCancelled(String imageUri,
+										View view) {
+									// TODO Auto-generated method stub
+
+								}
+							});
+					// ImgUtils.imageLoader.displayImage(
+					// new_LivePlay.getAppBgPic(),
+					// mViewHolderLive.new_item_liveplay_live_bg,
+					// ImgUtils.liveImageOptions);
 					mViewHolderLive.new_item_liveplay_live_status
 							.setVisibility(View.GONE);
 					// }
@@ -675,7 +721,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 					mViewHolderLive.new_item_liveplay_live_tv
 							.setVisibility(View.VISIBLE);
 					mViewHolderLive.new_item_liveplay_live_bg
-							.setImageResource(R.drawable.livebg2);
+							.setBackgroundResource(R.drawable.livebg2);
 					mViewHolderLive.new_item_liveplay_but
 							.setVisibility(View.VISIBLE);
 					mViewHolderLive.new_item_liveplay_live_tv.setText("正在直播");
@@ -791,7 +837,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 				mViewHolderLive.new_item_liveplay_live_tv
 						.setVisibility(View.VISIBLE);
 				mViewHolderLive.new_item_liveplay_live_bg
-						.setImageResource(R.drawable.livebg2);
+						.setBackgroundResource(R.drawable.livebg2);
 				mViewHolderLive.new_item_liveplay_but
 						.setVisibility(View.VISIBLE);
 				mViewHolderLive.new_item_liveplay_live_tv.setText("直播预告");
@@ -951,7 +997,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 		MyTextView new_item_liveplay_but;
 		MyTextView new_item_liveplay_live_but;
 		ImageView new_item_liveplay_live_ic;
-		ImageView new_item_liveplay_live_bg;
+		LinearLayout new_item_liveplay_live_bg;
 		View new_item_liveplay_live_status;
 
 	}
