@@ -27,6 +27,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -279,6 +280,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 				.findViewById(R.id.smallscrenn_but);
 		liveShareBut = (ImageView) inflate.findViewById(R.id.live_share_but);
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
+		
 		initListView(Mode.PULL_DOWN_TO_REFRESH);
 	}
 
@@ -631,6 +633,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 							.setVisibility(View.GONE);
 					mViewHolderLive.new_item_liveplay_live_tv
 							.setVisibility(View.GONE);
+					
 					// mViewHolderLive.new_item_liveplay_live_ic
 					// .setImageResource(R.drawable.xwzh);
 					// mViewHolderLive.new_item_liveplay_live_bg
@@ -653,13 +656,14 @@ public class New_LivePlayFragment extends BaseFragment implements
 								public void onLoadingStarted(String imageUri,
 										View view) {
 									// TODO Auto-generated method stub
-
+									Log.e("onLoadingStarted", "onLoadingStarted");
 								}
 
 								@Override
 								public void onLoadingFailed(String imageUri,
 										View view, FailReason failReason) {
 									// TODO Auto-generated method stub
+									Log.e("onLoadingFailed", "onLoadingFailed");
 									mViewHolderLive.new_item_liveplay_live_bg
 									.setBackgroundResource(R.drawable.livebg2);
 								}
@@ -668,16 +672,23 @@ public class New_LivePlayFragment extends BaseFragment implements
 								public void onLoadingComplete(String imageUri,
 										View view, Bitmap loadedImage) {
 									// TODO Auto-generated method stub
-									mViewHolderLive.new_item_liveplay_live_bg
-											.setBackground(new BitmapDrawable(
-													getResources(), loadedImage));
+									
+									if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+										mViewHolderLive.new_item_liveplay_live_bg
+										.setBackground(new BitmapDrawable(
+												getResources(), loadedImage));
+									} else {
+										mViewHolderLive.new_item_liveplay_live_bg
+										.setBackgroundDrawable(new BitmapDrawable(
+												getResources(), loadedImage));
+									}
 								}
 
 								@Override
 								public void onLoadingCancelled(String imageUri,
 										View view) {
 									// TODO Auto-generated method stub
-
+									Log.e("onLoadingCancelled", "onLoadingCancelled");
 								}
 							});
 					// ImgUtils.imageLoader.displayImage(

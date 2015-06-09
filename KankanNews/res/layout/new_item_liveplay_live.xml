@@ -5,13 +5,13 @@
     android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/new_item_liveplay_live_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-    	android:orientation="vertical"
-        android:background="#080808" >
+        android:background="#f0f0f0"
+        android:orientation="vertical" >
 
         <!--
+        #080808
         <ImageView
             android:id="@+id/new_item_liveplay_live_bg"
             android:layout_width="match_parent"
@@ -24,7 +24,7 @@
         -->
 
         <LinearLayout
-            android:id="@+id/new_item_liveplay_live_view"
+            android:id="@+id/new_item_liveplay_live_bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"

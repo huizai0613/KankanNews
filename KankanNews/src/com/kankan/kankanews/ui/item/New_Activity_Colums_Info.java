@@ -402,7 +402,6 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		public void onResponse(JSONArray jsonArray) {
 
 			if (jsonArray != null && jsonArray.length() > 0) {
-				curPlayNo = 0;
 				ArrayList<New_Colums_Info> mnew_colums_infos = new ArrayList<New_Colums_Info>();
 				for (int i = 0; i < jsonArray.length(); i++) {
 					try {
@@ -416,6 +415,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 					}
 				}
 				if (!isLoadMore) {
+					curPlayNo = 0;
 					new_colums_infos = new ArrayList<New_Colums_Info>();
 					new_colums_infos = mnew_colums_infos;
 					saveDate();
