@@ -565,13 +565,30 @@ public class New_LivePlayFragment extends BaseFragment implements
 		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
-			return mLivePlayList.get(position);
+//			return mLivePlayList.get(position);
+			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
 			// TODO Auto-generated method stub
 			return position;
+		}
+		
+		@Override
+		public int getItemViewType(int position) {
+			// TODO Auto-generated method stub
+			New_LivePlay new_LivePlay = mLivePlayList.get(position);
+			if(new_LivePlay.getAppBgPic() != null
+					&& !new_LivePlay.getAppBgPic().trim().equals(""))
+				return 0;
+			return 1;			
+		}
+
+		@Override
+		public int getViewTypeCount() {
+			// TODO Auto-generated method stub
+			return 2;
 		}
 
 		@Override
@@ -580,7 +597,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 			int itemViewType = getItemViewType(position);
 			final New_LivePlay new_LivePlay = mLivePlayList.get(position);
 
-			if (convertView == null) {
+//			if (convertView == null) {
 				convertView = inflate.inflate(mActivity,
 						R.layout.new_item_liveplay_live, null);
 				mViewHolderLive = new ViewHolderLive();
@@ -611,9 +628,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 						return;
 					}
 				});
-			} else {
-				mViewHolderLive = (ViewHolderLive) convertView.getTag();
-			}
+//			} else {
+//				mViewHolderLive = (ViewHolderLive) convertView.getTag();
+//			}
 
 			mViewHolderLive.new_item_liveplay_live_title.setText(new_LivePlay
 					.getTitle());
@@ -648,8 +665,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 					// .setVisibility(View.GONE);
 					// mViewHolderLive.new_item_liveplay_live_bg
 					// .setImageBitmap(null);
+					
 					ImgUtils.imageLoader.loadImage(new_LivePlay.getAppBgPic(),
-							ImgUtils.liveImageOptions,
+							ImgUtils.homeImageOptions,
 							new ImageLoadingListener() {
 
 								@Override
@@ -657,6 +675,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 										View view) {
 									// TODO Auto-generated method stub
 									Log.e("onLoadingStarted", "onLoadingStarted");
+//									mViewHolderLive.new_item_liveplay_live_bg
+//									.setBackgroundResource(R.drawable.livebg2);
 								}
 
 								@Override
@@ -672,6 +692,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 								public void onLoadingComplete(String imageUri,
 										View view, Bitmap loadedImage) {
 									// TODO Auto-generated method stub
+									Log.e("onLoadingComplete", "onLoadingComplete");
 									
 									if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 										mViewHolderLive.new_item_liveplay_live_bg
@@ -687,8 +708,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 								@Override
 								public void onLoadingCancelled(String imageUri,
 										View view) {
-									// TODO Auto-generated method stub
 									Log.e("onLoadingCancelled", "onLoadingCancelled");
+									// TODO Auto-generated method stub
 								}
 							});
 					// ImgUtils.imageLoader.displayImage(
