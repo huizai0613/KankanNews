@@ -229,7 +229,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-
 		spUtil = this.mActivity.mApplication.getSpUtil();
 		initView();
 		initDate();
@@ -280,7 +279,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 				.findViewById(R.id.smallscrenn_but);
 		liveShareBut = (ImageView) inflate.findViewById(R.id.live_share_but);
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
-		
+
 		initListView(Mode.PULL_DOWN_TO_REFRESH);
 	}
 
@@ -565,7 +564,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
-//			return mLivePlayList.get(position);
+			// return mLivePlayList.get(position);
 			return null;
 		}
 
@@ -574,15 +573,15 @@ public class New_LivePlayFragment extends BaseFragment implements
 			// TODO Auto-generated method stub
 			return position;
 		}
-		
+
 		@Override
 		public int getItemViewType(int position) {
 			// TODO Auto-generated method stub
 			New_LivePlay new_LivePlay = mLivePlayList.get(position);
-			if(new_LivePlay.getAppBgPic() != null
+			if (new_LivePlay.getAppBgPic() != null
 					&& !new_LivePlay.getAppBgPic().trim().equals(""))
 				return 0;
-			return 1;			
+			return 1;
 		}
 
 		@Override
@@ -597,40 +596,43 @@ public class New_LivePlayFragment extends BaseFragment implements
 			int itemViewType = getItemViewType(position);
 			final New_LivePlay new_LivePlay = mLivePlayList.get(position);
 
-//			if (convertView == null) {
-				convertView = inflate.inflate(mActivity,
-						R.layout.new_item_liveplay_live, null);
-				mViewHolderLive = new ViewHolderLive();
-				mViewHolderLive.new_item_liveplay_live_title = (MyTextView) convertView
-						.findViewById(R.id.new_item_liveplay_live_title);
-				mViewHolderLive.new_item_liveplay_but = (MyTextView) convertView
-						.findViewById(R.id.new_item_liveplay_but);
-				mViewHolderLive.new_item_liveplay_live_time = (MyTextView) convertView
-						.findViewById(R.id.new_item_liveplay_live_time);
-				mViewHolderLive.new_item_liveplay_content = (MyTextView) convertView
-						.findViewById(R.id.new_item_liveplay_content);
-				mViewHolderLive.new_item_liveplay_live_tv = (MyTextView) convertView
-						.findViewById(R.id.new_item_liveplay_live_tv);
-				mViewHolderLive.new_item_liveplay_live_but = (MyTextView) convertView
-						.findViewById(R.id.new_item_liveplay_live_but);
-				mViewHolderLive.new_item_liveplay_live_ic = (ImageView) convertView
-						.findViewById(R.id.new_item_liveplay_live_ic);
-				mViewHolderLive.new_item_liveplay_live_bg = (LinearLayout) convertView
-						.findViewById(R.id.new_item_liveplay_live_bg);
-				mViewHolderLive.new_item_liveplay_live_status = convertView
-						.findViewById(R.id.new_item_liveplay_live_statue);
-				convertView.setTag(mViewHolderLive);
-				convertView.setOnClickListener(new OnClickListener() {
-					
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						return;
-					}
-				});
-//			} else {
-//				mViewHolderLive = (ViewHolderLive) convertView.getTag();
-//			}
+			// if (convertView == null) {
+			convertView = inflate.inflate(mActivity,
+					R.layout.new_item_liveplay_live, null);
+			mViewHolderLive = new ViewHolderLive();
+			mViewHolderLive.new_item_liveplay_live_title = (MyTextView) convertView
+					.findViewById(R.id.new_item_liveplay_live_title);
+			mViewHolderLive.new_item_liveplay_but = (MyTextView) convertView
+					.findViewById(R.id.new_item_liveplay_but);
+			mViewHolderLive.new_item_liveplay_live_time = (MyTextView) convertView
+					.findViewById(R.id.new_item_liveplay_live_time);
+			mViewHolderLive.new_item_liveplay_content = (MyTextView) convertView
+					.findViewById(R.id.new_item_liveplay_content);
+			mViewHolderLive.new_item_liveplay_live_tv = (MyTextView) convertView
+					.findViewById(R.id.new_item_liveplay_live_tv);
+			mViewHolderLive.new_item_liveplay_live_but = (MyTextView) convertView
+					.findViewById(R.id.new_item_liveplay_live_but);
+			mViewHolderLive.new_item_liveplay_live_ic = (ImageView) convertView
+					.findViewById(R.id.new_item_liveplay_live_ic);
+			mViewHolderLive.new_item_liveplay_live_bg = (RelativeLayout) convertView
+					.findViewById(R.id.new_item_liveplay_live_bg);
+			mViewHolderLive.new_item_liveplay_live_bg_img = (ImageView) convertView
+					.findViewById(R.id.new_item_liveplay_live_bg_img);
+
+			mViewHolderLive.new_item_liveplay_live_status = convertView
+					.findViewById(R.id.new_item_liveplay_live_statue);
+			convertView.setTag(mViewHolderLive);
+			convertView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					return;
+				}
+			});
+			// } else {
+			// mViewHolderLive = (ViewHolderLive) convertView.getTag();
+			// }
 
 			mViewHolderLive.new_item_liveplay_live_title.setText(new_LivePlay
 					.getTitle());
@@ -650,7 +652,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 							.setVisibility(View.GONE);
 					mViewHolderLive.new_item_liveplay_live_tv
 							.setVisibility(View.GONE);
-					
+
 					// mViewHolderLive.new_item_liveplay_live_ic
 					// .setImageResource(R.drawable.xwzh);
 					// mViewHolderLive.new_item_liveplay_live_bg
@@ -665,57 +667,57 @@ public class New_LivePlayFragment extends BaseFragment implements
 					// .setVisibility(View.GONE);
 					// mViewHolderLive.new_item_liveplay_live_bg
 					// .setImageBitmap(null);
-					
-					ImgUtils.imageLoader.loadImage(new_LivePlay.getAppBgPic(),
-							ImgUtils.homeImageOptions,
-							new ImageLoadingListener() {
-
-								@Override
-								public void onLoadingStarted(String imageUri,
-										View view) {
-									// TODO Auto-generated method stub
-									Log.e("onLoadingStarted", "onLoadingStarted");
-//									mViewHolderLive.new_item_liveplay_live_bg
-//									.setBackgroundResource(R.drawable.livebg2);
-								}
-
-								@Override
-								public void onLoadingFailed(String imageUri,
-										View view, FailReason failReason) {
-									// TODO Auto-generated method stub
-									Log.e("onLoadingFailed", "onLoadingFailed");
-									mViewHolderLive.new_item_liveplay_live_bg
-									.setBackgroundResource(R.drawable.livebg2);
-								}
-
-								@Override
-								public void onLoadingComplete(String imageUri,
-										View view, Bitmap loadedImage) {
-									// TODO Auto-generated method stub
-									Log.e("onLoadingComplete", "onLoadingComplete");
-									
-									if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-										mViewHolderLive.new_item_liveplay_live_bg
-										.setBackground(new BitmapDrawable(
-												getResources(), loadedImage));
-									} else {
-										mViewHolderLive.new_item_liveplay_live_bg
-										.setBackgroundDrawable(new BitmapDrawable(
-												getResources(), loadedImage));
-									}
-								}
-
-								@Override
-								public void onLoadingCancelled(String imageUri,
-										View view) {
-									Log.e("onLoadingCancelled", "onLoadingCancelled");
-									// TODO Auto-generated method stub
-								}
-							});
-					// ImgUtils.imageLoader.displayImage(
-					// new_LivePlay.getAppBgPic(),
-					// mViewHolderLive.new_item_liveplay_live_bg,
-					// ImgUtils.liveImageOptions);
+					// ImgUtils.imageLoader.loadImage(new_LivePlay.getAppBgPic(),
+					// ImgUtils.homeImageOptions,
+					// new ImageLoadingListener() {
+					//
+					// @Override
+					// public void onLoadingStarted(String imageUri,
+					// View view) {
+					// // TODO Auto-generated method stub
+					// Log.e("onLoadingStarted", "onLoadingStarted");
+					// mViewHolderLive.new_item_liveplay_live_bg
+					// .setBackgroundResource(R.drawable.livebg2);
+					// }
+					//
+					// @Override
+					// public void onLoadingFailed(String imageUri,
+					// View view, FailReason failReason) {
+					// // TODO Auto-generated method stub
+					// Log.e("onLoadingFailed", "onLoadingFailed");
+					// mViewHolderLive.new_item_liveplay_live_bg
+					// .setBackgroundResource(R.drawable.livebg2);
+					// }
+					//
+					// @Override
+					// public void onLoadingComplete(String imageUri,
+					// View view, Bitmap loadedImage) {
+					// // TODO Auto-generated method stub
+					// Log.e("onLoadingComplete", "onLoadingComplete");
+					//
+					// if (Build.VERSION.SDK_INT >=
+					// Build.VERSION_CODES.JELLY_BEAN) {
+					// mViewHolderLive.new_item_liveplay_live_bg
+					// .setBackground(new BitmapDrawable(
+					// getResources(), loadedImage));
+					// } else {
+					// mViewHolderLive.new_item_liveplay_live_bg
+					// .setBackgroundDrawable(new BitmapDrawable(
+					// getResources(), loadedImage));
+					// }
+					// }
+					//
+					// @Override
+					// public void onLoadingCancelled(String imageUri,
+					// View view) {
+					// Log.e("onLoadingCancelled", "onLoadingCancelled");
+					// // TODO Auto-generated method stub
+					// }
+					// });
+					ImgUtils.imageLoader.displayImage(
+							new_LivePlay.getAppBgPic(),
+							mViewHolderLive.new_item_liveplay_live_bg_img,
+							ImgUtils.liveImageOptions);
 					mViewHolderLive.new_item_liveplay_live_status
 							.setVisibility(View.GONE);
 					// }
@@ -1029,8 +1031,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 		MyTextView new_item_liveplay_but;
 		MyTextView new_item_liveplay_live_but;
 		ImageView new_item_liveplay_live_ic;
-		LinearLayout new_item_liveplay_live_bg;
+		RelativeLayout new_item_liveplay_live_bg;
 		View new_item_liveplay_live_status;
+		ImageView new_item_liveplay_live_bg_img;
 
 	}
 

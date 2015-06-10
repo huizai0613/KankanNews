@@ -63,10 +63,11 @@ public class ImgUtils {
 				.build();// 构建完成
 		
 		liveImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true)// 设置下载的图片是否缓存在内存中
-				.cacheOnDisc(true)// 设置下载的图片是否缓存在SD卡中
-				 .showImageOnLoading(R.drawable.livebg2) //设置图片在下载期间显示的图片  
-				 .showImageForEmptyUri(R.drawable.livebg2)//设置图片Uri为空或是错误的时候显示的图片  
-				.showImageOnFail(R.drawable.livebg2)  //设置图片加载/解码过程中错误时候显示的图片
+//				.cacheOnDisc(true)// 设置下载的图片是否缓存在SD卡中
+				.cacheOnDisk(true)
+//				 .showImageOnLoading(R.drawable.livebg2) //设置图片在下载期间显示的图片  
+//				 .showImageForEmptyUri(R.drawable.livebg2)//设置图片Uri为空或是错误的时候显示的图片  
+//				.showImageOnFail(R.drawable.livebg2)  //设置图片加载/解码过程中错误时候显示的图片
 				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)// 设置图片以如何的编码方式显示
 				.bitmapConfig(Bitmap.Config.RGB_565)// 设置图片的解码类型//  EXACTLY_STRETCHED
 				.decodingOptions(new BitmapFactory.Options())// 设置图片的解码配置

@@ -30,6 +30,7 @@ import android.widget.RelativeLayout.LayoutParams;
 import com.android.volley.VolleyError;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.kankan.kankanews.base.BaseActivity;
+import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.base.download.MyRequestCallBack;
 import com.kankan.kankanews.bean.MyCollect;
@@ -60,6 +61,7 @@ public class MainActivity extends BaseVideoActivity {
 
 	private ImageView menu_user_img;
 	private MyTextView menu_user_name;
+	private int lastAddFrament = -1;
 
 	public SlidingMenu side_drawer;
 	private LinearLayout main_fragment_content;
@@ -72,7 +74,7 @@ public class MainActivity extends BaseVideoActivity {
 	private ArrayList<MyCollect> myCollects;
 
 	// 定义Fragment数组
-	public ArrayList<Fragment> fragments = new ArrayList<Fragment>();
+	public ArrayList<BaseFragment> fragments = new ArrayList<BaseFragment>();
 	private List<Fragment> addFragments;
 
 	private int[] nomalImg = { R.drawable.tab_one_nomal,
@@ -122,7 +124,8 @@ public class MainActivity extends BaseVideoActivity {
 		// 自动更新提示
 		UmengUpdateAgent.setUpdateOnlyWifi(false);
 		UmengUpdateAgent.update(this);
-		
+		Log.e("mScreenWidth", mScreenWidth + "");
+
 		newsW = (mScreenWidth - PixelUtil.dp2px(15)) / 2;
 		topNewW = mScreenWidth;
 
@@ -139,28 +142,29 @@ public class MainActivity extends BaseVideoActivity {
 			Bundle bun = intent.getExtras();
 			if (bun != null) {
 				if (bun.containsKey("LIVE_ID")) {
-					//直播分享
+					// 直播分享
 					New_LivePlayFragment fragment = (New_LivePlayFragment) fragments
 							.get(1);
 					fragment.setSelectPlay(true);
-					fragment.setSelectPlayID(Integer.parseInt(bun.getString("LIVE_ID")));
+					fragment.setSelectPlayID(Integer.parseInt(bun
+							.getString("LIVE_ID")));
 					Log.e("isSelectPlay", "已播放" + bun.getString("LIVE_ID"));
 					touchTab(tab_two);
 				} else if (bun.containsKey("PUSH_NEWS_ID")) {
-					//推送
+					// 推送
 					New_HomeFragment fragment = (New_HomeFragment) fragments
 							.get(0);
 					fragment.PUSH_NEWS_ID = bun.getString("PUSH_NEWS_ID");
-					touchTab(tab_one);   //正常启动
-				} else{
-					touchTab(tab_one);   //正常启动
+					touchTab(tab_one); // 正常启动
+				} else {
+					touchTab(tab_one); // 正常启动
 				}
 			} else {
-				touchTab(tab_one);   //正常启动
+				touchTab(tab_one); // 正常启动
 			}
 		}
 	}
-	
+
 	long lastTime;
 
 	@Override
@@ -298,13 +302,13 @@ public class MainActivity extends BaseVideoActivity {
 			curTab = 4;
 			break;
 		}
+
 		New_LivePlayFragment fragment = (New_LivePlayFragment) fragments.get(1);
 		if (curTab != 1) {
 			if (fragment.getVideoView() != null) {
 				fragment.getVideoView().stopPlayback();
 			}
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			New_LivePlayFragment liveFragment = (New_LivePlayFragment) fragments.get(1);
 			fragment.isFirst = false;
 		} else {
 			if (fragment.isResumed()) {
@@ -330,6 +334,7 @@ public class MainActivity extends BaseVideoActivity {
 			}
 		}
 		if (addFragments != null) {
+			// boolean contains = fragments.get(curTab).isAdded();
 			boolean contains = addFragments.contains(fragments.get(curTab));
 			if (contains) {
 				beginTransaction.show(fragments.get(curTab));
@@ -337,24 +342,28 @@ public class MainActivity extends BaseVideoActivity {
 					fragments.get(curTab).onResume();
 				}
 			} else {
-				beginTransaction.add(R.id.main_fragment_content,
-						fragments.get(curTab));
+				if (curTab != lastAddFrament) {
+					beginTransaction.add(R.id.main_fragment_content,
+							fragments.get(curTab));
+					lastAddFrament = curTab;
+				}
 				beginTransaction.show(fragments.get(curTab));
 				if (fragments.get(curTab).isResumed()) {
 					fragments.get(curTab).onResume();
 				}
 			}
 		} else {
-			beginTransaction.add(R.id.main_fragment_content,
-					fragments.get(curTab));
+			if (curTab != lastAddFrament) {
+				beginTransaction.add(R.id.main_fragment_content,
+						fragments.get(curTab));
+				lastAddFrament = curTab;
+			}
 			beginTransaction.show(fragments.get(curTab));
 			if (fragments.get(curTab).isResumed()) {
 				fragments.get(curTab).onResume();
 			}
 		}
-
 		beginTransaction.commit();
-
 	}
 
 	private void setTabStyle(RelativeLayout view, int positon, boolean isTouch) {
@@ -377,7 +386,8 @@ public class MainActivity extends BaseVideoActivity {
 		if (curTab == 1) {
 			if (((New_LivePlayFragment) fragments.get(1)).isFullstate()) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-				((New_LivePlayFragment) fragments.get(1)).orientationHandler.sendEmptyMessageDelayed(0, 1000);
+				((New_LivePlayFragment) fragments.get(1)).orientationHandler
+						.sendEmptyMessageDelayed(0, 1000);
 				return;
 			}
 		}
@@ -483,6 +493,23 @@ public class MainActivity extends BaseVideoActivity {
 		New_LivePlayFragment fragment = (New_LivePlayFragment) fragments.get(1);
 		fragment.isFirst = false;
 	}
-	
-	
+
+	public void closeClick() {
+		// TODO Auto-generated method stub
+		tab_one.setClickable(false);
+		tab_two.setClickable(false);
+		tab_three.setClickable(false);
+		tab_four.setClickable(false);
+		tab_five.setClickable(false);
+	}
+
+	public void openClick() {
+		// TODO Auto-generated method stub
+		tab_one.setClickable(true);
+		tab_two.setClickable(true);
+		tab_three.setClickable(true);
+		tab_four.setClickable(true);
+		tab_five.setClickable(true);
+	}
+
 }

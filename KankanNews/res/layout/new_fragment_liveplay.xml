@@ -218,6 +218,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/play"
         android:divider="@null"
+        android:cacheColorHint="#00000000"
         android:scrollingCache="false"
         android:scrollbars="none" >
     </com.iss.view.pulltorefresh.PullToRefreshListView>

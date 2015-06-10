@@ -23,16 +23,24 @@
             android:scaleType="fitXY" />
         -->
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/new_item_liveplay_live_bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:orientation="vertical"
             android:paddingLeft="10dip"
             android:paddingTop="10dip" >
 
+            <ImageView
+                android:id="@+id/new_item_liveplay_live_bg_img"
+                android:layout_width="match_parent"
+                android:layout_height="90dip"
+                android:paddingLeft="-10dip"
+                android:paddingTop="-10dip"
+                android:scaleType="fitXY" />
+
             <LinearLayout
+                android:id="@+id/new_item_liveplay_view_1"
                 android:layout_width="match_parent"
                 android:layout_height="30dip"
                 android:gravity="center_vertical"
@@ -64,8 +72,10 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/new_item_liveplay_view_2"
                 android:layout_width="match_parent"
                 android:layout_height="30dip"
+                android:layout_marginTop="30dip"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="10dip" >
@@ -83,6 +93,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="30dip"
+                android:layout_marginTop="60dip"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingLeft="10dip" >
@@ -120,7 +131,7 @@
                         android:background="@drawable/playlive" />
                 </RelativeLayout>
             </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
