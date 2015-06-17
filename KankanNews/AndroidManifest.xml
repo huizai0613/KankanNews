@@ -133,6 +133,11 @@
             android:exported="false"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name="com.kankan.kankanews.search.SearchMainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" >
+        </activity>
 
         <receiver
             android:name="com.kankan.kankanews.receiver.AlarmReceiver"

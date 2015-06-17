@@ -1,11 +1,13 @@
 package com.kankan.kankanews.net;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -70,4 +72,15 @@ public class CustomRequest extends Request<JSONObject> {
 		listener.onResponse(response);
 	}
 
+	@Override
+	public Map<String, String> getHeaders() throws AuthFailureError {
+		// TODO Auto-generated method stub
+		HashMap<String, String> headers = new HashMap<String, String>();  
+        headers.put("m", "1");
+//        headers.put("Accept", "text/json");
+//        headers.put("Content-Type", "text/json"); 
+        // MyLog.d(TAG, "headers=" + headers);  
+        return headers; 
+	}
+	
 }

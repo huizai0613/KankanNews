@@ -1,6 +1,9 @@
 package com.kankan.kankanews.net;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +13,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
@@ -96,18 +100,18 @@ public class ItnetUtils {
 				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
-	
+
 	/**
 	 * 获取新闻详细 数据
 	 */
 	public void getNewsContentDataPush(String news_id,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
-				AndroidConfig.New_NETHOST + AndroidConfig.NewContentPush + news_id, null,
-				reponseListener, errorListener);
+				AndroidConfig.New_NETHOST + AndroidConfig.NewContentPush
+						+ news_id, null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
-	
+
 	/**
 	 * 获取评论 新闻内容页
 	 */
@@ -284,7 +288,7 @@ public class ItnetUtils {
 	 */
 	public void getNewNewsClickData(String midtype,
 			Listener<JSONArray> reponseListener, ErrorListener errorListener) {
-		
+
 		mCustomRequestArray = new CustomRequestArray(Request.Method.POST,
 				AndroidConfig.New_NewsClick + midtype, null, reponseListener,
 				errorListener);
@@ -292,13 +296,11 @@ public class ItnetUtils {
 	}
 
 	/**
-	 * 添加新闻点击量  mid
-	 * id
-	 * tjid
+	 * 添加新闻点击量 mid id tjid
 	 */
 	public void addNewNewsClickData(String id) {
 		mCustomRequestArray = new CustomRequestArray(Request.Method.POST,
-				AndroidConfig.New_NewsAddClick + id,null,null,null);
+				AndroidConfig.New_NewsAddClick + id, null, null, null);
 		mRequestQueue.add(mCustomRequestArray);
 	}
 
@@ -336,21 +338,35 @@ public class ItnetUtils {
 				AndroidConfig.New_Colums, null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequestArray);
 	}
-	
+
+	/**
+	 * 获取栏目列表带二级菜单
+	 */
+	public void getNewColumsSecondData(Listener<JSONArray> reponseListener,
+			ErrorListener errorListener) {
+		mCustomRequestArray = new CustomRequestArray(Request.Method.POST,
+				// AndroidConfig.New_NETHOST +
+				AndroidConfig.New_Colums_Second_Level, null, reponseListener,
+				errorListener);
+		mRequestQueue.add(mCustomRequestArray);
+	}
+
 	/**
 	 * 提交报料内容
 	 */
-	public void postRevelationContent(String tel, String content, String imageUrls, Listener<JSONObject> reponseListener,
+	public void postRevelationContent(String tel, String content,
+			String imageUrls, Listener<JSONObject> reponseListener,
 			ErrorListener errorListener) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("phonenum", tel);
 		params.put("newstext", content);
 		params.put("imagegroup", imageUrls);
 		mCustomRequest = new CustomRequest(Request.Method.POST,
-				AndroidConfig.REVELATIONS_CONTENT_POST, params, reponseListener, errorListener);
+				AndroidConfig.REVELATIONS_CONTENT_POST, params,
+				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
-	
+
 	/**
 	 * 获取栏目节目列表
 	 * 
@@ -401,5 +417,35 @@ public class ItnetUtils {
 				AndroidConfig.New_Recommend, null, reponseListener,
 				errorListener);
 		mRequestQueue.add(mCustomRequestArray);
+	}
+
+	/**
+	 * 获得热门推荐接口
+	 */
+	public void getAdert(Map<String, String> params,
+			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.ADVERT_GET, params, reponseListener,
+				errorListener);
+
+		mRequestQueue.add(mCustomRequest);
+	}
+
+	/**
+	 * 获取搜索条目
+	 */
+	public void getSearchData(String searchContent, int pageNum,
+			Listener<JSONArray> reponseListener, ErrorListener errorListener) {
+		try {
+			searchContent = URLEncoder.encode(searchContent, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		mCustomRequestArray = new CustomRequestArray(Request.Method.GET,
+				AndroidConfig.SEARCH_GET + "?w=" + searchContent + "&p="
+						+ pageNum, null, reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequestArray);
+
 	}
 }

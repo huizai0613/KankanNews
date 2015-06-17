@@ -70,9 +70,6 @@ public class MainActivity extends BaseVideoActivity {
 
 	public FragmentManager fragmentManager;
 
-	// 获取我的收藏的数组
-	private ArrayList<MyCollect> myCollects;
-
 	// 定义Fragment数组
 	public ArrayList<BaseFragment> fragments = new ArrayList<BaseFragment>();
 	private List<Fragment> addFragments;

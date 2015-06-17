@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dip"
+        android:background="@android:color/white"
+        android:focusable="true"
+        android:focusableInTouchMode="true" >
+
+        <ImageView
+            android:id="@+id/search_icon"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="16dip"
+            android:layout_marginTop="16dip"
+            android:focusable="true"
+            android:src="@drawable/search_icon" />
+
+        <EditText
+            android:id="@+id/search_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="5dip"
+            android:layout_marginLeft="46dip"
+            android:layout_marginRight="55dip"
+            android:layout_marginTop="5dip"
+            android:background="@drawable/no_border_edittext_shape"
+            android:gravity="left|center_vertical"
+            android:hint="搜索您感兴趣的视频"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"
+            android:textSize="18dip" />
+
+        <ImageView
+            android:id="@+id/search_close_but"
+            android:layout_width="52dip"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:paddingBottom="16dip"
+            android:paddingRight="16dip"
+            android:paddingTop="16dip"
+            android:src="@drawable/search_icon" />
+
+        <TextView
+            android:id="@+id/search_cancel_but"
+            android:layout_width="52dip"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:paddingBottom="10dip"
+            android:paddingRight="6dip"
+            android:paddingTop="10dip"
+            android:text="取消"
+            android:textSize="20dip"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/search_but"
+            android:layout_width="52dip"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:paddingBottom="10dip"
+            android:paddingRight="6dip"
+            android:paddingTop="10dip"
+            android:text="搜索"
+            android:textColor="#FF0000"
+            android:textSize="20dip"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ededed" >
+
+        <com.iss.view.pulltorefresh.PullToRefreshListView
+            android:id="@+id/search_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#BDBDBD"
+            android:divider="@null"
+            android:scrollbars="none" >
+        </com.iss.view.pulltorefresh.PullToRefreshListView>
+
+        <ListView
+            android:id="@+id/search_his_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#BDBDBD"
+            android:scrollbars="none"
+            android:visibility="gone" >
+        </ListView>
+    </RelativeLayout>
+
+</LinearLayout>

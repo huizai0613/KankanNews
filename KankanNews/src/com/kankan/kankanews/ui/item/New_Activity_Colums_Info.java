@@ -53,6 +53,7 @@ import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.bean.New_Colums_Info;
+import com.kankan.kankanews.bean.New_Colums_Second;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.dialog.TishiMsgHint;
@@ -87,6 +88,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	private MyAdapter myAdapter;
 
 	private New_Colums colums;
+	private New_Colums_Second secondColums;
 	private String time = "";
 
 	private TextView nodata;
@@ -204,6 +206,13 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		mOperationPercent = (ImageView) findViewById(R.id.operation_percent);
 
 		colums = (New_Colums) getIntent().getSerializableExtra("colums");
+		secondColums = (New_Colums_Second) getIntent().getSerializableExtra("secondColum");
+		if(colums == null){
+			colums = new New_Colums();
+			colums.setClassId(secondColums.getId());
+			colums.setTitle(secondColums.getName());
+		}
+			
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 	}
 
@@ -237,7 +246,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		columsVideoController.setPlayerControl(columsVideoView);
 		columsVideoController.setActivity_Content(this);
 		columsVideoView.setIsNeedRelease(false);
-		columsTitle.setText(colums.getProgramName());
+		columsTitle.setText(colums.getTitle());
 
 		if (CommonUtils.isNetworkAvailable(this)) {
 			refreshNetDate();
@@ -288,8 +297,8 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		try {
 			if (dbUtils.tableIsExist(New_Colums_Info.class)) {
 				new_colums_infos = dbUtils.findAll(Selector.from(
-						New_Colums_Info.class).where("myType", "=",
-						colums.getProgramName()));
+						New_Colums_Info.class).where("classId", "=",
+						colums.getClassId()));
 				if (new_colums_infos != null && new_colums_infos.size() > 0) {
 					myAdapter.notifyDataSetChanged();
 				}
@@ -303,14 +312,15 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	protected void refreshNetDate() {
 		isLoadMore = false;
 		noMoreNews = false;
-		instance.getNewColumsInfoData(colums.getId(), time, "",
+		Log.e("getNewColumsInfoData", colums.getClassId());
+		instance.getNewColumsInfoData(colums.getClassId(), time, "",
 				getColumsInfoListener, getColumsInfoErrorListener);
 	}
 
 	protected void loadMoreNetDate() {
 		isLoadMore = true;
 		if (new_colums_infos != null && new_colums_infos.size() > 0) {
-			instance.getNewColumsInfoData(colums.getId(), time,
+			instance.getNewColumsInfoData(colums.getClassId(), time,
 					new_colums_infos.get(new_colums_infos.size() - 1)
 							.getNewstime(), getColumsInfoListener,
 					getColumsInfoErrorListener);
@@ -408,7 +418,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 						JSONObject jsonObject = jsonArray.optJSONObject(i);
 						New_Colums_Info colums_info = new New_Colums_Info();
 						colums_info = colums_info.parseJSON(jsonObject);
-						colums_info.setMyType(colums.getProgramName());
+						colums_info.setClassId(colums.getClassId());
 						mnew_colums_infos.add(colums_info);
 					} catch (NetRequestException e) {
 						e.printStackTrace();
@@ -465,7 +475,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		try {
 			if (dbUtils.tableIsExist(New_Colums_Info.class)) {
 				dbUtils.delete(New_Colums_Info.class,
-						WhereBuilder.b("myType", "=", colums.getProgramName()));
+						WhereBuilder.b("classId", "=", colums.getClassId()));
 			}
 			// dbUtils.deleteAll(New_Colums_Info.class);
 			dbUtils.saveAll(new_colums_infos);

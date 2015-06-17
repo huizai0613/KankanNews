@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,7 @@ import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_HomeCate;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
+import com.kankan.kankanews.search.SearchMainActivity;
 import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
@@ -44,6 +47,7 @@ public class New_HomeFragment extends BaseFragment implements
 	private HorizontalScrollView mColumnHorizontalScrollView;
 	private LinearLayout mRadioGroup_content;
 	private ImageView shade_left;
+	private ImageView searchBut;
 	// private ImageView shade_right;
 
 	private ViewPager mViewpager;
@@ -53,7 +57,6 @@ public class New_HomeFragment extends BaseFragment implements
 
 	private ArrayList<New_HomeCate> homeCates;
 
-	private RelativeLayout rl_column;
 	private View main_bg;
 
 	private int currentFragmentIndex;
@@ -69,6 +72,7 @@ public class New_HomeFragment extends BaseFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
 		instance = ItnetUtils.getInstance(mActivity);
 		inflate = inflater.inflate(R.layout.new_fragment_home, null);
 		mColumnHorizontalScrollView = (HorizontalScrollView) inflate
@@ -86,21 +90,15 @@ public class New_HomeFragment extends BaseFragment implements
 				android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
 				android.widget.LinearLayout.LayoutParams.MATCH_PARENT);
 
-		rl_column = (RelativeLayout) inflate.findViewById(R.id.rl_column);
 		main_bg = inflate.findViewById(R.id.main_bg);
-		main_bg.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
-				refreshNetDate();
-			}
-		});
-
+		searchBut = (ImageView) inflate.findViewById(R.id.home_search_but);
 		mViewpager = (ViewPager) inflate.findViewById(R.id.viewpager);
 		mViewpager.setOffscreenPageLimit(1);
 
-		if (CommonUtils.isNetworkAvailable(mActivity)) {
+		setListener();
 
+		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			refreshNetDate();
 		} else {
 			initLocaDate = initLocalDate();
@@ -120,7 +118,30 @@ public class New_HomeFragment extends BaseFragment implements
 		return res;
 	}
 
+	private void setListener() {
+		// TODO Auto-generated method stub
+		searchBut.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				New_HomeFragment.this.startActivity(new Intent(
+						New_HomeFragment.this.mActivity,
+						SearchMainActivity.class));
+				New_HomeFragment.this.mActivity.overridePendingTransition(
+						R.anim.in_from_top, R.anim.alpha_op );//R.anim.out_to_top
+			}
+		});
+		main_bg.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				refreshNetDate();
+			}
+		});
+	}
+
 	public void showData() {
+		Log.e("PixelUtil.getScale()", PixelUtil.getScale() + "");
 		mRadioGroup_content.removeAllViews();
 		if (homeCates != null) {
 			final int count = homeCates.size();
@@ -241,7 +262,7 @@ public class New_HomeFragment extends BaseFragment implements
 				}
 
 			};
-			 
+
 			mViewpager.setDrawingCacheEnabled(false);
 			mViewpager.setOnPageChangeListener(this);
 			mViewpager.setAdapter(adapter);
@@ -411,6 +432,7 @@ public class New_HomeFragment extends BaseFragment implements
 
 	@Override
 	protected void onSuccessArray(JSONArray jsonObject) {
+
 		if (jsonObject != null) {
 			main_bg.setVisibility(View.GONE);
 			int length = jsonObject.length();

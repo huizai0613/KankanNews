@@ -38,18 +38,20 @@ public class SharePreferenceUtil {
 	private String SHARED_KEY_LASRTIME = "shared_key_lasttime";
 	private String SHARED_KEY_CONTENT = "shared_key_content";
 	private String SHARED_KEY_FULL = "shared_key_full";
-	
+
 	private String SHARED_KEY_FRIST = "shared_key_frist";
-	//应用版本号
+	// 应用版本号
 	private String SHARE_KEY_VERSION = "shared_key_version";
-	//用户信息
+	// 用户信息
 	private String SHARED_KEY_USER_ID = "shared_key_user_id";
 	private String SHARED_KEY_USER_NAME = "shared_key_user_name";
 	private String SHARED_KEY_USER_POST = "shared_key_user_post";
-	//是否用手机流量看/下载视频    默认为否 
+	// 是否用手机流量看/下载视频 默认为否
 	private String SHARED_KEY_FLOW = "shared_key_flow";
-	
-	//应用版本号
+
+	private String SEARCH_HIS_LIST = "search_his_list";
+
+	// 应用版本号
 	public void setVersion(String version) {
 		editor.putString(SHARE_KEY_VERSION, version);
 		editor.commit();
@@ -58,25 +60,27 @@ public class SharePreferenceUtil {
 	public String getVersion() {
 		return mSharedPreferences.getString(SHARE_KEY_VERSION, "");
 	}
-	
+
 	// 是否第一次进入程序
 	public boolean isFristComing() {
 		return mSharedPreferences.getBoolean(SHARED_KEY_FRIST, true);
 	}
+
 	public void setFristComing(boolean isFrist) {
 		editor.putBoolean(SHARED_KEY_FRIST, isFrist);
 		editor.commit();
 	}
 
 	// 是否用流量看视频
-		public boolean isFlow() {
-			return mSharedPreferences.getBoolean(SHARED_KEY_FLOW, false);
-		}
-		public void setFlow(boolean isFlow) {
-			editor.putBoolean(SHARED_KEY_FLOW, isFlow);
-			editor.commit();
-		}
-	
+	public boolean isFlow() {
+		return mSharedPreferences.getBoolean(SHARED_KEY_FLOW, false);
+	}
+
+	public void setFlow(boolean isFlow) {
+		editor.putBoolean(SHARED_KEY_FLOW, isFlow);
+		editor.commit();
+	}
+
 	// 用户id
 	public void setUserId(String userid) {
 		editor.putString(SHARED_KEY_USER_ID, userid);
@@ -86,7 +90,7 @@ public class SharePreferenceUtil {
 	public String getUserId() {
 		return mSharedPreferences.getString(SHARED_KEY_USER_ID, "");
 	}
-	
+
 	// 用户name
 	public void setUserName(String usernmae) {
 		editor.putString(SHARED_KEY_USER_NAME, usernmae);
@@ -96,7 +100,7 @@ public class SharePreferenceUtil {
 	public String getUserName() {
 		return mSharedPreferences.getString(SHARED_KEY_USER_NAME, "");
 	}
-	
+
 	// 用户post
 	public void setUserPost(String userpost) {
 		editor.putString(SHARED_KEY_USER_POST, userpost);
@@ -236,4 +240,14 @@ public class SharePreferenceUtil {
 		return mSharedPreferences.getBoolean(SHARED_KEY_FULL, true);
 	}
 
+	/** 搜索历史 */
+	public void saveSearchHisList(String hisString) {
+		editor.putString(SEARCH_HIS_LIST, hisString);
+		editor.commit();
+	}
+
+	/** 搜索历史*/
+	public String getSearchHisList() {
+		return mSharedPreferences.getString(SEARCH_HIS_LIST, "");
+	}
 }

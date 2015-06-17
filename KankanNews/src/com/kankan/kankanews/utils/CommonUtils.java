@@ -80,7 +80,17 @@ public class CommonUtils {
 		ToastUtils.ErrorToastNoNet(context);
 		return false;
 	}
-
+	
+	/** 检查是否有网络  */
+	public static boolean isNetworkAvailableNoToast(Context context) {
+		NetworkInfo info = getNetworkInfo(context);
+		if (info != null) {
+			boolean available = info.isAvailable();
+			return available;
+		}
+		return false;
+	}
+	
 	/** 检查是否是WIFI */
 	public static boolean isWifi(Context context) {
 		NetworkInfo info = getNetworkInfo(context);

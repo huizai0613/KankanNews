@@ -130,7 +130,7 @@
     <!-- 字体大小 -->
     <dimen name="base_action_bar_title_size">20dip</dimen>
     <dimen name="textsize_1">12dip</dimen>
-    <dimen name="textsize_2">10dip</dimen>
+    <dimen name="textsize_2">9dip</dimen>
     <dimen name="textsize_3">7dip</dimen>
     <dimen name="textsize_4">5dip</dimen>
     

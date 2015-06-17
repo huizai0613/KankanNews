@@ -48,7 +48,7 @@ public abstract class BaseFragment extends Fragment {
 	private MyTextView com_title_bar_content;
 	private ImageView com_title_bar_right_bt;
 	private MyTextView com_title_bar_right_tv;
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -303,5 +303,4 @@ public abstract class BaseFragment extends Fragment {
 		}
 		super.onPause();
 	}
-
 }

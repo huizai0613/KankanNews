@@ -25,9 +25,11 @@ import android.widget.Toast;
 
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.download.MyRequestCallBack;
+import com.kankan.kankanews.bean.Advert;
 import com.kankan.kankanews.bean.Content_News;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.bean.New_Colums_Info;
+import com.kankan.kankanews.bean.New_Colums_Second;
 import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_News_Home;
@@ -131,7 +133,7 @@ public class CrashApplication extends Application {
 		tf = Typeface.createFromAsset(mgr, "nomal.TTF");
 		
 		
-		dbUtils = DbUtils.create(this, "kankan", 3, new DbUpgradeListener() {
+		dbUtils = DbUtils.create(this, "kankan", 5, new DbUpgradeListener() {
 			@Override
 			public void onUpgrade(DbUtils arg0, int arg1, int arg2) {
 				// TODO Auto-generated method stub
@@ -141,15 +143,21 @@ public class CrashApplication extends Application {
 					arg0.dropTable(New_News.class);
 					arg0.dropTable(New_Recommend.class);
 					arg0.dropTable(New_LivePlay.class);
+					arg0.dropTable(New_Colums.class);
+					arg0.dropTable(New_Colums_Second.class);
 					arg0.dropTable(New_Colums_Info.class);
 					arg0.dropTable(Content_News.class);
+					arg0.dropTable(Advert.class);
 					arg0.createTableIfNotExist(New_News_Home.class);
 					arg0.createTableIfNotExist(New_News_Top.class);
 					arg0.createTableIfNotExist(New_News.class);
 					arg0.createTableIfNotExist(New_Recommend.class);
 					arg0.createTableIfNotExist(New_LivePlay.class);
+					arg0.createTableIfNotExist(New_Colums.class);
+					arg0.createTableIfNotExist(New_Colums_Second.class);
 					arg0.createTableIfNotExist(New_Colums_Info.class);
 					arg0.createTableIfNotExist(Content_News.class);
+					arg0.createTableIfNotExist(Advert.class);
 				} catch (DbException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

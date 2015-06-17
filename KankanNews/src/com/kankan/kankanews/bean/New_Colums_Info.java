@@ -25,7 +25,7 @@ CanSharedObject {
 	private String intro;
 	private String episode;
 
-	private String myType;// 用来区分是什么栏目上的新闻
+	private String classId;// 用来区分是什么栏目上的新闻
 
 	@Override
 	public JSONObject toJSON() {
@@ -117,12 +117,12 @@ CanSharedObject {
 		this.date = date;
 	}
 
-	public String getMyType() {
-		return myType;
+	public String getClassId() {
+		return classId;
 	}
 
-	public void setMyType(String myType) {
-		this.myType = myType;
+	public void setClassId(String classId) {
+		this.classId = classId;
 	}
 
 	public String getSharedPic() {

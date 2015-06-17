@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +25,7 @@ import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.item.New_Activity_Colums_Info;
+import com.kankan.kankanews.ui.view.SecondColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.Options;
@@ -75,17 +77,17 @@ public class New_ColumsFragment extends BaseFragment {
 		});
 
 		instance = ItnetUtils.getInstance(mActivity);
-		
+
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			initNetData();
-		}else{
+		} else {
 			initLocalDate();
 		}
 		return inflate;
 	}
 
 	private void initNetData() {
-		instance.getNewColumsData(mListenerArray, mErrorListener);
+		instance.getNewColumsSecondData(mListenerArray, mErrorListener);
 	}
 
 	@Override
@@ -167,7 +169,7 @@ public class New_ColumsFragment extends BaseFragment {
 			}
 
 			saveLocalDate();
-//			adapter = new ImageAdapter();
+			// adapter = new ImageAdapter();
 			listview.setAdapter(adapter);
 		}
 
@@ -209,7 +211,7 @@ public class New_ColumsFragment extends BaseFragment {
 		public int getItemViewType(int position) {
 
 			if (lists.get(position).size() == 1
-					&& lists.get(position).get(0).getProgramType().equals("1")) {
+					&& lists.get(position).get(0).getType().equals("1")) {
 				return 0;
 			} else {
 				return 1;
@@ -280,156 +282,57 @@ public class New_ColumsFragment extends BaseFragment {
 			}
 
 			if (itemViewType == 0) {
-				final New_Colums N_C = lists.get(position).get(0);
-				// CommonUtils.zoomImage(imageLoader, N_C.getProgramPic(),
-				// viewOne.img, mActivity);
-				N_C.setProgramPic(CommonUtils.doWebpUrl(N_C.getProgramPic()));
-				ImgUtils.imageLoader.displayImage(N_C.getProgramPic(), viewOne.img,
-						Options.getSmallImageOptions(false));
-				// imageLoader.loadImage(N_C.getProgramPic(), new ImageSize(
-				// (mActivity.topNewW - PixelUtil.dp2px(10 * 2)),
-				// ((mActivity.topNewW - PixelUtil.dp2px(10 * 2)) / 4)),
-				// Options.getSmallImageOptions(false),
-				// new ImageLoadingListener() {
-				//
-				// @Override
-				// public void onLoadingStarted(String arg0, View arg1) {
-				// // TODO Auto-generated method stub
-				//
-				// }
-				//
-				// @Override
-				// public void onLoadingFailed(String arg0, View arg1,
-				// FailReason arg2) {
-				// // TODO Auto-generated method stub
-				//
-				// }
-				//
-				// @Override
-				// public void onLoadingComplete(String arg0,
-				// View arg1, Bitmap arg2) {
-				// viewOne.img.setImageBitmap(arg2);
-				// }
-				//
-				// @Override
-				// public void onLoadingCancelled(String arg0,
-				// View arg1) {
-				//
-				// }
-				// });
+				final New_Colums colum = lists.get(position).get(0);
+				colum.setTitlePic(CommonUtils.doWebpUrl(colum.getTitlePic()));
+				ImgUtils.imageLoader.displayImage(colum.getTitlePic(),
+						viewOne.img, Options.getSmallImageOptions(false));
 
 				viewOne.img.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-						startAnimActivityByBean(New_Activity_Colums_Info.class,
-								"colums", N_C);
+						columsClick(colum);
+						// startAnimActivityByBean(New_Activity_Colums_Info.class,
+						// "colums", colum);
 					}
 				});
 
 			} else if (itemViewType == 1) {
-				final ArrayList<New_Colums> N_C_S = lists.get(position);
+				final ArrayList<New_Colums> colums = lists.get(position);
 				// CommonUtils.zoomImage(imageLoader,
 				// N_C_S.get(0).getProgramPic(), viewTwo.v1, mActivity);
 
-				N_C_S.get(0).setProgramPic(CommonUtils.doWebpUrl(N_C_S.get(0).getProgramPic()));
-				ImgUtils.imageLoader.displayImage(N_C_S.get(0).getProgramPic(),
+				colums.get(0).setTitlePic(
+						CommonUtils.doWebpUrl(colums.get(0).getTitlePic()));
+				ImgUtils.imageLoader.displayImage(colums.get(0).getTitlePic(),
 						viewTwo.v1, Options.getSmallImageOptions(false));
-				// imageLoader.loadImage(
-				// N_C_S.get(0).getProgramPic(),
-				// new ImageSize((int) ((mActivity.topNewW - PixelUtil
-				// .dp2px(10 * 3)) / 2),
-				// (int) ((mActivity.topNewW - PixelUtil
-				// .dp2px(10 * 2)) / 4)), Options
-				// .getSmallImageOptions(false),
-				// new ImageLoadingListener() {
-				//
-				// @Override
-				// public void onLoadingStarted(String arg0, View arg1) {
-				// // TODO Auto-generated method stub
-				//
-				// }
-				//
-				// @Override
-				// public void onLoadingFailed(String arg0, View arg1,
-				// FailReason arg2) {
-				// // TODO Auto-generated method stub
-				//
-				// }
-				//
-				// @Override
-				// public void onLoadingComplete(String arg0,
-				// View arg1, Bitmap arg2) {
-				// viewTwo.v1.setImageBitmap(arg2);
-				// }
-				//
-				// @Override
-				// public void onLoadingCancelled(String arg0,
-				// View arg1) {
-				//
-				// }
-				// });
 
 				viewTwo.v1.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View arg0) {
 						// TODO Auto-generated method stub
-						startAnimActivityByBean(New_Activity_Colums_Info.class,
-								"colums", N_C_S.get(0));
+						columsClick(colums.get(0));
+						// startAnimActivityByBean(New_Activity_Colums_Info.class,
+						// "colums", colums.get(0));
 					}
 				});
-				if (N_C_S.size() == 2) {
-					// CommonUtils.zoomImage(imageLoader, N_C_S.get(1)
-					// .getProgramPic(), viewTwo.v2, mActivity);
+				if (colums.size() == 2) {
 
-					N_C_S.get(1).setProgramPic(CommonUtils.doWebpUrl(N_C_S.get(1).getProgramPic()));
-					ImgUtils.imageLoader.displayImage(N_C_S.get(1).getProgramPic(),
-							viewTwo.v2, Options.getSmallImageOptions(false));
-
-					// imageLoader.loadImage(
-					// N_C_S.get(1).getProgramPic(),
-					// new ImageSize((int) ((mActivity.topNewW - PixelUtil
-					// .dp2px(10 * 3)) / 2),
-					// (int) ((mActivity.topNewW - PixelUtil
-					// .dp2px(10 * 2)) / 4)), Options
-					// .getSmallImageOptions(false),
-					// new ImageLoadingListener() {
-					//
-					// @Override
-					// public void onLoadingStarted(String arg0,
-					// View arg1) {
-					// // TODO Auto-generated method stub
-					//
-					// }
-					//
-					// @Override
-					// public void onLoadingFailed(String arg0,
-					// View arg1, FailReason arg2) {
-					// // TODO Auto-generated method stub
-					//
-					// }
-					//
-					// @Override
-					// public void onLoadingComplete(String arg0,
-					// View arg1, Bitmap arg2) {
-					// viewTwo.v2.setImageBitmap(arg2);
-					// }
-					//
-					// @Override
-					// public void onLoadingCancelled(String arg0,
-					// View arg1) {
-					//
-					// }
-					// });
+					colums.get(1).setTitlePic(
+							CommonUtils.doWebpUrl(colums.get(1).getTitlePic()));
+					ImgUtils.imageLoader.displayImage(colums.get(1)
+							.getTitlePic(), viewTwo.v2, Options
+							.getSmallImageOptions(false));
 
 					viewTwo.v2.setVisibility(View.VISIBLE);
 					viewTwo.v2.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View arg0) {
 							// TODO Auto-generated method stub
-							startAnimActivityByBean(
-									New_Activity_Colums_Info.class, "colums",
-									N_C_S.get(1));
+							columsClick(colums.get(1));
+							// startAnimActivityByBean(
+							// New_Activity_Colums_Info.class, "colums",
+							// colums.get(1));
 						}
 					});
 				} else {
@@ -461,19 +364,19 @@ public class New_ColumsFragment extends BaseFragment {
 		for (int i = 0; i < nc.size(); i++) {
 			New_Colums new_Colums = new New_Colums();
 			new_Colums = nc.get(i);
-			if (new_Colums.getProgramType().equals("0") && isFirst) {
+			if (new_Colums.getType().equals("0") && isFirst) {
 				ncp = new ArrayList<New_Colums>();
 				isFirst = false;
 				ncp.add(new_Colums);
 				if (i >= nc.size() - 1) {
 					listss.add(ncp);
 				}
-			} else if (new_Colums.getProgramType().equals("0") && !isFirst) {
+			} else if (new_Colums.getType().equals("0") && !isFirst) {
 				isFirst = true;
 				ncp.add(new_Colums);
 				listss.add(ncp);
 				ncp = new ArrayList<New_Colums>();
-			} else if (new_Colums.getProgramType().equals("1")) {
+			} else if (new_Colums.getType().equals("1")) {
 				if (!isFirst) {
 					listss.add(ncp);
 					ncp = new ArrayList<New_Colums>();
@@ -489,8 +392,20 @@ public class New_ColumsFragment extends BaseFragment {
 	}
 
 	public void refresh() {
-		if(listview != null)
+		if (listview != null)
 			listview.setRefreshing(false);
 	}
 
+	public void columsClick(New_Colums colum) {
+		if (colum.getSecondNum() == 1) {
+			startAnimActivityByBean(New_Activity_Colums_Info.class, "colums",
+					colum);
+		} else {
+			SecondColumsBoard board = new SecondColumsBoard(this.mActivity,
+					colum);
+//			board.setWidth(this.mActivity.mScreenWidth * 95 / 100);
+			board.setAnimationStyle(R.style.popwin_anim_style);
+			board.showAtLocation(inflate, Gravity.BOTTOM, 0, 0);
+		}
+	}
 }

@@ -1,8 +1,9 @@
 package com.squareup.timessquare;
 
-import android.util.Log;
+import com.kankanews.kankanxinwen.BuildConfig;
 
-import com.android.volley.BuildConfig;
+import android.util.Log;
+ 
 
 /** Log utility class to handle the log tag and DEBUG-only logging. */
 final class Logr {

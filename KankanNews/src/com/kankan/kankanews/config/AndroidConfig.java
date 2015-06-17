@@ -62,7 +62,7 @@ public class AndroidConfig {
 	public static final int Comment_resultCode = 2002;
 
 	// 设置回调
-//	public static final int Set_requestCode = 3001;
+	// public static final int Set_requestCode = 3001;
 	public static final int Set_resultCode = 3002;
 
 	// 选择图片回调
@@ -139,8 +139,11 @@ public class AndroidConfig {
 	// 栏目列表
 	public static final String New_Colums = "http://api.app.kankanews.com/index.php/kankan/v5/channel/timeline";
 
+	// 栏目列表_二级菜单
+	public static final String New_Colums_Second_Level = "http://api.app.kankanews.com/index.php/kankan/v5/channel/tvcolumn";
+
 	// 栏目节目列表
-	public static final String New_Colums_Info = "/v5/channel/info_timeline/";
+	public static final String New_Colums_Info = "/v5/channel/tvinfolist/";
 
 	// 栏目时间回调
 	public static final int Colums_Time_requestCode = 10001;
@@ -158,9 +161,16 @@ public class AndroidConfig {
 	public static final String REVELATIONS_IMAGE_POST = "http://api.app.kankanews.com/kankan/v5/newsbreak/pic/1";
 
 	public static final String RESPONSE_CODE_OK = "200";
-	
+
 	// 报料信息上传接口
 	public static final String REVELATIONS_CONTENT_POST = "http://api.app.kankanews.com/kankan/v5/newsbreak/message/1";
-	
+
 	public static final long MAX_SEL_IMG_LENGTH = 20971520;
+
+	// 广告获取接口
+	public static final String ADVERT_GET = "http://afp.csbew.com/s.htm";
+	
+	public static final int MAX_SEARCH_HIS_NUM = 6;
+	// 内容搜索接口
+	public static final String SEARCH_GET = "http://api.app.kankanews.com/kankan/v5/search";
 }
