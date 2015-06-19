@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dip"
+    android:layout_height="48dip"
     android:background="@drawable/new_item_bg_selector" >
 
     <com.kankan.kankanews.ui.view.MyTextView
         android:id="@+id/search_his_text"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="48dp"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:lineSpacingExtra="4dp"
-        android:paddingRight="5dp"
+        android:paddingLeft="20dp"
         android:singleLine="true"
         android:text="俄罗斯总统会见朝鲜最高领导人特使"
+        android:textColor="#000000"
         android:textSize="20dp" />
 
     <ImageView
@@ -21,14 +22,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:src="@drawable/icon_canle" />
+        android:paddingBottom="10dip"
+        android:paddingRight="6dip"
+        android:paddingTop="10dip"
+        android:src="@drawable/search_clear" />
 
     <com.kankan.kankanews.ui.view.MyTextView
         android:id="@+id/search_his_clean"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:text="取消"
-        android:textSize="36dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#D9D9D9"
+        android:gravity="center"
+        android:paddingBottom="10dip"
+        android:paddingTop="10dip"
+        android:text="清除搜索历史"
+        android:textColor="#FF0000"
+        android:textSize="20dp"
         android:visibility="gone" />
 
 </RelativeLayout>

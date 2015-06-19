@@ -11,7 +11,9 @@ import org.json.JSONObject;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.Selection;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -58,6 +60,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	private ImageView searchIcon;
 	private TextView cancelBut;
 	private ImageView closeBut;
+	private ImageView clearBut;
 	private TextView searchBut;
 	private PullToRefreshListView searchListView;
 	private ListView searchHisListView;
@@ -76,6 +79,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	private boolean isLoadMore = false;
 
 	private List<String> searchHisList = new LinkedList<String>();
+
+	private String curSearchText;
 
 	private class SeachListViewHolder {
 		ImageView titlePic;
@@ -136,6 +141,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		searchContent = (EditText) this.findViewById(R.id.search_content);
 		cancelBut = (TextView) this.findViewById(R.id.search_cancel_but);
 		closeBut = (ImageView) this.findViewById(R.id.search_close_but);
+		clearBut = (ImageView) this.findViewById(R.id.search_clear_but);
 		searchIcon = (ImageView) this.findViewById(R.id.search_icon);
 		searchBut = (TextView) this.findViewById(R.id.search_but);
 		searchListView = (PullToRefreshListView) this
@@ -163,6 +169,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		searchBut.setOnClickListener(this);
 		cancelBut.setOnClickListener(this);
 		closeBut.setOnClickListener(this);
+		clearBut.setOnClickListener(this);
 
 		searchListView
 				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
@@ -215,9 +222,11 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 				if (len == 0) {
 					searchBut.setVisibility(View.GONE);
 					cancelBut.setVisibility(View.VISIBLE);
+					clearBut.setVisibility(View.GONE);
 				} else {
 					searchBut.setVisibility(View.VISIBLE);
 					cancelBut.setVisibility(View.GONE);
+					clearBut.setVisibility(View.VISIBLE);
 				}
 
 				if (len > maxSearchNum) {
@@ -288,6 +297,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		instance.getSearchData(searchText, curPageNum, mListenerArray,
 				mErrorListener);
 		addHis(searchText);
+		curSearchText = searchText;
 		hideHisList();
 	}
 
@@ -299,9 +309,11 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		case R.id.search_cancel_but:
 			cancelSearchContentFocus();
 			break;
-
 		case R.id.search_but:
 			goSearch();
+			break;
+		case R.id.search_clear_but:
+			searchContent.setText("");
 			break;
 		default:
 			break;
@@ -364,7 +376,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			news.setTitlePic(CommonUtils.doWebpUrl(news.getTitlePic()));
 			ImgUtils.imageLoader.displayImage(news.getTitlePic(),
 					holder.titlePic, ImgUtils.homeImageOptions);
-			holder.title.setText(news.getTitle());
+
+			holder.title.setText(dealHighLightText(news.getTitle()));
 			// holder.newstime.setText(news.getClickNum());
 
 			// SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
@@ -393,7 +406,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			if(searchHisList.size() == 0)
+			if (searchHisList.size() == 0)
 				return 0;
 			return searchHisList.size() + 1;
 		}
@@ -453,18 +466,36 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			} else {
 				hisHolder = (SeachHisListViewHolder) convertView.getTag();
 			}
+			hisHolder.removeHis.setTag(position);
+			hisHolder.removeHis.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					int position = (Integer) v.getTag();
+					removeHis(searchHisList.size() - position - 1);
+				}
+			});
 
 			convertView.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					int position = (Integer) v.findViewById(
+							R.id.search_his_remove).getTag();
+					if (itemType == 0) {
+						searchContent.setText(searchHisList.get(searchHisList
+								.size() - position - 1));
+						goSearch();
+					}
 					if (itemType == 1)
 						clearHisList();
 				}
 			});
 			if (itemType == 0)
-				hisHolder.hisText.setText(searchHisList.get(position));
+				hisHolder.hisText.setText(searchHisList.get(searchHisList
+						.size() - position - 1));
 			return convertView;
 		}
 	}
@@ -486,7 +517,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		if (!isLoadMore)
 			searchList.clear();
 		else
-			curPageNum = curPageNum++;
+			curPageNum = ++curPageNum;
 		for (int i = 0; i < jsonArray.length(); i++) {
 			New_News_Search news = new New_News_Search();
 			try {
@@ -508,6 +539,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 				|| searchBut.getVisibility() == View.VISIBLE) {
 			searchContent.setText("");
 			cancelSearchContentFocus();
+			hideHisList();
 			return;
 		}
 		this.finish();
@@ -541,6 +573,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 
 	private void addHis(String searchText) {
 		// TODO Auto-generated method stub
+		if (searchHisList.contains(searchText))
+			searchHisList.remove(searchText);
 		if (searchHisList.size() == AndroidConfig.MAX_SEARCH_HIS_NUM)
 			searchHisList.remove(0);
 		searchHisList.add(searchText);
@@ -565,8 +599,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		String[] bufArray = buf.split("\\|\\|");
 		searchHisList.clear();
 		for (String ele : bufArray) {
-			if(ele !=null && !ele.equals(""))
-			searchHisList.add(ele);
+			if (ele != null && !ele.equals(""))
+				searchHisList.add(ele);
 		}
 	}
 
@@ -583,5 +617,31 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		searchHisList.clear();
 		saveHisList();
 		searchHisAdapt.notifyDataSetChanged();
+	}
+
+	private void removeHis(int position) {
+		searchHisList.remove(position);
+		saveHisList();
+		searchHisAdapt.notifyDataSetChanged();
+	}
+
+	private CharSequence dealHighLightText(String srcSearchText) {
+		if (srcSearchText != null && srcSearchText.contains(curSearchText)) {
+
+			int index = srcSearchText.indexOf(curSearchText);
+
+			int len = curSearchText.length();
+
+			Spanned temp = Html.fromHtml(srcSearchText.substring(0, index)
+					+ "<font color=#FF0000>"
+					+ srcSearchText.substring(index, index + len)
+					+ "</font>"
+					+ srcSearchText.substring(index + len,
+							srcSearchText.length()));
+
+			return temp;
+		} else {
+			return srcSearchText;
+		}
 	}
 }

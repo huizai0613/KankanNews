@@ -747,9 +747,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					newHolder.title = (MyTextView) convertView
 							.findViewById(R.id.home_news_title);
-					newHolder.title.setTextSize(New_HomeItemFragment.this
-							.getResources().getDimension(
-									textNomalSize[PixelUtil.getScale()]));
+//					newHolder.title.setTextSize(New_HomeItemFragment.this
+//							.getResources().getDimension(
+//									textNomalSize[PixelUtil.getScale()]));
 					newHolder.newstime_sign = (ImageView) convertView
 							.findViewById(R.id.home_news_newstime_sign);
 					newHolder.newstime = (MyTextView) convertView

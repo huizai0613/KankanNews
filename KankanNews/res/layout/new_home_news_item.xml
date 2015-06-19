@@ -63,7 +63,7 @@
                     android:paddingRight="2dp"
                     android:text="俄罗斯总统会见朝鲜最高领导人特使"
                 	android:textStyle="bold"
-                    android:textSize="16dp" />
+                    android:textSize="@dimen/home_news_title_text_size" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
