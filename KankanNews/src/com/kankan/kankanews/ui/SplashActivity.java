@@ -91,8 +91,8 @@ public class SplashActivity extends BaseActivity {
 		instance = ItnetUtils.getInstance(this);
 		// Log.e("UmengRegistrar", UmengRegistrar.getRegistrationId(this));
 
-//		NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
-//				.withLocationServiceEnabled(true).start(this);
+		// NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
+		// .withLocationServiceEnabled(true).start(this);
 		mApplication.setStart(true);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -168,10 +168,11 @@ public class SplashActivity extends BaseActivity {
 	private void goHome() {
 		Intent intent = getIntent();
 		String scheme = intent.getScheme();
-		if ("kkl".equals(scheme)) {
+		if ("kkl".equalsIgnoreCase(scheme)) {
 			Uri uridata = this.getIntent().getData();
 			String liveId = uridata.getQueryParameter("LIVE_ID");
-			intent.putExtra("LIVE_ID", liveId);
+			if (liveId != null && !liveId.trim().equals(""))
+				intent.putExtra("LIVE_ID", liveId);
 		}
 		intent.setClass(SplashActivity.this, MainActivity.class);
 		SplashActivity.this.startActivity(intent);

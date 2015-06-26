@@ -608,19 +608,30 @@ public class New_LivePlayFragment extends BaseFragment implements
 					.findViewById(R.id.new_item_liveplay_live_time);
 			mViewHolderLive.new_item_liveplay_content = (MyTextView) convertView
 					.findViewById(R.id.new_item_liveplay_content);
-			mViewHolderLive.new_item_liveplay_live_tv = (MyTextView) convertView
-					.findViewById(R.id.new_item_liveplay_live_tv);
+			// mViewHolderLive.new_item_liveplay_live_tv = (MyTextView)
+			// convertView
+			// .findViewById(R.id.new_item_liveplay_live_tv);
 			mViewHolderLive.new_item_liveplay_live_but = (MyTextView) convertView
 					.findViewById(R.id.new_item_liveplay_live_but);
-			mViewHolderLive.new_item_liveplay_live_ic = (ImageView) convertView
-					.findViewById(R.id.new_item_liveplay_live_ic);
+			// mViewHolderLive.new_item_liveplay_live_ic = (ImageView)
+			// convertView
+			// .findViewById(R.id.new_item_liveplay_live_ic);
 			mViewHolderLive.new_item_liveplay_live_bg = (RelativeLayout) convertView
 					.findViewById(R.id.new_item_liveplay_live_bg);
 			mViewHolderLive.new_item_liveplay_live_bg_img = (ImageView) convertView
 					.findViewById(R.id.new_item_liveplay_live_bg_img);
 
-			mViewHolderLive.new_item_liveplay_live_status = convertView
-					.findViewById(R.id.new_item_liveplay_live_statue);
+			// ViewGroup.LayoutParams linearParams = (ViewGroup.LayoutParams)
+			// mViewHolderLive.new_item_liveplay_live_bg_img
+			// .getLayoutParams();
+			//
+			//
+			// linearParams.height =
+			// New_LivePlayFragment.this.mActivity.mScreenWidth / 3;
+			// mViewHolderLive.new_item_liveplay_live_bg_img.setLayoutParams(linearParams);
+
+			// mViewHolderLive.new_item_liveplay_live_status = convertView
+			// .findViewById(R.id.new_item_liveplay_live_statue);
 			convertView.setTag(mViewHolderLive);
 			convertView.setOnClickListener(new OnClickListener() {
 
@@ -640,18 +651,18 @@ public class New_LivePlayFragment extends BaseFragment implements
 					.getTime());
 			mViewHolderLive.new_item_liveplay_live_but.setText("");
 			if (!new_LivePlay.getType().equals("直播预告")) {
-				mViewHolderLive.new_item_liveplay_live_status
-						.setBackgroundResource(R.drawable.ic_live);
+				// mViewHolderLive.new_item_liveplay_live_status
+				// .setBackgroundResource(R.drawable.ic_live);
 				mViewHolderLive.new_item_liveplay_live_but
 						.setBackgroundResource(R.drawable.playlive);
 				if (new_LivePlay.getAppBgPic() != null
 						&& !new_LivePlay.getAppBgPic().trim().equals("")) {
 					mViewHolderLive.new_item_liveplay_but
 							.setVisibility(View.GONE);
-					mViewHolderLive.new_item_liveplay_live_ic
-							.setVisibility(View.GONE);
-					mViewHolderLive.new_item_liveplay_live_tv
-							.setVisibility(View.GONE);
+					// mViewHolderLive.new_item_liveplay_live_ic
+					// .setVisibility(View.GONE);
+					// mViewHolderLive.new_item_liveplay_live_tv
+					// .setVisibility(View.GONE);
 
 					// mViewHolderLive.new_item_liveplay_live_ic
 					// .setImageResource(R.drawable.xwzh);
@@ -718,8 +729,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 							new_LivePlay.getAppBgPic(),
 							mViewHolderLive.new_item_liveplay_live_bg_img,
 							ImgUtils.liveImageOptions);
-					mViewHolderLive.new_item_liveplay_live_status
-							.setVisibility(View.GONE);
+					// mViewHolderLive.new_item_liveplay_live_status
+					// .setVisibility(View.GONE);
 					// }
 					// if (new_LivePlay.getCatename().equals("新闻综合")) {
 					// mViewHolderLive.new_item_liveplay_but
@@ -748,17 +759,19 @@ public class New_LivePlayFragment extends BaseFragment implements
 					// mViewHolderLive.new_item_liveplay_content
 					// .setVisibility(View.GONE);
 				} else {
-					mViewHolderLive.new_item_liveplay_live_status
-							.setVisibility(View.VISIBLE);
-					mViewHolderLive.new_item_liveplay_live_ic
-							.setVisibility(View.GONE);
-					mViewHolderLive.new_item_liveplay_live_tv
-							.setVisibility(View.VISIBLE);
-					mViewHolderLive.new_item_liveplay_live_bg
-							.setBackgroundResource(R.drawable.livebg2);
+					// mViewHolderLive.new_item_liveplay_live_status
+					// .setVisibility(View.VISIBLE);
+					// mViewHolderLive.new_item_liveplay_live_ic
+					// .setVisibility(View.GONE);
+					// mViewHolderLive.new_item_liveplay_live_tv
+					// .setVisibility(View.VISIBLE);
+					// mViewHolderLive.new_item_liveplay_live_bg
+					// .setBackgroundResource(R.drawable.kklive_live_bg);
+					mViewHolderLive.new_item_liveplay_live_bg_img
+							.setImageResource(R.drawable.kklive_live_bg);
 					mViewHolderLive.new_item_liveplay_but
 							.setVisibility(View.VISIBLE);
-					mViewHolderLive.new_item_liveplay_live_tv.setText("正在直播");
+					// mViewHolderLive.new_item_liveplay_live_tv.setText("正在直播");
 					if (curPosition == position) {
 						if (isShow) {
 							mViewHolderLive.new_item_liveplay_content
@@ -850,11 +863,11 @@ public class New_LivePlayFragment extends BaseFragment implements
 							}
 						});
 			} else {
-				mViewHolderLive.new_item_liveplay_live_status
-						.setVisibility(View.VISIBLE);
+				// mViewHolderLive.new_item_liveplay_live_status
+				// .setVisibility(View.VISIBLE);
 
-				mViewHolderLive.new_item_liveplay_live_status
-						.setBackgroundResource(R.drawable.ic_next);
+				// mViewHolderLive.new_item_liveplay_live_status
+				// .setBackgroundResource(R.drawable.ic_next);
 
 				if (new_LivePlay.isOrder()) {
 					mViewHolderLive.new_item_liveplay_live_but
@@ -866,15 +879,18 @@ public class New_LivePlayFragment extends BaseFragment implements
 					mViewHolderLive.new_item_liveplay_live_but.setText("");
 				}
 
-				mViewHolderLive.new_item_liveplay_live_ic
-						.setVisibility(View.GONE);
-				mViewHolderLive.new_item_liveplay_live_tv
-						.setVisibility(View.VISIBLE);
-				mViewHolderLive.new_item_liveplay_live_bg
-						.setBackgroundResource(R.drawable.livebg2);
+				// mViewHolderLive.new_item_liveplay_live_ic
+				// .setVisibility(View.GONE);
+				// mViewHolderLive.new_item_liveplay_live_tv
+				// .setVisibility(View.VISIBLE);
+//				mViewHolderLive.new_item_liveplay_live_bg
+//						.setBackgroundResource(R.drawable.yugao_live_bg);
+
+				mViewHolderLive.new_item_liveplay_live_bg_img
+						.setImageResource(R.drawable.yugao_live_bg);
 				mViewHolderLive.new_item_liveplay_but
 						.setVisibility(View.VISIBLE);
-				mViewHolderLive.new_item_liveplay_live_tv.setText("直播预告");
+				// mViewHolderLive.new_item_liveplay_live_tv.setText("直播预告");
 
 				if (curPosition == position) {
 					if (isShow) {
@@ -1027,12 +1043,12 @@ public class New_LivePlayFragment extends BaseFragment implements
 		MyTextView new_item_liveplay_content;
 		MyTextView new_item_liveplay_live_title;
 		MyTextView new_item_liveplay_live_time;
-		MyTextView new_item_liveplay_live_tv;
+		// MyTextView new_item_liveplay_live_tv;
 		MyTextView new_item_liveplay_but;
 		MyTextView new_item_liveplay_live_but;
-		ImageView new_item_liveplay_live_ic;
+		// ImageView new_item_liveplay_live_ic;
 		RelativeLayout new_item_liveplay_live_bg;
-		View new_item_liveplay_live_status;
+		// View new_item_liveplay_live_status;
 		ImageView new_item_liveplay_live_bg_img;
 
 	}

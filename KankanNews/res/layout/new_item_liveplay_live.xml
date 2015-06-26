@@ -37,8 +37,8 @@
                 android:layout_height="90dip"
                 android:paddingLeft="-10dip"
                 android:paddingTop="-10dip"
-                android:scaleType="fitXY" />
-
+                android:scaleType="centerCrop" />
+<!-- 
             <LinearLayout
                 android:id="@+id/new_item_liveplay_view_1"
                 android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="15dip"
                     android:src="@drawable/xwzh" />
-
+				
                 <com.kankan.kankanews.ui.view.MyTextView
                     android:id="@+id/new_item_liveplay_live_tv"
                     android:layout_width="wrap_content"
@@ -69,7 +69,7 @@
                     android:textSize="16dip"
                     android:textStyle="bold"
                     android:visibility="gone" />
-            </LinearLayout>
+            </LinearLayout>  -->
 
             <LinearLayout
                 android:id="@+id/new_item_liveplay_view_2"

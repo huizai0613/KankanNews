@@ -170,7 +170,7 @@ public class AndroidConfig {
 	// 广告获取接口
 	public static final String ADVERT_GET = "http://afp.csbew.com/s.htm";
 	
-	public static final int MAX_SEARCH_HIS_NUM = 6;
+	public static final int MAX_SEARCH_HIS_NUM = 5;
 	// 内容搜索接口
 	public static final String SEARCH_GET = "http://api.app.kankanews.com/kankan/v5/search";
 }

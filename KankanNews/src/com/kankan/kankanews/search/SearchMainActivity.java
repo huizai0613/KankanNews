@@ -53,7 +53,6 @@ import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 
 public class SearchMainActivity extends BaseActivity implements OnClickListener {
-	private int searchContentHintKey = 10086;
 
 	private ItnetUtils instance;
 	private EditText searchContent;
@@ -77,10 +76,13 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	private SeachHisListViewHolder hisHolder;
 
 	private boolean isLoadMore = false;
+	private boolean isLoadEnd = false;
 
 	private List<String> searchHisList = new LinkedList<String>();
 
 	private String curSearchText;
+
+	private View loadingLayout;
 
 	private class SeachListViewHolder {
 		ImageView titlePic;
@@ -148,6 +150,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 				.findViewById(R.id.search_list_view);
 		searchHisListView = (ListView) this
 				.findViewById(R.id.search_his_list_view);
+		loadingLayout = this.findViewById(R.id.loading_layout);
 	}
 
 	@Override
@@ -196,7 +199,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 					showHisList();
 					if (searchText == null || searchText.equals("")) {
 						searchContent.setHint("");
-						closeBut.setVisibility(View.GONE);
+						searchIcon.setVisibility(View.GONE);
 						cancelBut.setVisibility(View.VISIBLE);
 					}
 				} else {
@@ -204,7 +207,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 							|| searchText.equals("")) {
 						searchContent
 								.setHint(searchContent.getTag().toString());
-						closeBut.setVisibility(View.VISIBLE);
+						searchIcon.setVisibility(View.VISIBLE);
 						cancelBut.setVisibility(View.GONE);
 					}
 				}
@@ -281,6 +284,11 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 
 	private void loadMoreNetDate() {
 		// TODO Auto-generated method stub
+//		if(isLoadEnd){
+////			searchListView.onRefreshComplete();
+//			onSuccessArray(new JSONArray());
+//			return;
+//		}
 		isLoadMore = true;
 		String searchText = searchContent.getText().toString();
 		instance.getSearchData(searchText, curPageNum + 1, mListenerArray,
@@ -289,16 +297,17 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 
 	private void goSearch() {
 		// TODO Auto-generated method stub
-		ToastUtils.Infotoast(SearchMainActivity.this, "搜索");
 		String searchText = searchContent.getText().toString();
 		cancelSearchContentFocus();
 		curPageNum = 1;
 		isLoadMore = false;
+		isLoadEnd = false;
 		instance.getSearchData(searchText, curPageNum, mListenerArray,
 				mErrorListener);
 		addHis(searchText);
 		curSearchText = searchText;
 		hideHisList();
+		loadingLayout.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -314,6 +323,12 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			break;
 		case R.id.search_clear_but:
 			searchContent.setText("");
+			if (!searchContent.hasFocus())
+				searchContent.requestFocus();
+			showHisList();
+			break;
+		case R.id.search_close_but:
+			finish();
 			break;
 		default:
 			break;
@@ -332,12 +347,30 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
+			if (isLoadEnd)
+				return searchList.size() + 1;
 			return searchList.size();
+		}
+
+		@Override
+		public int getViewTypeCount() {
+			// TODO Auto-generated method stub
+			return 2;
+		}
+
+		@Override
+		public int getItemViewType(int position) {
+			// TODO Auto-generated method stub
+			if (position == searchList.size())
+				return 1;
+			return 0;
 		}
 
 		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
+			if (isLoadEnd)
+				return "已加载全部";
 			return searchList.get(position);
 		}
 
@@ -350,53 +383,80 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
+			int itemViewType = getItemViewType(position);
 			if (convertView == null) {
-				convertView = inflate.inflate(R.layout.search_news_item, null);
-				holder = new SeachListViewHolder();
-				holder.titlePic = (ImageView) convertView
-						.findViewById(R.id.home_news_titlepic);
+				if (itemViewType == 0) {
+					convertView = inflate.inflate(R.layout.search_news_item,
+							null);
+					holder = new SeachListViewHolder();
+					holder.titlePic = (ImageView) convertView
+							.findViewById(R.id.home_news_titlepic);
 
-				holder.title = (MyTextView) convertView
-						.findViewById(R.id.home_news_title);
-				// holder.title.setTextSize(New_HomeItemFragment.this
-				// .getResources().getDimension(
-				// textNomalSize[PixelUtil.getScale()]));
-				holder.newsTime = (MyTextView) convertView
-						.findViewById(R.id.search_news_newstime);
-				holder.click = (MyTextView) convertView
-						.findViewById(R.id.search_news_click_num);
-				// holder.home_news_play = (ImageView) convertView
-				// .findViewById(R.id.home_news_play);
-				convertView.setTag(holder);
+					holder.title = (MyTextView) convertView
+							.findViewById(R.id.home_news_title);
+					// holder.title.setTextSize(New_HomeItemFragment.this
+					// .getResources().getDimension(
+					// textNomalSize[PixelUtil.getScale()]));
+					holder.newsTime = (MyTextView) convertView
+							.findViewById(R.id.search_news_newstime);
+					holder.click = (MyTextView) convertView
+							.findViewById(R.id.search_news_click_num);
+					// holder.home_news_play = (ImageView) convertView
+					// .findViewById(R.id.home_news_play);
+					convertView.setTag(holder);
+				} else if (itemViewType == 1) {
+					convertView = inflate.inflate(
+							R.layout.search_his_list_item, null);
+					hisHolder = new SeachHisListViewHolder();
+					hisHolder.removeHis = (ImageView) convertView
+							.findViewById(R.id.search_his_remove);
+					hisHolder.hisText = (MyTextView) convertView
+							.findViewById(R.id.search_his_text);
+					hisHolder.cleanHis = (MyTextView) convertView
+							.findViewById(R.id.search_his_clean);
+					hisHolder.removeHis.setVisibility(View.GONE);
+					hisHolder.hisText.setVisibility(View.GONE);
+					hisHolder.cleanHis.setVisibility(View.VISIBLE);
+					hisHolder.cleanHis.setText("已加载全部");
+					convertView.setTag(hisHolder);
+				}
 			} else {
-				holder = (SeachListViewHolder) convertView.getTag();
+				if (itemViewType == 0) {
+					holder = (SeachListViewHolder) convertView.getTag();
+				} else if (itemViewType == 1) {
+					hisHolder = (SeachHisListViewHolder) convertView.getTag();
+				}
 			}
 
-			final New_News_Search news = searchList.get(position);
-			news.setTitlePic(CommonUtils.doWebpUrl(news.getTitlePic()));
-			ImgUtils.imageLoader.displayImage(news.getTitlePic(),
-					holder.titlePic, ImgUtils.homeImageOptions);
+			if (itemViewType == 0) {
+				final New_News_Search news = searchList.get(position);
+				news.setTitlePic(CommonUtils.doWebpUrl(news.getTitlePic()));
+				ImgUtils.imageLoader.displayImage(news.getTitlePic(),
+						holder.titlePic, ImgUtils.homeImageOptions);
 
-			holder.title.setText(dealHighLightText(news.getTitle()));
-			// holder.newstime.setText(news.getClickNum());
+				holder.title.setText(dealHighLightText(news.getTitle()));
+				// holder.newstime.setText(news.getClickNum());
 
-			// SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日");
-			// long newsTime = Long.parseLong(news.getNewsTime()) * 1000;
-			// holder.newsTime.setText(format.format(new Date(newsTime)));
-			holder.click.setText(news.getClickNum() + "次");
-			holder.newsTime.setText(dealNewsTime(news.getNewsTime()));
-			convertView.setOnClickListener(new OnClickListener() {
+				// SimpleDateFormat format = new
+				// SimpleDateFormat("yyyy年MM月dd日");
+				// long newsTime = Long.parseLong(news.getNewsTime()) * 1000;
+				// holder.newsTime.setText(format.format(new Date(newsTime)));
+				holder.click.setText(news.getClickNum() + "次");
+				holder.newsTime.setText(dealNewsTime(news.getNewsTime()));
+				convertView.setOnClickListener(new OnClickListener() {
 
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-					SearchMainActivity.this.startAnimActivityByParameter(
-							New_Activity_Content_Video.class, news.getMId(),
-							news.getType(), news.getTitleUrl(),
-							news.getClickNum() + "", news.getTitle(),
-							news.getTitlePic(), news.getSharedPic());
-				}
-			});
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						SearchMainActivity.this.startAnimActivityByParameter(
+								New_Activity_Content_Video.class,
+								news.getMId(), news.getType(),
+								news.getTitleUrl(), news.getClickNum() + "",
+								news.getTitle(), news.getTitlePic(),
+								news.getSharedPic());
+					}
+				});
+			}
 			return convertView;
 		}
 	}
@@ -514,10 +574,14 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 
 	protected void onSuccessArray(JSONArray jsonArray) {
 		// TODO Auto-generated method stub seachList
+
+		loadingLayout.setVisibility(View.GONE);
 		if (!isLoadMore)
 			searchList.clear();
 		else
 			curPageNum = ++curPageNum;
+		if (jsonArray.length() == 0)
+			isLoadEnd = true;
 		for (int i = 0; i < jsonArray.length(); i++) {
 			New_News_Search news = new New_News_Search();
 			try {
@@ -538,12 +602,16 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		if (searchContent.hasFocus()
 				|| searchBut.getVisibility() == View.VISIBLE) {
 			searchContent.setText("");
+			if (!searchContent.hasFocus())
+				searchContent.requestFocus();
 			cancelSearchContentFocus();
 			hideHisList();
+			searchList.clear();
+			searchAdapt.notifyDataSetChanged();
 			return;
 		}
 		this.finish();
-		this.overridePendingTransition(R.anim.alpha, R.anim.out_to_top);
+		this.overridePendingTransition(R.anim.alpha, R.anim.out_to_right);
 	}
 
 	@Override

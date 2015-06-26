@@ -247,7 +247,7 @@ public class ImgUtils {
 		if (fileLength <= 524288 && fileLength > 262144)
 			scale = 80;
 		if (fileLength <= 262144)
-			scale = 100;
+			scale = 60;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
         
         if (filePath.endsWith(".jpg") || filePath.endsWith(".JPG"))

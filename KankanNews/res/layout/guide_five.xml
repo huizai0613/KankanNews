@@ -11,7 +11,14 @@
         android:background="@drawable/guide_five_k"
         android:focusable="true"
         android:scaleType="centerCrop" />
-
+    <View 
+        android:id="@+id/guide_start"
+        android:layout_width="match_parent"
+        android:layout_height="160dip"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"/>
+<!-- 
     <ImageView
         android:id="@+id/guide_start"
         android:layout_width="wrap_content"
@@ -20,5 +27,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="80dp"
         android:src="@drawable/guide_start_btn" />
-
+ -->
 </RelativeLayout>

@@ -74,7 +74,7 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 		views.add(inflater.inflate(R.layout.guide_one, null));
 		views.add(inflater.inflate(R.layout.guide_two, null));
 		views.add(inflater.inflate(R.layout.guide_three, null));
-		views.add(inflater.inflate(R.layout.guide_four, null));
+//		views.add(inflater.inflate(R.layout.guide_four, null));
 		views.add(inflater.inflate(R.layout.guide_five, null));
 
 		// 初始化Adapter
@@ -172,7 +172,7 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 		public Object instantiateItem(View arg0, int arg1) {
 			((ViewPager) arg0).addView(views.get(arg1), 0);
 			if (arg1 == views.size() - 1) {
-				ImageView mStartWeiboImageButton = (ImageView) arg0
+				View mStartWeiboImageButton = arg0
 						.findViewById(R.id.guide_start);
 				mStartWeiboImageButton
 						.setOnClickListener(new OnClickListener() {

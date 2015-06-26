@@ -128,7 +128,7 @@ public class New_HomeFragment extends BaseFragment implements
 						New_HomeFragment.this.mActivity,
 						SearchMainActivity.class));
 				New_HomeFragment.this.mActivity.overridePendingTransition(
-						R.anim.in_from_top, R.anim.alpha_op );//R.anim.out_to_top
+						R.anim.in_from_right, R.anim.alpha_op );//R.anim.out_to_top
 			}
 		});
 		main_bg.setOnClickListener(new OnClickListener() {

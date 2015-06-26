@@ -14,24 +14,23 @@
         android:paddingLeft="20dp"
         android:singleLine="true"
         android:text="俄罗斯总统会见朝鲜最高领导人特使"
-        android:textColor="#000000"
+        android:textColor="#A6A6A6"
         android:textSize="20dp" />
 
     <ImageView
         android:id="@+id/search_his_remove"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_alignParentRight="true"
-        android:paddingBottom="10dip"
+        android:paddingBottom="14dip"
         android:paddingRight="6dip"
-        android:paddingTop="10dip"
-        android:src="@drawable/search_clear" />
+        android:paddingTop="14dip"
+        android:src="@drawable/close" />
 
     <com.kankan.kankanews.ui.view.MyTextView
         android:id="@+id/search_his_clean"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#D9D9D9"
         android:gravity="center"
         android:paddingBottom="10dip"
         android:paddingTop="10dip"

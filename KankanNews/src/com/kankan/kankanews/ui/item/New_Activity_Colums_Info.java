@@ -206,13 +206,14 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		mOperationPercent = (ImageView) findViewById(R.id.operation_percent);
 
 		colums = (New_Colums) getIntent().getSerializableExtra("colums");
-		secondColums = (New_Colums_Second) getIntent().getSerializableExtra("secondColum");
-		if(colums == null){
+		secondColums = (New_Colums_Second) getIntent().getSerializableExtra(
+				"secondColum");
+		if (colums == null) {
 			colums = new New_Colums();
 			colums.setClassId(secondColums.getId());
 			colums.setTitle(secondColums.getName());
 		}
-			
+
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 	}
 
@@ -348,7 +349,8 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			columsVideoStart.setVisibility(View.GONE);
 			break;
 		case R.id.colums_share_but:
-			if (new_colums_infos.size() == 0 && curPlayNo >= new_colums_infos.size())
+			if (new_colums_infos.size() == 0
+					&& curPlayNo >= new_colums_infos.size())
 				break;
 			shareUtil = new ShareUtil(new_colums_infos.get(curPlayNo), this);
 			// 一键分享
@@ -595,6 +597,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 				columsInfoDetailHolder.detailCal.setText(new_colums_infos.get(
 						curPlayNo).getEpisode()
 						+ "期");
+				time = new_colums_infos.get(curPlayNo).getEpisode();
 				if (new_colums_infos.get(curPlayNo).getIntro() == null
 						|| new_colums_infos.get(curPlayNo).getIntro().trim()
 								.equals("")) {

@@ -839,6 +839,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		case R.id.com_title_bar_right_tv:
 			shareUtil = new ShareUtil(new_news, mContext);
 			isGoShare = true;
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			break;
 		}
 

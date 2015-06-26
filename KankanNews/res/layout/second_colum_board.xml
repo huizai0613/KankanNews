@@ -2,16 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#ffffff"
+    android:background="#b0000000"
     android:orientation="vertical" >
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="120dip"
-        android:layout_marginLeft="20dip"
-        android:layout_marginRight="20dip"
-        android:scrollbars="none"
-        android:overScrollMode="never" >
+        android:layout_height="130dip"
+        android:layout_marginLeft="10dip"
+        android:layout_marginRight="10dip"
+        android:background="#00FFFFFF"
+        android:overScrollMode="never"
+        android:scrollbars="none" >
 
         <LinearLayout
             android:id="@+id/second_colums_list"
@@ -27,9 +28,10 @@
         android:layout_marginBottom="10dip"
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
-        android:background="#E8E8E8"
+        android:background="@drawable/popupwindows_cancel_button_shap"
         android:gravity="center"
         android:text="取消"
-        android:textSize="24dip" />
+        android:textSize="20dip" 
+        android:textColor="@android:color/white"/>
 
 </LinearLayout>
