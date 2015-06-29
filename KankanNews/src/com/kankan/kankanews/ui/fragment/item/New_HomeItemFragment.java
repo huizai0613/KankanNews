@@ -201,7 +201,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			public void onPullUpToRefresh(PullToRefreshBase refreshView) {
 				loadMoreNetDate();
 			}
-		}); 
+		});
 		listview.setOnScrollListener(new OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -223,7 +223,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 		inflate.setLayoutParams(new LinearLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
-		
 		initLocalDate = initLocalDate();
 		if (!initLocalDate) {
 			main_bg.setVisibility(View.VISIBLE);
@@ -237,29 +236,53 @@ public class New_HomeItemFragment extends BaseFragment implements
 			}
 			refreshNetDate();
 		}
-
+		// TODO
+		if (New_HomeFragment.PUSH_NEWS_ID != null) {
+			// 推送
+			String news_id = New_HomeFragment.PUSH_NEWS_ID;
+			instance.getNewsContentDataPush(news_id,
+					new Listener<JSONObject>() {
+						@Override
+						public void onResponse(JSONObject jsonObject) {
+							New_News_Home news = new New_News_Home();
+							try {
+								news.parseJSON(jsonObject);
+								openNews(news);
+							} catch (NetRequestException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}, new ErrorListener() {
+						@Override
+						public void onErrorResponse(VolleyError error) {
+							ToastUtils.ErrorToastNoNet(getActivity());
+						}
+					});
+			New_HomeFragment.PUSH_NEWS_ID = null;
+		}
 		return inflate;
 
 	}
-	
+
 	public void myClickEvent(View view, float x1, float y1, float x2, float y2) {
-        long firstTime = SystemClock.uptimeMillis();
-        final MotionEvent firstEvent = MotionEvent.obtain(firstTime, firstTime,
-                MotionEvent.ACTION_DOWN, x1, y1, 0);
+		long firstTime = SystemClock.uptimeMillis();
+		final MotionEvent firstEvent = MotionEvent.obtain(firstTime, firstTime,
+				MotionEvent.ACTION_DOWN, x1, y1, 0);
 
-        long moveTime = 30;
-        final MotionEvent moveEvent = MotionEvent.obtain(moveTime, moveTime,
-                MotionEvent.ACTION_MOVE, x1, y1, 0);
-        
-        long secondTime = firstTime + 30;
-        final MotionEvent secondEvent = MotionEvent.obtain(secondTime,
-                secondTime, MotionEvent.ACTION_UP, x2, y2, 0);
+		long moveTime = 30;
+		final MotionEvent moveEvent = MotionEvent.obtain(moveTime, moveTime,
+				MotionEvent.ACTION_MOVE, x1, y1, 0);
 
-        view.dispatchTouchEvent(firstEvent);
-        view.dispatchTouchEvent(moveEvent);
-        view.dispatchTouchEvent(secondEvent);
-    }
-	
+		long secondTime = firstTime + 30;
+		final MotionEvent secondEvent = MotionEvent.obtain(secondTime,
+				secondTime, MotionEvent.ACTION_UP, x2, y2, 0);
+
+		view.dispatchTouchEvent(firstEvent);
+		view.dispatchTouchEvent(moveEvent);
+		view.dispatchTouchEvent(secondEvent);
+	}
+
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -349,33 +372,33 @@ public class New_HomeItemFragment extends BaseFragment implements
 					listview.onRefreshComplete();
 					screnn_pb.setVisibility(View.GONE);
 
-					// TODO
-					if (New_HomeFragment.PUSH_NEWS_ID != null) {
-						// 推送
-						String news_id = New_HomeFragment.PUSH_NEWS_ID;
-						instance.getNewsContentDataPush(news_id,
-								new Listener<JSONObject>() {
-									@Override
-									public void onResponse(JSONObject jsonObject) {
-										New_News_Home news = new New_News_Home();
-										try {
-											news.parseJSON(jsonObject);
-											openNews(news);
-										} catch (NetRequestException e) {
-											// TODO Auto-generated catch block
-											e.printStackTrace();
-										}
-									}
-								}, new ErrorListener() {
-									@Override
-									public void onErrorResponse(
-											VolleyError error) {
-										ToastUtils
-												.ErrorToastNoNet(getActivity());
-									}
-								});
-						New_HomeFragment.PUSH_NEWS_ID = null;
-					}
+					// // TODO
+					// if (New_HomeFragment.PUSH_NEWS_ID != null) {
+					// // 推送
+					// String news_id = New_HomeFragment.PUSH_NEWS_ID;
+					// instance.getNewsContentDataPush(news_id,
+					// new Listener<JSONObject>() {
+					// @Override
+					// public void onResponse(JSONObject jsonObject) {
+					// New_News_Home news = new New_News_Home();
+					// try {
+					// news.parseJSON(jsonObject);
+					// openNews(news);
+					// } catch (NetRequestException e) {
+					// // TODO Auto-generated catch block
+					// e.printStackTrace();
+					// }
+					// }
+					// }, new ErrorListener() {
+					// @Override
+					// public void onErrorResponse(
+					// VolleyError error) {
+					// ToastUtils
+					// .ErrorToastNoNet(getActivity());
+					// }
+					// });
+					// New_HomeFragment.PUSH_NEWS_ID = null;
+					// }
 				}
 			}, sleepTime);
 
@@ -747,9 +770,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					newHolder.title = (MyTextView) convertView
 							.findViewById(R.id.home_news_title);
-//					newHolder.title.setTextSize(New_HomeItemFragment.this
-//							.getResources().getDimension(
-//									textNomalSize[PixelUtil.getScale()]));
+					// newHolder.title.setTextSize(New_HomeItemFragment.this
+					// .getResources().getDimension(
+					// textNomalSize[PixelUtil.getScale()]));
 					newHolder.newstime_sign = (ImageView) convertView
 							.findViewById(R.id.home_news_newstime_sign);
 					newHolder.newstime = (MyTextView) convertView
@@ -802,8 +825,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 											textNomalSize[PixelUtil.getScale()]));
 					newZhuanTiHolder.home_news_titlepic = (ImageView) convertView
 							.findViewById(R.id.home_news_titlepic);
-					newZhuanTiHolder.home_news_intro = (MyTextView) convertView
-							.findViewById(R.id.home_news_intro);
+					// newZhuanTiHolder.home_news_intro = (MyTextView)
+					// convertView
+					// .findViewById(R.id.home_news_intro);
 
 					newZhuanTiHolder.home_news_titlepic
 							.setLayoutParams(new LinearLayout.LayoutParams(
@@ -837,8 +861,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final New_News_Home news = getmNewsList.get(newsPosition);
 				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
 				String clicktime = mClicks.get(news.getMid());
-				clicktime = TextUtils.isEmpty(clicktime) ? "0次" : clicktime
-						+ "次";
+				clicktime = TextUtils.isEmpty(clicktime) ? "0" : clicktime;
 				final int news_type = Integer.valueOf(news.getType());
 				newHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
@@ -895,7 +918,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					break;
 				default:
 
-					if (clicktime.equalsIgnoreCase("false次")) {
+					if (clicktime.equalsIgnoreCase("false")) {
 						newHolder.newstime.setVisibility(View.INVISIBLE);
 						newHolder.newstime_sign.setVisibility(View.INVISIBLE);
 					} else {
@@ -960,7 +983,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 								image_view_list.get(i),
 								ImgUtils.homeImageOptions);
 					} else {
-						image_view_list.get(i).setBackgroundResource(R.drawable.default_news_display);
+						image_view_list.get(i).setBackgroundResource(
+								R.drawable.default_news_display);
 					}
 				}
 
@@ -988,13 +1012,12 @@ public class New_HomeItemFragment extends BaseFragment implements
 					newZhuanTiHolder.title.setTextColor(Color
 							.parseColor("#000000"));
 				}
-//				CommonUtils.zoomImage(imageLoader, news.getTitlepic(),
-//						newZhuanTiHolder.home_news_titlepic, mActivity);
-				ImgUtils.imageLoader.displayImage(
-						news.getTitlepic(),
+				// CommonUtils.zoomImage(imageLoader, news.getTitlepic(),
+				// newZhuanTiHolder.home_news_titlepic, mActivity);
+				ImgUtils.imageLoader.displayImage(news.getTitlepic(),
 						newZhuanTiHolder.home_news_titlepic,
 						ImgUtils.homeImageOptions);
-				newZhuanTiHolder.home_news_intro.setText(news.getIntro());
+				// newZhuanTiHolder.home_news_intro.setText(news.getIntro());
 
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
@@ -1029,12 +1052,13 @@ public class New_HomeItemFragment extends BaseFragment implements
 			mActivity.startAnimActivityByParameter(
 					New_Activity_Content_PicSet.class, news.getMid(),
 					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(),  news.getTitlepic(), pics[1]);
+					news.getTitle(), news.getTitlepic(), pics[1]);
 		} else if (news_type % 10 == 5) {
 			// 专题
 			mActivity.startSubjectActivityByParameter(
 					New_Avtivity_Subject.class, news.getZtid(),
-					news.getTitle(), news.getTitlepic(), news.getTitleurl(),  news.getTitlepic(), news.getSharedPic());
+					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
+					news.getTitlepic(), news.getSharedPic());
 		} else if (news_type % 10 == 6) {
 			// 直播
 			New_LivePlayFragment fragment = (New_LivePlayFragment) mActivity.fragments
@@ -1046,7 +1070,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 		} else if (news.getZtype().equals("1")) {
 			mActivity.startSubjectActivityByParameter(
 					New_Avtivity_Subject.class, news.getZtid(),
-					news.getTitle(), news.getTitlepic(), news.getTitleurl(), news.getTitlepic(), news.getSharedPic());
+					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
+					news.getTitlepic(), news.getSharedPic());
 		} else {
 			mActivity.startAnimActivityByParameter(
 					New_Activity_Content_Web.class, news.getMid(),
@@ -1106,7 +1131,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 	private class NewZhuanTiHolder {
 		MyTextView title;
 		ImageView home_news_titlepic;
-		MyTextView home_news_intro;
+		// MyTextView home_news_intro;
 	}
 
 	// 没有更多数据

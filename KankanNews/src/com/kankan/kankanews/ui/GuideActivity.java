@@ -74,7 +74,7 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 		views.add(inflater.inflate(R.layout.guide_one, null));
 		views.add(inflater.inflate(R.layout.guide_two, null));
 		views.add(inflater.inflate(R.layout.guide_three, null));
-//		views.add(inflater.inflate(R.layout.guide_four, null));
+		// views.add(inflater.inflate(R.layout.guide_four, null));
 		views.add(inflater.inflate(R.layout.guide_five, null));
 
 		// 初始化Adapter
@@ -192,7 +192,18 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 
 		private void goHome() {
 			// 跳转
+
+			Bundle bundle = getIntent().getExtras();
+			// intent.setClass(SplashActivity.this, GuideActivity.class);
+
 			Intent intent = new Intent(activity, MainActivity.class);
+			if (bundle != null) {
+				if (bundle.containsKey("LIVE_ID"))
+					intent.putExtra("LIVE_ID", bundle.getString("LIVE_ID"));
+				if (bundle.containsKey("PUSH_NEWS_ID"))
+					intent.putExtra("PUSH_NEWS_ID",
+							bundle.getString("PUSH_NEWS_ID"));
+			}
 			activity.startActivity(intent);
 			activity.finish();
 		}

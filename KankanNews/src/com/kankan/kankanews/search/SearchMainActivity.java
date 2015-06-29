@@ -1,9 +1,10 @@
 package com.kankan.kankanews.search;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +16,6 @@ import android.text.Html;
 import android.text.Selection;
 import android.text.Spanned;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,29 +27,27 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.android.volley.VolleyError;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.VolleyError;
 import com.iss.view.pulltorefresh.PullToRefreshBase;
-import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
+import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.New_News_Search;
 import com.kankan.kankanews.config.AndroidConfig;
-import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
-import com.kankan.kankanews.utils.PixelUtil;
-import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 
 public class SearchMainActivity extends BaseActivity implements OnClickListener {
@@ -64,7 +62,10 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	private PullToRefreshListView searchListView;
 	private ListView searchHisListView;
 	private SearchListAdapter searchAdapt;
+	private HotWordAdapt hotWordAdapter;
 	private SearchHisListAdapter searchHisAdapt;
+	private GridView hotWordGrid;
+	private LinearLayout hotWordLayout;
 
 	private int curPageNum = 1;
 	private int maxSearchNum = 10;
@@ -74,6 +75,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	private LayoutInflater inflate;
 	private SeachListViewHolder holder;
 	private SeachHisListViewHolder hisHolder;
+	private TextView hotWordText;
 
 	private boolean isLoadMore = false;
 	private boolean isLoadEnd = false;
@@ -83,6 +85,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	private String curSearchText;
 
 	private View loadingLayout;
+
+	private static String[] hotWord;
 
 	private class SeachListViewHolder {
 		ImageView titlePic;
@@ -109,6 +113,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	protected Listener<JSONArray> mListenerArray = new Listener<JSONArray>() {
 		@Override
 		public void onResponse(JSONArray jsonObject) {
+
+			hotWordLayout.setVisibility(View.GONE);
 			onSuccessArray(jsonObject);
 		}
 	};
@@ -151,6 +157,9 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		searchHisListView = (ListView) this
 				.findViewById(R.id.search_his_list_view);
 		loadingLayout = this.findViewById(R.id.loading_layout);
+		hotWordGrid = (GridView) this.findViewById(R.id.hot_word_grid);
+		hotWordLayout = (LinearLayout) this.findViewById(R.id.hot_word_layout);
+
 	}
 
 	@Override
@@ -159,11 +168,37 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		instance = ItnetUtils.getInstance(this);
 		searchContent.setTag(searchContent.getHint().toString());
 		initListView();
-		searchAdapt = new SearchListAdapter();
-		searchListView.setAdapter(searchAdapt);
 		getHisList();
 		searchHisAdapt = new SearchHisListAdapter();
 		searchHisListView.setAdapter(searchHisAdapt);
+		hotWordAdapter = new HotWordAdapt();
+
+		instance.getSearchHotWord(new Listener<JSONArray>() {
+			@Override
+			public void onResponse(JSONArray jsonObject) {
+				if (jsonObject.length() > 0)
+					hotWord = new String[jsonObject.length()];
+				for (int i = 0; i < jsonObject.length(); i++) {
+					try {
+						hotWord[i] = jsonObject.getString(i);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						Log.e("SearchMainActivity", e.getLocalizedMessage());
+					}
+				}
+
+				hotWordGrid.setAdapter(hotWordAdapter);
+				hotWordAdapter.notifyDataSetChanged();
+			}
+		}, new ErrorListener() {
+
+			@Override
+			public void onErrorResponse(VolleyError arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
 	}
 
 	@Override
@@ -209,6 +244,10 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 								.setHint(searchContent.getTag().toString());
 						searchIcon.setVisibility(View.VISIBLE);
 						cancelBut.setVisibility(View.GONE);
+					} else {
+						searchIcon.setVisibility(View.GONE);
+						cancelBut.setVisibility(View.GONE);
+						searchBut.setVisibility(View.VISIBLE);
 					}
 				}
 			}
@@ -226,10 +265,12 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 					searchBut.setVisibility(View.GONE);
 					cancelBut.setVisibility(View.VISIBLE);
 					clearBut.setVisibility(View.GONE);
+					searchIcon.setVisibility(View.GONE);
 				} else {
 					searchBut.setVisibility(View.VISIBLE);
 					cancelBut.setVisibility(View.GONE);
 					clearBut.setVisibility(View.VISIBLE);
+					searchIcon.setVisibility(View.GONE);
 				}
 
 				if (len > maxSearchNum) {
@@ -284,11 +325,11 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 
 	private void loadMoreNetDate() {
 		// TODO Auto-generated method stub
-//		if(isLoadEnd){
-////			searchListView.onRefreshComplete();
-//			onSuccessArray(new JSONArray());
-//			return;
-//		}
+		// if(isLoadEnd){
+		// // searchListView.onRefreshComplete();
+		// onSuccessArray(new JSONArray());
+		// return;
+		// }
 		isLoadMore = true;
 		String searchText = searchContent.getText().toString();
 		instance.getSearchData(searchText, curPageNum + 1, mListenerArray,
@@ -340,6 +381,54 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
 		imm.hideSoftInputFromWindow(searchContent.getWindowToken(), 0);
+		hotWordLayout.setVisibility(View.VISIBLE);
+		hideHisList();
+	}
+
+	private class HotWordAdapt extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return 6;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return hotWord[position];
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			if (convertView == null) {
+				convertView = inflate.inflate(R.layout.search_hot_word_item,
+						null);
+				hotWordText = (TextView) convertView
+						.findViewById(R.id.search_hot_word_text);
+				convertView.setTag(hotWordText);
+			} else {
+				hotWordText = (TextView) convertView.getTag();
+			}
+			hotWordText.setText(hotWord[position]);
+			hotWordText.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					searchContent.setText(((TextView) v).getText());
+					goSearch();
+				}
+			});
+			return convertView;
+		}
 	}
 
 	private class SearchListAdapter extends BaseAdapter {
@@ -441,7 +530,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 				// SimpleDateFormat("yyyy年MM月dd日");
 				// long newsTime = Long.parseLong(news.getNewsTime()) * 1000;
 				// holder.newsTime.setText(format.format(new Date(newsTime)));
-				holder.click.setText(news.getClickNum() + "次");
+				holder.click.setText(news.getClickNum() + "");
 				holder.newsTime.setText(dealNewsTime(news.getNewsTime()));
 				convertView.setOnClickListener(new OnClickListener() {
 
@@ -592,6 +681,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			}
 			searchList.add(news);
 		}
+		searchAdapt = new SearchListAdapter();
+		searchListView.setAdapter(searchAdapt);
 		searchAdapt.notifyDataSetChanged();
 		searchListView.onRefreshComplete();
 	}
@@ -608,6 +699,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			hideHisList();
 			searchList.clear();
 			searchAdapt.notifyDataSetChanged();
+			hotWordLayout.setVisibility(View.VISIBLE);
 			return;
 		}
 		this.finish();

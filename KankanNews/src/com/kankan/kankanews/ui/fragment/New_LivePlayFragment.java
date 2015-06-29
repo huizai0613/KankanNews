@@ -214,6 +214,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 				isFirst = true;
 			} else {
 				ToastUtils.ErrorToastNoNet(mActivity);
+				screnn_pb.setVisibility(View.GONE);
+				main_bg.setVisibility(View.VISIBLE);
 			}
 		} else {
 			// isFirst = false;
@@ -236,12 +238,12 @@ public class New_LivePlayFragment extends BaseFragment implements
 		initLinsenter();
 		initLocalDate();
 
-		if (CommonUtils.isNetworkAvailable(mActivity)) {
-			refreshNetDate();
-		} else {
-			screnn_pb.setVisibility(View.GONE);
-			main_bg.setVisibility(View.VISIBLE);
-		}
+//		if (CommonUtils.isNetworkAvailable(mActivity)) {
+//			refreshNetDate();
+//		} else {
+//			screnn_pb.setVisibility(View.GONE);
+//			main_bg.setVisibility(View.VISIBLE);
+//		}
 
 		return inflate;
 	}
@@ -496,6 +498,11 @@ public class New_LivePlayFragment extends BaseFragment implements
 					// video_view.release(true);
 					// }
 					liveVideoView.setVideoPath(news.getStreamurl());
+
+					ItnetUtils.getInstance(this.mActivity).getAnalyse(
+							this.mActivity, "live", news.getTitle(),
+							news.getTitleurl());
+
 					mActivity
 							.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 					nowLiveNew = news;
@@ -510,6 +517,11 @@ public class New_LivePlayFragment extends BaseFragment implements
 						isSelectPlay = false;
 						liveVideoView.stopPlayback();
 						liveVideoView.setVideoPath(news.getStreamurl());
+
+						ItnetUtils.getInstance(this.mActivity).getAnalyse(
+								this.mActivity, "live", news.getTitle(),
+								news.getTitleurl());
+
 						mVideoLoadingLayout.setVisibility(View.GONE);
 						mActivity
 								.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
@@ -855,8 +867,15 @@ public class New_LivePlayFragment extends BaseFragment implements
 								liveStart.setVisibility(View.GONE);
 								liveVideoView.setVideoPath(new_LivePlay
 										.getStreamurl());
-								Log.e("liveVideoView",
-										new_LivePlay.getStreamurl());
+
+								ItnetUtils
+										.getInstance(
+												New_LivePlayFragment.this.mActivity)
+										.getAnalyse(
+												New_LivePlayFragment.this.mActivity,
+												"live",
+												new_LivePlay.getTitle(),
+												new_LivePlay.getTitleurl());
 
 								// setVideoLoadingLayoutVisibility(View.VISIBLE);
 								nowLiveNew = new_LivePlay;
@@ -883,8 +902,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 				// .setVisibility(View.GONE);
 				// mViewHolderLive.new_item_liveplay_live_tv
 				// .setVisibility(View.VISIBLE);
-//				mViewHolderLive.new_item_liveplay_live_bg
-//						.setBackgroundResource(R.drawable.yugao_live_bg);
+				// mViewHolderLive.new_item_liveplay_live_bg
+				// .setBackgroundResource(R.drawable.yugao_live_bg);
 
 				mViewHolderLive.new_item_liveplay_live_bg_img
 						.setImageResource(R.drawable.yugao_live_bg);

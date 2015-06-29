@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -106,7 +108,6 @@ public class SplashActivity extends BaseActivity {
 		MobclickAgent.openActivityDurationTrack(false);
 		// 发送策略
 		MobclickAgent.updateOnlineConfig(mContext);
-		Log.e("PixelUtil.dp2px(18)", PixelUtil.px2dp(96) + "");
 		initAnalytics("");
 		setRightFinsh(false);
 
@@ -139,7 +140,6 @@ public class SplashActivity extends BaseActivity {
 			// Log.e("Date", params.get("ts"));AndroidConfig.ADVERT_GET
 			// String params = "?aid=107167&ts=" + new Date().getTime() +
 			// "&fmt=json&ver=1";
-			Log.e("ADVERT_GET", AndroidConfig.ADVERT_GET + params);
 			instance.getAdert(params, this.mListener, this.mErrorListener);
 		} else {
 			getLocalAdvert();
@@ -181,7 +181,17 @@ public class SplashActivity extends BaseActivity {
 	}
 
 	private void goGuide() {
+		Bundle bundle = getIntent().getExtras();
+		// intent.setClass(SplashActivity.this, GuideActivity.class);
+
 		Intent intent = new Intent(SplashActivity.this, GuideActivity.class);
+		if (bundle != null) {
+			if (bundle.containsKey("LIVE_ID"))
+				intent.putExtra("LIVE_ID", bundle.getString("LIVE_ID"));
+			if (bundle.containsKey("PUSH_NEWS_ID"))
+				intent.putExtra("PUSH_NEWS_ID",
+						bundle.getString("PUSH_NEWS_ID"));
+		}
 		SplashActivity.this.startActivity(intent);
 		SplashActivity.this.finish();
 	}
@@ -231,6 +241,38 @@ public class SplashActivity extends BaseActivity {
 	protected void initView() {
 		// TODO Auto-generated method stub
 		adPic = (ImageView) this.findViewById(R.id.ad_pic);
+		adPic.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (advert != null && advert.getValue() != null
+						&& !advert.getValue().equals("")) {
+					String advertValue = advert.getValue();
+					if (advertValue.split("\\/\\/").length == 2) {
+						String keyValue = advertValue.split("\\/\\/")[1];
+						if (keyValue.split("=").length == 2) {
+							String key = keyValue.split("=")[0];
+							String value = keyValue.split("=")[1];
+							Intent intent = getIntent();
+							if (key.equalsIgnoreCase("infoid"))
+								intent.putExtra("PUSH_NEWS_ID", value);
+							if (key.equalsIgnoreCase("liveid"))
+								intent.putExtra("LIVE_ID", value);
+							mHandler.removeMessages(GO_HOME);
+							mHandler.removeMessages(GO_GUIDE);
+							if (isFirstIn
+									|| !version.equals(spUtil.getVersion())) {
+								// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
+								goGuide();
+							} else {
+								goHome();
+							}
+						}
+					}
+				}
+			}
+		});
 
 		rootView = (LinearLayout) this.findViewById(R.id.welcome_root_view);
 		welcome_img = (ImageView) this.findViewById(R.id.welcome_logo_img);

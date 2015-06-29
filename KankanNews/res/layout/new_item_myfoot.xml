@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:singleLine="true"
-                        android:text="0次"
+                        android:text="0"
                         android:textColor="#7c7c7c"
                         android:textSize="12dp" />
 

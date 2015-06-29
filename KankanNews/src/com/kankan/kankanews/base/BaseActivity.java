@@ -190,17 +190,17 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 		listview.setMode(Mode.BOTH);
 
 		// 设置PullRefreshListView上提加载时的加载提示
-		listview.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载...");
+		listview.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载更多");
 		listview.getLoadingLayoutProxy(false, true).setRefreshingLabel(
-				"正在加载请稍后…");
+				"刷新中…");
 		listview.getLoadingLayoutProxy(false, true)
-				.setReleaseLabel("松开加载更多...");
+				.setReleaseLabel("松开立即加载");
 
 		// 设置PullRefreshListView下拉加载时的加载提示
-		listview.getLoadingLayoutProxy(true, false).setPullLabel("下拉刷新...");
-		listview.getLoadingLayoutProxy(true, false)
-				.setRefreshingLabel("正在淘江湖~");
-		listview.getLoadingLayoutProxy(true, false).setReleaseLabel("松开刷新...");
+		listview.getLoadingLayoutProxy(true, false).setPullLabel("下拉可以刷新");
+//		listview.getLoadingLayoutProxy(true, false)
+//				.setRefreshingLabel("正在淘江湖~");
+		listview.getLoadingLayoutProxy(true, false).setReleaseLabel("释放后刷新");
 	}
 
 	// 处理网络出错

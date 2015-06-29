@@ -97,17 +97,50 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#E8E8E8" >
+        android:background="#EDEDED" >
 
         <com.iss.view.pulltorefresh.PullToRefreshListView
             android:id="@+id/search_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#BDBDBD"
+            android:background="#EDEDED"
             android:divider="@null"
             android:scrollbars="none"
             android:visibility="visible" >
         </com.iss.view.pulltorefresh.PullToRefreshListView>
+
+        <LinearLayout
+            android:id="@+id/hot_word_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="30dip"
+            android:layout_marginRight="30dip"
+            android:layout_marginTop="40dip"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dip"
+                android:text="近期热点"
+                android:textColor="#BEBEBE"
+                android:textSize="18dip" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dip"
+                android:layout_marginBottom="10dip"
+                android:layout_marginTop="10dip"
+                android:background="#BDBDBD" />
+
+            <GridView
+                android:id="@+id/hot_word_grid"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:horizontalSpacing="10dip"
+                android:numColumns="2"
+                android:verticalSpacing="10dip" >
+            </GridView>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/loading_layout"

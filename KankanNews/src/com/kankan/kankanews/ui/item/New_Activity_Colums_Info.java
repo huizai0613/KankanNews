@@ -1,5 +1,7 @@
 package com.kankan.kankanews.ui.item;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -807,6 +809,10 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 							curPlayNo).getTitle());
 					columsVideoView.requestFocus();
 					columsVideoView.start();
+
+					ItnetUtils.getInstance(mContext).getAnalyse(this, "column",
+							new_colums_infos.get(curPlayNo).getTitle(),
+							new_colums_infos.get(curPlayNo).getTitleurl());
 				}
 			}
 		} else {

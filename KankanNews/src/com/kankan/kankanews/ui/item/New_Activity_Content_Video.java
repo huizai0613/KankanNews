@@ -9,6 +9,8 @@ import tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener;
 import tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -529,10 +531,12 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		new_news.setSharedPic(sharedPic);
 		new_news.setTitlelist(titlelist);
 
-		// 提交点击
-		ItnetUtils.getInstance(mContext).addNewNewsClickData("id=" + mid);
-
 		instance = ItnetUtils.getInstance(this);
+		// 提交点击
+		instance.addNewNewsClickData("id=" + mid);
+
+		ItnetUtils.getInstance(mContext).getAnalyse(this, "video",
+				new_news.getTitlelist(), new_news.getTitleurl());
 
 		initLocalDate = initLocalDate(new_news.getId());
 

@@ -7,11 +7,19 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -33,6 +41,8 @@ public class ItnetUtils {
 	private CustomRequest mCustomRequest;
 	private CustomRequestArray mCustomRequestArray;
 	private Context mContext;
+
+	private String separator = "__";
 
 	private ItnetUtils(Context mContext) {
 		this.mContext = mContext;
@@ -443,9 +453,81 @@ public class ItnetUtils {
 			e.printStackTrace();
 		}
 		mCustomRequestArray = new CustomRequestArray(Request.Method.GET,
-				AndroidConfig.SEARCH_GET + "?w=" + searchContent + "&p="
-						+ pageNum, null, reponseListener, errorListener);
+				AndroidConfig.New_NETHOST + AndroidConfig.SEARCH_GET + "?w="
+						+ searchContent + "&p=" + pageNum, null,
+				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequestArray);
 
+	}
+
+	/**
+	 * 获取搜索条目
+	 */
+	public void getSearchHotWord(Listener<JSONArray> reponseListener,
+			ErrorListener errorListener) {
+		mCustomRequestArray = new CustomRequestArray(Request.Method.GET,
+				AndroidConfig.New_NETHOST + AndroidConfig.SEARCH_HOT_WORD,
+				null, reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequestArray);
+
+	}
+
+	public void getAnalyse(Context context, String type, String title,
+			String titleUrl) {
+		String url;
+		try {
+			url = AndroidConfig.New_NewsAnalyse + "?itemType=" + type
+					+ "&pageTitle=" + URLEncoder.encode(title, "utf-8")
+					+ "&pageURL=" + titleUrl;
+			new AnalyseGetThread(url, context).start();
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			Log.e("New_Activity_Content_Web.initData", e1.getLocalizedMessage());
+		}
+	}
+
+	private class AnalyseGetThread extends Thread {
+		private String url;
+		private Context context;
+
+		AnalyseGetThread(String url, Context context) {
+			this.url = url;
+			this.context = context;
+		}
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+
+			try {
+				TelephonyManager telephonyManager = (TelephonyManager) context
+						.getSystemService(Context.TELEPHONY_SERVICE);
+				ConnectivityManager connectivityManager = (ConnectivityManager) context
+						.getSystemService(Context.CONNECTIVITY_SERVICE);
+				NetworkInfo activeNetInfo = connectivityManager
+						.getActiveNetworkInfo();
+				HttpGet httpRequest = new HttpGet(url);
+				// httpRequest.setHeader("MOBILE_DEVICE_INFO",
+				// android.os.Build.MODEL);
+				String operatorName = telephonyManager.getNetworkOperatorName()
+						.trim().endsWith("") ? "null" : telephonyManager
+						.getNetworkOperatorName();
+				httpRequest.setHeader(
+						"User-Agent",
+						"kankanapp(" + android.os.Build.MODEL + separator
+								+ "kankanapp" + separator
+								+ CommonUtils.getVersion(context) + separator
+								+ "Android" + separator + "Android"
+								+ android.os.Build.VERSION.RELEASE + separator
+								+ operatorName + separator
+								+ activeNetInfo.getTypeName() + ")");
+				HttpResponse httpResponse;
+				httpResponse = new DefaultHttpClient().execute(httpRequest);
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				Log.e("ItnetUtils.addNewNewsAnalyse", e.getLocalizedMessage());
+			}
+		}
 	}
 }

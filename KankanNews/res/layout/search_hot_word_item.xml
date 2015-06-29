@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dip" >
+
+    <com.kankan.kankanews.ui.view.MyTextView
+        android:id="@+id/search_hot_word_text"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:ellipsize="end"
+        android:gravity="left|center_vertical"
+        android:lineSpacingExtra="4dp"
+        android:singleLine="true"
+        android:text="俄罗斯总统会见朝鲜最高领导人特使"
+        android:textColor="#9E9E9E"
+        android:textSize="18dp" />
+
+</RelativeLayout>

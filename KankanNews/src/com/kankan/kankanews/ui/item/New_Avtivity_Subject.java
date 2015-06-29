@@ -1,6 +1,8 @@
 package com.kankan.kankanews.ui.item;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -24,6 +26,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -48,6 +51,7 @@ import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_Subject_Json;
 import com.kankan.kankanews.bean.Subject_Item;
 import com.kankan.kankanews.bean.subject_List;
+import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.sina.AccessTokenKeeper;
@@ -129,16 +133,17 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.subject);
 	}
-	
-	@Override 
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    /**使用SSO授权必须添加如下代码 */
-	    
-	    UMSsoHandler ssoHandler = shareUtil.getmController().getConfig().getSsoHandler(requestCode) ;
-	    if(ssoHandler != null){
-	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-	    }
+		super.onActivityResult(requestCode, resultCode, data);
+		/** 使用SSO授权必须添加如下代码 */
+
+		UMSsoHandler ssoHandler = shareUtil.getmController().getConfig()
+				.getSsoHandler(requestCode);
+		if (ssoHandler != null) {
+			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+		}
 	}
 
 	@Override
@@ -164,6 +169,9 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		new_news.setTitlelist(title);
 		new_news.setSharedPic(sharedPic);
 		new_news.setTitleurl(titleurl);
+		
+		ItnetUtils.getInstance(mContext).getAnalyse(this, "topic",
+				new_news.getTitlelist(), new_news.getTitleurl());
 
 		// 初始化shareutil类
 		shareUtil = new ShareUtil(new_news, mContext);
@@ -509,14 +517,16 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 				} else {
 					if (itemViewType == 1) {
 						if (NewsBrowseUtils.isBrowed(item.getId())) {
-							newHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
+							newHolder.title.setTextColor(Color
+									.parseColor("#B0B0B0"));
 						} else {
-							newHolder.title.setTextColor(Color.parseColor("#000000"));
+							newHolder.title.setTextColor(Color
+									.parseColor("#000000"));
 						}
-						
+
 						String clicktime = mClicks.get(item.getMid());
-						clicktime = TextUtils.isEmpty(clicktime) ? "0次"
-								: clicktime + "次";
+						clicktime = TextUtils.isEmpty(clicktime) ? "0"
+								: clicktime;
 						// String clicktime = "0次";
 						newHolder.newstime.setText(clicktime);
 						final int news_type = Integer.valueOf(item.getType());
@@ -545,7 +555,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 
 						switch (news_type % 10) {
 						case 5:
-							if (clicktime.equalsIgnoreCase("false次")) {
+							if (clicktime.equalsIgnoreCase("false")) {
 								newHolder.newstime
 										.setVisibility(View.INVISIBLE);
 								newHolder.newstime_sign
@@ -559,7 +569,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 									.setImageResource(R.drawable.new_icon_sign_subject);
 							break;
 						case 6:
-							if (clicktime.equalsIgnoreCase("false次")) {
+							if (clicktime.equalsIgnoreCase("false")) {
 								newHolder.newstime
 										.setVisibility(View.INVISIBLE);
 								newHolder.newstime_sign
@@ -573,7 +583,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 									.setImageResource(R.drawable.new_icon_sign_live);
 							break;
 						default:
-							if (clicktime.equalsIgnoreCase("false次")) {
+							if (clicktime.equalsIgnoreCase("false")) {
 								newHolder.newstime
 										.setVisibility(View.INVISIBLE);
 								newHolder.newstime_sign
@@ -592,33 +602,35 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
 								if (news_type % 10 == 1) {
-									
+
 									MyTextView textView = (MyTextView) v
 											.findViewById(R.id.home_news_title);
 									NewsBrowseUtils.hasBrowedNews(item.getId());
-									textView.setTextColor(Color.parseColor("#B0B0B0"));
-									
+									textView.setTextColor(Color
+											.parseColor("#B0B0B0"));
+
 									startAnimActivityByParameter(
 											New_Activity_Content_Video.class,
 											item.getMid(), item.getType(),
 											item.getTitleurl(),
 											item.getNewstime(),
 											item.getTitle(),
-											item.getTitlepic(), 
+											item.getTitlepic(),
 											item.getSharedPic());
 								} else if (news_type % 10 == 5) {
 									// 专题
 									MyTextView textView = (MyTextView) v
 											.findViewById(R.id.home_news_title);
 									NewsBrowseUtils.hasBrowedNews(item.getId());
-									textView.setTextColor(Color.parseColor("#B0B0B0"));
-									
+									textView.setTextColor(Color
+											.parseColor("#B0B0B0"));
+
 									startSubjectActivityByParameter(
 											New_Avtivity_Subject.class,
 											item.getZtid(), item.getTitle(),
 											item.getTitlepic(),
 											item.getTitleurl(),
-											item.getTitlepic(), 
+											item.getTitlepic(),
 											item.getSharedPic());
 								} else if (news_type % 10 == 6) {// 直播
 
@@ -626,26 +638,29 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 									MyTextView textView = (MyTextView) v
 											.findViewById(R.id.home_news_title);
 									NewsBrowseUtils.hasBrowedNews(item.getId());
-									textView.setTextColor(Color.parseColor("#B0B0B0"));
-									
+									textView.setTextColor(Color
+											.parseColor("#B0B0B0"));
+
 									startAnimActivityByParameter(
 											New_Activity_Content_Web.class,
 											item.getMid(), item.getType(),
 											item.getTitleurl(),
 											item.getNewstime(),
 											item.getTitle(),
-											item.getTitlepic(), 
+											item.getTitlepic(),
 											item.getSharedPic());
 								}
 							}
 						});
 					} else if (itemViewType == 3) {
 						if (NewsBrowseUtils.isBrowed(item.getId())) {
-							albumsHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
+							albumsHolder.title.setTextColor(Color
+									.parseColor("#B0B0B0"));
 						} else {
-							albumsHolder.title.setTextColor(Color.parseColor("#000000"));
+							albumsHolder.title.setTextColor(Color
+									.parseColor("#000000"));
 						}
-						
+
 						albumsHolder.title.setText(item.getTitle());
 						final String[] pics = item.getTitlepic()
 								.split("::::::");
@@ -679,13 +694,15 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 								MyTextView textView = (MyTextView) arg0
 										.findViewById(R.id.home_albums_title);
 								NewsBrowseUtils.hasBrowedNews(item.getId());
-								textView.setTextColor(Color.parseColor("#B0B0B0"));
-								
+								textView.setTextColor(Color
+										.parseColor("#B0B0B0"));
+
 								startAnimActivityByParameter(
 										New_Activity_Content_PicSet.class,
 										item.getMid(), item.getType(),
 										item.getTitleurl(), item.getNewstime(),
-										item.getTitle(), item.getTitlepic(), pics[1]);
+										item.getTitle(), item.getTitlepic(),
+										pics[1]);
 							}
 						});
 

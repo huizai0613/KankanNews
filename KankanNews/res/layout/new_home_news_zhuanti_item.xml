@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-        android:background="@drawable/new_item_bg_selector"
+    android:background="@drawable/new_item_bg_selector"
     android:orientation="vertical" >
 
     <LinearLayout
@@ -19,16 +19,34 @@
             android:paddingRight="10dp"
             android:paddingTop="5dp" >
 
-            <com.kankan.kankanews.ui.view.MyTextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:textStyle="bold"
-                android:singleLine="true"
-                android:textSize="16dp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="7dp"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical"
+                    android:singleLine="true"
+                    android:textSize="16dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/home_news_newstype"
+                    android:layout_width="25dp"
+                    android:layout_height="15dip" 
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginRight="5dp"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/new_icon_sign_subject" />
+            </RelativeLayout>
 
             <ImageView
                 android:id="@+id/home_news_titlepic"
@@ -36,7 +54,7 @@
                 android:layout_height="80dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/default_news_display" />
-
+            <!--
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
@@ -72,8 +90,8 @@
                     android:scaleType="fitXY"
                     android:src="@drawable/new_icon_sign_subject" />
             </RelativeLayout>
+            -->
         </LinearLayout>
-
     </LinearLayout>
 
 </LinearLayout>

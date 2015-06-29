@@ -2,6 +2,8 @@ package com.kankan.kankanews.ui.item;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.json.JSONObject;
 
@@ -19,6 +21,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +36,7 @@ import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_NewsPic;
+import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.sina.AccessTokenKeeper;
@@ -65,10 +69,10 @@ import com.xunao.view.photoview.PhotoView;
 import com.xunao.view.photoview.PhotoViewAttacher.OnPhotoTapListener;
 
 public class New_Activity_Content_PicSet extends BaseVideoActivity implements
-		OnClickListener, OnPageChangeListener{
+		OnClickListener, OnPageChangeListener {
 
 	/** 微博微博分享接口实例 */
-//	private IWeiboShareAPI mWeiboShareAPI = null;
+	// private IWeiboShareAPI mWeiboShareAPI = null;
 
 	private String mid;
 	private String type;
@@ -101,16 +105,17 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_pic_set);
 	}
-	
-	@Override 
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    super.onActivityResult(requestCode, resultCode, data);
-	    /**使用SSO授权必须添加如下代码 */
-	    
-	    UMSsoHandler ssoHandler = shareUtil.getmController().getConfig().getSsoHandler(requestCode) ;
-	    if(ssoHandler != null){
-	       ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-	    }
+		super.onActivityResult(requestCode, resultCode, data);
+		/** 使用SSO授权必须添加如下代码 */
+
+		UMSsoHandler ssoHandler = shareUtil.getmController().getConfig()
+				.getSsoHandler(requestCode);
+		if (ssoHandler != null) {
+			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+		}
 	}
 
 	@Override
@@ -157,6 +162,9 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 
 		// 提交点击
 		ItnetUtils.getInstance(mContext).addNewNewsClickData("tjid=" + mid);
+		
+		ItnetUtils.getInstance(mContext).getAnalyse(this, "album",
+				new_news.getTitlelist(), new_news.getTitleurl());
 
 		myVpAdapter = new MyVpAdapter();
 		initLocalData();
@@ -306,7 +314,8 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			String picUrl = CommonUtils.doWebpUrl(parseImagegroups[position][1]);
+			String picUrl = CommonUtils
+					.doWebpUrl(parseImagegroups[position][1]);
 			View view = getLayoutInflater().inflate(
 					R.layout.new_item_activity_picset, null);
 			final PhotoView photoView = (PhotoView) view
@@ -373,8 +382,8 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 			});
 
 			// 加载图片
-//			ImgUtils.imageLoader.displayImage(picUrl, photoView,
-//					Options.getSmallImageOptions(false));
+			// ImgUtils.imageLoader.displayImage(picUrl, photoView,
+			// Options.getSmallImageOptions(false));
 			ImgUtils.imageLoader.displayImage(picUrl, photoView,
 					ImgUtils.homeImageOptions);
 			view.setTag(photoView);
@@ -388,22 +397,22 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 			View v = (View) object;
 			PhotoView tag2 = (PhotoView) v.getTag();
 
-//			if (tag2 != null) {
-//				Drawable drawable2 = tag2.getDrawable();
-//
-//				if (drawable2 instanceof BitmapDrawable) {
-//					BitmapDrawable drawable = (BitmapDrawable) tag2
-//							.getDrawable();
-//					if (drawable != null) {
-//						Bitmap bitmap = drawable.getBitmap();
-//						if (bitmap != null) {
-//							bitmap.recycle();
-//							bitmap = null;
-//						}
-//						drawable = null;
-//					}
-//				}
-//			}
+			// if (tag2 != null) {
+			// Drawable drawable2 = tag2.getDrawable();
+			//
+			// if (drawable2 instanceof BitmapDrawable) {
+			// BitmapDrawable drawable = (BitmapDrawable) tag2
+			// .getDrawable();
+			// if (drawable != null) {
+			// Bitmap bitmap = drawable.getBitmap();
+			// if (bitmap != null) {
+			// bitmap.recycle();
+			// bitmap = null;
+			// }
+			// drawable = null;
+			// }
+			// }
+			// }
 			container.removeView((View) object);
 		}
 	}
@@ -421,7 +430,8 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 				shareUtil = new ShareUtil(new_news, mContext);
 			}
 			// 一键分享
-			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil, this);
+			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
+					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
@@ -443,8 +453,8 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 	}
 
 	@Override
-	public void finish(){
-		if(vp != null)
+	public void finish() {
+		if (vp != null)
 			vp.setAdapter(null);
 		System.gc();
 		super.finish();

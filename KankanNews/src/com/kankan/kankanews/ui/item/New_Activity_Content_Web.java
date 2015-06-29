@@ -3,6 +3,8 @@ package com.kankan.kankanews.ui.item;
 import com.kankan.kankanews.utils.StringUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.json.JSONObject;
 
@@ -75,6 +77,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 	private String titlePic;
 	private String sharedPic;
 	private String titlelist;
+	private String title;
 
 	private View xCustomView;
 
@@ -176,6 +179,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		titlePic = intent.getStringExtra("titlePic");
 		sharedPic = intent.getStringExtra("sharedPic");
 		newstime = intent.getStringExtra("newstime");
+		title = intent.getStringExtra("title");
 
 		titlelist = intent.getStringExtra("titlelist");
 		// 存储数据
@@ -191,7 +195,8 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 
 		// 提交点击
 		ItnetUtils.getInstance(mContext).addNewNewsClickData("id=" + mid);
-
+		ItnetUtils.getInstance(mContext).getAnalyse(this, "text",
+				new_news.getTitlelist(), new_news.getTitleurl());
 		// 更新数据
 		try {
 			dbUtils.saveOrUpdate(new_news);
