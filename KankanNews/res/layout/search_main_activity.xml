@@ -169,34 +169,6 @@
                 android:visibility="visible" />
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/search_his_list_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#E8E8E8"
-            android:scrollbars="none"
-            android:visibility="gone" >
-        </ListView>
-        
-        <LinearLayout
-            android:id="@+id/search_no_net_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#ffffff"
-            android:gravity="center"
-            android:visibility="gone" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="60dip"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:text="点击屏幕重新加载"
-                android:textSize="16dip"
-                android:visibility="visible" />
-        </LinearLayout>
-        
         <LinearLayout
             android:id="@+id/search_no_data_layout"
             android:layout_width="match_parent"
@@ -212,6 +184,34 @@
                 android:layout_centerInParent="true"
                 android:gravity="center"
                 android:text="没有搜索到你需要的内容，请换其他关键字"
+                android:textSize="16dip"
+                android:visibility="visible" />
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/search_his_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#E8E8E8"
+            android:scrollbars="none"
+            android:visibility="gone" >
+        </ListView>
+
+        <LinearLayout
+            android:id="@+id/search_no_net_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:gravity="center"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="60dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="点击屏幕重新加载"
                 android:textSize="16dip"
                 android:visibility="visible" />
         </LinearLayout>
