@@ -69,6 +69,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	private GridView hotWordGrid;
 	private LinearLayout hotWordLayout;
 	private LinearLayout noNetLayout;
+	private LinearLayout noDataLayout;
 
 	private int curPageNum = 1;
 	private int maxSearchNum = 10;
@@ -164,6 +165,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		hotWordLayout = (LinearLayout) this.findViewById(R.id.hot_word_layout);
 		noNetLayout = (LinearLayout) this
 				.findViewById(R.id.search_no_net_layout);
+		noDataLayout = (LinearLayout) this
+				.findViewById(R.id.search_no_data_layout);
 
 	}
 
@@ -352,6 +355,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	private void goSearch() {
 		// TODO Auto-generated method stub
 
+		noDataLayout.setVisibility(View.GONE);
 		if (!CommonUtils.isNetworkAvailable(this)) {
 			noNetLayout.setVisibility(View.VISIBLE);
 			return;
@@ -381,6 +385,9 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			searchList.clear();
 			if (searchAdapt != null)
 				searchAdapt.notifyDataSetChanged();
+
+			noDataLayout.setVisibility(View.GONE);
+			noNetLayout.setVisibility(View.GONE);
 			loadingLayout.setVisibility(View.GONE);
 			hotWordLayout.setVisibility(View.VISIBLE);
 			break;
@@ -716,6 +723,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			}
 			searchList.add(news);
 		}
+		if (searchList.size() == 0)
+			noDataLayout.setVisibility(View.VISIBLE);
 		searchAdapt.notifyDataSetChanged();
 		searchListView.onRefreshComplete();
 	}
@@ -723,6 +732,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
+		noDataLayout.setVisibility(View.GONE);
 		if (searchContent.hasFocus()
 				|| searchBut.getVisibility() == View.VISIBLE) {
 			searchContent.setText("");
@@ -736,7 +746,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			noNetLayout.setVisibility(View.GONE);
 			loadingLayout.setVisibility(View.GONE);
 			hotWordLayout.setVisibility(View.VISIBLE);
-			
+
 			return;
 		}
 		this.finish();

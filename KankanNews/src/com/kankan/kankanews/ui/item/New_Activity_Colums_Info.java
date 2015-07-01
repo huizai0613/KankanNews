@@ -184,7 +184,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		setContentView(R.layout.new_activity_colums_info);
 
 	}
-	
+
 	@Override
 	protected void initView() {
 		listview = (PullToRefreshListView) findViewById(R.id.colums_info_list_view);
@@ -749,10 +749,12 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			time = data.getStringExtra("time");
 			refreshNetDate();
 		}
-		UMSsoHandler ssoHandler = shareUtil.getmController().getConfig()
-				.getSsoHandler(requestCode);
-		if (ssoHandler != null) {
-			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+		if (shareUtil != null) {
+			UMSsoHandler ssoHandler = shareUtil.getmController().getConfig()
+					.getSsoHandler(requestCode);
+			if (ssoHandler != null) {
+				ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+			}
 		}
 	}
 
@@ -914,7 +916,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			// player_guide.setVisibility(View.VISIBLE);
 			// noShowPB = true;
 			// } else {
-			if(!this.isPause)
+			if (!this.isPause)
 				columsVideoView.start();
 			// }
 			// video_controller.setEnabled(true);
