@@ -343,7 +343,7 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 
 	public void AnimFinsh() {
 		this.finish();
-		this.overridePendingTransition(R.anim.in_from_left, R.anim.out_to_right);
+		this.overridePendingTransition(R.anim.alpha, R.anim.out_to_right);
 	}
 
 	// init头部view

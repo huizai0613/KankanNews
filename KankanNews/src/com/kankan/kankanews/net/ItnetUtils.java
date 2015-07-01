@@ -526,7 +526,7 @@ public class ItnetUtils {
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				Log.e("ItnetUtils.addNewNewsAnalyse", e.getLocalizedMessage());
+				Log.e("ItnetUtils.addNewNewsAnalyse", e.getLocalizedMessage() + "");
 			}
 		}
 	}

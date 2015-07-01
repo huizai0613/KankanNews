@@ -179,4 +179,6 @@ public class AndroidConfig {
 	// 后台分析接口
 	public static final String New_NewsAnalyse = "http://api.kankanews.com/kkstat/kkapp/collect/kankanapp.json";
 
+	public static final String Shared_Icon = "http://static.statickksmg.com/image/2015/07/01/4601965e14483b182a9b7860072f5405.jpg";
+
 }

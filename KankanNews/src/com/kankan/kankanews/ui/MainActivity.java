@@ -46,11 +46,13 @@ import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
+import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.http.HttpHandler;
 import com.networkbench.agent.impl.NBSAppAgent;
 import com.umeng.message.PushAgent;
+import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends BaseVideoActivity {
@@ -58,6 +60,8 @@ public class MainActivity extends BaseVideoActivity {
 	private int curTab;
 	private int lastTab;
 	public RelativeLayout curTouchTab;
+
+	public ShareUtil shareUtil;
 
 	private ImageView menu_user_img;
 	private MyTextView menu_user_name;
@@ -400,6 +404,13 @@ public class MainActivity extends BaseVideoActivity {
 			New_RevelationsFragment fragment = (New_RevelationsFragment) fragments
 					.get(4);
 			fragment.onActivityResult(requestCode, resultCode, data);
+		}
+		if (this.shareUtil != null) {
+			UMSsoHandler ssoHandler = this.shareUtil.getmController()
+					.getConfig().getSsoHandler(requestCode);
+			if (ssoHandler != null) {
+				ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+			}
 		}
 	}
 

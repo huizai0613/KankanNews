@@ -1135,7 +1135,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 	@Override
 	protected void onResume() {
-		Log.e("onResume", "onResume");
 		super.onResume();
 		isPause = false;
 		isGoShare = false;

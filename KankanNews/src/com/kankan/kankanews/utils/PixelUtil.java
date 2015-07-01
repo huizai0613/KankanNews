@@ -2,6 +2,7 @@ package com.kankan.kankanews.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.kankan.kankanews.base.IA.CrashApplication;
 
@@ -10,7 +11,7 @@ import com.kankan.kankanews.base.IA.CrashApplication;
  * 
  * @author MarkMjw
  */
-public class PixelUtil {
+public class PixelUtil{
 
 	/**
 	 * The context.

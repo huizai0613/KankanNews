@@ -75,12 +75,14 @@ import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
+import com.umeng.socialize.sso.UMSsoHandler;
 
 public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		OnInfoListener, OnClickListener, OnPreparedListener,
 		OnCompletionListener, OnErrorListener {
 
 	private boolean noMoreNews = false;
+	private boolean isPause;
 
 	private ShareUtil shareUtil = null;
 	private static CustomShareBoard shareBoard;
@@ -182,7 +184,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		setContentView(R.layout.new_activity_colums_info);
 
 	}
-
+	
 	@Override
 	protected void initView() {
 		listview = (PullToRefreshListView) findViewById(R.id.colums_info_list_view);
@@ -385,6 +387,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		isPause = false;
 		if (columsVideoView != null) {
 			columsVideoView.start();
 		}
@@ -393,6 +396,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	@Override
 	public void onPause() {
 		super.onPause();
+		isPause = true;
 		if (columsVideoView != null) {
 			columsVideoView.pause();
 		}
@@ -745,6 +749,11 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			time = data.getStringExtra("time");
 			refreshNetDate();
 		}
+		UMSsoHandler ssoHandler = shareUtil.getmController().getConfig()
+				.getSsoHandler(requestCode);
+		if (ssoHandler != null) {
+			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+		}
 	}
 
 	private void videoPlay() {
@@ -905,7 +914,8 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			// player_guide.setVisibility(View.VISIBLE);
 			// noShowPB = true;
 			// } else {
-			columsVideoView.start();
+			if(!this.isPause)
+				columsVideoView.start();
 			// }
 			// video_controller.setEnabled(true);
 			// goneContentVideoTempImage();

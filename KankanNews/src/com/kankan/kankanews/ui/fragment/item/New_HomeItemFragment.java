@@ -194,6 +194,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				String time = TimeUtil.getTime(new Date());
 				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(
 						"最后更新:" + time);
+				Log.e("onPullDownToRefresh", "onPullDownToRefresh");
 				refreshNetDate();
 			}
 
@@ -229,38 +230,40 @@ public class New_HomeItemFragment extends BaseFragment implements
 		}
 		screnn_pb.setVisibility(View.GONE);
 		if (CommonUtils.isNetworkAvailable(mActivity) && !hasLoaded) {
-			listview.showHeadLoadingView();
-			if (!initLocalDate) {
-				screnn_pb.setVisibility(View.VISIBLE);
-				main_bg.setVisibility(View.GONE);
-			}
-			refreshNetDate();
-		}
-		// TODO
-		if (New_HomeFragment.PUSH_NEWS_ID != null) {
-			// 推送
-			String news_id = New_HomeFragment.PUSH_NEWS_ID;
-			instance.getNewsContentDataPush(news_id,
-					new Listener<JSONObject>() {
-						@Override
-						public void onResponse(JSONObject jsonObject) {
-							New_News_Home news = new New_News_Home();
-							try {
-								news.parseJSON(jsonObject);
-								openNews(news);
-							} catch (NetRequestException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+			// TODO
+			if (New_HomeFragment.PUSH_NEWS_ID != null) {
+				// 推送
+				String news_id = New_HomeFragment.PUSH_NEWS_ID;
+				instance.getNewsContentDataPush(news_id,
+						new Listener<JSONObject>() {
+							@Override
+							public void onResponse(JSONObject jsonObject) {
+								New_News_Home news = new New_News_Home();
+								try {
+									news.parseJSON(jsonObject);
+									openNews(news);
+								} catch (NetRequestException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							}
-						}
-					}, new ErrorListener() {
-						@Override
-						public void onErrorResponse(VolleyError error) {
-							ToastUtils.ErrorToastNoNet(getActivity());
-						}
-					});
-			New_HomeFragment.PUSH_NEWS_ID = null;
+						}, new ErrorListener() {
+							@Override
+							public void onErrorResponse(VolleyError error) {
+								// ToastUtils.ErrorToastNoNet(getActivity());
+							}
+						});
+				New_HomeFragment.PUSH_NEWS_ID = null;
+			} else {
+				listview.showHeadLoadingView();
+				if (!initLocalDate) {
+					screnn_pb.setVisibility(View.VISIBLE);
+					main_bg.setVisibility(View.GONE);
+				}
+			}
+			 refreshNetDate();
 		}
+
 		return inflate;
 
 	}
@@ -333,7 +336,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 	}
 
 	private void addData(final boolean isClear) {
-
 		if (!isLoadMore) {
 			long time = refreshStartTime - System.currentTimeMillis();
 			long sleepTime = 0;
@@ -471,7 +473,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 	@Override
 	protected void refreshNetDate() {
-
+		Log.e("refreshNetDate", "refreshNetDate");
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			refreshStartTime = System.currentTimeMillis();
 			isLoadMore = false;
@@ -770,9 +772,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					newHolder.title = (MyTextView) convertView
 							.findViewById(R.id.home_news_title);
-					// newHolder.title.setTextSize(New_HomeItemFragment.this
-					// .getResources().getDimension(
-					// textNomalSize[PixelUtil.getScale()]));
+					newHolder.title.setTextSize(New_HomeItemFragment.this
+							.getResources().getDimension(
+									textNomalSize[PixelUtil.getScale()]));
 					newHolder.newstime_sign = (ImageView) convertView
 							.findViewById(R.id.home_news_newstime_sign);
 					newHolder.newstime = (MyTextView) convertView

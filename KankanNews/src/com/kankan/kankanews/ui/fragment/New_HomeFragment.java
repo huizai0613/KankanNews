@@ -199,10 +199,19 @@ public class New_HomeFragment extends BaseFragment implements
 						}
 					}
 				});
-				params.rightMargin = PixelUtil.dp2px(0);
-				params.leftMargin = PixelUtil.dp2px(18);
-
-				layout.addView(columnTextView, params);
+				if(i == count - 1){
+					Log.e("iiiii", i + "" + (count - 1));
+					LinearLayout.LayoutParams lastParams = new LinearLayout.LayoutParams(
+							android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
+							android.widget.LinearLayout.LayoutParams.MATCH_PARENT);
+					lastParams.rightMargin = PixelUtil.dp2px(18);
+					lastParams.leftMargin = PixelUtil.dp2px(18);
+					layout.addView(columnTextView, lastParams);
+				} else{
+					params.rightMargin = PixelUtil.dp2px(0);
+					params.leftMargin = PixelUtil.dp2px(18);
+					layout.addView(columnTextView, params);
+				}
 				mRadioGroup_content.addView(layout, Linparams);
 
 			}

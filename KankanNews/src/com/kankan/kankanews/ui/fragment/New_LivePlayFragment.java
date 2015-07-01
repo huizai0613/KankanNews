@@ -238,12 +238,13 @@ public class New_LivePlayFragment extends BaseFragment implements
 		initLinsenter();
 		initLocalDate();
 
-//		if (CommonUtils.isNetworkAvailable(mActivity)) {
-//			refreshNetDate();
-//		} else {
-//			screnn_pb.setVisibility(View.GONE);
-//			main_bg.setVisibility(View.VISIBLE);
-//		}
+		if (CommonUtils.isNetworkAvailable(mActivity)) {
+			refreshNetDate();
+			isFirst = true;
+		} else {
+			screnn_pb.setVisibility(View.GONE);
+			main_bg.setVisibility(View.VISIBLE);
+		}
 
 		return inflate;
 	}
@@ -1108,7 +1109,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 		switch (id) {
 		case R.id.live_share_but:
 			nowLiveNew.setSharedPic(null);
-			shareUtil = new ShareUtil(nowLiveNew, this.getActivity());
+			shareUtil = new ShareUtil(nowLiveNew, this.mActivity);
+			this.mActivity.shareUtil = shareUtil;
 			// 一键分享
 			shareBoard = new CustomShareBoard((BaseActivity) this.mActivity,
 					shareUtil, this);

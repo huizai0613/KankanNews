@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.interfaz.CanSharedObject;
+import com.kankan.kankanews.config.AndroidConfig;
 import com.kankanews.kankanxinwen.R;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.bean.SocializeEntity;
@@ -84,7 +85,7 @@ public class ShareUtil {
 				if (eCode == StatusCode.ST_CODE_SUCCESSED) {
 					ToastUtils.Infotoast(activity, "分享成功");
 				} else if (eCode == StatusCode.ST_CODE_ERROR_CANCEL) {
-//					ToastUtils.Infotoast(activity, "分享取消");
+					// ToastUtils.Infotoast(activity, "分享取消");
 				} else {
 					ToastUtils.Infotoast(activity, "分享失败");
 				}
@@ -100,7 +101,7 @@ public class ShareUtil {
 	private void setShareContent() {
 
 		// 配置SSO
-		 mController.getConfig().setSsoHandler(new SinaSsoHandler());
+		mController.getConfig().setSsoHandler(new SinaSsoHandler());
 		// mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
 
 		// QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(activity,
@@ -112,15 +113,16 @@ public class ShareUtil {
 		// (BitmapDrawable)drawable).getBitmap());
 		// UMImage SharePic = new UMImage(activity, content_News.getTitlepic());
 		UMImage titlePic = null;
-		if(null == shareObj.getSharedPic() || "".equals(shareObj.getSharedPic().trim())){
-			titlePic = new UMImage(activity, R.drawable.icon_shared);
-		}else{
+		if (null == shareObj.getSharedPic()
+				|| "".equals(shareObj.getSharedPic().trim())) {
+			titlePic = new UMImage(activity, AndroidConfig.Shared_Icon);
+		} else {
 			titlePic = new UMImage(activity, shareObj.getSharedPic());
 		}
 		// UMImage resImage = new UMImage(activity, R.drawable.icon);
-		
+
 		String sharedUrl = handleUrl(shareObj.getTitleurl());
-		
+
 		// 视频分享
 		UMVideo video = new UMVideo(shareObj.getTitleurl());
 		video.setMediaUrl(shareObj.getTitleurl());
@@ -131,9 +133,8 @@ public class ShareUtil {
 
 		// 微信
 		WeiXinShareContent weixinContent = new WeiXinShareContent();
-		weixinContent
-				.setShareContent(shareObj.getTitle() == null ? shareObj
-						.getTitlelist() : shareObj.getTitle());
+		weixinContent.setShareContent(shareObj.getTitle() == null ? shareObj
+				.getTitlelist() : shareObj.getTitle());
 		weixinContent.setTitle(shareObj.getTitlelist());
 		weixinContent.setTargetUrl(sharedUrl);
 		weixinContent.setShareMedia(titlePic);
@@ -200,7 +201,8 @@ public class ShareUtil {
 		SinaShareContent sinaContent = new SinaShareContent(titlePic);
 		// sinaContent.setShareMedia(video);
 		sinaContent.setShareImage(titlePic);
-//		sinaContent.setShareImage(new UMImage(activity, "http://static.statickksmg.com/image/2015/05/07/ad7b6608ed69b909356b605db8924891.jpg"));
+		// sinaContent.setShareImage(new UMImage(activity,
+		// "http://static.statickksmg.com/image/2015/05/07/ad7b6608ed69b909356b605db8924891.jpg"));
 		// TODO
 		sinaContent.setShareContent(shareObj.getTitlelist() + "-看看新闻 "
 				+ sharedUrl + " （分享自@看看新闻网） ");
@@ -230,20 +232,20 @@ public class ShareUtil {
 	// SHARE_MEDIA.YIXIN_CIRCLE, SHARE_MEDIA.YNOTE);
 	// mController.openShare(activity, false);
 	// }
-	
-	private String handleUrl(String srcUrl){
-		if(srcUrl.contains("?")){
+
+	private String handleUrl(String srcUrl) {
+		if (srcUrl.contains("?")) {
 			return srcUrl + "&utm_source=kankanapp";
 		}
 		return srcUrl + "?utm_source=kankanapp";
 	}
-	
+
 	/**
 	 * 配置分享平台参数</br>
 	 */
 	private void configPlatforms() {
 		// 添加新浪SSO授权
-		 mController.getConfig().setSsoHandler(new SinaSsoHandler());
+		mController.getConfig().setSsoHandler(new SinaSsoHandler());
 		// 添加腾讯微博SSO授权
 		// mController.getConfig().setSsoHandler(new TencentWBSsoHandler());
 		// 添加人人网SSO授权

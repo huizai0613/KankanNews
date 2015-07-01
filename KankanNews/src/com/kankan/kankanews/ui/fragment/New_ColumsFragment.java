@@ -276,8 +276,19 @@ public class New_ColumsFragment extends BaseFragment {
 
 				if (itemViewType == 0) {
 					viewOne = (HolderViewOne) convertView.getTag();
+					if (position == 0) {
+						convertView.setPadding(0, PixelUtil.dp2px(10), 0,
+								PixelUtil.dp2px(10));
+					} else {
+						convertView.setPadding(0, 0, 0, PixelUtil.dp2px(10));
+					}
 				} else if (itemViewType == 1) {
 					viewTwo = (HolderViewTwo) convertView.getTag();
+					if (position == 0) {
+						convertView.setPadding(0, PixelUtil.dp2px(10), 0, 0);
+					} else {
+						convertView.setPadding(0, 0, 0, PixelUtil.dp2px(10));
+					}
 				}
 			}
 
@@ -403,7 +414,7 @@ public class New_ColumsFragment extends BaseFragment {
 		} else {
 			SecondColumsBoard board = new SecondColumsBoard(this.mActivity,
 					colum);
-//			board.setWidth(this.mActivity.mScreenWidth * 95 / 100);
+			// board.setWidth(this.mActivity.mScreenWidth * 95 / 100);
 			board.setAnimationStyle(R.style.popwin_anim_style);
 			board.showAtLocation(inflate, Gravity.BOTTOM, 0, 0);
 		}

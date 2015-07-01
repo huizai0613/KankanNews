@@ -454,8 +454,6 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 
 	@Override
 	public void finish() {
-		if (vp != null)
-			vp.setAdapter(null);
 		System.gc();
 		super.finish();
 	}

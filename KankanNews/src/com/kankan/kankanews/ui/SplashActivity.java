@@ -31,6 +31,7 @@ import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.net.ItnetUtils;
+import com.kankan.kankanews.search.SearchMainActivity;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -52,15 +53,26 @@ public class SplashActivity extends BaseActivity {
 	private String version;
 
 	private static final int GO_HOME = 1000;
-	private static final int GO_GUIDE = 1001;
+	private static final int AD_GO_HOME = 1001;
+	private static final int GO_GUIDE = 1010;
+	private static final int AD_GO_GUIDE = 1011;
+	private static final int CLICK_GO_HOME = 1020;
+	private static final int REMOVE_MESSAGES = 2000;
+	private static final int REMOVE_ALL_MESSAGES = 3000;
 	// 延迟3秒
-	private static final long SPLASH_DELAY_MILLIS = 3000;
+	private static final long SPLASH_DELAY_MILLIS = 5000;
+	// 延迟3秒
+	private static final long AD_HAS_DELAY_MILLIS = 3000;
+	// 延迟3秒
+	private static final long AD_NO_DELAY_MILLIS = 2000;
 
 	private ImageView welcome_img;
 	private ImageView welcome_text_img;
 	private LinearLayout rootView;
 	private ImageView adPic;
 	private Advert advert;
+
+	private boolean hasCallAds = false;
 	// private Animation animation;
 
 	/**
@@ -72,13 +84,25 @@ public class SplashActivity extends BaseActivity {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case GO_HOME:
+			case AD_GO_HOME:
 				goHome();
 				break;
+			case AD_GO_GUIDE:
 			case GO_GUIDE:
 				goGuide();
 				break;
+			case REMOVE_MESSAGES:
+				mHandler.removeMessages(GO_GUIDE);
+				mHandler.removeMessages(GO_HOME);
+				break;
+			case REMOVE_ALL_MESSAGES:
+				mHandler.removeMessages(GO_GUIDE);
+				mHandler.removeMessages(GO_HOME);
+				mHandler.removeMessages(AD_GO_GUIDE);
+				mHandler.removeMessages(AD_GO_HOME);
+				break;
 			}
-			super.handleMessage(msg);
+			// super.handleMessage(msg);
 		}
 	};
 	private PushAgent mPushAgent;
@@ -93,8 +117,8 @@ public class SplashActivity extends BaseActivity {
 		instance = ItnetUtils.getInstance(this);
 		// Log.e("UmengRegistrar", UmengRegistrar.getRegistrationId(this));
 
-		// NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
-		// .withLocationServiceEnabled(true).start(this);
+		NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
+				.withLocationServiceEnabled(true).start(this);
 		mApplication.setStart(true);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
@@ -103,7 +127,7 @@ public class SplashActivity extends BaseActivity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		setContentView(R.layout.activity_splash);
-		Log.e("mScreenWidth", mScreenWidth + "");
+		// Log.e("mScreenWidth", mScreenWidth + "");
 		// 关闭默认的统计方式
 		MobclickAgent.openActivityDurationTrack(false);
 		// 发送策略
@@ -125,25 +149,49 @@ public class SplashActivity extends BaseActivity {
 
 	public void onWindowFocusChanged(boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		int adPicWidth = adPic.getWidth();
-		int adPicHeight = adPic.getHeight();
-
-		if (CommonUtils.isNetworkAvailableNoToast(this)) {
-			Map<String, String> params = new HashMap<String, String>();
-			params.put("aid", "107167");
-			params.put("ts", new Date().getTime() + "");
-			params.put("fmt", "json");
-			params.put("ver", "1");
-			params.put("aw", adPicWidth + "");
-			params.put("ah", adPicHeight + "");
-			params.put("m", "1");
-			// Log.e("Date", params.get("ts"));AndroidConfig.ADVERT_GET
-			// String params = "?aid=107167&ts=" + new Date().getTime() +
-			// "&fmt=json&ver=1";
-			instance.getAdert(params, this.mListener, this.mErrorListener);
-		} else {
-			getLocalAdvert();
-			showAdvert();
+		if (!hasCallAds) {
+			int adPicWidth = adPic.getWidth();
+			int adPicHeight = adPic.getHeight();
+			hasCallAds = true;
+			if (CommonUtils.isNetworkAvailableNoToast(this)) {
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("aid", "107167");
+				params.put("ts", new Date().getTime() + "");
+				params.put("fmt", "json");
+				params.put("ver", "1");
+				params.put("aw", adPicWidth + "");
+				params.put("ah", adPicHeight + "");
+				params.put("m", "1");
+				// Log.e("Date", params.get("ts"));AndroidConfig.ADVERT_GET
+				// String params = "?aid=107167&ts=" + new Date().getTime() +
+				// "&fmt=json&ver=1";
+				instance.getAdert(params, this.mListener, this.mErrorListener);
+			} else {
+				getLocalAdvert();
+				mHandler.sendEmptyMessage(REMOVE_MESSAGES);
+				if (advert == null) {
+					if (isFirstIn || !version.equals(spUtil.getVersion())) {
+						// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
+						mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
+								AD_NO_DELAY_MILLIS);
+					} else {
+						mHandler.sendEmptyMessageDelayed(AD_GO_HOME,
+								AD_NO_DELAY_MILLIS);
+					}
+					return;
+				} else {
+					if (isFirstIn || !version.equals(spUtil.getVersion())) {
+						// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
+						mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
+								AD_HAS_DELAY_MILLIS);
+					} else {
+						mHandler.sendEmptyMessageDelayed(AD_GO_HOME,
+								AD_HAS_DELAY_MILLIS);
+					}
+					showAdvert();
+					return;
+				}
+			}
 		}
 	}
 
@@ -246,6 +294,8 @@ public class SplashActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				if (!CommonUtils.isNetworkAvailableNoToast(SplashActivity.this))
+					return;
 				if (advert != null && advert.getValue() != null
 						&& !advert.getValue().equals("")) {
 					String advertValue = advert.getValue();
@@ -259,13 +309,14 @@ public class SplashActivity extends BaseActivity {
 								intent.putExtra("PUSH_NEWS_ID", value);
 							if (key.equalsIgnoreCase("liveid"))
 								intent.putExtra("LIVE_ID", value);
-							mHandler.removeMessages(GO_HOME);
-							mHandler.removeMessages(GO_GUIDE);
+							mHandler.sendEmptyMessage(REMOVE_ALL_MESSAGES);
 							if (isFirstIn
 									|| !version.equals(spUtil.getVersion())) {
 								// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
 								goGuide();
 							} else {
+								// mHandler.sendEmptyMessage(CLICK_GO_HOME);
+
 								goHome();
 							}
 						}
@@ -278,11 +329,11 @@ public class SplashActivity extends BaseActivity {
 		welcome_img = (ImageView) this.findViewById(R.id.welcome_logo_img);
 		welcome_text_img = (ImageView) this
 				.findViewById(R.id.welcome_logo_text_img);
-
-		int width = this.mScreenWidth;
-		int height = this.mScreenHeight;
-		Log.e("adPicWidth", adPic.getWidth() + "");
-		Log.e("adPicHeight", adPic.getHeight() + "");
+		//
+		// int width = this.mScreenWidth;
+		// int height = this.mScreenHeight;
+		// Log.e("adPicWidth", adPic.getWidth() + "");
+		// Log.e("adPicHeight", adPic.getHeight() + "");
 		// welcome_img.post(new Runnable() {
 		// @Override
 		// public void run() {
@@ -399,10 +450,29 @@ public class SplashActivity extends BaseActivity {
 	@Override
 	protected void onSuccess(JSONObject jsonObject) {
 		// TODO Auto-generated method stub
+		mHandler.sendEmptyMessage(REMOVE_MESSAGES);
+		if (jsonObject.optString("status").equals("failure")) {
+			clearLocalAdvert();
+			if (isFirstIn || !version.equals(spUtil.getVersion())) {
+				// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
+				mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
+						AD_NO_DELAY_MILLIS);
+			} else {
+				mHandler.sendEmptyMessageDelayed(AD_GO_HOME, AD_NO_DELAY_MILLIS);
+			}
+			return;
+		}
 		Log.e("jsonObject", jsonObject.toString());
 		if (advert == null)
 			advert = new Advert();
 		advert.parseJSON(jsonObject);
+
+		if (isFirstIn || !version.equals(spUtil.getVersion())) {
+			// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
+			mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE, AD_HAS_DELAY_MILLIS);
+		} else {
+			mHandler.sendEmptyMessageDelayed(AD_GO_HOME, AD_HAS_DELAY_MILLIS);
+		}
 		if (advert != null) {
 			showAdvert();
 			saveAdvertLocal();
@@ -436,6 +506,14 @@ public class SplashActivity extends BaseActivity {
 			advert = this.dbUtils.findFirst(Advert.class);
 		} catch (DbException e) {
 			Log.e("SplashActivity saveAdvertLocal", e.getLocalizedMessage());
+		}
+	}
+
+	private void clearLocalAdvert() {
+		try {
+			this.dbUtils.deleteAll(Advert.class);
+		} catch (DbException e) {
+			Log.e("SplashActivity clearLocalAdvert", e.getLocalizedMessage());
 		}
 	}
 
