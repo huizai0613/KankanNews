@@ -46,7 +46,6 @@ public class New_HomeFragment extends BaseFragment implements
 	private int mRadioGroupContentWidth;
 	private HorizontalScrollView mColumnHorizontalScrollView;
 	private LinearLayout mRadioGroup_content;
-	private ImageView shade_left;
 	private ImageView searchBut;
 	// private ImageView shade_right;
 
@@ -128,7 +127,7 @@ public class New_HomeFragment extends BaseFragment implements
 						New_HomeFragment.this.mActivity,
 						SearchMainActivity.class));
 				New_HomeFragment.this.mActivity.overridePendingTransition(
-						R.anim.in_from_right, R.anim.alpha_op );//R.anim.out_to_top
+						R.anim.in_from_right, R.anim.alpha_out );//R.anim.out_to_top
 			}
 		});
 		main_bg.setOnClickListener(new OnClickListener() {
@@ -158,7 +157,7 @@ public class New_HomeFragment extends BaseFragment implements
 				columnTextView.setId(i);
 				columnTextView.setText(homeCates.get(i).getTitle());
 				columnTextView.setTextColor(getResources().getColorStateList(
-						R.color.top_category_scroll_text_color_day));
+						R.color.home_category_text_color));
 				columnTextView
 						.setBackgroundResource(R.drawable.select_columnitem);
 

@@ -70,7 +70,6 @@ public class MainActivity extends BaseVideoActivity {
 	public SlidingMenu side_drawer;
 	private LinearLayout main_fragment_content;
 	public int newsW;
-	public int topNewW;
 
 	public FragmentManager fragmentManager;
 
@@ -126,9 +125,9 @@ public class MainActivity extends BaseVideoActivity {
 		UmengUpdateAgent.setUpdateOnlyWifi(false);
 		UmengUpdateAgent.update(this);
 		Log.e("mScreenWidth", mScreenWidth + "");
+		Log.e("mScreenHeight", mScreenHeight + "");
 
 		newsW = (mScreenWidth - PixelUtil.dp2px(15)) / 2;
-		topNewW = mScreenWidth;
 
 		Intent intent = getIntent();
 		Serializable serializableExtra = intent.getSerializableExtra("LIVE");
@@ -171,7 +170,7 @@ public class MainActivity extends BaseVideoActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+		Log.e("PixelUtil.getScale()", mContext.getResources().getDisplayMetrics().densityDpi + "");
 		if (lastTime != 0) {
 			if ((TimeUtil.now() - lastTime) / 60 >= 10) {
 				if (curTouchTab == tab_one) {

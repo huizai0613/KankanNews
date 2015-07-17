@@ -11,7 +11,7 @@
             android:text="已加载全部数据"
             android:paddingBottom="10dp"
             android:gravity="center"
-            android:textColor="@color/text_gray_color"
+            android:textColor="@color/mid_gray"
             android:textSize="16dp"
 			android:visibility="visible"            
             />

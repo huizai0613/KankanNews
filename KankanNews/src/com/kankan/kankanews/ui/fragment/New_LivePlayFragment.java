@@ -479,6 +479,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 	private void showData() {
 		boolean unStart = false;
+		Log.e("selectPlayID", selectPlayID + "");
 		for (New_LivePlay news : mLivePlayList) {
 
 			if (isSelectPlay && Integer.parseInt(news.getZid()) == selectPlayID) {
@@ -1108,6 +1109,10 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 		switch (id) {
 		case R.id.live_share_but:
+			if (nowLiveNew == null) {
+				ToastUtils.Errortoast(mActivity, "抱歉,获取不到当前直播信息，请点击播放重新尝试");
+				return;
+			}
 			nowLiveNew.setSharedPic(null);
 			shareUtil = new ShareUtil(nowLiveNew, this.mActivity);
 			this.mActivity.shareUtil = shareUtil;
@@ -1133,8 +1138,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 			}
 			break;
 		case R.id.live_pause:// 暂停
-			if (!liveVideoView.isPlaying())
-				break;
 			if (isFullstate) {
 				if (isFullShowLayout) {
 					fullScreenLayout.setVisibility(View.GONE);
@@ -1149,6 +1152,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 							HIDE_VIDEO_CONTROLLER, hideTimeOut);
 				}
 			} else {
+				if (!liveVideoView.isPlaying())
+					break;
 				liveVideoPause();
 			}
 			break;

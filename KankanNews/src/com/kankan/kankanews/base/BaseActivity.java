@@ -286,7 +286,7 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 		intent.putExtra("titlePic", titlePic);
 		intent.putExtra("sharedPic", sharedPic);
 		this.startActivity(intent);
-		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_op);
+		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_out);
 	}
 	
 	public void startAnimActivityByParameter(Class<?> cla,New_News_Home mews) {
@@ -294,7 +294,7 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
 		intent.putExtra("HOME_NEWS", (Serializable) mews);
 		this.startActivity(intent);
-		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_op);
+		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_out);
 	}
 	
 	public void startSubjectActivityByParameter(Class<?> cla, String ztid,
@@ -307,22 +307,22 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 		intent.putExtra("titlePic", titlePic);
 		intent.putExtra("sharedPic", sharedPic);
 		this.startActivity(intent);
-		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_op);
+		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_out);
 	}
 
 	public void startAnimActivity(Class<?> cla) {
 		this.startActivity(new Intent(this, cla));
-		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_op);
+		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_out);
 	}
 
 	public void startAnimActivityBack(Class<?> cla) {
 		this.startActivity(new Intent(this, cla));
-		this.overridePendingTransition(R.anim.in_from_left, R.anim.alpha_op);
+		this.overridePendingTransition(R.anim.in_from_left, R.anim.alpha_out);
 	}
 
 	public void startAnim_back_Activity(Class<?> cla) {
 		this.startActivity(new Intent(this, cla));
-		this.overridePendingTransition(R.anim.in_from_left, R.anim.alpha_op);
+		this.overridePendingTransition(R.anim.in_from_left, R.anim.alpha_out);
 	}
 
 	public void startAnimActivityAndFinsh(Class<?> cla) {
@@ -343,7 +343,7 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 
 	public void AnimFinsh() {
 		this.finish();
-		this.overridePendingTransition(R.anim.alpha, R.anim.out_to_right);
+		this.overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 	}
 
 	// init头部view

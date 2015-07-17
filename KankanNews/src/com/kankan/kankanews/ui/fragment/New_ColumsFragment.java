@@ -239,9 +239,9 @@ public class New_ColumsFragment extends BaseFragment {
 							.findViewById(R.id.img);
 					viewOne.img
 							.setLayoutParams(new LinearLayout.LayoutParams(
-									(int) ((mActivity.topNewW - PixelUtil
+									(int) ((mActivity.mScreenWidth - PixelUtil
 											.dp2px(10 * 2))),
-									(int) ((mActivity.topNewW - PixelUtil
+									(int) ((mActivity.mScreenWidth - PixelUtil
 											.dp2px(10 * 2)) / 4)));
 					if (position == 0) {
 						convertView.setPadding(0, PixelUtil.dp2px(10), 0,
@@ -256,15 +256,15 @@ public class New_ColumsFragment extends BaseFragment {
 					viewTwo.v2 = (ImageView) (convertView.findViewById(R.id.v2));
 					viewTwo.v1
 							.setLayoutParams(new LinearLayout.LayoutParams(
-									(int) ((mActivity.topNewW - PixelUtil
+									(int) ((mActivity.mScreenWidth - PixelUtil
 											.dp2px(10 * 3)) / 2),
-									(int) ((mActivity.topNewW - PixelUtil
+									(int) ((mActivity.mScreenWidth - PixelUtil
 											.dp2px(10 * 2)) / 4)));
 					viewTwo.v2
 							.setLayoutParams(new LinearLayout.LayoutParams(
-									(int) ((mActivity.topNewW - PixelUtil
+									(int) ((mActivity.mScreenWidth - PixelUtil
 											.dp2px(10 * 3)) / 2),
-									(int) ((mActivity.topNewW - PixelUtil
+									(int) ((mActivity.mScreenWidth - PixelUtil
 											.dp2px(10 * 2)) / 4)));
 					if (position == 0) {
 						convertView.setPadding(0, PixelUtil.dp2px(10), 0, 0);

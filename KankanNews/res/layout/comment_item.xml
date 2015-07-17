@@ -46,7 +46,7 @@
                     android:layout_height="20dp"
                     android:gravity="center_vertical"
                     android:text="上海广播电视台电视中心记者"
-                    android:textColor="@color/text_gray_color"
+                    android:textColor="@color/mid_gray"
                     android:textSize="12dp" />
             </LinearLayout>
         </LinearLayout>

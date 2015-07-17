@@ -108,7 +108,7 @@
             android:id="@+id/listView_divider_line"
             android:layout_width="match_parent"
             android:layout_height="5dp"
-            android:background="@color/listView_divider_color"
+            android:background="@color/light_gray"
             android:visibility="gone" />
     </LinearLayout>
 

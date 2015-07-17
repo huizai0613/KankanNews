@@ -238,7 +238,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="50dip"
-            android:background="@color/colums_title_background" >
+            android:background="@color/deep_gray" >
 
             <ImageView
                 android:id="@+id/colums_image"
@@ -304,7 +304,7 @@
         android:clickable="true"
         android:gravity="center"
         android:text="暂无数据"
-        android:textColor="@color/text_gray_color"
+        android:textColor="@color/mid_gray"
         android:textSize="20dp"
         android:visibility="gone" />
 

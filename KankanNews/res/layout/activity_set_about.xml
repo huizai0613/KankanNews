@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dip"
-        android:textColor="@color/text_gray_color"
+        android:textColor="@color/mid_gray"
         android:textSize="16dp" />
 
     <RelativeLayout
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="上海看看牛视网络传播有限公司"
-                android:textColor="@color/text_gray_color"
+                android:textColor="@color/mid_gray"
                 android:textSize="12dp" />
 
             <com.kankan.kankanews.ui.view.MyTextView
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="Copyright © 2014-2015 Kankanews.com Inc. All Rights Reserved."
-                android:textColor="@color/text_gray_color"
+                android:textColor="@color/mid_gray"
                 android:textSize="10dp" />
         </LinearLayout>
     </RelativeLayout>

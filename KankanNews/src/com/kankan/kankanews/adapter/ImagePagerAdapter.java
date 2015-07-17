@@ -106,10 +106,10 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 		if (getItemViewType(position) == 1) {// gif图片
 			GifView gifView = (GifView) view;
 			gifView.setGifImageType(GifImageType.COVER);
-			gifView.setShowDimension(fragment.mActivity.topNewW,
-					(int) (fragment.mActivity.topNewW / 1.7));
+			gifView.setShowDimension(fragment.mActivity.mScreenWidth,
+					(int) (fragment.mActivity.mScreenWidth / 1.7));
 			gifView.setTag(R.string.viewwidth,
-					(int) (fragment.mActivity.topNewW / 1.7));
+					(int) (fragment.mActivity.mScreenWidth / 1.7));
 
 			CommonUtils.zoomImageGIF(imageLoader,
 					imageIdList.get(getPosition(position)).getUrlPath(),
@@ -165,7 +165,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 			ImageView v = (ImageView) view;
 
 			v.setTag(R.string.viewwidth,
-					(int) (fragment.mActivity.topNewW / 1.7));
+					(int) (fragment.mActivity.mScreenWidth / 1.7));
 			v.setTag(R.string.isTop, true);
 			ImgUtils.imageLoader.displayImage(
 					imageIdList.get(getPosition(position)).getUrlPath()

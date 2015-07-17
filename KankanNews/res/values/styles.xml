@@ -16,13 +16,13 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
     </style>
 
@@ -37,7 +37,7 @@
 
     <style name="ActionBar">
         <item name="android:orientation">horizontal</item>
-        <item name="android:background">@color/top_bar_color</item>
+        <item name="android:background">@color/dove_gray</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_height">@dimen/base_action_bar_height</item>
@@ -280,79 +280,38 @@
         <item name="android:textColor">#acacac</item>
     </style>
 
-    <!-- 我的关注主页top里的四个样式 -->
-    <style name="myAttention_top_layout">
-        <item name="android:layout_height">match_parent</item>
+    <style name="CalendarTitle">
+        <item name="android:textSize">@dimen/calendar_text_medium</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CalendarCell">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:orientation">vertical</item>
         <item name="android:gravity">center</item>
+        <item name="android:textAlignment">center</item>
     </style>
 
-    <!-- 我的关注主页top里的四个样式    字体num -->
-    <style name="myAttention_top_text_1">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">20dp</item>
-        <item name="android:textColor">@color/text_myAttention_normal</item>
-        <item name="android:text">"0"</item>
+    <style name="CalendarCell.DayHeader">
+        <item name="android:textSize">@dimen/calendar_text_small</item>
     </style>
 
-    <!-- 我的关注主页top里的四个样式    字体 -->
-    <style name="myAttention_top_text_2">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">16dp</item>
-        <item name="android:layout_marginTop">4dp</item>
-        <item name="android:textColor">@color/text_myAttention_normal</item>
+    <style name="CalendarCell.CalendarDate">
+        <item name="android:textSize">@dimen/calendar_text_medium</item>
+        <item name="android:clickable">true</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- 我的关注主页top里的四个样式    竖分割线 -->
-    <style name="myAttention_top_line">
-        <item name="android:layout_height">40dp</item>
-        <item name="android:layout_width">1dp</item>
-        <item name="android:background">#dddddd</item>
-    </style>
-
-    <!-- 我的关注 设置分割线 -->
-    <style name="myAttention_line">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">#dddddd</item>
-    </style>
-    
-    
-    <style name="CalendarTitle">
-    <item name="android:textSize">@dimen/calendar_text_medium</item>
-    <item name="android:textStyle">bold</item>
-  </style>
-
-  <style name="CalendarCell">
-    <item name="android:layout_width">0dp</item>
-    <item name="android:layout_weight">1</item>
-    <item name="android:gravity">center</item>
-    <item name="android:textAlignment">center</item>
-  </style>
-
-  <style name="CalendarCell.DayHeader">
-    <item name="android:textSize">@dimen/calendar_text_small</item>
-  </style>
-
-  <style name="CalendarCell.CalendarDate">
-    <item name="android:textSize">@dimen/calendar_text_medium</item>
-    <item name="android:clickable">true</item>
-    <item name="android:textStyle">bold</item>
-  </style>
-  
-  <!-- 设置分割线 -->
+    <!-- 设置分割线 -->
     <style name="new_set_item_Line">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#f6f6f6</item>
     </style>
-	
+
     <style name="anim_popup_dir">
         <item name="android:windowEnterAnimation">@anim/pic_selected_slide_in</item>
         <item name="android:windowExitAnimation">@anim/pic_selected_slide_out</item>
     </style>
+
 </resources>

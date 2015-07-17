@@ -131,8 +131,7 @@ public class CrashApplication extends Application {
 		int height = display.getHeight();
 		AssetManager mgr = getAssets();
 		tf = Typeface.createFromAsset(mgr, "nomal.TTF");
-		
-		
+
 		dbUtils = DbUtils.create(this, "kankan", 5, new DbUpgradeListener() {
 			@Override
 			public void onUpgrade(DbUtils arg0, int arg1, int arg2) {
@@ -166,8 +165,8 @@ public class CrashApplication extends Application {
 		});
 		dbUtils.configAllowTransaction(true);
 
-//		Vitamio.initialize(this,
-//				getResources().getIdentifier("libarm", "raw", getPackageName()));
+		// Vitamio.initialize(this,
+		// getResources().getIdentifier("libarm", "raw", getPackageName()));
 		checkLogin();
 		File cacheDir = CommonUtils.getImageCachePath(getApplicationContext());
 		initImageLoader(this, cacheDir);
@@ -189,11 +188,11 @@ public class CrashApplication extends Application {
 				.denyCacheImageMultipleSizesInMemory()
 				.diskCacheSize(50 * 1024 * 1024)
 				.memoryCache(new WeakMemoryCache())
-//				.memoryCacheSize(20*1024*1024)
-//				.diskCacheExtraOptions(480, 320, null)
+				// .memoryCacheSize(20*1024*1024)
+				// .diskCacheExtraOptions(480, 320, null)
 				// 50 Mb
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
-//				.writeDebugLogs() // Remove for release app
+				// .writeDebugLogs() // Remove for release app
 				.build();
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);

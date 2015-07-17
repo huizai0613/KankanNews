@@ -717,16 +717,19 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					pagerHolder.title = (MyTextView) convertView
 							.findViewById(R.id.new_title);
-					pagerHolder.title.setTextSize(New_HomeItemFragment.this
+//					pagerHolder.title.setTextSize(New_HomeItemFragment.this
+//							.getResources().getDimension(
+//									textNomalSize[PixelUtil.getScale()]));
+					Log.e("PixelUtil.getScale()", New_HomeItemFragment.this
 							.getResources().getDimension(
-									textNomalSize[PixelUtil.getScale()]));
+									textNomalSize[PixelUtil.getScale()]) + "");
 					pagerHolder.pager
 							.setLayoutParams(new RelativeLayout.LayoutParams(
 									RelativeLayout.LayoutParams.MATCH_PARENT,
-									(int) (mActivity.topNewW / 1.7)));
+									(int) (mActivity.mScreenWidth / 1.7)));
 					convertView.setLayoutParams(new AbsListView.LayoutParams(
 							RelativeLayout.LayoutParams.MATCH_PARENT,
-							(int) (mActivity.topNewW / 1.7)
+							(int) (mActivity.mScreenWidth / 1.7)
 									+ PixelUtil.dp2px(45)));
 
 					pagerHolder.pager
@@ -811,7 +814,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					albumsHolder.home_albums_imgs_layout
 							.setLayoutParams(new LinearLayout.LayoutParams(
 									LinearLayout.LayoutParams.MATCH_PARENT,
-									(int) ((mActivity.topNewW - PixelUtil
+									(int) ((mActivity.mScreenWidth - PixelUtil
 											.dp2px(10 * 4)) / 3 * 0.7)));
 					convertView.setTag(albumsHolder);
 				} else if (itemViewType == 4) {
@@ -833,13 +836,13 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					newZhuanTiHolder.home_news_titlepic
 							.setLayoutParams(new LinearLayout.LayoutParams(
-									(int) ((mActivity.topNewW - PixelUtil
+									(int) ((mActivity.mScreenWidth - PixelUtil
 											.dp2px(10 * 2))),
-									(int) ((float) ((mActivity.topNewW - PixelUtil
+									(int) ((float) ((mActivity.mScreenWidth - PixelUtil
 											.dp2px(10 * 2)) / 3.2))));
 					newZhuanTiHolder.home_news_titlepic
 							.setTag(R.string.viewwidth,
-									(int) ((mActivity.topNewW - PixelUtil
+									(int) ((mActivity.mScreenWidth - PixelUtil
 											.dp2px(10 * 2))));
 					convertView.setTag(newZhuanTiHolder);
 				}

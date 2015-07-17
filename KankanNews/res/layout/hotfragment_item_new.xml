@@ -66,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:text="54343"
-                    android:textColor="@color/text_gray_color"
+                    android:textColor="@color/mid_gray"
                     android:textSize="14dp" />
 
                 <com.kankan.kankanews.ui.view.MyTextView
@@ -75,7 +75,7 @@
                     android:layout_marginLeft="5dp"
                     android:gravity="bottom"
                     android:text="次播放"
-                    android:textColor="@color/text_gray_color"
+                    android:textColor="@color/mid_gray"
                     android:textSize="14dp" />
             </LinearLayout>
 

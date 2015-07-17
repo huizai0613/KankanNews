@@ -116,7 +116,7 @@ public class CalendarPickerView extends ListView {
 				R.styleable.CalendarPickerView);
 		final int bg = a.getColor(
 				R.styleable.CalendarPickerView_android_background,
-				res.getColor(R.color.calendar_bg));
+				res.getColor(R.color.white_no_alpha));
 		dividerColor = a.getColor(R.styleable.CalendarPickerView_dividerColor,
 				res.getColor(R.color.calendar_divider));
 		dayBackgroundResId = a.getResourceId(

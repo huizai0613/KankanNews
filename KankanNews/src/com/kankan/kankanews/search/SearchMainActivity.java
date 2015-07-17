@@ -750,7 +750,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			return;
 		}
 		this.finish();
-		this.overridePendingTransition(R.anim.alpha, R.anim.out_to_right);
+		this.overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 	}
 
 	@Override

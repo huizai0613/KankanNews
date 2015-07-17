@@ -106,7 +106,7 @@
             android:layout_height="1dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@color/listView_divider_color" />
+            android:background="@color/light_gray" />
     </LinearLayout>
 
 </LinearLayout>
