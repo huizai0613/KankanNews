@@ -22,6 +22,9 @@
     <!-- 浅灰色 列表间隙 -->
     <color name="light_gray">#DBDBDB</color>
 
+    <!-- 浅灰中灰色之间颜色  新闻查看过之后的颜色-->
+    <color name="mid_light_gray">#B0B0B0</color>
+
     <!-- 中灰色 字体颜色 -->
     <color name="mid_gray">#8E8E8E</color>
 

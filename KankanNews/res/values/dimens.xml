@@ -136,9 +136,9 @@
     
 	<!-- 字体大小 -->
     <dimen name="news_textsize_1">9dip</dimen>
-    <dimen name="news_textsize_2">8dip</dimen>
-    <dimen name="news_textsize_3">5.5dip</dimen>
-    <dimen name="news_textsize_4">4.5dip</dimen>
+    <dimen name="news_textsize_2">8sp</dimen>
+    <dimen name="news_textsize_3">5.5sp</dimen>
+    <dimen name="news_textsize_4">4.5sp</dimen>
     
     <!-- Padding  10dp -->
     <dimen name="padding_10dp">10dp</dimen>

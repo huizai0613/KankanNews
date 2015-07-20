@@ -55,10 +55,6 @@
 
             <LinearLayout style="@style/set_layout" >
 
-                <View
-                    style="@style/new_set_item_Line"
-                    android:visibility="gone" />
-
                 <LinearLayout style="@style/set_layout_item" >
 
                     <com.kankan.kankanews.ui.view.MarqueeTextView
@@ -69,6 +65,21 @@
                         android:id="@+id/layout_download"
                         style="@style/set_layout_right_image"
                         android:src="@drawable/icon_set_on" />
+                </LinearLayout>
+
+                <View style="@style/new_set_item_Line" />
+
+                <LinearLayout
+                    android:id="@+id/font_size_set"
+                    style="@style/set_layout_item" >
+
+                    <com.kankan.kankanews.ui.view.MyTextView
+                        style="@style/set_layout_left_text"
+                        android:text="字体更改" />
+
+                    <ImageView
+                        style="@style/set_layout_right_image"
+                        android:src="@drawable/new_icon_my_right" />
                 </LinearLayout>
             </LinearLayout>
 

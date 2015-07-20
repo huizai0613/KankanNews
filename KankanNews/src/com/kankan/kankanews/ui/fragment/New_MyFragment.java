@@ -9,7 +9,9 @@ import java.util.Map.Entry;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.LinearGradient;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.kankanews.kankanxinwen.R;
@@ -58,11 +61,14 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 	private LinearLayout layout_point;
 	private LinearLayout layout_fankui;
 	private LinearLayout layout_updata;
+	private LinearLayout font_size_set;
 	private TextView layout_version;
 	private LinearLayout layout_delete;
 	private TextView layout_detele_now;
 
 	private View scroll_view;
+
+	private String[] fontSize = new String[] { "小", "中", "大", "特大" };
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,6 +101,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		layout_download = (ImageView) inflate
 				.findViewById(R.id.layout_download);
 		layout_about = (LinearLayout) inflate.findViewById(R.id.layout_about);
+		font_size_set = (LinearLayout) inflate.findViewById(R.id.font_size_set);
 		layout_fankui = (LinearLayout) inflate.findViewById(R.id.layout_fankui);
 		layout_updata = (LinearLayout) inflate.findViewById(R.id.layout_updata);
 		layout_version = (TextView) inflate.findViewById(R.id.layout_version);
@@ -112,7 +119,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		layout_download.setOnClickListener(this);
 		layout_updata.setOnClickListener(this);
 		layout_fankui.setOnClickListener(this);
-
+		font_size_set.setOnClickListener(this);
 		layout_delete.setOnClickListener(this);
 
 		UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
@@ -222,7 +229,15 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		case R.id.layout_my_foot:
 			mActivity.startAnimActivity(New_Activity_MyFoot.class);
 			break;
-
+		case R.id.font_size_set:
+			// mActivity.startAnimActivity(New_Activity_My_About.class);
+			AlertDialog ad = new AlertDialog.Builder(this.mActivity)
+					.setTitle("选择区域")
+					.setSingleChoiceItems(fontSize, 1, new RadioOnClick(1))
+					.create();
+			// areaRadioListView = ad.getListView();
+			ad.show();
+			break;
 		case R.id.layout_about:
 			mActivity.startAnimActivity(New_Activity_My_About.class);
 			break;
@@ -372,4 +387,29 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		}
 	}
 
+	class RadioOnClick implements DialogInterface.OnClickListener {
+		private int index;
+
+		public RadioOnClick(int index) {
+			this.index = index;
+		}
+
+		public void setIndex(int index) {
+			this.index = index;
+		}
+
+		public int getIndex() {
+			return index;
+		}
+
+		@Override
+		public void onClick(DialogInterface dialog, int which) {
+			// TODO Auto-generated method stub
+			setIndex(which);
+			Toast.makeText(New_MyFragment.this.mActivity,
+					"您已经选择了： " + index + ":" + fontSize[index],
+					Toast.LENGTH_LONG).show();
+			dialog.dismiss();
+		}
+	}
 }

@@ -111,9 +111,9 @@ public class New_HomeFragment extends BaseFragment implements
 
 	public Resources getResourcesSelf() {
 		Resources res = super.getResources();
-		Configuration config = new Configuration();
-		config.setToDefaults();
-		res.updateConfiguration(config, res.getDisplayMetrics());
+//		Configuration config = new Configuration();
+//		config.setToDefaults();
+//		res.updateConfiguration(config, res.getDisplayMetrics());
 		return res;
 	}
 
