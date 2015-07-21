@@ -24,16 +24,18 @@ import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.SharePreferenceUtil;
 import com.kankanews.kankanxinwen.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
 public abstract class BaseFragment extends Fragment {
+	public SharePreferenceUtil spUtil;
 
 	protected CrashApplication crashApplication;
 	public MainActivity mActivity;
-	
+
 	protected DisplayImageOptions options;
 	protected PullToRefreshListView listview;
 	protected LayoutInflater inflater;
@@ -48,13 +50,14 @@ public abstract class BaseFragment extends Fragment {
 	private MyTextView com_title_bar_content;
 	private ImageView com_title_bar_right_bt;
 	private MyTextView com_title_bar_right_tv;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActivity = (MainActivity) getActivity();
 		crashApplication = CrashApplication.getInstance();
 		handler = new Handler();
+		spUtil = this.mActivity.mApplication.getSpUtil();
 		// options = new DisplayImageOptions.Builder()
 		// .showStubImage(R.drawable.empty_photo)
 		// .showImageForEmptyUri(R.drawable.empty_photo)
@@ -76,15 +79,13 @@ public abstract class BaseFragment extends Fragment {
 		listview.setMode(mMode);
 		// 设置PullRefreshListView上提加载时的加载提示
 		listview.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载更多");
-		listview.getLoadingLayoutProxy(false, true).setRefreshingLabel(
-				"刷新中…");
-		listview.getLoadingLayoutProxy(false, true)
-				.setReleaseLabel("松开立即加载");
+		listview.getLoadingLayoutProxy(false, true).setRefreshingLabel("刷新中…");
+		listview.getLoadingLayoutProxy(false, true).setReleaseLabel("松开立即加载");
 
 		// 设置PullRefreshListView下拉加载时的加载提示
 		listview.getLoadingLayoutProxy(true, false).setPullLabel("下拉可以刷新");
-//		listview.getLoadingLayoutProxy(true, false).setRefreshingLabel(
-//				"正在刷新请稍后...");
+		// listview.getLoadingLayoutProxy(true, false).setRefreshingLabel(
+		// "正在刷新请稍后...");
 		listview.getLoadingLayoutProxy(true, false).setReleaseLabel("释放后刷新");
 	}
 
@@ -186,18 +187,25 @@ public abstract class BaseFragment extends Fragment {
 		com_title_bar_content_img = (ImageView) view
 				.findViewById(R.id.com_title_bai_content_img);
 	}
-	
-	public void initTitle_Right_Left_bar(View view,String content, String leftContent,
-			String rightContent, String contentColor, int right_img_id,
-			int left_img_id, String bgColor,String lineColor) {
-		com_title_bar_bg = (RelativeLayout) view.findViewById(R.id.com_title_bar_bg);
-		com_title_bar_bottom_line =  view.findViewById(R.id.com_title_bar_bottom_line);
-		com_title_bar_left_bt = (ImageView) view.findViewById(R.id.com_title_bar_left_bt);
-		com_title_bar_content = (MyTextView) view.findViewById(R.id.com_title_bar_content);
-		com_title_bar_right_bt = (ImageView) view.findViewById(R.id.com_title_bar_right_bt);
 
-		com_title_bar_left_tv = (MyTextView) view.findViewById(R.id.com_title_bar_left_tv);
-		com_title_bar_right_tv = (MyTextView) view.findViewById(R.id.com_title_bar_right_tv);
+	public void initTitle_Right_Left_bar(View view, String content,
+			String leftContent, String rightContent, String contentColor,
+			int right_img_id, int left_img_id, String bgColor, String lineColor) {
+		com_title_bar_bg = (RelativeLayout) view
+				.findViewById(R.id.com_title_bar_bg);
+		com_title_bar_bottom_line = view
+				.findViewById(R.id.com_title_bar_bottom_line);
+		com_title_bar_left_bt = (ImageView) view
+				.findViewById(R.id.com_title_bar_left_bt);
+		com_title_bar_content = (MyTextView) view
+				.findViewById(R.id.com_title_bar_content);
+		com_title_bar_right_bt = (ImageView) view
+				.findViewById(R.id.com_title_bar_right_bt);
+
+		com_title_bar_left_tv = (MyTextView) view
+				.findViewById(R.id.com_title_bar_left_tv);
+		com_title_bar_right_tv = (MyTextView) view
+				.findViewById(R.id.com_title_bar_right_tv);
 
 		com_title_bar_left_tv.setText(leftContent);
 		com_title_bar_right_tv.setText(rightContent);
@@ -206,7 +214,8 @@ public abstract class BaseFragment extends Fragment {
 		if (!TextUtils.isEmpty(bgColor))
 			com_title_bar_bg.setBackgroundColor(Color.parseColor(bgColor));
 		if (!TextUtils.isEmpty(lineColor))
-			com_title_bar_bottom_line.setBackgroundColor(Color.parseColor(lineColor));
+			com_title_bar_bottom_line.setBackgroundColor(Color
+					.parseColor(lineColor));
 		com_title_bar_right_bt.setImageResource(right_img_id);
 		com_title_bar_left_bt.setImageResource(left_img_id);
 
@@ -243,33 +252,34 @@ public abstract class BaseFragment extends Fragment {
 				R.anim.out_to_left);
 	}
 
-//	public void startAnimActivityByParameter(Class<?> cla, String mid,
-//			String type, String titleurl, String newstime, String titlepiclist,String titlelist) {
-//		Intent intent = new Intent(mActivity, cla);
-//		intent.setAction("com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY");
-//		intent.addCategory(Intent.CATEGORY_DEFAULT);
-//		intent.putExtra("mid", mid);
-//		intent.putExtra("type", type);
-//		intent.putExtra("titleurl", titleurl);
-//		intent.putExtra("newstime", newstime);
-//		intent.putExtra("titlepiclist", titlepiclist);
-//		intent.putExtra("titlelist", titlelist);
-//		
-//		// intent.putExtra(key, bean);
-//		mActivity.startActivity(intent);
-//		mActivity.overridePendingTransition(R.anim.in_from_right,
-//				R.anim.out_to_left);
-//	}
+	// public void startAnimActivityByParameter(Class<?> cla, String mid,
+	// String type, String titleurl, String newstime, String titlepiclist,String
+	// titlelist) {
+	// Intent intent = new Intent(mActivity, cla);
+	// intent.setAction("com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY");
+	// intent.addCategory(Intent.CATEGORY_DEFAULT);
+	// intent.putExtra("mid", mid);
+	// intent.putExtra("type", type);
+	// intent.putExtra("titleurl", titleurl);
+	// intent.putExtra("newstime", newstime);
+	// intent.putExtra("titlepiclist", titlepiclist);
+	// intent.putExtra("titlelist", titlelist);
+	//
+	// // intent.putExtra(key, bean);
+	// mActivity.startActivity(intent);
+	// mActivity.overridePendingTransition(R.anim.in_from_right,
+	// R.anim.out_to_left);
+	// }
 
-//	public void startSubjectActivityByParameter(Class<?> cla, String ztid,
-//			String title) {
-//		Intent intent = new Intent(mActivity, cla);
-//		intent.putExtra("ztid", ztid);
-//		intent.putExtra("title", title);
-//		mActivity.startActivity(intent);
-//		mActivity.overridePendingTransition(R.anim.in_from_right,
-//				R.anim.out_to_left);
-//	}
+	// public void startSubjectActivityByParameter(Class<?> cla, String ztid,
+	// String title) {
+	// Intent intent = new Intent(mActivity, cla);
+	// intent.putExtra("ztid", ztid);
+	// intent.putExtra("title", title);
+	// mActivity.startActivity(intent);
+	// mActivity.overridePendingTransition(R.anim.in_from_right,
+	// R.anim.out_to_left);
+	// }
 
 	@Override
 	public void onResume() {

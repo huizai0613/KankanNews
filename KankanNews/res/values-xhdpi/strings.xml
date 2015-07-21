@@ -2,5 +2,6 @@
 <resources>
 
     <string name="home_news_title_text_size">16</string>
+    <string name="home_cates_text_size">18</string>
 
 </resources>

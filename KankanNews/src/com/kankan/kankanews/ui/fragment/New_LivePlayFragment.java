@@ -82,7 +82,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 		OnInfoListener, OnCompletionListener, OnErrorListener, OnClickListener,
 		OnPreparedListener, CanSharedBySina {
 
-	public SharePreferenceUtil spUtil;
 	private View inflate;
 	private RelativeLayout smallrootview;
 	private RelativeLayout rootview;
@@ -231,7 +230,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		spUtil = this.mActivity.mApplication.getSpUtil();
 		initView();
 		initDate();
 		initViewLayout();

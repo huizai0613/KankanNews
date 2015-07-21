@@ -86,6 +86,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_content_web);
+		spUtil.saveFontSizeRadix(1.4f);
 	}
 
 	@Override

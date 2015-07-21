@@ -37,6 +37,7 @@ import com.kankan.kankanews.ui.item.New_Activity_My_About;
 import com.kankan.kankanews.ui.item.New_Activity_My_FanKui;
 import com.kankan.kankanews.ui.item.New_Activity_MyFoot;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -68,7 +69,8 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 
 	private View scroll_view;
 
-	private String[] fontSize = new String[] { "小", "中", "大", "特大" };
+	private String[] fontSizeShow = new String[] { "小", "中", "大", "特大" };
+	private float[] fontSize = new float[] { 0.8f, 1, 1.2f, 1.4f };
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -231,10 +233,18 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 			break;
 		case R.id.font_size_set:
 			// mActivity.startAnimActivity(New_Activity_My_About.class);
+			float radix = spUtil.getFontSizeRadix();
+			int index = 1;
+			for (int i = 0; i < fontSize.length; i++) {
+				if (fontSize[i] == radix) {
+					index = i;
+					break;
+				}
+			}
 			AlertDialog ad = new AlertDialog.Builder(this.mActivity)
 					.setTitle("选择区域")
-					.setSingleChoiceItems(fontSize, 1, new RadioOnClick(1))
-					.create();
+					.setSingleChoiceItems(fontSizeShow, index,
+							new RadioOnClick(index)).create();
 			// areaRadioListView = ad.getListView();
 			ad.show();
 			break;
@@ -407,8 +417,10 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 			// TODO Auto-generated method stub
 			setIndex(which);
 			Toast.makeText(New_MyFragment.this.mActivity,
-					"您已经选择了： " + index + ":" + fontSize[index],
+					"您已经选择了： " + index + ":" + fontSizeShow[index],
 					Toast.LENGTH_LONG).show();
+			spUtil.saveFontSizeRadix(fontSize[index]);
+			FontUtils.setChangeFontSize(true);
 			dialog.dismiss();
 		}
 	}

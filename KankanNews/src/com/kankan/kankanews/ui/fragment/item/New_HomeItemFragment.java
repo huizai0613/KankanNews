@@ -18,6 +18,8 @@ import org.json.JSONObject;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
@@ -65,6 +67,7 @@ import com.kankan.kankanews.ui.view.AutoImageVIew;
 import com.kankan.kankanews.ui.view.AutoScrollViewPager;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -155,6 +158,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 
 		if (isVisibleToUser) {
+			if (FontUtils.hasChangeFontSize())
+				this.changeFontSize();
 			if (lastTime != 0) {
 				if ((TimeUtil.now() - lastTime) / 60 >= 10) {
 					refresh();
@@ -167,11 +172,18 @@ public class New_HomeItemFragment extends BaseFragment implements
 	}
 
 	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		inflate = inflater.inflate(R.layout.new_fragment_home_item, null);
-
+		Log.e("onCreateView", "onCreateView");
 		instance = ItnetUtils.getInstance(mActivity);
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 		screnn_pb = (LinearLayout) inflate.findViewById(R.id.screnn_pb);
@@ -195,7 +207,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 				String time = TimeUtil.getTime(new Date());
 				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(
 						"最后更新:" + time);
-				Log.e("onPullDownToRefresh", "onPullDownToRefresh");
 				refreshNetDate();
 			}
 
@@ -264,7 +275,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 			}
 			refreshNetDate();
 		}
-
 		return inflate;
 
 	}
@@ -474,7 +484,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 	@Override
 	protected void refreshNetDate() {
-		Log.e("refreshNetDate", "refreshNetDate");
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			refreshStartTime = System.currentTimeMillis();
 			isLoadMore = false;
@@ -717,29 +726,14 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					pagerHolder.title = (MyTextView) convertView
 							.findViewById(R.id.new_title);
-					// pagerHolder.title
-					// .setTextSize(
-					// TypedValue.COMPLEX_UNIT_SP,
-					// New_HomeItemFragment.this.getResources()
-					// .getDimension(
-					// textNomalSize[PixelUtil
-					// .getScale()]));
-					pagerHolder.title
-							.setTextSize(
-									TypedValue.COMPLEX_UNIT_SP,
-									Float.parseFloat(New_HomeItemFragment.this
-											.getResources()
-											.getString(
-													R.string.home_news_title_text_size)));
+					FontUtils.setTextViewFontSize(New_HomeItemFragment.this,
+							pagerHolder.title,
+							R.string.home_news_title_text_size,
+							spUtil.getFontSizeRadix());
 					pagerHolder.pager
 							.setLayoutParams(new RelativeLayout.LayoutParams(
 									RelativeLayout.LayoutParams.MATCH_PARENT,
 									(int) (mActivity.mScreenWidth / 1.7)));
-					// convertView.setLayoutParams(new AbsListView.LayoutParams(
-					// RelativeLayout.LayoutParams.MATCH_PARENT,
-					// (int) (mActivity.mScreenWidth / 1.7)
-					// + PixelUtil.dp2px(45)));
-
 					pagerHolder.pager
 							.setOnPageChangeListener(New_HomeItemFragment.this);
 					convertView.setTag(pagerHolder);
@@ -786,6 +780,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 					// newHolder.title.setTextSize(New_HomeItemFragment.this
 					// .getResources().getDimension(
 					// textNomalSize[PixelUtil.getScale()]));
+
+					FontUtils.setTextViewFontSize(New_HomeItemFragment.this,
+							newHolder.title,
+							R.string.home_news_title_text_size,
+							spUtil.getFontSizeRadix());
 					newHolder.newstime_sign = (ImageView) convertView
 							.findViewById(R.id.home_news_newstime_sign);
 					newHolder.newstime = (MyTextView) convertView
@@ -809,6 +808,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 					// albumsHolder.title.setTextSize(New_HomeItemFragment.this
 					// .getResources().getDimension(
 					// textNomalSize[PixelUtil.getScale()]));
+					FontUtils.setTextViewFontSize(New_HomeItemFragment.this,
+							albumsHolder.title,
+							R.string.home_news_title_text_size,
+							spUtil.getFontSizeRadix());
 					albumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
 							.findViewById(R.id.home_albums_imgs_layout);
 					albumsHolder.albums_image_1 = (ImageView) convertView
@@ -829,17 +832,12 @@ public class New_HomeItemFragment extends BaseFragment implements
 					newZhuanTiHolder = new NewZhuanTiHolder();
 					newZhuanTiHolder.title = (MyTextView) convertView
 							.findViewById(R.id.title);
-					// newZhuanTiHolder.title
-					// .setTextSize(New_HomeItemFragment.this
-					// .getResources()
-					// .getDimension(
-					// textNomalSize[PixelUtil.getScale()]));
+					FontUtils.setTextViewFontSize(New_HomeItemFragment.this,
+							newZhuanTiHolder.title,
+							R.string.home_news_title_text_size,
+							spUtil.getFontSizeRadix());
 					newZhuanTiHolder.home_news_titlepic = (ImageView) convertView
 							.findViewById(R.id.home_news_titlepic);
-					// newZhuanTiHolder.home_news_intro = (MyTextView)
-					// convertView
-					// .findViewById(R.id.home_news_intro);
-
 					newZhuanTiHolder.home_news_titlepic
 							.setLayoutParams(new LinearLayout.LayoutParams(
 									(int) ((mActivity.mScreenWidth - PixelUtil
@@ -876,9 +874,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final int news_type = Integer.valueOf(news.getType());
 				newHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
-				// CommonUtils.zoomImage(imageLoader,
-				// news.getTitlepic(),
-				// newHolder.titlepic, mActivity, imageCache);
 				ImgUtils.imageLoader.displayImage(news.getTitlepic(),
 						newHolder.titlepic, ImgUtils.homeImageOptions);
 
@@ -1032,12 +1027,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 							.setTextColor(New_HomeItemFragment.this
 									.getResources().getColor(R.color.black));
 				}
-				// CommonUtils.zoomImage(imageLoader, news.getTitlepic(),
-				// newZhuanTiHolder.home_news_titlepic, mActivity);
 				ImgUtils.imageLoader.displayImage(news.getTitlepic(),
 						newZhuanTiHolder.home_news_titlepic,
 						ImgUtils.homeImageOptions);
-				// newZhuanTiHolder.home_news_intro.setText(news.getIntro());
 
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
@@ -1209,6 +1201,13 @@ public class New_HomeItemFragment extends BaseFragment implements
 			}
 			imageCache.put(e.getKey(), new SoftReference<Bitmap>(null));
 		}
+	}
+
+	public void changeFontSize() {
+		// TODO Auto-generated method stub
+		int first = listview.getFirstVisiblePosition();
+		listview.setAdapter(adapter);
+		listview.setSelection(first);
 	}
 
 }

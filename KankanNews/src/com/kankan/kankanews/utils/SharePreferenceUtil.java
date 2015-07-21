@@ -51,6 +51,8 @@ public class SharePreferenceUtil {
 
 	private String SEARCH_HIS_LIST = "search_his_list";
 
+	private String FONT_SIZE_RADIX = "font_size_radix";
+
 	// 应用版本号
 	public void setVersion(String version) {
 		editor.putString(SHARE_KEY_VERSION, version);
@@ -246,8 +248,19 @@ public class SharePreferenceUtil {
 		editor.commit();
 	}
 
-	/** 搜索历史*/
+	/** 搜索历史 */
 	public String getSearchHisList() {
 		return mSharedPreferences.getString(SEARCH_HIS_LIST, "");
+	}
+
+	/** 字体大小调整基数 */
+	public void saveFontSizeRadix(float redix) {
+		editor.putFloat(FONT_SIZE_RADIX, redix);
+		editor.commit();
+	}
+
+	/** 字体大小调整基数 */
+	public float getFontSizeRadix() {
+		return mSharedPreferences.getFloat(FONT_SIZE_RADIX, 1);
 	}
 }

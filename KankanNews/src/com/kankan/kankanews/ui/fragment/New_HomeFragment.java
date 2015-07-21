@@ -35,6 +35,7 @@ import com.kankan.kankanews.search.SearchMainActivity;
 import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.exception.DbException;
@@ -93,7 +94,7 @@ public class New_HomeFragment extends BaseFragment implements
 
 		searchBut = (ImageView) inflate.findViewById(R.id.home_search_but);
 		mViewpager = (ViewPager) inflate.findViewById(R.id.viewpager);
-		mViewpager.setOffscreenPageLimit(1);
+		mViewpager.setOffscreenPageLimit(0);
 
 		setListener();
 
@@ -109,11 +110,19 @@ public class New_HomeFragment extends BaseFragment implements
 		return inflate;
 	}
 
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (FontUtils.hasChangeFontSize())
+			fragments.get(currentFragmentIndex).changeFontSize();
+	}
+
 	public Resources getResourcesSelf() {
 		Resources res = super.getResources();
-//		Configuration config = new Configuration();
-//		config.setToDefaults();
-//		res.updateConfiguration(config, res.getDisplayMetrics());
+		// Configuration config = new Configuration();
+		// config.setToDefaults();
+		// res.updateConfiguration(config, res.getDisplayMetrics());
 		return res;
 	}
 
@@ -127,7 +136,7 @@ public class New_HomeFragment extends BaseFragment implements
 						New_HomeFragment.this.mActivity,
 						SearchMainActivity.class));
 				New_HomeFragment.this.mActivity.overridePendingTransition(
-						R.anim.in_from_right, R.anim.alpha_out );//R.anim.out_to_top
+						R.anim.in_from_right, R.anim.alpha_out);// R.anim.out_to_top
 			}
 		});
 		main_bg.setOnClickListener(new OnClickListener() {
@@ -163,13 +172,13 @@ public class New_HomeFragment extends BaseFragment implements
 
 				if (columnSelectIndex == i) {
 					columnTextView.setSelected(true);
-					columnTextView.setTextSize(getResourcesSelf()
-							.getDimensionPixelSize(
-									textNomalSize[PixelUtil.getScale()]));
-				} else {
-					columnTextView.setTextSize(getResourcesSelf().getDimension(
-							textNomalSize[PixelUtil.getScale()]));
 				}
+
+				FontUtils.setTextViewFontSize(this, columnTextView,
+						R.string.home_cates_text_size,
+						spUtil.getFontSizeRadix());
+				// columnTextView.setTextSize(getResourcesSelf().getDimension(
+				// textNomalSize[PixelUtil.getScale()]));
 				columnTextView.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -181,24 +190,26 @@ public class New_HomeFragment extends BaseFragment implements
 							TextView localView = (TextView) layout
 									.getChildAt(0);
 
+							// localView
+							// .setTextSize(getResourcesSelf()
+							// .getDimensionPixelSize(
+							// textNomalSize[PixelUtil
+							// .getScale()]));
+
+							FontUtils.setTextViewFontSize(
+									New_HomeFragment.this, localView,
+									R.string.home_cates_text_size,
+									spUtil.getFontSizeRadix());
 							if (localView != v) {
 								localView.setSelected(false);
-								localView.setTextSize(getResourcesSelf()
-										.getDimensionPixelSize(
-												textNomalSize[PixelUtil
-														.getScale()]));
 							} else {
-								localView.setTextSize(getResourcesSelf()
-										.getDimensionPixelSize(
-												textNomalSize[PixelUtil
-														.getScale()]));
 								localView.setSelected(true);
 								mViewpager.setCurrentItem(i, false);
 							}
 						}
 					}
 				});
-				if(i == count - 1){
+				if (i == count - 1) {
 					Log.e("iiiii", i + "" + (count - 1));
 					LinearLayout.LayoutParams lastParams = new LinearLayout.LayoutParams(
 							android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -206,7 +217,7 @@ public class New_HomeFragment extends BaseFragment implements
 					lastParams.rightMargin = PixelUtil.dp2px(18);
 					lastParams.leftMargin = PixelUtil.dp2px(18);
 					layout.addView(columnTextView, lastParams);
-				} else{
+				} else {
 					params.rightMargin = PixelUtil.dp2px(0);
 					params.leftMargin = PixelUtil.dp2px(18);
 					layout.addView(columnTextView, params);
@@ -297,15 +308,13 @@ public class New_HomeFragment extends BaseFragment implements
 			boolean ischeck;
 			if (j == tab_postion) {
 				ischeck = true;
-				checkView1.setTextSize(getResourcesSelf()
-						.getDimensionPixelSize(
-								textNomalSize[PixelUtil.getScale()]));
 			} else {
 				ischeck = false;
-				checkView1.setTextSize(getResourcesSelf()
-						.getDimensionPixelSize(
-								textNomalSize[PixelUtil.getScale()]));
 			}
+			// checkView1.setTextSize(getResourcesSelf().getDimensionPixelSize(
+			// textNomalSize[PixelUtil.getScale()]));
+			FontUtils.setTextViewFontSize(this, checkView1,
+					R.string.home_cates_text_size, spUtil.getFontSizeRadix());
 			checkView1.setSelected(ischeck);
 		}
 	}
