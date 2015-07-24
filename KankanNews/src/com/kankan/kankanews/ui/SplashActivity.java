@@ -136,6 +136,8 @@ public class SplashActivity extends BaseActivity {
 		setRightFinsh(false);
 
 		init();
+		
+		this.chage2Day();
 		// createShortcut();
 		// String device_token = UmengRegistrar.getRegistrationId(this);
 	}

@@ -11,19 +11,21 @@
 
         <RelativeLayout
             android:id="@+id/smallrootview"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="150dip"
-            android:background="#ff000000" >
+            android:layout_gravity="center_horizontal"
+            android:background="#ff000000"
+            android:gravity="center_horizontal" >
 
-            <tv.danmaku.ijk.media.widget.VideoView
-                android:id="@+id/live_video_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:background="@android:color/transparent"
-                android:clickable="true"
-                android:visibility="visible" />
-			<!-- 
+                <tv.danmaku.ijk.media.widget.VideoView
+                    android:id="@+id/live_video_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:layout_gravity="center"
+                    android:visibility="visible" />
+            <!--
             <com.kankan.kankanews.ui.view.VideoViewController
                 android:id="@+id/live_video_controller"
                 android:layout_width="match_parent"
@@ -32,20 +34,21 @@
                 android:clickable="true"
                 android:visibility="visible" >
             </com.kankan.kankanews.ui.view.VideoViewController>
- -->
+            -->
+
             <View
                 android:id="@+id/live_pause"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#00ffffff" />
-            
-			<ImageView
+
+            <ImageView
                 android:id="@+id/live_video_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/live_video_image"
                 android:visibility="visible" />
-			
+
             <ImageView
                 android:id="@+id/live_start"
                 android:layout_width="90dip"
@@ -53,29 +56,29 @@
                 android:layout_centerInParent="true"
                 android:padding="10dip"
                 android:src="@drawable/ic_liveplay" />
-            
+
             <ImageView
                 android:id="@+id/full_live_start"
                 android:layout_width="90dip"
                 android:layout_height="90dip"
                 android:layout_centerInParent="true"
                 android:padding="10dip"
-                android:src="@drawable/ic_liveplay" 
-                android:visibility="gone"/>
-            
-			<ImageView
-                    android:id="@+id/fullscrenn_but"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:paddingBottom="15dip"
-                    android:paddingLeft="10dip"
-                    android:paddingRight="10dip"
-                    android:paddingTop="10dip"
-                    android:src="@drawable/fullscreen"
-                    android:visibility="visible" />
-			
+                android:src="@drawable/ic_liveplay"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/fullscrenn_but"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:paddingBottom="15dip"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip"
+                android:src="@drawable/fullscreen"
+                android:visibility="visible" />
+
             <LinearLayout
                 android:id="@+id/buffering_indicator"
                 android:layout_width="wrap_content"
@@ -86,7 +89,8 @@
                 android:focusableInTouchMode="false"
                 android:orientation="vertical"
                 android:visibility="gone" >
-				<!-- 
+
+                <!--
                 <TextView
                     android:id="@+id/buffering_msg"
                     android:layout_width="wrap_content"
@@ -99,7 +103,8 @@
                     android:singleLine="true"
                     android:text="正在加载..."
                     android:textSize="26dp" />
- -->
+                -->
+
                 <ProgressBar
                     android:id="@+id/buffering_progress"
                     style="@android:style/Widget.ProgressBar.Large"
@@ -140,17 +145,18 @@
                     android:textSize="25dp"
                     android:visibility="visible" />
             </LinearLayout>
-            --> 
+            -->
+
             <LinearLayout
                 android:id="@+id/fullscreen_layout"
                 android:layout_width="match_parent"
                 android:layout_height="60dip"
                 android:layout_alignParentTop="true"
+                android:background="#88000000"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:orientation="horizontal"
-                android:background="#88000000"
-                android:visibility="gone" > 
+                android:visibility="gone" >
 
                 <ImageView
                     android:id="@+id/smallscrenn_but"
@@ -169,15 +175,15 @@
                     android:layout_height="50dip"
                     android:layout_toRightOf="@+id/smallscrenn_but"
                     android:background="#00000000"
+                    android:ellipsize="end"
                     android:gravity="left|center"
                     android:paddingLeft="15dip"
                     android:paddingTop="10dip"
-                    android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="#ffffff"
                     android:textSize="20dp"
                     android:visibility="visible" />
-            </LinearLayout> 
+            </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout
@@ -217,10 +223,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/play"
-        android:divider="@null"
         android:cacheColorHint="#00000000"
-        android:scrollingCache="false"
-        android:scrollbars="none" >
+        android:divider="@null"
+        android:scrollbars="none"
+        android:scrollingCache="false" >
     </com.iss.view.pulltorefresh.PullToRefreshListView>
 
     <LinearLayout

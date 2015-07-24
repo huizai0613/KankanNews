@@ -6,6 +6,8 @@ import android.widget.TextView;
 
 public class FontUtils {
 	public static boolean fontSizeHasChanged = false;
+	
+	public static float DEFAULT_FONT_RADIX = 1;
 
 	public static void setTextViewFontSize(Fragment fragment, TextView view,
 			int resourceId, float radix) {

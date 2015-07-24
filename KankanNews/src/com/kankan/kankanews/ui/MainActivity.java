@@ -12,6 +12,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -63,8 +64,6 @@ public class MainActivity extends BaseVideoActivity {
 
 	public ShareUtil shareUtil;
 
-	private ImageView menu_user_img;
-	private MyTextView menu_user_name;
 	private int lastAddFrament = -1;
 
 	public SlidingMenu side_drawer;
@@ -170,7 +169,8 @@ public class MainActivity extends BaseVideoActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.e("PixelUtil.getScale()", mContext.getResources().getDisplayMetrics().densityDpi + "");
+		Log.e("PixelUtil.getScale()", mContext.getResources()
+				.getDisplayMetrics().densityDpi + "");
 		if (lastTime != 0) {
 			if ((TimeUtil.now() - lastTime) / 60 >= 10) {
 				if (curTouchTab == tab_one) {
@@ -191,8 +191,6 @@ public class MainActivity extends BaseVideoActivity {
 		setRightFinsh(false);
 		// initSlidingMenu();
 		fragmentManager = getSupportFragmentManager();
-		menu_user_img = (ImageView) findViewById(R.id.menu_user_img);
-		menu_user_name = (MyTextView) findViewById(R.id.menu_user_name);
 
 		main_fragment_content = (LinearLayout) findViewById(R.id.main_fragment_content);
 		menu_bottom_bar = (RelativeLayout) findViewById(R.id.menu_bottom_bar);
@@ -518,5 +516,4 @@ public class MainActivity extends BaseVideoActivity {
 		tab_four.setClickable(true);
 		tab_five.setClickable(true);
 	}
-
 }

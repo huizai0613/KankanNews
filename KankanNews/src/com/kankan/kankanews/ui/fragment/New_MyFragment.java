@@ -51,6 +51,7 @@ import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
+import com.zcw.togglebutton.ToggleButton;
 
 public class New_MyFragment extends BaseFragment implements OnClickListener {
 
@@ -66,6 +67,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 	private TextView layout_version;
 	private LinearLayout layout_delete;
 	private TextView layout_detele_now;
+	private ToggleButton isDayMode;
 
 	private View scroll_view;
 
@@ -79,7 +81,6 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		super.onCreateView(inflater, container, savedInstanceState);
 
 		inflate = inflater.inflate(R.layout.new_fragment_my, null);
-
 		initview();
 		initLister();
 		initData();
@@ -110,6 +111,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		layout_delete = (LinearLayout) inflate.findViewById(R.id.layout_delete);
 		layout_detele_now = (TextView) inflate
 				.findViewById(R.id.layout_detele_now);
+		isDayMode = (ToggleButton) inflate.findViewById(R.id.is_day_mode);
 
 		initTitle_Right_Left_bar(inflate, "我", "", "", "#ffffff", 0, 0,
 				"#000000", "#000000");
@@ -123,6 +125,20 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		layout_fankui.setOnClickListener(this);
 		font_size_set.setOnClickListener(this);
 		layout_delete.setOnClickListener(this);
+
+		isDayMode.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+
+			@Override
+			public void onToggle(boolean on) {
+				// TODO Auto-generated method stub
+				spUtil.saveIsDayMode(!on);
+				if (on) {
+					New_MyFragment.this.mActivity.chage2Night();
+				} else {
+					New_MyFragment.this.mActivity.chage2Day();
+				}
+			}
+		});
 
 		UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
 			@Override
@@ -169,6 +185,12 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 	private void initData() {
 
 		init_flow();
+
+		if (spUtil.getIsDayMode()) {
+			isDayMode.setToggleOff();
+		} else {
+			isDayMode.setToggleOn();
+		}
 
 		layout_version.setText("当前版本  " + CommonUtils.getVersion(mActivity));
 
@@ -262,7 +284,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 			} else {
 				mActivity.spUtil.setFlow(true);
 			}
-			initData();
+			init_flow();
 			break;
 
 		case R.id.layout_fankui:

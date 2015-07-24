@@ -12,7 +12,6 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ededed"
         android:scrollbars="none" >
 
         <LinearLayout
@@ -80,6 +79,21 @@
                     <ImageView
                         style="@style/set_layout_right_image"
                         android:src="@drawable/new_icon_my_right" />
+                </LinearLayout>
+
+                <View style="@style/new_set_item_Line" />
+
+                <LinearLayout
+                    android:id="@+id/day_night_mode_set"
+                    style="@style/set_layout_item" >
+
+                    <com.kankan.kankanews.ui.view.MyTextView
+                        style="@style/set_layout_left_text"
+                        android:text="开启夜间模式" />
+
+                    <com.zcw.togglebutton.ToggleButton
+                        android:id="@+id/is_day_mode"
+                        style="@style/set_layout_right_image" />
                 </LinearLayout>
             </LinearLayout>
 

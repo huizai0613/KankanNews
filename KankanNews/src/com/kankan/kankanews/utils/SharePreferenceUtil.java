@@ -53,6 +53,8 @@ public class SharePreferenceUtil {
 
 	private String FONT_SIZE_RADIX = "font_size_radix";
 
+	private String IS_DAY_MODE = "is_day_mode";
+
 	// 应用版本号
 	public void setVersion(String version) {
 		editor.putString(SHARE_KEY_VERSION, version);
@@ -262,5 +264,16 @@ public class SharePreferenceUtil {
 	/** 字体大小调整基数 */
 	public float getFontSizeRadix() {
 		return mSharedPreferences.getFloat(FONT_SIZE_RADIX, 1);
+	}
+
+	/** 是否为日间模式 */
+	public void saveIsDayMode(boolean isDay) {
+		editor.putBoolean(IS_DAY_MODE, isDay);
+		editor.commit();
+	}
+
+	/** 字体大小调整基数 */
+	public boolean getIsDayMode() {
+		return mSharedPreferences.getBoolean(IS_DAY_MODE, true);
 	}
 }

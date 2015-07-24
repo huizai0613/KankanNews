@@ -176,7 +176,7 @@ public class New_HomeFragment extends BaseFragment implements
 
 				FontUtils.setTextViewFontSize(this, columnTextView,
 						R.string.home_cates_text_size,
-						spUtil.getFontSizeRadix());
+						FontUtils.DEFAULT_FONT_RADIX);
 				// columnTextView.setTextSize(getResourcesSelf().getDimension(
 				// textNomalSize[PixelUtil.getScale()]));
 				columnTextView.setOnClickListener(new OnClickListener() {
@@ -199,7 +199,7 @@ public class New_HomeFragment extends BaseFragment implements
 							FontUtils.setTextViewFontSize(
 									New_HomeFragment.this, localView,
 									R.string.home_cates_text_size,
-									spUtil.getFontSizeRadix());
+									FontUtils.DEFAULT_FONT_RADIX);
 							if (localView != v) {
 								localView.setSelected(false);
 							} else {
@@ -313,8 +313,10 @@ public class New_HomeFragment extends BaseFragment implements
 			}
 			// checkView1.setTextSize(getResourcesSelf().getDimensionPixelSize(
 			// textNomalSize[PixelUtil.getScale()]));
-			FontUtils.setTextViewFontSize(this, checkView1,
-					R.string.home_cates_text_size, spUtil.getFontSizeRadix());
+			FontUtils
+					.setTextViewFontSize(this, checkView1,
+							R.string.home_cates_text_size,
+							FontUtils.DEFAULT_FONT_RADIX);
 			checkView1.setSelected(ischeck);
 		}
 	}

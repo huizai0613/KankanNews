@@ -1,5 +1,16 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="Kankan_base_Theme" parent="android:Theme.Light.NoTitleBar">
+
+    </style>
+    <style name="Kankan_Theme_Day" parent="Kankan_base_Theme">
+        <item name="appBackground">@color/bright_gray</item>
+    </style>
+
+    <style name="Kankan_Theme_Night" parent="Kankan_base_Theme">
+        <item name="appBackground">@color/dark_gray</item>
+    </style>
+
     <style name="top_category_scroll_view_item_text">
         <item name="android:textStyle">normal</item>
     </style>
@@ -7,32 +18,6 @@
     <style name="popwin_anim_style">
         <item name="android:windowEnterAnimation">@anim/share_borad_show</item>
         <item name="android:windowExitAnimation">@anim/share_borad_hide</item>
-    </style>
-
-    <style name="AppTheme_s" parent="android:Theme.Light">
-        <item name="android:windowBackground">@drawable/welcome_kankan</item>
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
-    </style>
-
-    <style name="MYTheme">
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
     <style name="ActionBar">

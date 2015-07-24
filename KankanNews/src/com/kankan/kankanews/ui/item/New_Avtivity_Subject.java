@@ -169,7 +169,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		new_news.setTitlelist(title);
 		new_news.setSharedPic(sharedPic);
 		new_news.setTitleurl(titleurl);
-		
+
 		ItnetUtils.getInstance(mContext).getAnalyse(this, "topic",
 				new_news.getTitlelist(), new_news.getTitleurl());
 
@@ -215,7 +215,6 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 			ToastUtils.ErrorToastNoNet(mContext);
 			initLocalData(ztid);
 		}
-
 	}
 
 	private boolean initLocalData(String ztid) {

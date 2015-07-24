@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
@@ -24,6 +25,7 @@ import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -47,7 +49,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
-public abstract class BaseActivity extends FragmentActivity implements CanSharedBySina {
+public abstract class BaseActivity extends FragmentActivity implements
+		CanSharedBySina {
 
 	public DbUtils dbUtils;
 	protected Loading_Dialog loading_dialog;
@@ -57,7 +60,7 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 	public int mScreenHeight;
 	private XunaoLog yeLog;
 	protected BaseActivity mContext;
-//	protected ImageLoader imageLoader = ImageLoader.getInstance();
+	// protected ImageLoader imageLoader = ImageLoader.getInstance();
 	protected PullToRefreshListView listview;
 	protected boolean isLoadMore;
 
@@ -72,6 +75,8 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 	private GestureDetector gestureDetector;
 	protected boolean isRightFinsh = true;
 	protected HashMap<String, SoftReference<Bitmap>> imageCache;
+
+	private View mNightView;
 
 	public void setRightFinsh(boolean isRightFinsh) {
 		this.isRightFinsh = isRightFinsh;
@@ -107,10 +112,11 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		// registerReceiver(mDialogReceiver, new IntentFilter("dialog"));
 		mApplication = (CrashApplication) CrashApplication.getInstance();
 		spUtil = mApplication.getSpUtil();
+		super.onCreate(savedInstanceState);
+		initNightView();
+		// registerReceiver(mDialogReceiver, new IntentFilter("dialog"));
 		imageCache = new HashMap<String, SoftReference<Bitmap>>();
 		DisplayMetrics metric = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -191,15 +197,13 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 
 		// 设置PullRefreshListView上提加载时的加载提示
 		listview.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载更多");
-		listview.getLoadingLayoutProxy(false, true).setRefreshingLabel(
-				"刷新中…");
-		listview.getLoadingLayoutProxy(false, true)
-				.setReleaseLabel("松开立即加载");
+		listview.getLoadingLayoutProxy(false, true).setRefreshingLabel("刷新中…");
+		listview.getLoadingLayoutProxy(false, true).setReleaseLabel("松开立即加载");
 
 		// 设置PullRefreshListView下拉加载时的加载提示
 		listview.getLoadingLayoutProxy(true, false).setPullLabel("下拉可以刷新");
-//		listview.getLoadingLayoutProxy(true, false)
-//				.setRefreshingLabel("正在淘江湖~");
+		// listview.getLoadingLayoutProxy(true, false)
+		// .setRefreshingLabel("正在淘江湖~");
 		listview.getLoadingLayoutProxy(true, false).setReleaseLabel("释放后刷新");
 	}
 
@@ -273,8 +277,8 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 	}
 
 	public void startAnimActivityByParameter(Class<?> cla, String mid,
-			String type, String titleurl, String newstime,
-			String titlelist, String titlePic, String sharedPic) {
+			String type, String titleurl, String newstime, String titlelist,
+			String titlePic, String sharedPic) {
 		Intent intent = new Intent(this, cla);
 		intent.setAction("com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY");
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -288,17 +292,18 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_out);
 	}
-	
-	public void startAnimActivityByParameter(Class<?> cla,New_News_Home mews) {
+
+	public void startAnimActivityByParameter(Class<?> cla, New_News_Home mews) {
 		Intent intent = new Intent(this, cla);
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
 		intent.putExtra("HOME_NEWS", (Serializable) mews);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_out);
 	}
-	
+
 	public void startSubjectActivityByParameter(Class<?> cla, String ztid,
-			String title, String titlepic, String titleurl, String titlePic, String sharedPic) {
+			String title, String titlepic, String titleurl, String titlePic,
+			String sharedPic) {
 		Intent intent = new Intent(this, cla);
 		intent.putExtra("ztid", ztid);
 		intent.putExtra("title", title);
@@ -574,15 +579,36 @@ public abstract class BaseActivity extends FragmentActivity implements CanShared
 			return null;
 	}
 
-	public void refresh(){
-		
+	public void refresh() {
+
 	}
 
 	public void Commit_Share(SHARE_MEDIA platform) {
 
 	}
-	
+
 	public void shareReBack() {
 
+	}
+
+	public void initNightView() {
+		WindowManager.LayoutParams mNightViewParam = new WindowManager.LayoutParams(
+				WindowManager.LayoutParams.TYPE_APPLICATION,
+				WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+						| WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+				PixelFormat.TRANSPARENT);
+		WindowManager mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+		mNightView = new View(this);
+		mWindowManager.addView(mNightView, mNightViewParam);
+		if (!spUtil.getIsDayMode())
+			chage2Night();
+	}
+
+	public void chage2Day() {
+		mNightView.setBackgroundResource(android.R.color.transparent);
+	}
+
+	public void chage2Night() {
+		mNightView.setBackgroundResource(R.color.night_mask);
 	}
 }

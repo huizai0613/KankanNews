@@ -170,6 +170,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 			smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			liveVideoView.setmRootViewHeight(0);
 			liveVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullstate = true;
 			updateFullStartBut(true);
@@ -198,6 +199,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 			smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT,
 					(int) (mActivity.mScreenWidth / 16 * 9)));
+			liveVideoView
+					.setmRootViewHeight((int) (mActivity.mScreenWidth / 16 * 9));
 			isFullstate = false;
 			liveVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
 		}
@@ -255,6 +258,14 @@ public class New_LivePlayFragment extends BaseFragment implements
 				.findViewById(R.id.smallrootview);
 		rootview = (RelativeLayout) inflate.findViewById(R.id.rootview);
 		liveVideoView = (VideoView) inflate.findViewById(R.id.live_video_view);
+		liveVideoView.setMediaBufferingIndicator(mVideoLoadingLayout);
+		liveVideoView.setUserAgent("KKApp");
+		// new RelativeLayout.LayoutParams(
+		// RelativeLayout.LayoutParams.MATCH_PARENT,
+		// (int) (mActivity.mScreenWidth / 1.7))
+
+		liveVideoView.setLayoutParams(new LayoutParams(mActivity.mScreenWidth,
+				(int) (mActivity.mScreenWidth / 1.7)));
 
 		livePause = inflate.findViewById(R.id.live_pause);
 		main_bg = inflate.findViewById(R.id.main_bg);
@@ -270,10 +281,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 		mVideoLoadingLayout = (LinearLayout) inflate
 				.findViewById(R.id.buffering_indicator);
 		mVideoLoadingLayout.bringToFront();
-		liveVideoView.setMediaBufferingIndicator(mVideoLoadingLayout);
 		fullScreenLayout = (LinearLayout) inflate
 				.findViewById(R.id.fullscreen_layout);
-		liveVideoView.setUserAgent("KKApp");
 		screnn_pb = (LinearLayout) inflate.findViewById(R.id.screnn_pb);
 		fullscrenn_but = (ImageView) inflate.findViewById(R.id.fullscrenn_but);
 		smallscrenn_but = (ImageView) inflate
@@ -291,9 +300,11 @@ public class New_LivePlayFragment extends BaseFragment implements
 	}
 
 	public void initViewLayout() {
-		smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT,
-				(int) (mActivity.mScreenWidth / 16 * 9)));
+//		smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
+//				LayoutParams.WRAP_CONTENT,
+//				(int) (mActivity.mScreenWidth / 16 * 9)));
+		liveVideoView
+				.setmRootViewHeight((int) (mActivity.mScreenWidth / 16 * 9));
 	}
 
 	public void initLinsenter() {
@@ -1107,6 +1118,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 		switch (id) {
 		case R.id.live_share_but:
+			Log.e("live_share_but", liveVideoView.getLayoutParams().height + "");
+			;
+
 			if (nowLiveNew == null) {
 				ToastUtils.Errortoast(mActivity, "抱歉,获取不到当前直播信息，请点击播放重新尝试");
 				return;

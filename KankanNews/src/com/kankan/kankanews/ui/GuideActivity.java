@@ -64,6 +64,8 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 
 		// 初始化应用的版本号
 		version = CommonUtils.getVersionName(this);
+		
+		this.chage2Day();
 	}
 
 	private void initViews() {
