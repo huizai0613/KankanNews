@@ -78,6 +78,9 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 	private View mNightView;
 
+	public boolean isFinsh;
+	protected boolean isNeedNightView = true;
+
 	public void setRightFinsh(boolean isRightFinsh) {
 		this.isRightFinsh = isRightFinsh;
 	}
@@ -93,8 +96,6 @@ public abstract class BaseActivity extends FragmentActivity implements
 		}
 
 	}
-
-	public boolean isFinsh;
 
 	@Override
 	protected void onDestroy() {
@@ -115,7 +116,8 @@ public abstract class BaseActivity extends FragmentActivity implements
 		mApplication = (CrashApplication) CrashApplication.getInstance();
 		spUtil = mApplication.getSpUtil();
 		super.onCreate(savedInstanceState);
-		initNightView();
+		if (isNeedNightView)
+			initNightView();
 		// registerReceiver(mDialogReceiver, new IntentFilter("dialog"));
 		imageCache = new HashMap<String, SoftReference<Bitmap>>();
 		DisplayMetrics metric = new DisplayMetrics();

@@ -106,6 +106,7 @@ public class SplashActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		this.isNeedNightView = false;
 		super.onCreate(savedInstanceState);
 
 		mPushAgent = PushAgent.getInstance(this);
@@ -122,7 +123,6 @@ public class SplashActivity extends BaseActivity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 		setContentView(R.layout.activity_splash);
 		// Log.e("mScreenWidth", mScreenWidth + "");
 		// 关闭默认的统计方式
@@ -134,7 +134,6 @@ public class SplashActivity extends BaseActivity {
 
 		init();
 
-		this.chage2Day();
 		// createShortcut();
 		// String device_token = UmengRegistrar.getRegistrationId(this);
 	}

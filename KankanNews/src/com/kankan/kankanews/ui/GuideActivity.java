@@ -50,6 +50,7 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		this.isNeedNightView = false;
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_guide);
 
@@ -64,7 +65,7 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 
 		// 初始化应用的版本号
 		version = CommonUtils.getVersionName(this);
-		
+
 		this.chage2Day();
 	}
 

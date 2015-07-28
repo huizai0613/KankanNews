@@ -149,7 +149,7 @@ public class New_HomeFragment extends BaseFragment implements
 	}
 
 	public void showData() {
-		Log.e("PixelUtil.getScale()", PixelUtil.getScale() + "");
+
 		mRadioGroup_content.removeAllViews();
 		if (homeCates != null) {
 			final int count = homeCates.size();
