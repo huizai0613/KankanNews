@@ -66,16 +66,6 @@ public class MainActivity extends BaseVideoActivity {
 
 	private int lastAddFrament = -1;
 	
-	public static int px2sp(Context context, float pxValue) {  
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;  
-        return (int) (pxValue / fontScale + 0.5f);  
-    }  	
-	
-	public static int px2dip(Context context, float pxValue) {  
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;  
-        return (int) (pxValue / fontScale + 0.5f);  
-    }  
-	
 	public SlidingMenu side_drawer;
 	private LinearLayout main_fragment_content;
 	public int newsW;
@@ -127,7 +117,7 @@ public class MainActivity extends BaseVideoActivity {
 		super.onCreate(savedInstanceState);
 		spUtil.setFristComing(false);
 		
-		Log.e("px2sp", px2sp(this,28) + "");
+		Log.e("px2sp", PixelUtil.px2sp(28, this) + "");
 		
 		wm = (WindowManager) getApplicationContext().getSystemService(
 				Context.WINDOW_SERVICE);

@@ -70,7 +70,9 @@ public class SplashActivity extends BaseActivity {
 	private Advert advert;
 
 	private boolean hasCallAds = false;
-	// private Animation animation;
+
+	// 友盟
+	private PushAgent mPushAgent;
 
 	/**
 	 * Handler:跳转到不同界面
@@ -102,27 +104,28 @@ public class SplashActivity extends BaseActivity {
 			// super.handleMessage(msg);
 		}
 	};
-	private PushAgent mPushAgent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		this.isNeedNightView = false;
+		this.isNeedNightView = false; // 一定要在super.onCreate之前
 		super.onCreate(savedInstanceState);
 
 		mPushAgent = PushAgent.getInstance(this);
 		mPushAgent.onAppStart();
 		mPushAgent.enable();
+
 		instance = ItnetUtils.getInstance(this);
 		// Log.e("UmengRegistrar", UmengRegistrar.getRegistrationId(this));
 
+		// 听云 放在友盟之后
 		NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
 				.withLocationServiceEnabled(true).start(this);
+
 		mApplication.setStart(true);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		// requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		setContentView(R.layout.activity_splash);
 		// Log.e("mScreenWidth", mScreenWidth + "");
 		// 关闭默认的统计方式

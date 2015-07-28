@@ -27,12 +27,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_HomeCate;
+import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.search.SearchMainActivity;
 import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
+import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
+import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
+import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
+import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.FontUtils;
@@ -95,7 +102,27 @@ public class New_HomeFragment extends BaseFragment implements
 		searchBut = (ImageView) inflate.findViewById(R.id.home_search_but);
 		mViewpager = (ViewPager) inflate.findViewById(R.id.viewpager);
 		mViewpager.setOffscreenPageLimit(0);
-
+		String news_id = New_HomeFragment.PUSH_NEWS_ID;
+		instance.getNewsContentDataPush(news_id,
+				new Listener<JSONObject>() {
+					@Override
+					public void onResponse(JSONObject jsonObject) {
+						New_News_Home news = new New_News_Home();
+						try {
+							news.parseJSON(jsonObject);
+							openNews(news);
+						} catch (NetRequestException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}, new ErrorListener() {
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						// ToastUtils.ErrorToastNoNet(getActivity());
+					}
+				});
+		New_HomeFragment.PUSH_NEWS_ID = null;
 		setListener();
 
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
@@ -485,6 +512,47 @@ public class New_HomeFragment extends BaseFragment implements
 	protected void onFailure(VolleyError error) {
 		if (!initLocaDate) {
 			main_bg.setVisibility(View.VISIBLE);
+		}
+	}
+
+	private void openNews(New_News_Home news) {
+		//
+		final int news_type = Integer.valueOf(news.getType());
+		if (news_type % 10 == 1) {
+			mActivity.startAnimActivityByParameter(
+					New_Activity_Content_Video.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					news.getTitle(), news.getTitlepic(), news.getSharedPic());
+		} else if (news_type % 10 == 2) {
+			final String[] pics = news.getTitlepic().split("::::::");
+			mActivity.startAnimActivityByParameter(
+					New_Activity_Content_PicSet.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					news.getTitle(), news.getTitlepic(), pics[1]);
+		} else if (news_type % 10 == 5) {
+			// 专题
+			mActivity.startSubjectActivityByParameter(
+					New_Avtivity_Subject.class, news.getZtid(),
+					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
+					news.getTitlepic(), news.getSharedPic());
+		} else if (news_type % 10 == 6) {
+			// 直播
+			New_LivePlayFragment fragment = (New_LivePlayFragment) mActivity.fragments
+					.get(1);
+			fragment.setSelectPlay(true);
+			fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
+			mActivity.touchTab(mActivity.tab_two);
+
+		} else if (news.getZtype().equals("1")) {
+			mActivity.startSubjectActivityByParameter(
+					New_Avtivity_Subject.class, news.getZtid(),
+					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
+					news.getTitlepic(), news.getSharedPic());
+		} else {
+			mActivity.startAnimActivityByParameter(
+					New_Activity_Content_Web.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					news.getTitle(), news.getTitlepic(), news.getSharedPic());
 		}
 	}
 
