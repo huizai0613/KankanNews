@@ -313,4 +313,14 @@ public abstract class BaseFragment extends Fragment {
 		}
 		super.onPause();
 	}
+
+	public void chage2Day() {
+		// TODO Auto-generated method stub
+		this.mActivity.chage2Day();
+	}
+
+	public void chage2Night() {
+		// TODO Auto-generated method stub
+		this.mActivity.chage2Night();
+	}
 }

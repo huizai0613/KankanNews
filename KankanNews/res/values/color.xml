@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <color name="night_mask">#90000000</color>
+    <color name="night_mask">#90000000</color>
+
     <!-- 黑色颜色 -->
     <color name="black">#000000</color>
 
     <!-- 白色 -->
     <color name="white">#FFFFFF</color>
+
+    <!-- 白色  95%透明 -->
+    <color name="white_90">#F3FFFFFF</color>
 
     <!-- 白色 无透明 -->
     <color name="white_no_alpha">#FFFFFFFF</color>
@@ -23,7 +27,10 @@
     <!-- 浅灰色 列表间隙 -->
     <color name="light_gray">#DBDBDB</color>
 
-    <!-- 浅灰中灰色之间颜色  新闻查看过之后的颜色-->
+    <!-- 浅灰色 首页top下划线 -->
+    <color name="gray_cc">#CCCCCC</color>
+
+    <!-- 浅灰中灰色之间颜色  新闻查看过之后的颜色 -->
     <color name="mid_light_gray">#B0B0B0</color>
 
     <!-- 中灰色 字体颜色 -->

@@ -14,7 +14,7 @@ import android.widget.PopupWindow;
 
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
-import com.kankan.kankanews.bean.interfaz.CanSharedBySina;
+import com.kankan.kankanews.bean.interfaz.CanBeShared;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankanews.kankanxinwen.R;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -26,9 +26,11 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 
 	private BaseActivity mActivity;
 	private ShareUtil shareUtil;
-	private CanSharedBySina shareObj;
+	private CanBeShared shareObj;
 	private View refreshBox;
-	public CustomShareBoard(BaseActivity activity, ShareUtil shareUtil, CanSharedBySina shareObj) {
+
+	public CustomShareBoard(BaseActivity activity, ShareUtil shareUtil,
+			CanBeShared shareObj) {
 		super(activity);
 		this.mActivity = activity;
 		this.shareUtil = shareUtil;
@@ -45,6 +47,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		rootView.findViewById(R.id.qq_box).setOnClickListener(this);
 		rootView.findViewById(R.id.sina_box).setOnClickListener(this);
 		rootView.findViewById(R.id.email_box).setOnClickListener(this);
+		rootView.findViewById(R.id.font).setOnClickListener(this);
+		rootView.findViewById(R.id.night).setOnClickListener(this);
 		refreshBox = rootView.findViewById(R.id.refresh_box);
 		refreshBox.setOnClickListener(this);
 		setContentView(rootView);
@@ -73,10 +77,17 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			break;
 		case R.id.sina_box:
 			shareUtil.directShare(SHARE_MEDIA.SINA);
-//			shareObj.sendSingleMessage();
+			// shareObj.sendSingleMessage();
 			break;
 		case R.id.refresh_box:
 			shareObj.refresh();
+			break;
+		case R.id.font:
+			shareUtil.directShare(SHARE_MEDIA.SINA);
+			// shareObj.sendSingleMessage();
+			break;
+		case R.id.night:
+			shareObj.chage2Night();
 			break;
 		default:
 			mActivity.shareReBack();
@@ -84,8 +95,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		}
 		dismiss();
 	}
-	
-	public void closeRefresh(){
+
+	public void closeRefresh() {
 		refreshBox.setVisibility(View.INVISIBLE);
 	}
 }

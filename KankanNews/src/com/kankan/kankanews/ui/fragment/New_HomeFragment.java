@@ -172,11 +172,14 @@ public class New_HomeFragment extends BaseFragment implements
 
 				if (columnSelectIndex == i) {
 					columnTextView.setSelected(true);
+					FontUtils.setTextViewFontSize(this, columnTextView,
+							R.string.home_cates_text_size_selected,
+							FontUtils.DEFAULT_FONT_RADIX);
+				} else {
+					FontUtils.setTextViewFontSize(this, columnTextView,
+							R.string.home_cates_text_size,
+							FontUtils.DEFAULT_FONT_RADIX);
 				}
-
-				FontUtils.setTextViewFontSize(this, columnTextView,
-						R.string.home_cates_text_size,
-						FontUtils.DEFAULT_FONT_RADIX);
 				// columnTextView.setTextSize(getResourcesSelf().getDimension(
 				// textNomalSize[PixelUtil.getScale()]));
 				columnTextView.setOnClickListener(new OnClickListener() {
@@ -198,7 +201,7 @@ public class New_HomeFragment extends BaseFragment implements
 
 							FontUtils.setTextViewFontSize(
 									New_HomeFragment.this, localView,
-									R.string.home_cates_text_size,
+									R.string.home_cates_text_size_selected,
 									FontUtils.DEFAULT_FONT_RADIX);
 							if (localView != v) {
 								localView.setSelected(false);
@@ -308,15 +311,17 @@ public class New_HomeFragment extends BaseFragment implements
 			boolean ischeck;
 			if (j == tab_postion) {
 				ischeck = true;
+				FontUtils.setTextViewFontSize(this, checkView1,
+						R.string.home_cates_text_size_selected,
+						FontUtils.DEFAULT_FONT_RADIX);
 			} else {
 				ischeck = false;
+				FontUtils.setTextViewFontSize(this, checkView1,
+						R.string.home_cates_text_size,
+						FontUtils.DEFAULT_FONT_RADIX);
 			}
 			// checkView1.setTextSize(getResourcesSelf().getDimensionPixelSize(
 			// textNomalSize[PixelUtil.getScale()]));
-			FontUtils
-					.setTextViewFontSize(this, checkView1,
-							R.string.home_cates_text_size,
-							FontUtils.DEFAULT_FONT_RADIX);
 			checkView1.setSelected(ischeck);
 		}
 	}

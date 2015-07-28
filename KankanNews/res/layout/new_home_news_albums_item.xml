@@ -4,9 +4,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/new_item_bg_selector"
     android:orientation="vertical"
-    android:paddingBottom="5dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
     android:paddingTop="5dp" >
 
     <LinearLayout
@@ -15,14 +12,14 @@
         android:layout_marginBottom="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingRight="4dp" >
+        android:paddingLeft="10dp"
+        android:paddingRight="14dp" >
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/home_albums_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="32sp"
             android:textStyle="bold" />
 
         <ImageView
@@ -35,8 +32,10 @@
     <LinearLayout
         android:id="@+id/home_albums_imgs_layout"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal" >
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" >
 
         <ImageView
             android:id="@+id/home_albums_img_1"
@@ -66,10 +65,10 @@
     </LinearLayout>
 
     <View
-        android:id="@+id/listView_divider_line"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:background="@color/light_gray"
-        android:visibility="gone" />
+        android:layout_height="@dimen/separation_line_height"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dip"
+        android:background="@color/light_gray" />
 
 </LinearLayout>

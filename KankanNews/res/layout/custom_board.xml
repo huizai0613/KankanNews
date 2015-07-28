@@ -235,24 +235,23 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="invisible" >
+            android:layout_weight="1">
 
             <ImageButton
-                android:id="@+id/email"
+                android:id="@+id/font"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/umeng_socialize_qq_on" />
 
             <TextView
-                android:id="@+id/email_name"
+                android:id="@+id/font_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/email"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dip"
-                android:text="邮件"
+                android:text="字体设置"
                 android:textSize="12dip" />
         </RelativeLayout>
 
@@ -263,20 +262,20 @@
             android:visibility="invisible" >
 
             <ImageButton
-                android:id="@+id/email"
+                android:id="@+id/night"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
                 android:background="@drawable/umeng_socialize_qq_on" />
 
             <TextView
-                android:id="@+id/email_name"
+                android:id="@+id/night_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/email"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dip"
-                android:text="邮件"
+                android:text="夜间模式"
                 android:textSize="12dip" />
         </RelativeLayout>
     </LinearLayout>

@@ -66,9 +66,6 @@ public class SplashActivity extends BaseActivity {
 	// 延迟3秒
 	private static final long AD_NO_DELAY_MILLIS = 2000;
 
-	private ImageView welcome_img;
-	private ImageView welcome_text_img;
-	private LinearLayout rootView;
 	private ImageView adPic;
 	private Advert advert;
 
@@ -136,7 +133,7 @@ public class SplashActivity extends BaseActivity {
 		setRightFinsh(false);
 
 		init();
-		
+
 		this.chage2Day();
 		// createShortcut();
 		// String device_token = UmengRegistrar.getRegistrationId(this);
@@ -326,115 +323,6 @@ public class SplashActivity extends BaseActivity {
 				}
 			}
 		});
-
-		rootView = (LinearLayout) this.findViewById(R.id.welcome_root_view);
-		welcome_img = (ImageView) this.findViewById(R.id.welcome_logo_img);
-		welcome_text_img = (ImageView) this
-				.findViewById(R.id.welcome_logo_text_img);
-		//
-		// int width = this.mScreenWidth;
-		// int height = this.mScreenHeight;
-		// Log.e("adPicWidth", adPic.getWidth() + "");
-		// Log.e("adPicHeight", adPic.getHeight() + "");
-		// welcome_img.post(new Runnable() {
-		// @Override
-		// public void run() {
-		// AnimationSet animationSet = new AnimationSet(true);
-		// final int top = welcome_img.getTop();
-		// final int left = welcome_img.getLeft();
-		// View v = getWindow().findViewById(Window.ID_ANDROID_CONTENT);
-		//
-		// Class<?> c = null;
-		// Object obj = null;
-		// Field field = null;
-		// int x = 0, sbar = 0;
-		// try {
-		// c = Class.forName("com.android.internal.R$dimen");
-		// obj = c.newInstance();
-		// field = c.getField("status_bar_height");
-		// x = Integer.parseInt(field.get(obj).toString());
-		// sbar = getResources().getDimensionPixelSize(x);
-		// } catch (Exception e) {
-		// Log.e("get status bar height fail",
-		// e.getLocalizedMessage(), e);
-		// }
-		//
-		// Rect frame = new Rect();
-		// getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-		//
-		// final float statusBarHeight = frame.top;
-		// final float displayHeight = getWindowManager()
-		// .getDefaultDisplay().getHeight();
-		//
-		// final float toY = (top - statusBarHeight) / displayHeight;
-		//
-		// // TranslateAnimation translateAnimation = new
-		// // TranslateAnimation(
-		// // Animation.RELATIVE_TO_SELF, 0f,
-		// // Animation.RELATIVE_TO_SELF, -5 / 6f,
-		// // Animation.RELATIVE_TO_SELF, 0f,
-		// // Animation.RELATIVE_TO_PARENT, - toY);
-		// // translateAnimation.setDuration(2000);
-		// // translateAnimation.setFillAfter(true);
-		// // translateAnimation.setFillEnabled(true);
-		// // animationSet.addAnimation(translateAnimation);
-		// // welcome_img.startAnimation(animationSet);
-		//
-		// AnimationSet alphaSet = new AnimationSet(true);
-		// AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
-		// alphaAnimation.setDuration(1000);
-		// alphaSet.addAnimation(alphaAnimation);
-		// welcome_text_img.startAnimation(alphaSet);
-		// welcome_img.startAnimation(alphaSet);
-		// alphaAnimation.setAnimationListener(new AnimationListener() {
-		//
-		// @Override
-		// public void onAnimationStart(Animation animation) {
-		// // TODO Auto-generated method stub
-		// // welcome_text_img.setVisibility(View.GONE);
-		// }
-		//
-		// @Override
-		// public void onAnimationEnd(Animation animation) {
-		//
-		// }
-		//
-		// @Override
-		// public void onAnimationRepeat(Animation animation) {
-		// }
-		//
-		// });
-		//
-		// // translateAnimation.setAnimationListener(new
-		// // AnimationListener(){
-		// //
-		// // @Override
-		// // public void onAnimationStart(Animation animation) {
-		// // // TODO Auto-generated method stub
-		// // welcome_img.setVisibility(View.GONE);
-		// // }
-		// //
-		// // @Override
-		// // public void onAnimationEnd(Animation animation) {
-		// // // TODO Auto-generated method stub
-		// // // welcome_img.setX(welcome_img.getWidth() / 6);
-		// // // welcome_img.setY(top - statusBarHeight);
-		// // // welcome_img.setLayoutParams(new LayoutParams(10, (int)
-		// // (top - statusBarHeight)));
-		// // // welcome_img.setVisibility(View.VISIBLE);
-		// //
-		// // }
-		// //
-		// // @Override
-		// // public void onAnimationRepeat(Animation animation) {
-		// // // TODO Auto-generated method stub
-		// //
-		// // }
-		// //
-		// // });
-		// }
-		// });
-
 	}
 
 	@Override

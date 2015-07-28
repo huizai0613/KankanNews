@@ -126,7 +126,9 @@
 
     <!-- 主界面头部 -->
     <!-- 高度 -->
-    <dimen name="base_action_bar_height">50dip</dimen>
+    <dimen name="separation_line_height">1px</dimen>
+    <dimen name="base_action_bar_height">44dip</dimen>
+    <dimen name="home_cates_title_height">36dip</dimen>
     <!-- 字体大小 -->
     <dimen name="base_action_bar_title_size">20dip</dimen>
     <dimen name="textsize_1">12dip</dimen>

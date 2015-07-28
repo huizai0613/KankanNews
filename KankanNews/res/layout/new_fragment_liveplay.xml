@@ -11,20 +11,18 @@
 
         <RelativeLayout
             android:id="@+id/smallrootview"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="150dip"
-            android:layout_gravity="center_horizontal"
-            android:background="#ff000000"
-            android:gravity="center_horizontal" >
+            android:background="#ff000000" >
 
-                <tv.danmaku.ijk.media.widget.VideoView
-                    android:id="@+id/live_video_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:clickable="true"
-                    android:layout_gravity="center"
-                    android:visibility="visible" />
+            <tv.danmaku.ijk.media.widget.VideoView
+                android:id="@+id/live_video_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:visibility="visible" />
             <!--
             <com.kankan.kankanews.ui.view.VideoViewController
                 android:id="@+id/live_video_controller"

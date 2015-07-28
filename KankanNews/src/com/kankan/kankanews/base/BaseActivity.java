@@ -37,7 +37,7 @@ import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.bean.New_News_Home;
-import com.kankan.kankanews.bean.interfaz.CanSharedBySina;
+import com.kankan.kankanews.bean.interfaz.CanBeShared;
 import com.kankan.kankanews.dialog.Loading_Dialog;
 import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.ui.view.MyTextView;
@@ -50,7 +50,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 public abstract class BaseActivity extends FragmentActivity implements
-		CanSharedBySina {
+		CanBeShared {
 
 	public DbUtils dbUtils;
 	protected Loading_Dialog loading_dialog;

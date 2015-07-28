@@ -379,7 +379,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					saveLocalDate();
 					initTopImageAndPoint();
-					listview.setBackgroundColor(Color.parseColor("#BDBDBD"));
 					adapter = new TopAdapter();
 					listview.setAdapter(adapter);
 					listview.onRefreshComplete();

@@ -209,7 +209,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		// 初始化shareutil类
 		shareUtil = new ShareUtil(new_news, mContext);
 
-		webView.loadUrl(titleurl + "?fromkkApp=1");
+		webView.loadUrl(titleurl + "?fromkkApp=1#kk_font=xl");
 
 	}
 

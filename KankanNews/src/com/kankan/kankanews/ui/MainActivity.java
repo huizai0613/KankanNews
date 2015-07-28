@@ -65,7 +65,17 @@ public class MainActivity extends BaseVideoActivity {
 	public ShareUtil shareUtil;
 
 	private int lastAddFrament = -1;
-
+	
+	public static int px2sp(Context context, float pxValue) {  
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;  
+        return (int) (pxValue / fontScale + 0.5f);  
+    }  	
+	
+	public static int px2dip(Context context, float pxValue) {  
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;  
+        return (int) (pxValue / fontScale + 0.5f);  
+    }  
+	
 	public SlidingMenu side_drawer;
 	private LinearLayout main_fragment_content;
 	public int newsW;
@@ -116,6 +126,9 @@ public class MainActivity extends BaseVideoActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		spUtil.setFristComing(false);
+		
+		Log.e("px2sp", px2sp(this,28) + "");
+		
 		wm = (WindowManager) getApplicationContext().getSystemService(
 				Context.WINDOW_SERVICE);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -199,7 +212,7 @@ public class MainActivity extends BaseVideoActivity {
 		tab_three = (RelativeLayout) findViewById(R.id.tab_three);
 		tab_four = (RelativeLayout) findViewById(R.id.tab_four);
 		tab_five = (RelativeLayout) findViewById(R.id.tab_five);
-
+		
 		// 初始化fragments
 		New_HomeFragment mainFragment = new New_HomeFragment();
 		New_LivePlayFragment liveFragment = new New_LivePlayFragment();

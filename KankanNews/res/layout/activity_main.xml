@@ -9,7 +9,6 @@
         android:id="@+id/main_fragment_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="48dp"
         android:background="?attr/appBackground"
         android:orientation="vertical" >
     </LinearLayout>
@@ -17,15 +16,15 @@
     <RelativeLayout
         android:id="@+id/menu_bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent" >
+        android:layout_height="@dimen/base_action_bar_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white_90" >
 
         <LinearLayout
             android:id="@+id/menu_bottom"
             android:layout_width="match_parent"
-            android:layout_height="48dip"
-            android:layout_alignParentBottom="true"
-            android:background="#ffffff" >
+            android:layout_height="@dimen/base_action_bar_height"
+            android:layout_alignParentBottom="true" >
 
             <RelativeLayout
                 android:id="@+id/tab_one"

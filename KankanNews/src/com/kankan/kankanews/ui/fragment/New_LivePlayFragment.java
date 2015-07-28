@@ -53,7 +53,7 @@ import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_LivePlay;
-import com.kankan.kankanews.bean.interfaz.CanSharedBySina;
+import com.kankan.kankanews.bean.interfaz.CanBeShared;
 import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.exception.NetRequestException;
@@ -80,7 +80,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 public class New_LivePlayFragment extends BaseFragment implements
 		OnInfoListener, OnCompletionListener, OnErrorListener, OnClickListener,
-		OnPreparedListener, CanSharedBySina {
+		OnPreparedListener, CanBeShared {
 
 	private View inflate;
 	private RelativeLayout smallrootview;
@@ -170,7 +170,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 			smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-			liveVideoView.setmRootViewHeight(0);
+			liveVideoView.setmRootViewHeight(this.mActivity.mScreenWidth);
 			liveVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullstate = true;
 			updateFullStartBut(true);
@@ -260,12 +260,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 		liveVideoView = (VideoView) inflate.findViewById(R.id.live_video_view);
 		liveVideoView.setMediaBufferingIndicator(mVideoLoadingLayout);
 		liveVideoView.setUserAgent("KKApp");
-		// new RelativeLayout.LayoutParams(
-		// RelativeLayout.LayoutParams.MATCH_PARENT,
-		// (int) (mActivity.mScreenWidth / 1.7))
-
-		liveVideoView.setLayoutParams(new LayoutParams(mActivity.mScreenWidth,
-				(int) (mActivity.mScreenWidth / 1.7)));
 
 		livePause = inflate.findViewById(R.id.live_pause);
 		main_bg = inflate.findViewById(R.id.main_bg);
@@ -300,9 +294,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 	}
 
 	public void initViewLayout() {
-//		smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
-//				LayoutParams.WRAP_CONTENT,
-//				(int) (mActivity.mScreenWidth / 16 * 9)));
+		smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT,
+				(int) (this.mActivity.mScreenWidth / 16 * 9)));
 		liveVideoView
 				.setmRootViewHeight((int) (mActivity.mScreenWidth / 16 * 9));
 	}
