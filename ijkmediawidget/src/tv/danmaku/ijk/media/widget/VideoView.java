@@ -171,16 +171,16 @@ public class VideoView extends SurfaceView implements
 				lp.height = windowRatio < videoRatio ? windowHeight
 						: (int) (windowWidth / videoRatio);
 			} else {
-				 boolean full = layout == VIDEO_LAYOUT_STRETCH;
-				 lp.width = (full || windowRatio < videoRatio) ? windowWidth
-				 : (int) (videoRatio * windowHeight);
-				 lp.height = (full || windowRatio > videoRatio) ? windowHeight
-				 : (int) (windowWidth / videoRatio);
-//				lp.height = mRootViewHeight == 0 ? LayoutParams.MATCH_PARENT
-//						: mRootViewHeight;
-//				lp.width = mRootViewHeight == 0 ? LayoutParams.MATCH_PARENT
-//						: (int) (videoRatio * mRootViewHeight);
-			}lp.width=600;
+				// boolean full = layout == VIDEO_LAYOUT_STRETCH;
+				// lp.width = (full || windowRatio < videoRatio) ? windowWidth
+				// : (int) (videoRatio * windowHeight);
+				// lp.height = (full || windowRatio > videoRatio) ? windowHeight
+				// : (int) (windowWidth / videoRatio);
+				lp.height = mRootViewHeight == 0 ? LayoutParams.MATCH_PARENT
+						: mRootViewHeight;
+				lp.width = mRootViewHeight == 0 ? LayoutParams.MATCH_PARENT
+						: (int) (videoRatio * mRootViewHeight);
+			}
 			setLayoutParams(lp);
 			getHolder().setFixedSize(mSurfaceWidth, mSurfaceHeight);
 			DebugLog.dfmt(
