@@ -33,7 +33,6 @@ import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_HomeCate;
 import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.search.SearchMainActivity;
 import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
@@ -42,7 +41,9 @@ import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
 import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.exception.DbException;
@@ -59,7 +60,6 @@ public class New_HomeFragment extends BaseFragment implements
 
 	private ViewPager mViewpager;
 
-	private ItnetUtils instance;
 	private int[] itemWidth;
 
 	private ArrayList<New_HomeCate> homeCates;
@@ -71,16 +71,12 @@ public class New_HomeFragment extends BaseFragment implements
 
 	public ArrayList<New_HomeItemFragment> fragments;
 
-	public static String PUSH_NEWS_ID = null;
-
 	int[] textNomalSize = { R.dimen.textsize_1, R.dimen.textsize_2,
 			R.dimen.textsize_3, R.dimen.textsize_4 };
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
-		instance = ItnetUtils.getInstance(mActivity);
 		inflate = inflater.inflate(R.layout.new_fragment_home, null);
 		mColumnHorizontalScrollView = (HorizontalScrollView) inflate
 				.findViewById(R.id.mColumnHorizontalScrollView);
@@ -102,36 +98,16 @@ public class New_HomeFragment extends BaseFragment implements
 		searchBut = (ImageView) inflate.findViewById(R.id.home_search_but);
 		mViewpager = (ViewPager) inflate.findViewById(R.id.viewpager);
 		mViewpager.setOffscreenPageLimit(0);
-		String news_id = New_HomeFragment.PUSH_NEWS_ID;
-		instance.getNewsContentDataPush(news_id,
-				new Listener<JSONObject>() {
-					@Override
-					public void onResponse(JSONObject jsonObject) {
-						New_News_Home news = new New_News_Home();
-						try {
-							news.parseJSON(jsonObject);
-							openNews(news);
-						} catch (NetRequestException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}, new ErrorListener() {
-					@Override
-					public void onErrorResponse(VolleyError error) {
-						// ToastUtils.ErrorToastNoNet(getActivity());
-					}
-				});
-		New_HomeFragment.PUSH_NEWS_ID = null;
+
 		setListener();
 
+		initLocaDate = initLocalDate();
+		if (!initLocaDate) {
+			main_bg.setVisibility(View.VISIBLE);
+			showData();
+		}
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			refreshNetDate();
-		} else {
-			initLocaDate = initLocalDate();
-			if (!initLocaDate) {
-				main_bg.setVisibility(View.VISIBLE);
-			}
 		}
 
 		return inflate;
@@ -469,7 +445,7 @@ public class New_HomeFragment extends BaseFragment implements
 
 	@Override
 	protected void refreshNetDate() {
-		instance.getNewHomeCateData(mListenerArray, mErrorListener);
+		netUtils.getNewHomeCateData(mListenerArray, mErrorListener);
 	}
 
 	@Override
@@ -483,28 +459,43 @@ public class New_HomeFragment extends BaseFragment implements
 
 	@Override
 	protected void onSuccessArray(JSONArray jsonObject) {
-
+		DebugLog.e("加载回来了");
 		if (jsonObject != null) {
+			boolean isNeedFreash = false;
 			main_bg.setVisibility(View.GONE);
 			int length = jsonObject.length();
-			homeCates = new ArrayList<New_HomeCate>();
-			New_HomeCate mNew_HomeCate = null;
-			for (int i = 0; i < length; i++) {
-				mNew_HomeCate = new New_HomeCate();
-				try {
-					mNew_HomeCate.parseJSON(jsonObject.optJSONObject(i));
-					homeCates.add(mNew_HomeCate);
-				} catch (NetRequestException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if (homeCates != null) {
+				ArrayList<New_HomeCate> tmp = new ArrayList<New_HomeCate>();
+				for (int i = 0; i < homeCates.size(); i++) {
+					String newTitle = jsonObject.optJSONObject(i).optString(
+							"title");
+					if (!newTitle.equals(homeCates.get(i).getTitle())) {
+						isNeedFreash = true;
+						break;
+					}
 				}
 			}
-			saveLocalDate();
-			showData();
+			if (isNeedFreash) {
+				homeCates = new ArrayList<New_HomeCate>();
+				New_HomeCate mNew_HomeCate = null;
+				for (int i = 0; i < length; i++) {
+					mNew_HomeCate = new New_HomeCate();
+					try {
+						mNew_HomeCate.parseJSON(jsonObject.optJSONObject(i));
+						homeCates.add(mNew_HomeCate);
+					} catch (NetRequestException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				saveLocalDate();
+				showData();
+			}
 		} else {
 			if (!initLocaDate) {
 				main_bg.setVisibility(View.VISIBLE);
 			}
+
 		}
 	}
 
@@ -512,47 +503,6 @@ public class New_HomeFragment extends BaseFragment implements
 	protected void onFailure(VolleyError error) {
 		if (!initLocaDate) {
 			main_bg.setVisibility(View.VISIBLE);
-		}
-	}
-
-	private void openNews(New_News_Home news) {
-		//
-		final int news_type = Integer.valueOf(news.getType());
-		if (news_type % 10 == 1) {
-			mActivity.startAnimActivityByParameter(
-					New_Activity_Content_Video.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), news.getSharedPic());
-		} else if (news_type % 10 == 2) {
-			final String[] pics = news.getTitlepic().split("::::::");
-			mActivity.startAnimActivityByParameter(
-					New_Activity_Content_PicSet.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), pics[1]);
-		} else if (news_type % 10 == 5) {
-			// 专题
-			mActivity.startSubjectActivityByParameter(
-					New_Avtivity_Subject.class, news.getZtid(),
-					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
-					news.getTitlepic(), news.getSharedPic());
-		} else if (news_type % 10 == 6) {
-			// 直播
-			New_LivePlayFragment fragment = (New_LivePlayFragment) mActivity.fragments
-					.get(1);
-			fragment.setSelectPlay(true);
-			fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
-			mActivity.touchTab(mActivity.tab_two);
-
-		} else if (news.getZtype().equals("1")) {
-			mActivity.startSubjectActivityByParameter(
-					New_Avtivity_Subject.class, news.getZtid(),
-					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
-					news.getTitlepic(), news.getSharedPic());
-		} else {
-			mActivity.startAnimActivityByParameter(
-					New_Activity_Content_Web.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), news.getSharedPic());
 		}
 	}
 

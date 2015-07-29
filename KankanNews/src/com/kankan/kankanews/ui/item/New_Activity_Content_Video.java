@@ -67,7 +67,6 @@ import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
@@ -78,6 +77,7 @@ import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
@@ -145,7 +145,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	private ShareUtil shareUtil;
 
 	private New_News new_news;
-	private ItnetUtils instance;
+	private NetUtils instance;
 	private LayoutInflater inflater;
 
 	private New_News localnew_news;// 本地数据
@@ -531,11 +531,11 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		new_news.setSharedPic(sharedPic);
 		new_news.setTitlelist(titlelist);
 
-		instance = ItnetUtils.getInstance(this);
+		instance = NetUtils.getInstance(this);
 		// 提交点击
 		instance.addNewNewsClickData("id=" + mid);
 
-		ItnetUtils.getInstance(mContext).getAnalyse(this, "video",
+		NetUtils.getInstance(mContext).getAnalyse(this, "video",
 				new_news.getTitlelist(), new_news.getTitleurl());
 
 		initLocalDate = initLocalDate(new_news.getId());
@@ -1604,6 +1604,12 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		}
 		System.gc();
 		super.finish();
+		if (this.mApplication.mBaseActivityList.size() == 0) {
+			Intent intent = getIntent();
+			intent.setClass(this, MainActivity.class);
+			this.startActivity(intent);
+			overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
+		}
 	}
 
 	@Override

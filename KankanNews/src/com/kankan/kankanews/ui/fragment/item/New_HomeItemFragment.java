@@ -54,7 +54,6 @@ import com.kankan.kankanews.bean.New_News_Click;
 import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.fragment.New_HomeFragment;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
@@ -69,6 +68,7 @@ import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -81,7 +81,7 @@ import com.lidroid.xutils.exception.DbException;
 public class New_HomeItemFragment extends BaseFragment implements
 		OnPageChangeListener {
 
-	private ItnetUtils instance;
+	private NetUtils instance;
 	private View inflate;
 	protected LinearLayout screnn_pb;
 	protected View main_bg;
@@ -184,7 +184,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 		inflate = inflater.inflate(R.layout.new_fragment_home_item, null);
 		Log.e("onCreateView", "onCreateView");
-		instance = ItnetUtils.getInstance(mActivity);
+		instance = NetUtils.getInstance(mActivity);
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 		screnn_pb = (LinearLayout) inflate.findViewById(R.id.screnn_pb);
 		main_bg = inflate.findViewById(R.id.main_bg);
@@ -243,35 +243,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 		screnn_pb.setVisibility(View.GONE);
 		if (CommonUtils.isNetworkAvailable(mActivity) && !hasLoaded) {
 			// TODO
-			if (New_HomeFragment.PUSH_NEWS_ID != null) {
-				// 推送
-				String news_id = New_HomeFragment.PUSH_NEWS_ID;
-				instance.getNewsContentDataPush(news_id,
-						new Listener<JSONObject>() {
-							@Override
-							public void onResponse(JSONObject jsonObject) {
-								New_News_Home news = new New_News_Home();
-								try {
-									news.parseJSON(jsonObject);
-									openNews(news);
-								} catch (NetRequestException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-						}, new ErrorListener() {
-							@Override
-							public void onErrorResponse(VolleyError error) {
-								// ToastUtils.ErrorToastNoNet(getActivity());
-							}
-						});
-				New_HomeFragment.PUSH_NEWS_ID = null;
-			} else {
-				listview.showHeadLoadingView();
-				if (!initLocalDate) {
-					screnn_pb.setVisibility(View.VISIBLE);
-					main_bg.setVisibility(View.GONE);
-				}
+			listview.showHeadLoadingView();
+			if (!initLocalDate) {
+				screnn_pb.setVisibility(View.VISIBLE);
+				main_bg.setVisibility(View.GONE);
 			}
 			refreshNetDate();
 		}
@@ -823,7 +798,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 							.setLayoutParams(new LinearLayout.LayoutParams(
 									LinearLayout.LayoutParams.MATCH_PARENT,
 									(int) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 4)) / 3 * 0.7)));
+											.dp2px(10 * 4)) / 3 * 0.75)));
 					convertView.setTag(albumsHolder);
 				} else if (itemViewType == 4) {
 					convertView = inflate.inflate(mActivity,
@@ -839,10 +814,12 @@ public class New_HomeItemFragment extends BaseFragment implements
 							.findViewById(R.id.home_news_titlepic);
 					newZhuanTiHolder.home_news_titlepic
 							.setLayoutParams(new LinearLayout.LayoutParams(
-									(int) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 2))),
+									// (int) ((mActivity.mScreenWidth -
+									// PixelUtil
+									// .dp2px(10 * 2)))
+									mActivity.mScreenWidth,
 									(int) ((float) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 2)) / 3.2))));
+											.dp2px(10 * 2)) / 4))));
 					newZhuanTiHolder.home_news_titlepic.setTag(
 							R.string.viewwidth,
 							(int) ((mActivity.mScreenWidth - PixelUtil

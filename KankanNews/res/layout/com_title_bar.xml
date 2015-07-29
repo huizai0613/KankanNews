@@ -26,7 +26,8 @@
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/com_title_bar_left_bt"
             android:textColor="#2eaff4"
-            android:textSize="15dp" />
+            android:textSize="15dp"
+            android:visibility="gone" />
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/com_title_bar_content"

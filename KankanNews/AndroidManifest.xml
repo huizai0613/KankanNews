@@ -74,6 +74,13 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.kankan.kankanews.ui.TransitionLoadingActivity"
+            android:exported="false"
+            android:hardwareAccelerated="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_My_About"
             android:exported="false"
             android:screenOrientation="portrait" >

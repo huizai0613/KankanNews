@@ -1,4 +1,4 @@
-package com.kankan.kankanews.net;
+package com.kankan.kankanews.utils;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -29,14 +29,15 @@ import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.Volley;
 import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.config.AndroidConfig;
-import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.net.CustomRequest;
+import com.kankan.kankanews.net.CustomRequestArray;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.http.HttpHandler;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 
-public class ItnetUtils {
+public class NetUtils {
 
-	private static ItnetUtils netUtils;
+	private static NetUtils netUtils;
 	private RequestQueue mRequestQueue;
 	private CustomRequest mCustomRequest;
 	private CustomRequestArray mCustomRequestArray;
@@ -44,14 +45,14 @@ public class ItnetUtils {
 
 	private String separator = "__";
 
-	private ItnetUtils(Context mContext) {
+	private NetUtils(Context mContext) {
 		this.mContext = mContext;
 		mRequestQueue = Volley.newRequestQueue(mContext);
 	};
 
-	public static ItnetUtils getInstance(Context mContext) {
+	public static NetUtils getInstance(Context mContext) {
 		if (netUtils == null) {
-			netUtils = new ItnetUtils(mContext);
+			netUtils = new NetUtils(mContext);
 		}
 		return netUtils;
 	}

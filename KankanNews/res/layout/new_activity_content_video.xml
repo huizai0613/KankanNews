@@ -8,14 +8,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="51dp"
-        android:background="#ffffff" >
+        android:layout_marginTop="@dimen/base_action_bar_height"
+        android:background="@color/white" >
 
         <com.kankan.kankanews.ui.view.StickyScrollView
             android:id="@+id/scollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#ffffff"
             android:scrollbars="none" >
 
             <LinearLayout

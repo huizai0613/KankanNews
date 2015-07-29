@@ -8,8 +8,8 @@ import android.os.SystemClock;
 import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.bean.Content_News;
 import com.kankan.kankanews.bean.User_Collect_Offline;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.exception.HttpException;
@@ -24,7 +24,7 @@ public class MyRequestCallBack extends RequestCallBack<File> {
 	}
 
 	private CrashApplication application = CrashApplication.getInstance();
-	private ItnetUtils instance;
+	private NetUtils instance;
 	private Content_News mContent_News;
 	private DbUtils dbUtils;
 
@@ -34,7 +34,7 @@ public class MyRequestCallBack extends RequestCallBack<File> {
 
 	public MyRequestCallBack(Content_News mContent_News, DbUtils dbUtils) {
 		super();
-		instance = ItnetUtils.getInstance(application);
+		instance = NetUtils.getInstance(application);
 		this.dbUtils = dbUtils;
 		this.mContent_News = mContent_News;
 	}

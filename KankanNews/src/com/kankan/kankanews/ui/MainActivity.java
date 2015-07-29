@@ -65,7 +65,7 @@ public class MainActivity extends BaseVideoActivity {
 	public ShareUtil shareUtil;
 
 	private int lastAddFrament = -1;
-	
+
 	public SlidingMenu side_drawer;
 	private LinearLayout main_fragment_content;
 	public int newsW;
@@ -114,11 +114,12 @@ public class MainActivity extends BaseVideoActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		spUtil.setFristComing(false);
-		
+
 		Log.e("px2sp", PixelUtil.px2sp(28, this) + "");
-		
+
 		wm = (WindowManager) getApplicationContext().getSystemService(
 				Context.WINDOW_SERVICE);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -152,12 +153,6 @@ public class MainActivity extends BaseVideoActivity {
 							.getString("LIVE_ID")));
 					Log.e("isSelectPlay", "已播放" + bun.getString("LIVE_ID"));
 					touchTab(tab_two);
-				} else if (bun.containsKey("PUSH_NEWS_ID")) {
-					// 推送
-					New_HomeFragment fragment = (New_HomeFragment) fragments
-							.get(0);
-					fragment.PUSH_NEWS_ID = bun.getString("PUSH_NEWS_ID");
-					touchTab(tab_one); // 正常启动
 				} else {
 					touchTab(tab_one); // 正常启动
 				}
@@ -202,7 +197,7 @@ public class MainActivity extends BaseVideoActivity {
 		tab_three = (RelativeLayout) findViewById(R.id.tab_three);
 		tab_four = (RelativeLayout) findViewById(R.id.tab_four);
 		tab_five = (RelativeLayout) findViewById(R.id.tab_five);
-		
+
 		// 初始化fragments
 		New_HomeFragment mainFragment = new New_HomeFragment();
 		New_LivePlayFragment liveFragment = new New_LivePlayFragment();
@@ -458,15 +453,16 @@ public class MainActivity extends BaseVideoActivity {
 	private RelativeLayout tab_five;
 
 	public void bottomBarVisible(int visibility) {
-		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		if (visibility == View.VISIBLE) {
-			params.bottomMargin = PixelUtil.dp2px(54);
-		} else {
-			params.bottomMargin = 0;
-
-		}
-		main_fragment_content.setLayoutParams(params);
+		// RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+		// LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		// if (visibility == View.VISIBLE) {
+		// params.bottomMargin = PixelUtil.dp2px(this.getResources()
+		// .getDimension(R.dimen.base_action_bar_height));
+		// } else {
+		// params.bottomMargin = 0;
+		//
+		// }
+		// main_fragment_content.setLayoutParams(params);
 		menu_bottom_bar.setVisibility(visibility);
 
 	}

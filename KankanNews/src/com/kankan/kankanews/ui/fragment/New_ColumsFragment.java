@@ -23,11 +23,11 @@ import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.item.New_Activity_Colums_Info;
 import com.kankan.kankanews.ui.view.SecondColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -41,7 +41,7 @@ import com.umeng.socialize.utils.Log;
 
 public class New_ColumsFragment extends BaseFragment {
 
-	private ItnetUtils instance;
+	private NetUtils instance;
 	private View inflate;
 	private ImageAdapter adapter = new ImageAdapter();;
 
@@ -76,7 +76,7 @@ public class New_ColumsFragment extends BaseFragment {
 			}
 		});
 
-		instance = ItnetUtils.getInstance(mActivity);
+		instance = NetUtils.getInstance(mActivity);
 
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			initNetData();
@@ -193,7 +193,7 @@ public class New_ColumsFragment extends BaseFragment {
 
 		@Override
 		public int getCount() {
-			return lists.size();
+			return lists.size() + 1;
 		}
 
 		@Override
@@ -209,7 +209,8 @@ public class New_ColumsFragment extends BaseFragment {
 
 		@Override
 		public int getItemViewType(int position) {
-
+			if (position == lists.size())
+				return 2;
 			if (lists.get(position).size() == 1
 					&& lists.get(position).get(0).getType().equals("1")) {
 				return 0;
@@ -222,14 +223,18 @@ public class New_ColumsFragment extends BaseFragment {
 		@Override
 		public int getViewTypeCount() {
 			// TODO Auto-generated method stub
-			return 2;
+			return 3;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
 			int itemViewType = getItemViewType(position);
-
+			if (itemViewType == 2) {
+				convertView = inflate.inflate(mActivity,
+						R.layout.new_item_blank, null);
+				return convertView;
+			}
 			if (convertView == null) {
 				if (itemViewType == 0) {
 					viewOne = new HolderViewOne();
@@ -237,12 +242,11 @@ public class New_ColumsFragment extends BaseFragment {
 							R.layout.new_item_colums_one, null);
 					viewOne.img = (ImageView) convertView
 							.findViewById(R.id.img);
-					viewOne.img
-							.setLayoutParams(new LinearLayout.LayoutParams(
-									(int) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 2))),
-									(int) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 2)) / 4)));
+					viewOne.img.setLayoutParams(new LinearLayout.LayoutParams(
+							(int) ((mActivity.mScreenWidth - PixelUtil
+									.dp2px(10 * 2))),
+							(int) ((mActivity.mScreenWidth - PixelUtil
+									.dp2px(10 * 2)) / 4)));
 					if (position == 0) {
 						convertView.setPadding(0, PixelUtil.dp2px(10), 0,
 								PixelUtil.dp2px(10));
@@ -254,18 +258,16 @@ public class New_ColumsFragment extends BaseFragment {
 							R.layout.new_item_colums_two, null);
 					viewTwo.v1 = (ImageView) (convertView.findViewById(R.id.v1));
 					viewTwo.v2 = (ImageView) (convertView.findViewById(R.id.v2));
-					viewTwo.v1
-							.setLayoutParams(new LinearLayout.LayoutParams(
-									(int) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 3)) / 2),
-									(int) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 2)) / 4)));
-					viewTwo.v2
-							.setLayoutParams(new LinearLayout.LayoutParams(
-									(int) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 3)) / 2),
-									(int) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 2)) / 4)));
+					viewTwo.v1.setLayoutParams(new LinearLayout.LayoutParams(
+							(int) ((mActivity.mScreenWidth - PixelUtil
+									.dp2px(10 * 3)) / 2),
+							(int) ((mActivity.mScreenWidth - PixelUtil
+									.dp2px(10 * 2)) / 4)));
+					viewTwo.v2.setLayoutParams(new LinearLayout.LayoutParams(
+							(int) ((mActivity.mScreenWidth - PixelUtil
+									.dp2px(10 * 3)) / 2),
+							(int) ((mActivity.mScreenWidth - PixelUtil
+									.dp2px(10 * 2)) / 4)));
 					if (position == 0) {
 						convertView.setPadding(0, PixelUtil.dp2px(10), 0, 0);
 					}

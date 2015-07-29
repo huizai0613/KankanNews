@@ -43,15 +43,18 @@ import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.config.AndroidConfig;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.sina.AccessTokenKeeper;
 import com.kankan.kankanews.sina.Constants;
+import com.kankan.kankanews.ui.MainActivity;
+import com.kankan.kankanews.ui.SplashActivity;
+import com.kankan.kankanews.ui.TransitionLoadingActivity;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.ProgressWebView;
 import com.kankan.kankanews.ui.view.VerticalBar;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
@@ -124,7 +127,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		webView.setWebChromeClient(xwebchromeclient);
 
 		// 初始化头部
-		initTitle_Right_Left_bar("看看新闻", "", "", "#ffffff",
+		initTitle_Right_Left_bar("看看新闻", "关闭", "", "#ffffff",
 				R.drawable.new_ic_more, R.drawable.new_ic_back, "#000000",
 				"#000000");
 		// 头部的左右点击事件
@@ -153,8 +156,12 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		case R.id.com_title_bar_left_bt:
 			if (webView.canGoBack()) {
 				webView.goBack();
+				showLeftBarTv();
 				break;
 			}
+			webFinish();
+			break;
+		case R.id.com_title_bar_left_tv:
 			webFinish();
 			break;
 		case R.id.com_title_bar_right_bt:
@@ -195,8 +202,8 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		new_news.setLooktime(Long.toString(TimeUtil.now()));
 
 		// 提交点击
-		ItnetUtils.getInstance(mContext).addNewNewsClickData("id=" + mid);
-		ItnetUtils.getInstance(mContext).getAnalyse(this, "text",
+		NetUtils.getInstance(mContext).addNewNewsClickData("id=" + mid);
+		NetUtils.getInstance(mContext).getAnalyse(this, "text",
 				new_news.getTitlelist(), new_news.getTitleurl());
 		// 更新数据
 		try {
@@ -254,6 +261,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		case KeyEvent.KEYCODE_BACK:
 			if (webView.canGoBack()) {
 				webView.goBack();
+				showLeftBarTv();
 				return true;
 			}
 			if (inCustomView()) {
@@ -262,7 +270,6 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 			} else {
 				// 退出时加载空网址防止退出时还在播放视频
 				webFinish();
-
 			}
 		}
 		return true;
@@ -398,10 +405,22 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 	public void onBackPressed() {
 		if (webView.canGoBack()) {
 			webView.goBack();
+			showLeftBarTv();
 		} else {
 			webView.loadUrl("about:blank");
 			super.onBackPressed();
 		}
 	}
 
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+		if (this.mApplication.mBaseActivityList.size() == 0) {
+			Intent intent = getIntent();
+			intent.setClass(this, MainActivity.class);
+			this.startActivity(intent);
+			overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
+		}
+	}
 }

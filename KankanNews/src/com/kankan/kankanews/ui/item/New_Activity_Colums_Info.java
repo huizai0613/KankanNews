@@ -60,13 +60,13 @@ import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -87,7 +87,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	private ShareUtil shareUtil = null;
 	private static CustomShareBoard shareBoard;
 
-	private ItnetUtils instance;
+	private NetUtils instance;
 	private List<New_Colums_Info> new_colums_infos = new ArrayList<New_Colums_Info>();
 	private MyAdapter myAdapter;
 
@@ -223,7 +223,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 	@Override
 	protected void initData() {
-		instance = ItnetUtils.getInstance(this);
+		instance = NetUtils.getInstance(this);
 
 		myAdapter = new MyAdapter();
 		listview.setAdapter(myAdapter);
@@ -821,7 +821,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 					columsVideoView.requestFocus();
 					columsVideoView.start();
 
-					ItnetUtils.getInstance(mContext).getAnalyse(this, "column",
+					NetUtils.getInstance(mContext).getAnalyse(this, "column",
 							new_colums_infos.get(curPlayNo).getTitle(),
 							new_colums_infos.get(curPlayNo).getTitleurl());
 				}

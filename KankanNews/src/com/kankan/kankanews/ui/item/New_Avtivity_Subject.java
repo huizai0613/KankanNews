@@ -53,14 +53,15 @@ import com.kankan.kankanews.bean.Subject_Item;
 import com.kankan.kankanews.bean.subject_List;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.sina.AccessTokenKeeper;
 import com.kankan.kankanews.sina.Constants;
+import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -116,7 +117,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 
 	private View headerView;
 
-	private ItnetUtils instance;
+	private NetUtils instance;
 
 	// 新闻点击量
 	private ArrayList<New_News_Click> new_news_clicks;
@@ -155,7 +156,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		// 禁用手势
 		// setRightFinsh(false);
 
-		instance = ItnetUtils.getInstance(this);
+		instance = NetUtils.getInstance(this);
 		// 获取上个页面传来的数据
 		Intent intent = getIntent();
 		ztid = intent.getStringExtra("ztid");
@@ -170,7 +171,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		new_news.setSharedPic(sharedPic);
 		new_news.setTitleurl(titleurl);
 
-		ItnetUtils.getInstance(mContext).getAnalyse(this, "topic",
+		NetUtils.getInstance(mContext).getAnalyse(this, "topic",
 				new_news.getTitlelist(), new_news.getTitleurl());
 
 		// 初始化shareutil类
@@ -968,6 +969,18 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		} else {
 			ToastUtils.ErrorToastNoNet(mContext);
 			initLocalData(ztid);
+		}
+	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+		if (this.mApplication.mBaseActivityList.size() == 0) {
+			Intent intent = getIntent();
+			intent.setClass(this, MainActivity.class);
+			this.startActivity(intent);
+			overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 		}
 	}
 

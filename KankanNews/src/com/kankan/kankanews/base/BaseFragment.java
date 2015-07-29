@@ -24,6 +24,7 @@ import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.SharePreferenceUtil;
 import com.kankanews.kankanxinwen.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -35,6 +36,7 @@ public abstract class BaseFragment extends Fragment {
 
 	protected CrashApplication crashApplication;
 	public MainActivity mActivity;
+	protected NetUtils netUtils;
 
 	protected DisplayImageOptions options;
 	protected PullToRefreshListView listview;
@@ -55,6 +57,7 @@ public abstract class BaseFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mActivity = (MainActivity) getActivity();
+		netUtils = NetUtils.getInstance(mActivity);
 		crashApplication = CrashApplication.getInstance();
 		handler = new Handler();
 		spUtil = this.mActivity.mApplication.getSpUtil();

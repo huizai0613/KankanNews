@@ -53,13 +53,13 @@ import com.kankan.kankanews.bean.interfaz.CanBeShared;
 import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.receiver.AlarmReceiver;
 import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
@@ -149,6 +149,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 			if (shareBoard != null && shareBoard.isShowing()) {
 				shareBoard.dismiss();
 			}
+			mActivity.getWindowManager().removeView(this.mActivity.mNightView);
 			fullscrenn_but.setVisibility(View.GONE);
 			mActivity.bottomBarVisible(View.GONE);
 			liveStart.setVisibility(View.GONE);
@@ -156,6 +157,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 			mActivity.getWindow().setAttributes(attrs);
 			mActivity.getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+			this.mActivity.initNightView(true);
 			smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			liveVideoView.setmRootViewHeight(this.mActivity.mScreenWidth);
@@ -172,6 +174,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 			liveVideoView.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,
 					LayoutParams.MATCH_PARENT);
 		} else {
+			mActivity.getWindowManager().removeView(this.mActivity.mNightView);
 			fullscrenn_but.setVisibility(View.VISIBLE);
 			fullScreenLayout.setVisibility(View.GONE);
 			fullLiveStart.setVisibility(View.GONE);
@@ -184,6 +187,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 			// 取消全屏设置
 			mActivity.getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+			this.mActivity.initNightView(false);
 			smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT,
 					(int) (mActivity.mScreenWidth / 16 * 9)));
@@ -197,9 +201,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		closeVideoView();
 		if (!isFirst && mActivity.curTouchTab == mActivity.tab_two) {
 			if (CommonUtils.isNetworkAvailable(mActivity)) {
-
 				refreshNetDate();
 				isFirst = true;
 			} else {
@@ -272,13 +276,11 @@ public class New_LivePlayFragment extends BaseFragment implements
 		liveShareBut = (ImageView) inflate.findViewById(R.id.live_share_but);
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 
-		initListView(Mode.PULL_DOWN_TO_REFRESH);
+		initListView(Mode.PULL_FROM_START);
 	}
 
 	public void initDate() {
 		listview.setAdapter(new MyAdapter());
-		// liveVideoController.setPlayerControl(liveVideoView);
-		// liveVideoController.setActivity_Content(this.mActivity);
 	}
 
 	public void initViewLayout() {
@@ -291,19 +293,14 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 	public void initLinsenter() {
 		liveVideoView.setOnErrorListener(this);
-		// liveVideoView.setOnCompletionListener(this);
 		liveVideoView.setOnPreparedListener(this);
-		// liveVideoView.setOnInfoListener(this);
-		// liveVideoView.setOnClickListener(this);
 		livePause.setOnClickListener(this);
 		liveStart.setOnClickListener(this);
 		fullLiveStart.setOnClickListener(this);
 		fullscrenn_but.setOnClickListener(this);
 		smallscrenn_but.setOnClickListener(this);
 		liveShareBut.setOnClickListener(this);
-		// liveVideoController.setOnClickListener(this);
 		listview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
-
 			@Override
 			public void onPullDownToRefresh(PullToRefreshBase refreshView) {
 				String time = TimeUtil.getTime(new Date());
@@ -319,7 +316,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 		});
 
 		main_bg.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 				screnn_pb.setVisibility(View.VISIBLE);
@@ -352,7 +348,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 		try {
 			localDate = mActivity.dbUtils.findAll(New_LivePlay.class);
 		} catch (DbException e) {
-			e.printStackTrace();
+			DebugLog.e(e.getLocalizedMessage());
+			return false;
 		}
 		return true;
 	}
@@ -364,9 +361,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 	@Override
 	protected void refreshNetDate() {
-		initLocalDate();
+		// initLocalDate();
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
-			ItnetUtils instance = ItnetUtils.getInstance(mActivity);
+			NetUtils instance = NetUtils.getInstance(mActivity);
 			instance.getNewLivePlayData(mListenerArray, mErrorListener);
 		} else {
 			handler.postDelayed(new Runnable() {
@@ -401,15 +398,16 @@ public class New_LivePlayFragment extends BaseFragment implements
 					livePlay.parseJSON(jsonObject.getJSONObject(i));
 					mLivePlayList.add(livePlay);
 				} catch (NetRequestException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					DebugLog.e(e.getLocalizedMessage());
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					DebugLog.e(e.getLocalizedMessage());
 				}
 			}
-			screnn_pb.setVisibility(View.GONE);
 			main_bg.setVisibility(View.GONE);
+			myAdapter = new MyAdapter();
+			listview.setAdapter(myAdapter);
+			screnn_pb.setVisibility(View.GONE);
+			listview.onRefreshComplete();
 			playerVideo();
 		}
 	}
@@ -470,7 +468,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 	private void showData() {
 		boolean unStart = false;
-		Log.e("selectPlayID", selectPlayID + "");
+		DebugLog.e("selectPlayID" + selectPlayID);
 		for (New_LivePlay news : mLivePlayList) {
 
 			if (isSelectPlay && Integer.parseInt(news.getZid()) == selectPlayID) {
@@ -483,16 +481,11 @@ public class New_LivePlayFragment extends BaseFragment implements
 					fullScreenLivePlayTitle.setText("正在播放:" + news.getTitle());
 					liveStart.setVisibility(View.GONE);
 					mVideoLoadingLayout.setVisibility(View.GONE);
-					// video_view.pause();
 					liveStart.setVisibility(View.GONE);
 					liveVideoView.stopPlayback();
-					// Uri getmUri = video_view.
-					// if (getmUri != null) {
-					// video_view.release(true);
-					// }
 					liveVideoView.setVideoPath(news.getStreamurl());
 
-					ItnetUtils.getInstance(this.mActivity).getAnalyse(
+					NetUtils.getInstance(this.mActivity).getAnalyse(
 							this.mActivity, "live", news.getTitle(),
 							news.getTitleurl());
 
@@ -511,7 +504,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 						liveVideoView.stopPlayback();
 						liveVideoView.setVideoPath(news.getStreamurl());
 
-						ItnetUtils.getInstance(this.mActivity).getAnalyse(
+						NetUtils.getInstance(this.mActivity).getAnalyse(
 								this.mActivity, "live", news.getTitle(),
 								news.getTitleurl());
 
@@ -543,11 +536,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 			}
 			showData();
 		}
-
-		myAdapter = new MyAdapter();
-		listview.setAdapter(myAdapter);
-		screnn_pb.setVisibility(View.GONE);
-		listview.onRefreshComplete();
 	}
 
 	@Override
@@ -563,7 +551,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return mLivePlayList.size();
+			return mLivePlayList.size() + 1;
 		}
 
 		@Override
@@ -582,6 +570,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 		@Override
 		public int getItemViewType(int position) {
 			// TODO Auto-generated method stub
+			if (position == mLivePlayList.size())
+				return 2;
 			New_LivePlay new_LivePlay = mLivePlayList.get(position);
 			if (new_LivePlay.getAppBgPic() != null
 					&& !new_LivePlay.getAppBgPic().trim().equals(""))
@@ -592,16 +582,20 @@ public class New_LivePlayFragment extends BaseFragment implements
 		@Override
 		public int getViewTypeCount() {
 			// TODO Auto-generated method stub
-			return 2;
+			return 3;
 		}
 
 		@Override
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 			int itemViewType = getItemViewType(position);
+			if (itemViewType == 2) {
+				convertView = inflate.inflate(mActivity,
+						R.layout.new_item_blank, null);
+				return convertView;
+			}
 			final New_LivePlay new_LivePlay = mLivePlayList.get(position);
 
-			// if (convertView == null) {
 			convertView = inflate.inflate(mActivity,
 					R.layout.new_item_liveplay_live, null);
 			mViewHolderLive = new ViewHolderLive();
@@ -613,30 +607,12 @@ public class New_LivePlayFragment extends BaseFragment implements
 					.findViewById(R.id.new_item_liveplay_live_time);
 			mViewHolderLive.new_item_liveplay_content = (MyTextView) convertView
 					.findViewById(R.id.new_item_liveplay_content);
-			// mViewHolderLive.new_item_liveplay_live_tv = (MyTextView)
-			// convertView
-			// .findViewById(R.id.new_item_liveplay_live_tv);
 			mViewHolderLive.new_item_liveplay_live_but = (MyTextView) convertView
 					.findViewById(R.id.new_item_liveplay_live_but);
-			// mViewHolderLive.new_item_liveplay_live_ic = (ImageView)
-			// convertView
-			// .findViewById(R.id.new_item_liveplay_live_ic);
 			mViewHolderLive.new_item_liveplay_live_bg = (RelativeLayout) convertView
 					.findViewById(R.id.new_item_liveplay_live_bg);
 			mViewHolderLive.new_item_liveplay_live_bg_img = (ImageView) convertView
 					.findViewById(R.id.new_item_liveplay_live_bg_img);
-
-			// ViewGroup.LayoutParams linearParams = (ViewGroup.LayoutParams)
-			// mViewHolderLive.new_item_liveplay_live_bg_img
-			// .getLayoutParams();
-			//
-			//
-			// linearParams.height =
-			// New_LivePlayFragment.this.mActivity.mScreenWidth / 3;
-			// mViewHolderLive.new_item_liveplay_live_bg_img.setLayoutParams(linearParams);
-
-			// mViewHolderLive.new_item_liveplay_live_status = convertView
-			// .findViewById(R.id.new_item_liveplay_live_statue);
 			convertView.setTag(mViewHolderLive);
 			convertView.setOnClickListener(new OnClickListener() {
 
@@ -646,9 +622,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 					return;
 				}
 			});
-			// } else {
-			// mViewHolderLive = (ViewHolderLive) convertView.getTag();
-			// }
 
 			mViewHolderLive.new_item_liveplay_live_title.setText(new_LivePlay
 					.getTitle());
@@ -656,162 +629,39 @@ public class New_LivePlayFragment extends BaseFragment implements
 					.getTime());
 			mViewHolderLive.new_item_liveplay_live_but.setText("");
 			if (!new_LivePlay.getType().equals("直播预告")) {
-				// mViewHolderLive.new_item_liveplay_live_status
-				// .setBackgroundResource(R.drawable.ic_live);
 				mViewHolderLive.new_item_liveplay_live_but
 						.setBackgroundResource(R.drawable.playlive);
 				if (new_LivePlay.getAppBgPic() != null
 						&& !new_LivePlay.getAppBgPic().trim().equals("")) {
 					mViewHolderLive.new_item_liveplay_but
 							.setVisibility(View.GONE);
-					// mViewHolderLive.new_item_liveplay_live_ic
-					// .setVisibility(View.GONE);
-					// mViewHolderLive.new_item_liveplay_live_tv
-					// .setVisibility(View.GONE);
-
-					// mViewHolderLive.new_item_liveplay_live_ic
-					// .setImageResource(R.drawable.xwzh);
-					// mViewHolderLive.new_item_liveplay_live_bg
-					// .setBackgroundResource(R.drawable.livebg3);
-					// Log.e("getAppBgPic", new_LivePlay.getAppBgPic());
-					// Bitmap bgMap = ImgUtils.getNetImage(new_LivePlay
-					// .getAppBgPic());
-					// mViewHolderLive.new_item_liveplay_live_bg
-					// .setBackground(new BitmapDrawable(getResources(),
-					// bgMap));
-					// mViewHolderLive.new_item_liveplay_content
-					// .setVisibility(View.GONE);
-					// mViewHolderLive.new_item_liveplay_live_bg
-					// .setImageBitmap(null);
-					// ImgUtils.imageLoader.loadImage(new_LivePlay.getAppBgPic(),
-					// ImgUtils.homeImageOptions,
-					// new ImageLoadingListener() {
-					//
-					// @Override
-					// public void onLoadingStarted(String imageUri,
-					// View view) {
-					// // TODO Auto-generated method stub
-					// Log.e("onLoadingStarted", "onLoadingStarted");
-					// mViewHolderLive.new_item_liveplay_live_bg
-					// .setBackgroundResource(R.drawable.livebg2);
-					// }
-					//
-					// @Override
-					// public void onLoadingFailed(String imageUri,
-					// View view, FailReason failReason) {
-					// // TODO Auto-generated method stub
-					// Log.e("onLoadingFailed", "onLoadingFailed");
-					// mViewHolderLive.new_item_liveplay_live_bg
-					// .setBackgroundResource(R.drawable.livebg2);
-					// }
-					//
-					// @Override
-					// public void onLoadingComplete(String imageUri,
-					// View view, Bitmap loadedImage) {
-					// // TODO Auto-generated method stub
-					// Log.e("onLoadingComplete", "onLoadingComplete");
-					//
-					// if (Build.VERSION.SDK_INT >=
-					// Build.VERSION_CODES.JELLY_BEAN) {
-					// mViewHolderLive.new_item_liveplay_live_bg
-					// .setBackground(new BitmapDrawable(
-					// getResources(), loadedImage));
-					// } else {
-					// mViewHolderLive.new_item_liveplay_live_bg
-					// .setBackgroundDrawable(new BitmapDrawable(
-					// getResources(), loadedImage));
-					// }
-					// }
-					//
-					// @Override
-					// public void onLoadingCancelled(String imageUri,
-					// View view) {
-					// Log.e("onLoadingCancelled", "onLoadingCancelled");
-					// // TODO Auto-generated method stub
-					// }
-					// });
 					ImgUtils.imageLoader.displayImage(
 							new_LivePlay.getAppBgPic(),
 							mViewHolderLive.new_item_liveplay_live_bg_img,
 							ImgUtils.liveImageOptions);
-					// mViewHolderLive.new_item_liveplay_live_status
-					// .setVisibility(View.GONE);
-					// }
-					// if (new_LivePlay.getCatename().equals("新闻综合")) {
-					// mViewHolderLive.new_item_liveplay_but
-					// .setVisibility(View.GONE);
-					// mViewHolderLive.new_item_liveplay_live_ic
-					// .setVisibility(View.VISIBLE);
-					// mViewHolderLive.new_item_liveplay_live_tv
-					// .setVisibility(View.GONE);
-					// mViewHolderLive.new_item_liveplay_live_ic
-					// .setImageResource(R.drawable.xwzh);
-					// mViewHolderLive.new_item_liveplay_live_bg
-					// .setBackgroundResource(R.drawable.livebg3);
-					// mViewHolderLive.new_item_liveplay_content
-					// .setVisibility(View.GONE);
-					// } else if (new_LivePlay.getCatename().equals("东方卫视")) {
-					// mViewHolderLive.new_item_liveplay_but
-					// .setVisibility(View.GONE);
-					// mViewHolderLive.new_item_liveplay_live_tv
-					// .setVisibility(View.GONE);
-					// mViewHolderLive.new_item_liveplay_live_ic
-					// .setVisibility(View.VISIBLE);
-					// mViewHolderLive.new_item_liveplay_live_ic
-					// .setImageResource(R.drawable.dfws);
-					// mViewHolderLive.new_item_liveplay_live_bg
-					// .setBackgroundResource(R.drawable.livebg4);
-					// mViewHolderLive.new_item_liveplay_content
-					// .setVisibility(View.GONE);
 				} else {
-					// mViewHolderLive.new_item_liveplay_live_status
-					// .setVisibility(View.VISIBLE);
-					// mViewHolderLive.new_item_liveplay_live_ic
-					// .setVisibility(View.GONE);
-					// mViewHolderLive.new_item_liveplay_live_tv
-					// .setVisibility(View.VISIBLE);
-					// mViewHolderLive.new_item_liveplay_live_bg
-					// .setBackgroundResource(R.drawable.kklive_live_bg);
 					mViewHolderLive.new_item_liveplay_live_bg_img
 							.setImageResource(R.drawable.kklive_live_bg);
 					mViewHolderLive.new_item_liveplay_but
 							.setVisibility(View.VISIBLE);
-					// mViewHolderLive.new_item_liveplay_live_tv.setText("正在直播");
+
+					Drawable ic_arrowshow = getResources().getDrawable(
+							R.drawable.ic_arrowshow);
+					ic_arrowshow.setBounds(0, 0,
+							ic_arrowshow.getMinimumWidth(),
+							ic_arrowshow.getMinimumHeight());
+					mViewHolderLive.new_item_liveplay_but.setCompoundDrawables(
+							null, null, ic_arrowshow, null);
 					if (curPosition == position) {
 						if (isShow) {
 							mViewHolderLive.new_item_liveplay_content
 									.setVisibility(View.VISIBLE);
-							Drawable ic_arrowdown = getResources().getDrawable(
-									R.drawable.ic_arrowdown);
-							ic_arrowdown.setBounds(0, 0,
-									ic_arrowdown.getMinimumWidth(),
-									ic_arrowdown.getMinimumHeight());
-							mViewHolderLive.new_item_liveplay_but
-									.setCompoundDrawables(null, null,
-											ic_arrowdown, null);
 						} else {
-							Drawable ic_arrowshow = getResources().getDrawable(
-									R.drawable.ic_arrowshow);
-							ic_arrowshow.setBounds(0, 0,
-									ic_arrowshow.getMinimumWidth(),
-									ic_arrowshow.getMinimumHeight());
-							mViewHolderLive.new_item_liveplay_but
-									.setCompoundDrawables(null, null,
-											ic_arrowshow, null);
-
 							mViewHolderLive.new_item_liveplay_content
 									.setVisibility(View.GONE);
 
 						}
 					} else {
-						Drawable ic_arrowshow = getResources().getDrawable(
-								R.drawable.ic_arrowshow);
-						ic_arrowshow.setBounds(0, 0,
-								ic_arrowshow.getMinimumWidth(),
-								ic_arrowshow.getMinimumHeight());
-						mViewHolderLive.new_item_liveplay_but
-								.setCompoundDrawables(null, null, ic_arrowshow,
-										null);
 						mViewHolderLive.new_item_liveplay_content
 								.setVisibility(View.GONE);
 					}
@@ -848,39 +698,124 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 							@Override
 							public void onClick(View v) {
-								livePlayTitle.setText("正在播放:"
-										+ new_LivePlay.getTitle());
-								fullScreenLivePlayTitle.setText("正在播放:"
-										+ new_LivePlay.getTitle());
-								// 更改直播频道
-								// video_view.release(true);
-								mVideoLoadingLayout.setVisibility(View.GONE);
-								liveVideoView.stopPlayback();
-								liveVideoImage.setVisibility(View.VISIBLE);
-								liveStart.setVisibility(View.GONE);
-								liveVideoView.setVideoPath(new_LivePlay
-										.getStreamurl());
+								if (CommonUtils
+										.isNetworkAvailable(New_LivePlayFragment.this.mActivity)) {
+									if (!CommonUtils
+											.isWifi(New_LivePlayFragment.this.mActivity)) {
+										if (!spUtil.isFlow()) {
+											final TishiMsgHint dialog = new TishiMsgHint(
+													New_LivePlayFragment.this.mActivity,
+													R.style.MyDialog1);
+											dialog.setContent(
+													"您已设置2G/3G/4G网络下不允许播放/缓存视频",
+													"我知道了");
+											dialog.setCancleListener(new OnClickListener() {
+												@Override
+												public void onClick(View v) {
+													closeVideoView();
+													dialog.dismiss();
+												}
+											});
+											dialog.show();
+										} else {
+											final InfoMsgHint dialog = new InfoMsgHint(
+													New_LivePlayFragment.this.mActivity,
+													R.style.MyDialog1);
+											dialog.setContent(
+													"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
+													"", "继续播放", "取消");
+											dialog.setCancleListener(new OnClickListener() {
+												@Override
+												public void onClick(View v) {
+													closeVideoView();
+													dialog.dismiss();
+												}
+											});
+											dialog.setOKListener(new OnClickListener() {
+												@Override
+												public void onClick(View v) {
 
-								ItnetUtils
-										.getInstance(
-												New_LivePlayFragment.this.mActivity)
-										.getAnalyse(
-												New_LivePlayFragment.this.mActivity,
-												"live",
-												new_LivePlay.getTitle(),
-												new_LivePlay.getTitleurl());
+													livePlayTitle.setText("正在播放:"
+															+ new_LivePlay
+																	.getTitle());
+													fullScreenLivePlayTitle.setText("正在播放:"
+															+ new_LivePlay
+																	.getTitle());
+													// 更改直播频道
+													// video_view.release(true);
+													mVideoLoadingLayout
+															.setVisibility(View.GONE);
+													closeVideoView();
+													liveVideoView
+															.setVideoPath(new_LivePlay
+																	.getStreamurl());
 
-								// setVideoLoadingLayoutVisibility(View.VISIBLE);
-								nowLiveNew = new_LivePlay;
+													NetUtils
+															.getInstance(
+																	New_LivePlayFragment.this.mActivity)
+															.getAnalyse(
+																	New_LivePlayFragment.this.mActivity,
+																	"live",
+																	new_LivePlay
+																			.getTitle(),
+																	new_LivePlay
+																			.getTitleurl());
+
+													// setVideoLoadingLayoutVisibility(View.VISIBLE);
+													nowLiveNew = new_LivePlay;
+													dialog.dismiss();
+												}
+											});
+											dialog.show();
+
+										}
+
+									} else {
+
+										livePlayTitle.setText("正在播放:"
+												+ new_LivePlay.getTitle());
+										fullScreenLivePlayTitle.setText("正在播放:"
+												+ new_LivePlay.getTitle());
+										// 更改直播频道
+										// video_view.release(true);
+										mVideoLoadingLayout
+												.setVisibility(View.GONE);
+										liveVideoView.stopPlayback();
+										liveVideoImage
+												.setVisibility(View.VISIBLE);
+										liveStart.setVisibility(View.GONE);
+										liveVideoView.setVideoPath(new_LivePlay
+												.getStreamurl());
+
+										NetUtils
+												.getInstance(
+														New_LivePlayFragment.this.mActivity)
+												.getAnalyse(
+														New_LivePlayFragment.this.mActivity,
+														"live",
+														new_LivePlay.getTitle(),
+														new_LivePlay
+																.getTitleurl());
+
+										// setVideoLoadingLayoutVisibility(View.VISIBLE);
+										nowLiveNew = new_LivePlay;
+									}
+								} else {
+									final TishiMsgHint dialog = new TishiMsgHint(
+											New_LivePlayFragment.this.mActivity,
+											R.style.MyDialog1);
+									dialog.setContent("当前无可用网络", "我知道了");
+									dialog.setCancleListener(new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											dialog.dismiss();
+										}
+									});
+									dialog.show();
+								}
 							}
 						});
 			} else {
-				// mViewHolderLive.new_item_liveplay_live_status
-				// .setVisibility(View.VISIBLE);
-
-				// mViewHolderLive.new_item_liveplay_live_status
-				// .setBackgroundResource(R.drawable.ic_next);
-
 				if (new_LivePlay.isOrder()) {
 					mViewHolderLive.new_item_liveplay_live_but
 							.setBackgroundResource(R.drawable.ic_unyuyue);
@@ -890,54 +825,28 @@ public class New_LivePlayFragment extends BaseFragment implements
 							.setBackgroundResource(R.drawable.ic_yuyue);
 					mViewHolderLive.new_item_liveplay_live_but.setText("");
 				}
-
-				// mViewHolderLive.new_item_liveplay_live_ic
-				// .setVisibility(View.GONE);
-				// mViewHolderLive.new_item_liveplay_live_tv
-				// .setVisibility(View.VISIBLE);
-				// mViewHolderLive.new_item_liveplay_live_bg
-				// .setBackgroundResource(R.drawable.yugao_live_bg);
-
 				mViewHolderLive.new_item_liveplay_live_bg_img
 						.setImageResource(R.drawable.yugao_live_bg);
 				mViewHolderLive.new_item_liveplay_but
 						.setVisibility(View.VISIBLE);
-				// mViewHolderLive.new_item_liveplay_live_tv.setText("直播预告");
 
+				Drawable ic_arrowshow = getResources().getDrawable(
+						R.drawable.ic_arrowshow);
+				ic_arrowshow.setBounds(0, 0, ic_arrowshow.getMinimumWidth(),
+						ic_arrowshow.getMinimumHeight());
+				mViewHolderLive.new_item_liveplay_but.setCompoundDrawables(
+						null, null, ic_arrowshow, null);
 				if (curPosition == position) {
 					if (isShow) {
 						mViewHolderLive.new_item_liveplay_content
 								.setVisibility(View.VISIBLE);
-						Drawable ic_arrowdown = getResources().getDrawable(
-								R.drawable.ic_arrowdown);
-						ic_arrowdown.setBounds(0, 0,
-								ic_arrowdown.getMinimumWidth(),
-								ic_arrowdown.getMinimumHeight());
-						mViewHolderLive.new_item_liveplay_but
-								.setCompoundDrawables(null, null, ic_arrowdown,
-										null);
 					} else {
-						Drawable ic_arrowshow = getResources().getDrawable(
-								R.drawable.ic_arrowshow);
-						ic_arrowshow.setBounds(0, 0,
-								ic_arrowshow.getMinimumWidth(),
-								ic_arrowshow.getMinimumHeight());
-						mViewHolderLive.new_item_liveplay_but
-								.setCompoundDrawables(null, null, ic_arrowshow,
-										null);
 
 						mViewHolderLive.new_item_liveplay_content
 								.setVisibility(View.GONE);
 
 					}
 				} else {
-					Drawable ic_arrowshow = getResources().getDrawable(
-							R.drawable.ic_arrowshow);
-					ic_arrowshow.setBounds(0, 0,
-							ic_arrowshow.getMinimumWidth(),
-							ic_arrowshow.getMinimumHeight());
-					mViewHolderLive.new_item_liveplay_but.setCompoundDrawables(
-							null, null, ic_arrowshow, null);
 					mViewHolderLive.new_item_liveplay_content
 							.setVisibility(View.GONE);
 				}
@@ -993,7 +902,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 												.getTimeZone("GMT+8"));
 										calendar.add(Calendar.SECOND,
 												(int) (time / 1000));
-										// calendar.add(Calendar.SECOND, 10);
+										// calendar.add(Calendar.SECOND,
+										// 10);
 
 										Intent intent = new Intent(mActivity,
 												AlarmReceiver.class);
@@ -1043,9 +953,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 								}
 							}
 						});
-
 			}
-
 			return convertView;
 		}
 	}
@@ -1077,7 +985,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 	public boolean onError(IMediaPlayer mp, int what, int extra) {
 		// TODO Auto-generated method stub
 		liveStart.setVisibility(View.VISIBLE);
-		DebugLog.e("onError", what + " " + extra);
+		DebugLog.e("IMediaPlayer onError " + what + " " + extra);
 		ToastUtils.Errortoast(mActivity, "视频播放有误请重新刷新");
 		return true;
 	}
@@ -1163,14 +1071,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 			orientationHandler
 					.sendEmptyMessageDelayed(FULL_SCREEN_CHANGE, 1000);
 			break;
-		// case R.id.live_video_controller:
-		// // if (video_view.isPlaying() || hasBeenPaly) {
-		// if (!liveVideoController.isShow())
-		// // && video_pb.getVisibility() != View.VISIBLE
-		// // && small_video_pb.getVisibility() != View.VISIBLE)
-		// liveVideoController.show();
-		// // }
-		// break;
 		}
 
 	}
@@ -1182,7 +1082,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 	}
 
 	public VideoView getVideoView() {
-		// video_view.release(true);
 		return liveVideoView;
 	}
 
@@ -1195,7 +1094,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 	@Override
 	public void onPrepared(IMediaPlayer mp) {
 		// TODO Auto-generated method stub
-		// liveVideoView.start();
 		liveVideoView.pause();
 		liveVideoImage.setVisibility(View.GONE);
 		if (mActivity.curTouchTab == mActivity.tab_two)
@@ -1203,11 +1101,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 	}
 
 	public void liveVideoPause() {
-		// if (liveVideoView.isPlaying()) {
 		if (liveVideoView != null) {
 			liveVideoView.pause();
 		}
-		// }
 		if (liveStart != null) {
 			liveStart.setVisibility(View.VISIBLE);
 		}
@@ -1240,4 +1136,9 @@ public class New_LivePlayFragment extends BaseFragment implements
 		return isFullstate;
 	}
 
+	public void closeVideoView() {
+		liveVideoView.stopPlayback();
+		liveVideoImage.setVisibility(View.VISIBLE);
+		liveStart.setVisibility(View.GONE);
+	}
 }

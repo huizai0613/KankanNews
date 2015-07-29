@@ -73,7 +73,7 @@ public class CrashApplication extends Application {
 
 	public TreeMap<String, User_Collect_Offline> mUser_Collect_Offlines = new TreeMap<String, User_Collect_Offline>();
 
-	private LinkedList<BaseActivity> mBaseActivityList = new LinkedList<BaseActivity>();
+	public LinkedList<BaseActivity> mBaseActivityList = new LinkedList<BaseActivity>();
 	public boolean isAattch = false;
 	public boolean isLogin = false;
 
@@ -196,22 +196,6 @@ public class CrashApplication extends Application {
 				.build();
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);
-	}
-
-	public static int calculateInSampleSize(Bitmap bitmap, int reqWidth,
-			int reqHeight) {
-		final int height = bitmap.getWidth();
-		final int width = bitmap.getHeight();
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-			if (width > height) {
-				inSampleSize = Math.round((float) height / (float) reqHeight);
-			} else {
-				inSampleSize = Math.round((float) width / (float) reqWidth);
-			}
-		}
-		return inSampleSize;
 	}
 
 	class MyUnlimitedDiscCache extends BaseDiscCache {

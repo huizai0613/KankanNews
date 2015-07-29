@@ -197,15 +197,17 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 			// 跳转
 
 			Bundle bundle = getIntent().getExtras();
-			// intent.setClass(SplashActivity.this, GuideActivity.class);
-
 			Intent intent = new Intent(activity, MainActivity.class);
 			if (bundle != null) {
-				if (bundle.containsKey("LIVE_ID"))
+				if (bundle.containsKey("LIVE_ID")) {
 					intent.putExtra("LIVE_ID", bundle.getString("LIVE_ID"));
-				if (bundle.containsKey("PUSH_NEWS_ID"))
+				}
+				if (bundle.containsKey("PUSH_NEWS_ID")) {
+					intent = new Intent(activity,
+							TransitionLoadingActivity.class);
 					intent.putExtra("PUSH_NEWS_ID",
 							bundle.getString("PUSH_NEWS_ID"));
+				}
 			}
 			activity.startActivity(intent);
 			activity.finish();

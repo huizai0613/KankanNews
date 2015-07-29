@@ -30,10 +30,10 @@ import com.kankan.kankanews.bean.New_News_Click;
 import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.config.AndroidConfig;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.search.SearchMainActivity;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
@@ -47,7 +47,7 @@ import com.umeng.message.PushAgent;
  * (2)是，则进入GuideActivity；否，则进入MainActivity (3)3s后执行(2)操作
  */
 public class SplashActivity extends BaseActivity {
-	private ItnetUtils instance;
+	private NetUtils instance;
 	boolean isFirstIn = false;
 	// 应用版本号
 	private String version;
@@ -114,7 +114,7 @@ public class SplashActivity extends BaseActivity {
 		mPushAgent.onAppStart();
 		mPushAgent.enable();
 
-		instance = ItnetUtils.getInstance(this);
+		instance = NetUtils.getInstance(this);
 		// Log.e("UmengRegistrar", UmengRegistrar.getRegistrationId(this));
 
 		// 听云 放在友盟之后
@@ -229,6 +229,14 @@ public class SplashActivity extends BaseActivity {
 		SplashActivity.this.finish();
 	}
 
+	private void goTrasition() {
+		Intent intent = getIntent();
+		intent.setClass(SplashActivity.this, TransitionLoadingActivity.class);
+		SplashActivity.this.startActivity(intent);
+		// overridePendingTransition(R.anim.alpha, R.anim.alpha_op);
+		SplashActivity.this.finish();
+	}
+
 	private void goGuide() {
 		Bundle bundle = getIntent().getExtras();
 		// intent.setClass(SplashActivity.this, GuideActivity.class);
@@ -306,19 +314,21 @@ public class SplashActivity extends BaseActivity {
 							String key = keyValue.split("=")[0];
 							String value = keyValue.split("=")[1];
 							Intent intent = getIntent();
+							mHandler.sendEmptyMessage(REMOVE_ALL_MESSAGES);
 							if (key.equalsIgnoreCase("infoid"))
 								intent.putExtra("PUSH_NEWS_ID", value);
 							if (key.equalsIgnoreCase("liveid"))
 								intent.putExtra("LIVE_ID", value);
-							mHandler.sendEmptyMessage(REMOVE_ALL_MESSAGES);
 							if (isFirstIn
 									|| !version.equals(spUtil.getVersion())) {
 								// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
 								goGuide();
 							} else {
 								// mHandler.sendEmptyMessage(CLICK_GO_HOME);
-
-								goHome();
+								if (key.equalsIgnoreCase("infoid"))
+									goTrasition();
+								if (key.equalsIgnoreCase("liveid"))
+									goHome();
 							}
 						}
 					}

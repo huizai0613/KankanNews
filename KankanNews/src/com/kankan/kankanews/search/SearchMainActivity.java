@@ -45,16 +45,16 @@ import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.New_News_Search;
 import com.kankan.kankanews.config.AndroidConfig;
-import com.kankan.kankanews.net.ItnetUtils;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankanews.kankanxinwen.R;
 
 public class SearchMainActivity extends BaseActivity implements OnClickListener {
 
-	private ItnetUtils instance;
+	private NetUtils instance;
 	private EditText searchContent;
 	private ImageView searchIcon;
 	private TextView cancelBut;
@@ -174,7 +174,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	protected void initData() {
 		// TODO Auto-generated method stub
 
-		instance = ItnetUtils.getInstance(this);
+		instance = NetUtils.getInstance(this);
 		searchContent.setTag(searchContent.getHint().toString());
 		initListView();
 		getHisList();

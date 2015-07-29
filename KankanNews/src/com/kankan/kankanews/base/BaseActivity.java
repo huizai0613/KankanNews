@@ -41,6 +41,7 @@ import com.kankan.kankanews.bean.interfaz.CanBeShared;
 import com.kankan.kankanews.dialog.Loading_Dialog;
 import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.SharePreferenceUtil;
 import com.kankan.kankanews.utils.XunaoLog;
 import com.kankanews.kankanxinwen.R;
@@ -60,6 +61,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 	public int mScreenHeight;
 	private XunaoLog yeLog;
 	protected BaseActivity mContext;
+	protected NetUtils netUtils;
 	// protected ImageLoader imageLoader = ImageLoader.getInstance();
 	protected PullToRefreshListView listview;
 	protected boolean isLoadMore;
@@ -76,7 +78,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 	protected boolean isRightFinsh = true;
 	protected HashMap<String, SoftReference<Bitmap>> imageCache;
 
-	private View mNightView;
+	public View mNightView;
 
 	public boolean isFinsh;
 	protected boolean isNeedNightView = true;
@@ -117,7 +119,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 		spUtil = mApplication.getSpUtil();
 		super.onCreate(savedInstanceState);
 		if (isNeedNightView)
-			initNightView();
+			initNightView(false);
 		// registerReceiver(mDialogReceiver, new IntentFilter("dialog"));
 		imageCache = new HashMap<String, SoftReference<Bitmap>>();
 		DisplayMetrics metric = new DisplayMetrics();
@@ -127,6 +129,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 		yeLog = XunaoLog.yLog();
 		mContext = this;
 		mApplication.addActivity(this);
+		netUtils = NetUtils.getInstance(this);
 		loading_dialog = new Loading_Dialog(mContext, R.style.MyDialogStyle);
 
 		dbUtils = mApplication.getDbUtils();
@@ -295,6 +298,23 @@ public abstract class BaseActivity extends FragmentActivity implements
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_out);
 	}
 
+	public void startAnimActivityByParameterAlpha(Class<?> cla, String mid,
+			String type, String titleurl, String newstime, String titlelist,
+			String titlePic, String sharedPic) {
+		Intent intent = new Intent(this, cla);
+		intent.setAction("com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY");
+		intent.addCategory(Intent.CATEGORY_DEFAULT);
+		intent.putExtra("mid", mid);
+		intent.putExtra("type", type);
+		intent.putExtra("titleurl", titleurl);
+		intent.putExtra("newstime", newstime);
+		intent.putExtra("titlelist", titlelist);
+		intent.putExtra("titlePic", titlePic);
+		intent.putExtra("sharedPic", sharedPic);
+		this.startActivity(intent);
+		this.overridePendingTransition(R.anim.alpha_in, R.anim.alpha_out);
+	}
+
 	public void startAnimActivityByParameter(Class<?> cla, New_News_Home mews) {
 		Intent intent = new Intent(this, cla);
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -315,6 +335,20 @@ public abstract class BaseActivity extends FragmentActivity implements
 		intent.putExtra("sharedPic", sharedPic);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_out);
+	}
+
+	public void startSubjectActivityByParameterAlpha(Class<?> cla, String ztid,
+			String title, String titlepic, String titleurl, String titlePic,
+			String sharedPic) {
+		Intent intent = new Intent(this, cla);
+		intent.putExtra("ztid", ztid);
+		intent.putExtra("title", title);
+		intent.putExtra("titlepic", titlepic);
+		intent.putExtra("titleurl", titleurl);
+		intent.putExtra("titlePic", titlePic);
+		intent.putExtra("sharedPic", sharedPic);
+		this.startActivity(intent);
+		this.overridePendingTransition(R.anim.alpha_in, R.anim.alpha_out);
 	}
 
 	public void startAnimActivity(Class<?> cla) {
@@ -476,6 +510,10 @@ public abstract class BaseActivity extends FragmentActivity implements
 		com_title_bar_right_tv.setOnClickListener(clickListener);
 		com_title_bar_right_bt.setOnClickListener(clickListener);
 	}
+	
+	protected void showLeftBarTv(){
+		com_title_bar_left_tv.setVisibility(View.VISIBLE);
+	}
 
 	/**
 	 * 初始化视图
@@ -593,11 +631,20 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 	}
 
-	public void initNightView() {
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finish();
+		this.mApplication.removeActivity(this);
+	}
+
+	public void initNightView(boolean isFullScreen) {
+		int _flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+				| WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+		if (isFullScreen)
+			_flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
 		WindowManager.LayoutParams mNightViewParam = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.TYPE_APPLICATION,
-				WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-						| WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+				WindowManager.LayoutParams.TYPE_APPLICATION, _flags,
 				PixelFormat.TRANSPARENT);
 		WindowManager mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
 		mNightView = new View(this);
