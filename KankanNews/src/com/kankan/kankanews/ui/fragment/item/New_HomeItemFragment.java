@@ -798,7 +798,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 							.setLayoutParams(new LinearLayout.LayoutParams(
 									LinearLayout.LayoutParams.MATCH_PARENT,
 									(int) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 4)) / 3 * 0.75)));
+											.dp2px(12.5f * 2 + 7.5f * 2)) / 3 * 0.75)));
 					convertView.setTag(albumsHolder);
 				} else if (itemViewType == 4) {
 					convertView = inflate.inflate(mActivity,
@@ -819,11 +819,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 									// .dp2px(10 * 2)))
 									mActivity.mScreenWidth,
 									(int) ((float) ((mActivity.mScreenWidth - PixelUtil
-											.dp2px(10 * 2)) / 4))));
+											.dp2px(12.5f * 2)) / 10 * 3))));
 					newZhuanTiHolder.home_news_titlepic.setTag(
 							R.string.viewwidth,
 							(int) ((mActivity.mScreenWidth - PixelUtil
-									.dp2px(10 * 2))));
+									.dp2px(12.5f * 2))));
 					convertView.setTag(newZhuanTiHolder);
 				}
 			} else {

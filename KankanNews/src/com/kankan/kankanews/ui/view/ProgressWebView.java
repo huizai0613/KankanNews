@@ -5,6 +5,7 @@ import com.kankanews.kankanxinwen.R;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
@@ -24,7 +25,12 @@ public class ProgressWebView extends WebView {
 	public ProgressBar getProgressbar() {
 		return progressbar;
 	}
-
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		// TODO Auto-generated method stub
+		return super.dispatchTouchEvent(ev);
+	}
 
 	public ProgressWebView(Context context, AttributeSet attrs) {
 		super(context, attrs);

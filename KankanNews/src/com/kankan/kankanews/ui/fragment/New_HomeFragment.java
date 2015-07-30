@@ -170,8 +170,8 @@ public class New_HomeFragment extends BaseFragment implements
 				columnTextView.setText(homeCates.get(i).getTitle());
 				columnTextView.setTextColor(getResources().getColorStateList(
 						R.color.home_category_text_color));
-				columnTextView
-						.setBackgroundResource(R.drawable.select_columnitem);
+				// columnTextView
+				// .setBackgroundResource(R.drawable.select_columnitem);
 
 				if (columnSelectIndex == i) {
 					columnTextView.setSelected(true);
@@ -202,10 +202,22 @@ public class New_HomeFragment extends BaseFragment implements
 							// textNomalSize[PixelUtil
 							// .getScale()]));
 
-							FontUtils.setTextViewFontSize(
-									New_HomeFragment.this, localView,
-									R.string.home_cates_text_size_selected,
-									FontUtils.DEFAULT_FONT_RADIX);
+							// FontUtils.setTextViewFontSize(
+							// New_HomeFragment.this, localView,
+							// R.string.home_cates_text_size_selected,
+							// FontUtils.DEFAULT_FONT_RADIX);
+//							if (columnSelectIndex == i) {
+//								columnTextView.setSelected(true);
+//								FontUtils.setTextViewFontSize(
+//										New_HomeFragment.this, columnTextView,
+//										R.string.home_cates_text_size_selected,
+//										FontUtils.DEFAULT_FONT_RADIX);
+//							} else {
+								FontUtils.setTextViewFontSize(
+										New_HomeFragment.this, localView,
+										R.string.home_cates_text_size,
+										FontUtils.DEFAULT_FONT_RADIX);
+//							}
 							if (localView != v) {
 								localView.setSelected(false);
 							} else {
@@ -213,10 +225,13 @@ public class New_HomeFragment extends BaseFragment implements
 								mViewpager.setCurrentItem(i, false);
 							}
 						}
+						FontUtils.setTextViewFontSize(
+								New_HomeFragment.this, columnTextView,
+								R.string.home_cates_text_size_selected,
+								FontUtils.DEFAULT_FONT_RADIX);
 					}
 				});
 				if (i == count - 1) {
-					Log.e("iiiii", i + "" + (count - 1));
 					LinearLayout.LayoutParams lastParams = new LinearLayout.LayoutParams(
 							android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
 							android.widget.LinearLayout.LayoutParams.MATCH_PARENT);
@@ -224,7 +239,7 @@ public class New_HomeFragment extends BaseFragment implements
 					lastParams.leftMargin = PixelUtil.dp2px(18);
 					layout.addView(columnTextView, lastParams);
 				} else {
-					params.rightMargin = PixelUtil.dp2px(0);
+					params.rightMargin = PixelUtil.dp2px(4);
 					params.leftMargin = PixelUtil.dp2px(18);
 					layout.addView(columnTextView, params);
 				}

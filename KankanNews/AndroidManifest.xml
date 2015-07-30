@@ -66,12 +66,17 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.kankan.kankanews.ui.TestActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.kankan.kankanews.ui.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:hardwareAccelerated="false"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.TransitionLoadingActivity"
@@ -123,7 +128,8 @@
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_Content_Web"
             android:exported="false"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" 
+            android:theme="@style/Kankan_Theme_Day_Alpha" >
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_MyFoot"

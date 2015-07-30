@@ -74,7 +74,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 	protected MyTextView com_title_bar_content;
 	protected MyTextView com_title_bar_right_tv;
 	protected ImageView com_title_bar_right_bt;
-	private GestureDetector gestureDetector;
+//	private GestureDetector gestureDetector;
 	protected boolean isRightFinsh = true;
 	protected HashMap<String, SoftReference<Bitmap>> imageCache;
 
@@ -87,17 +87,17 @@ public abstract class BaseActivity extends FragmentActivity implements
 		this.isRightFinsh = isRightFinsh;
 	}
 
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-
-		try {
-			gestureDetector.onTouchEvent(ev);
-			return super.dispatchTouchEvent(ev);
-		} catch (IllegalArgumentException e) {
-			return true;
-		}
-
-	}
+//	@Override
+//	public boolean dispatchTouchEvent(MotionEvent ev) {
+//
+//		try {
+//			gestureDetector.onTouchEvent(ev);
+//			return super.dispatchTouchEvent(ev);
+//		} catch (IllegalArgumentException e) {
+//			return true;
+//		}
+//
+//	}
 
 	@Override
 	protected void onDestroy() {
@@ -134,57 +134,57 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 		dbUtils = mApplication.getDbUtils();
 
-		gestureDetector = new GestureDetector(this,
-				new GestureDetector.OnGestureListener() {
-
-					@Override
-					public boolean onSingleTapUp(MotionEvent e) {
-						// TODO Auto-generated method stub
-						return false;
-					}
-
-					@Override
-					public void onShowPress(MotionEvent e) {
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public boolean onScroll(MotionEvent e1, MotionEvent e2,
-							float distanceX, float distanceY) {
-
-						return false;
-					}
-
-					@Override
-					public void onLongPress(MotionEvent e) {
-						// TODO Auto-generated method stub
-
-					}
-
-					// 右滑手势
-					@Override
-					public boolean onFling(MotionEvent e1, MotionEvent e2,
-							float velocityX, float velocityY) {
-						if (isRightFinsh) {
-							// 右滑动
-							if (e2.getX() - e1.getX() > 200
-									&& Math.abs(e2.getY() - e1.getY()) < Math
-											.abs(e2.getX() - e1.getX())) {
-								onBackPressed();
-								isFinsh = true;
-								return true;
-							}
-						}
-						return false;
-					}
-
-					@Override
-					public boolean onDown(MotionEvent e) {
-						// TODO Auto-generated method stub
-						return false;
-					}
-				});
+//		gestureDetector = new GestureDetector(this,
+//				new GestureDetector.OnGestureListener() {
+//
+//					@Override
+//					public boolean onSingleTapUp(MotionEvent e) {
+//						// TODO Auto-generated method stub
+//						return false;
+//					}
+//
+//					@Override
+//					public void onShowPress(MotionEvent e) {
+//						// TODO Auto-generated method stub
+//
+//					}
+//
+//					@Override
+//					public boolean onScroll(MotionEvent e1, MotionEvent e2,
+//							float distanceX, float distanceY) {
+//
+//						return false;
+//					}
+//
+//					@Override
+//					public void onLongPress(MotionEvent e) {
+//						// TODO Auto-generated method stub
+//
+//					}
+//
+//					// 右滑手势
+//					@Override
+//					public boolean onFling(MotionEvent e1, MotionEvent e2,
+//							float velocityX, float velocityY) {
+//						if (isRightFinsh) {
+//							// 右滑动
+//							if (e2.getX() - e1.getX() > 200
+//									&& Math.abs(e2.getY() - e1.getY()) < Math
+//											.abs(e2.getX() - e1.getX())) {
+//								onBackPressed();
+//								isFinsh = true;
+//								return true;
+//							}
+//						}
+//						return false;
+//					}
+//
+//					@Override
+//					public boolean onDown(MotionEvent e) {
+//						// TODO Auto-generated method stub
+//						return false;
+//					}
+//				});
 
 	}
 

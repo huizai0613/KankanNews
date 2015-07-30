@@ -4,16 +4,16 @@
     android:layout_height="wrap_content"
     android:background="@drawable/new_item_bg_selector"
     android:orientation="vertical"
-    android:paddingTop="5dp" >
+    android:paddingTop="@dimen/news_bask_space" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="7dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="14dp" >
+        android:paddingLeft="@dimen/news_bask_space"
+        android:paddingRight="@dimen/news_bask_space" >
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/home_albums_title"
@@ -34,8 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" >
+        android:paddingLeft="@dimen/news_bask_space"
+        android:paddingRight="@dimen/news_bask_space" >
 
         <ImageView
             android:id="@+id/home_albums_img_1"
@@ -49,7 +49,7 @@
             android:id="@+id/home_albums_img_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="7.5dp"
             android:layout_weight="1"
             android:scaleType="fitXY"
             android:src="@drawable/default_news_display" />
@@ -58,7 +58,7 @@
             android:id="@+id/home_albums_img_3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="7.5dp"
             android:layout_weight="1"
             android:scaleType="fitXY"
             android:src="@drawable/default_news_display" />
@@ -68,7 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/separation_line_height"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dip"
+        android:layout_marginTop="@dimen/news_bask_space"
         android:background="@color/light_gray" />
 
 </LinearLayout>

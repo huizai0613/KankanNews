@@ -1,10 +1,16 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Kankan_base_Theme" parent="android:Theme.Light.NoTitleBar">
+    <style name="Kankan_base_Theme" parent="android:Theme.Light.NoTitleBar"></style>
 
-    </style>
     <style name="Kankan_Theme_Day" parent="Kankan_base_Theme">
         <item name="appBackground">@color/bright_gray</item>
+    </style>
+
+    <style name="Kankan_Theme_Day_Alpha" parent="Kankan_base_Theme">
+        <item name="appBackground">@color/bright_gray</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
     <style name="Kankan_Theme_Night" parent="Kankan_base_Theme">

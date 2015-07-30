@@ -41,6 +41,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.sina.AccessTokenKeeper;
@@ -89,13 +90,23 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_content_web);
-		spUtil.saveFontSizeRadix(1.4f);
+		SildingFinishLayout mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
+		mSildingFinishLayout
+				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
+
+					@Override
+					public void onSildingFinish() {
+						New_Activity_Content_Web.this.finish();
+					}
+				});
+		mSildingFinishLayout.setEffectiveX(100);
+		mSildingFinishLayout.setTouchView(mSildingFinishLayout);
+		mSildingFinishLayout.setTouchView(webView);
 	}
 
 	@Override
 	protected void initView() {
 		webView = (ProgressWebView) findViewById(R.id.webView);
-		video_view = (FrameLayout) findViewById(R.id.video_view);
 		WebSettings webSettings = webView.getSettings();
 
 		// 开启javascript设置
@@ -123,6 +134,8 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 			webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 		}
 		webView.setWebViewClient(new MyWebViewClient());
+		webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+
 		xwebchromeclient = new xWebChromeClient();
 		webView.setWebChromeClient(xwebchromeclient);
 
@@ -300,36 +313,6 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 
 	private xWebChromeClient xwebchromeclient;
 
-	private FrameLayout video_view;
-
-	private Boolean islandport = true;// true表示此时是竖屏，false表示此时横屏。
-
-	private ImageView content_video_temp_image;
-
-	private RelativeLayout video_controller_bar;
-
-	private RelativeLayout video_controller_full;
-
-	private View video_controller_volume_box;
-
-	private LinearLayout video_controller_top_bar;
-
-	private ImageView video_controller_back;
-
-	private ImageView video_controller_full_play;
-
-	private ImageView video_controller_volume;
-
-	private MyTextView video_controller_title;
-
-	private MyTextView video_controller_totalAndCurTime;
-
-	private SeekBar video_controller_seek_full;
-
-	private VerticalBar video_controller_volume_seek;
-
-	private AudioManager mAM;
-
 	public class xWebChromeClient extends WebChromeClient {
 		private Bitmap xdefaltvideo;
 		private View xprogressvideo;
@@ -337,7 +320,20 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		@Override
 		public void onProgressChanged(WebView view, int newProgress) {
 			if (newProgress == 100) {
-				webView.getProgressbar().setVisibility(View.GONE);
+				if (webView.getProgressbar().getVisibility() == View.GONE)
+					webView.getProgressbar().setVisibility(View.VISIBLE);
+				webView.getProgressbar().setProgress(newProgress);
+				new Handler() {
+					@Override
+					public void handleMessage(Message msg) {
+						switch (msg.what) {
+						case 2046:
+							webView.getProgressbar().setVisibility(View.GONE);
+							break;
+						}
+						// super.handleMessage(msg);
+					}
+				}.sendEmptyMessageDelayed(2046, 300);
 			} else {
 				if (webView.getProgressbar().getVisibility() == View.GONE)
 					webView.getProgressbar().setVisibility(View.VISIBLE);
@@ -383,16 +379,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 	 */
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		Log.i("testwebview", "=====<<<  onConfigurationChanged  >>>=====");
 		super.onConfigurationChanged(newConfig);
-
-		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-			Log.i("webview", "   现在是横屏1");
-			islandport = false;
-		} else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-			Log.i("webview", "   现在是竖屏1");
-			islandport = true;
-		}
 	}
 
 	@Override

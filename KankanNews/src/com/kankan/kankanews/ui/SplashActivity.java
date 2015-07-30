@@ -298,6 +298,23 @@ public class SplashActivity extends BaseActivity {
 	protected void initView() {
 		// TODO Auto-generated method stub
 		adPic = (ImageView) this.findViewById(R.id.ad_pic);
+
+		ImageView flower = (ImageView) this.findViewById(R.id.red_flower);
+		flower.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent2 = getIntent();
+				intent2.setClass(SplashActivity.this, TestActivity.class);
+				SplashActivity.this.startActivity(intent2);
+				SplashActivity.this.overridePendingTransition(
+						R.anim.in_from_right, R.anim.alpha_out);
+				mHandler.sendEmptyMessage(REMOVE_ALL_MESSAGES);
+				return;
+			}
+		});
+
 		adPic.setOnClickListener(new OnClickListener() {
 
 			@Override

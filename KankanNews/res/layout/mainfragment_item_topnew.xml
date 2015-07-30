@@ -7,7 +7,7 @@
     <com.kankan.kankanews.ui.view.AutoScrollViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="150dip" >
+        android:layout_height="wrap_content" >
     </com.kankan.kankanews.ui.view.AutoScrollViewPager>
 
     <LinearLayout
@@ -17,8 +17,8 @@
         android:layout_below="@id/viewpager"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip" >
+        android:paddingLeft="@dimen/news_bask_space"
+        android:paddingRight="@dimen/news_bask_space" >
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/new_title"
@@ -29,7 +29,6 @@
             android:paddingBottom="10dip"
             android:paddingTop="10dip"
             android:textColor="@color/black"
-            android:textSize="32sp"
             android:textStyle="bold" />
 
         <LinearLayout

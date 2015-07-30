@@ -4,33 +4,30 @@
     android:layout_height="wrap_content"
     android:background="@drawable/new_item_bg_selector"
     android:orientation="vertical"
-    android:paddingTop="5dp" >
+    android:paddingTop="@dimen/news_bask_space" >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp" >
+        android:layout_marginBottom="7dp"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/news_bask_space"
+        android:paddingRight="@dimen/news_bask_space" >
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="7dp"
-            android:layout_marginTop="7dp"
             android:gravity="center_vertical"
             android:textSize="32sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:paddingRight="32dp" />
 
         <ImageView
             android:id="@+id/home_news_newstype"
             android:layout_width="25dp"
             android:layout_height="15dip"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="7dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="7dp"
             android:scaleType="fitXY"
             android:src="@drawable/new_icon_sign_subject" />
     </RelativeLayout>
@@ -39,8 +36,8 @@
         android:id="@+id/home_news_titlepic"
         android:layout_width="match_parent"
         android:layout_height="80dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+        android:paddingLeft="@dimen/news_bask_space"
+        android:paddingRight="@dimen/news_bask_space"
         android:scaleType="fitXY"
         android:src="@drawable/default_news_display" />
 
@@ -48,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/separation_line_height"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dip"
+        android:layout_marginTop="@dimen/news_bask_space"
         android:background="@color/light_gray" />
 
 </LinearLayout>
