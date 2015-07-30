@@ -16,5 +16,10 @@
         android:layout_marginTop="@dimen/base_action_bar_height"
         android:scrollbarThumbVertical="@color/gray_cc"
         android:scrollbarSize="4dip"/>
-
+	
+    <View 
+        android:layout_below="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="500dip"
+        android:background="@color/black"/>
 </com.kankan.kankanews.base.view.SildingFinishLayout>
