@@ -57,9 +57,8 @@ public class New_Activity_MyFoot extends BaseActivity implements
 		// - PixelUtil.dp2px(51)));
 
 		// 初始化头部
-		initTitle_Right_Left_bar("浏览记录", "", "", "#ffffff",
-				R.drawable.new_icon_delete, R.drawable.new_ic_back, "#000000",
-				"#000000");
+		initTitleBarContent("浏览记录", "", "",
+				R.drawable.new_icon_delete, R.drawable.new_ic_back);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
@@ -105,11 +104,10 @@ public class New_Activity_MyFoot extends BaseActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.com_title_bar_left_bt:
+		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;
-		case R.id.com_title_bar_right_bt:
-		case R.id.com_title_bar_right_tv:
+		case R.id.title_bar_right_img:
 			if (mNew_News != null && mNew_News.size() > 0) {
 				delete();
 			}
@@ -194,19 +192,21 @@ public class New_Activity_MyFoot extends BaseActivity implements
 			final New_News new_news = mNew_News.get(position);
 			titlepic.setTag(R.string.viewwidth, PixelUtil.dp2px(80));
 			if (new_news.getTitlepic() != null) {
-//				CommonUtils.zoomImage(imageLoader, new_news.getTitlepiclist()
-//						.split("::::::")[0], titlepic, mContext, imageCache);
-				ImgUtils.imageLoader.displayImage(new_news.getTitlepic()
-						.split("::::::")[0], titlepic, ImgUtils.homeImageOptions);
-			}else{
-//				CommonUtils.zoomImage(imageLoader, new_news.getTitlepic()
-//						.split("::::::")[0], titlepic, mContext, imageCache);
+				// CommonUtils.zoomImage(imageLoader, new_news.getTitlepiclist()
+				// .split("::::::")[0], titlepic, mContext, imageCache);
+				ImgUtils.imageLoader.displayImage(
+						new_news.getTitlepic().split("::::::")[0], titlepic,
+						ImgUtils.homeImageOptions);
+			} else {
+				// CommonUtils.zoomImage(imageLoader, new_news.getTitlepic()
+				// .split("::::::")[0], titlepic, mContext, imageCache);
 				ImgUtils.imageLoader.displayImage(new_news.getSharedPic()
-						.split("::::::")[0], titlepic, ImgUtils.homeImageOptions);
+						.split("::::::")[0], titlepic,
+						ImgUtils.homeImageOptions);
 			}
 			if (new_news.getTitlelist() != null) {
-			title.setText(new_news.getTitlelist());
-			}else{
+				title.setText(new_news.getTitlelist());
+			} else {
 				title.setText(new_news.getTitle());
 			}
 			looktime.setText(new_news.getLooktime());
@@ -227,23 +227,28 @@ public class New_Activity_MyFoot extends BaseActivity implements
 			startAnimActivityByParameter(New_Activity_Content_Video.class,
 					new_news.getId(), new_news.getType(),
 					new_news.getTitleurl(), new_news.getNewstime(),
-					new_news.getTitle(), new_news.getTitlepic(), new_news.getSharedPic());
+					new_news.getTitle(), new_news.getTitlepic(),
+					new_news.getSharedPic());
 			break;
 		case 2:// 图集
 			startAnimActivityByParameter(New_Activity_Content_PicSet.class,
 					new_news.getId(), new_news.getType(),
 					new_news.getTitleurl(), new_news.getNewstime(),
-					new_news.getTitle(), new_news.getTitlepic(), new_news.getSharedPic());
+					new_news.getTitle(), new_news.getTitlepic(),
+					new_news.getSharedPic());
 			break;
 		case 5:// 专题
 			startSubjectActivityByParameter(New_Avtivity_Subject.class,
 					new_news.getZtid(), new_news.getTitle(),
-					new_news.getTitlepic(), new_news.getTitleurl(), new_news.getTitlepic(), new_news.getSharedPic());
+					new_news.getTitlepic(), new_news.getTitleurl(),
+					new_news.getTitlepic(), new_news.getSharedPic());
 			break;
 		default:// 图文
 			startAnimActivityByParameter(New_Activity_Content_Web.class,
 					new_news.getId(), new_news.getType(),
-					new_news.getTitleurl(), new_news.getNewstime(), new_news.getTitlelist(), new_news.getTitlepic(), new_news.getSharedPic());
+					new_news.getTitleurl(), new_news.getNewstime(),
+					new_news.getTitlelist(), new_news.getTitlepic(),
+					new_news.getSharedPic());
 			break;
 		}
 	}

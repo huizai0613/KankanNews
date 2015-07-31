@@ -12,7 +12,7 @@
 		android:layout_marginLeft="10dp"
         android:layout_centerVertical="true" >
 
-    <com.xunao.view.photoview.PhotoView
+    <com.kankan.kankanews.photoview.PhotoView
         android:id="@+id/titlepic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

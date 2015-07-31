@@ -66,15 +66,15 @@ public abstract class BaseActivity extends FragmentActivity implements
 	protected PullToRefreshListView listview;
 	protected boolean isLoadMore;
 
-	protected RelativeLayout com_title_bar_bg;
-	protected View com_title_bar_bottom_line;
-	protected ImageView com_title_bar_left_bt;
-	protected MyTextView com_title_bar_left_tv;
-	protected ImageView com_title_bar_content_bt;
-	protected MyTextView com_title_bar_content;
-	protected MyTextView com_title_bar_right_tv;
-	protected ImageView com_title_bar_right_bt;
-//	private GestureDetector gestureDetector;
+	protected RelativeLayout titleBarView;
+	protected ImageView titleBarLeftImg;
+	protected MyTextView titleBarLeftText;
+	protected ImageView titleBarContentImg;
+	protected MyTextView titleBarContent;
+	protected MyTextView titleBarRightText;
+	protected ImageView titleBarRightImg;
+	protected ImageView titleBarRightImgSecond;
+	// private GestureDetector gestureDetector;
 	protected boolean isRightFinsh = true;
 	protected HashMap<String, SoftReference<Bitmap>> imageCache;
 
@@ -87,17 +87,17 @@ public abstract class BaseActivity extends FragmentActivity implements
 		this.isRightFinsh = isRightFinsh;
 	}
 
-//	@Override
-//	public boolean dispatchTouchEvent(MotionEvent ev) {
-//
-//		try {
-//			gestureDetector.onTouchEvent(ev);
-//			return super.dispatchTouchEvent(ev);
-//		} catch (IllegalArgumentException e) {
-//			return true;
-//		}
-//
-//	}
+	// @Override
+	// public boolean dispatchTouchEvent(MotionEvent ev) {
+	//
+	// try {
+	// gestureDetector.onTouchEvent(ev);
+	// return super.dispatchTouchEvent(ev);
+	// } catch (IllegalArgumentException e) {
+	// return true;
+	// }
+	//
+	// }
 
 	@Override
 	protected void onDestroy() {
@@ -134,57 +134,57 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 		dbUtils = mApplication.getDbUtils();
 
-//		gestureDetector = new GestureDetector(this,
-//				new GestureDetector.OnGestureListener() {
-//
-//					@Override
-//					public boolean onSingleTapUp(MotionEvent e) {
-//						// TODO Auto-generated method stub
-//						return false;
-//					}
-//
-//					@Override
-//					public void onShowPress(MotionEvent e) {
-//						// TODO Auto-generated method stub
-//
-//					}
-//
-//					@Override
-//					public boolean onScroll(MotionEvent e1, MotionEvent e2,
-//							float distanceX, float distanceY) {
-//
-//						return false;
-//					}
-//
-//					@Override
-//					public void onLongPress(MotionEvent e) {
-//						// TODO Auto-generated method stub
-//
-//					}
-//
-//					// 右滑手势
-//					@Override
-//					public boolean onFling(MotionEvent e1, MotionEvent e2,
-//							float velocityX, float velocityY) {
-//						if (isRightFinsh) {
-//							// 右滑动
-//							if (e2.getX() - e1.getX() > 200
-//									&& Math.abs(e2.getY() - e1.getY()) < Math
-//											.abs(e2.getX() - e1.getX())) {
-//								onBackPressed();
-//								isFinsh = true;
-//								return true;
-//							}
-//						}
-//						return false;
-//					}
-//
-//					@Override
-//					public boolean onDown(MotionEvent e) {
-//						// TODO Auto-generated method stub
-//						return false;
-//					}
-//				});
+		// gestureDetector = new GestureDetector(this,
+		// new GestureDetector.OnGestureListener() {
+		//
+		// @Override
+		// public boolean onSingleTapUp(MotionEvent e) {
+		// // TODO Auto-generated method stub
+		// return false;
+		// }
+		//
+		// @Override
+		// public void onShowPress(MotionEvent e) {
+		// // TODO Auto-generated method stub
+		//
+		// }
+		//
+		// @Override
+		// public boolean onScroll(MotionEvent e1, MotionEvent e2,
+		// float distanceX, float distanceY) {
+		//
+		// return false;
+		// }
+		//
+		// @Override
+		// public void onLongPress(MotionEvent e) {
+		// // TODO Auto-generated method stub
+		//
+		// }
+		//
+		// // 右滑手势
+		// @Override
+		// public boolean onFling(MotionEvent e1, MotionEvent e2,
+		// float velocityX, float velocityY) {
+		// if (isRightFinsh) {
+		// // 右滑动
+		// if (e2.getX() - e1.getX() > 200
+		// && Math.abs(e2.getY() - e1.getY()) < Math
+		// .abs(e2.getX() - e1.getX())) {
+		// onBackPressed();
+		// isFinsh = true;
+		// return true;
+		// }
+		// }
+		// return false;
+		// }
+		//
+		// @Override
+		// public boolean onDown(MotionEvent e) {
+		// // TODO Auto-generated method stub
+		// return false;
+		// }
+		// });
 
 	}
 
@@ -388,131 +388,134 @@ public abstract class BaseActivity extends FragmentActivity implements
 	}
 
 	// init头部view
-	protected void initTitle_bar_view() {
+	protected void initTitleBarView() {
+		titleBarView = (RelativeLayout) findViewById(R.id.title_bar_view);
 		// 左
-		com_title_bar_left_bt = (ImageView) findViewById(R.id.com_title_bar_left_bt);
-		com_title_bar_left_tv = (MyTextView) findViewById(R.id.com_title_bar_left_tv);
+		titleBarLeftImg = (ImageView) findViewById(R.id.title_bar_left_img);
+		titleBarLeftText = (MyTextView) findViewById(R.id.title_bar_left_text);
 		// 中
-		com_title_bar_content_bt = (ImageView) findViewById(R.id.com_title_bai_content_img);
-		com_title_bar_content = (MyTextView) findViewById(R.id.com_title_bar_content);
+		titleBarContentImg = (ImageView) findViewById(R.id.title_bar_content_img);
+		titleBarContent = (MyTextView) findViewById(R.id.title_bar_content);
 		// 右
-		com_title_bar_right_bt = (ImageView) findViewById(R.id.com_title_bar_right_bt);
-		com_title_bar_right_tv = (MyTextView) findViewById(R.id.com_title_bar_right_tv);
+		titleBarRightImgSecond = (ImageView) findViewById(R.id.title_bar_right_second_img);
+		titleBarRightImg = (ImageView) findViewById(R.id.title_bar_right_img);
+		titleBarRightText = (MyTextView) findViewById(R.id.title_bar_right_text);
 
+		titleBarLeftImg.setVisibility(View.GONE);
+		titleBarLeftText.setVisibility(View.GONE);
+		titleBarContentImg.setVisibility(View.GONE);
+		titleBarContent.setVisibility(View.GONE);
+		titleBarRightImgSecond.setVisibility(View.GONE);
+		titleBarRightImg.setVisibility(View.GONE);
+		titleBarRightText.setVisibility(View.GONE);
 	}
 
 	// 左图标 中文字 右图标
 	protected void initTitle_Left_bar(int left_img, String mid_text,
 			int right_img) {
-		initTitle_bar_view();
-
-		com_title_bar_left_bt.setImageResource(left_img);
-		com_title_bar_content.setText(mid_text);
-		com_title_bar_right_bt.setImageResource(right_img);
+		initTitleBarView();
+		titleBarLeftImg.setVisibility(View.VISIBLE);
+		titleBarContent.setVisibility(View.VISIBLE);
+		titleBarRightImg.setVisibility(View.VISIBLE);
+		titleBarLeftImg.setImageResource(left_img);
+		titleBarContent.setText(mid_text);
+		titleBarRightImg.setImageResource(right_img);
 	}
 
 	// 只有左侧和中间的 图标
-	protected void initTitle_Left_bar(int left_img_id, int mid_img_id) {
-		com_title_bar_content = (MyTextView) findViewById(R.id.com_title_bar_content);
-		com_title_bar_content_bt = (ImageView) findViewById(R.id.com_title_bai_content_img);
-		com_title_bar_left_bt = (ImageView) findViewById(R.id.com_title_bar_left_bt);
-		com_title_bar_left_tv = (MyTextView) findViewById(R.id.com_title_bar_left_tv);
+	protected void initTitleLeftBar(int left_img_id, int mid_img_id) {
+		initTitleBarView();
 
-		com_title_bar_content.setVisibility(View.GONE);
-		com_title_bar_content_bt.setVisibility(View.VISIBLE);
-		com_title_bar_content_bt.setImageResource(mid_img_id);
-		com_title_bar_left_bt.setImageResource(left_img_id);
+		titleBarContentImg.setVisibility(View.VISIBLE);
+		titleBarLeftImg.setVisibility(View.VISIBLE);
+		titleBarContentImg.setImageResource(mid_img_id);
+		titleBarLeftImg.setImageResource(left_img_id);
 	}
 
-	protected void initTitle_Left_bar(String content, String leftContent,
-			String contentColor, int left_img_id) {
+	protected void initTitleLeftBar(String content, String leftContent,
+			int left_img_id) {
+		initTitleBarView();
+		titleBarLeftText.setVisibility(View.VISIBLE);
+		titleBarContent.setVisibility(View.VISIBLE);
+		titleBarLeftImg.setVisibility(View.VISIBLE);
 
-		com_title_bar_left_bt = (ImageView) findViewById(R.id.com_title_bar_left_bt);
-		com_title_bar_content = (MyTextView) findViewById(R.id.com_title_bar_content);
-		com_title_bar_left_tv = (MyTextView) findViewById(R.id.com_title_bar_left_tv);
-		com_title_bar_right_tv = (MyTextView) findViewById(R.id.com_title_bar_right_tv);
-		com_title_bar_right_bt = (ImageView) findViewById(R.id.com_title_bar_right_bt);
-
-		com_title_bar_left_tv.setText(leftContent);
-		com_title_bar_content.setText(content);
-		com_title_bar_content.setTextColor(Color.parseColor(contentColor));
-
-		com_title_bar_left_bt.setImageResource(left_img_id);
+		titleBarLeftText.setText(leftContent);
+		titleBarContent.setText(content);
+		titleBarLeftImg.setImageResource(left_img_id);
 
 	}
 
-	protected void initTitle_bar(String content, String contentColor) {
+	protected void initTitleBar(String content) {
+		initTitleBarView();
+		titleBarContent.setVisibility(View.VISIBLE);
 
-		com_title_bar_left_bt = (ImageView) findViewById(R.id.com_title_bar_left_bt);
-		com_title_bar_content = (MyTextView) findViewById(R.id.com_title_bar_content);
-		com_title_bar_right_bt = (ImageView) findViewById(R.id.com_title_bar_right_bt);
-
-		com_title_bar_left_tv = (MyTextView) findViewById(R.id.com_title_bar_left_tv);
-		com_title_bar_right_tv = (MyTextView) findViewById(R.id.com_title_bar_right_tv);
-
-		com_title_bar_content.setText(content);
-		com_title_bar_content.setTextColor(Color.parseColor(contentColor));
-
+		titleBarContent.setText(content);
 	}
 
-	protected void initTitle_Right_bar(String content, String rightContent,
-			String contentColor, int right_img_id) {
+	protected void initTitleRightBar(String content, String rightContent,
+			int right_img_id) {
+		initTitleBarView();
+		titleBarRightText.setVisibility(View.VISIBLE);
+		titleBarContent.setVisibility(View.VISIBLE);
+		titleBarRightImg.setVisibility(View.VISIBLE);
 
-		com_title_bar_left_bt = (ImageView) findViewById(R.id.com_title_bar_left_bt);
-		com_title_bar_content = (MyTextView) findViewById(R.id.com_title_bar_content);
-		com_title_bar_right_bt = (ImageView) findViewById(R.id.com_title_bar_right_bt);
-
-		com_title_bar_left_tv = (MyTextView) findViewById(R.id.com_title_bar_left_tv);
-		com_title_bar_right_tv = (MyTextView) findViewById(R.id.com_title_bar_right_tv);
-
-		com_title_bar_right_tv.setText(rightContent);
-		com_title_bar_content.setText(content);
-		com_title_bar_content.setTextColor(Color.parseColor(contentColor));
-
-		com_title_bar_right_bt.setImageResource(right_img_id);
-
+		titleBarRightText.setText(rightContent);
+		titleBarContent.setText(content);
+		titleBarRightImg.setImageResource(right_img_id);
 	}
 
-	public void initTitle_Right_Left_bar(String content, String leftContent,
-			String rightContent, String contentColor, int right_img_id,
-			int left_img_id, String bgColor, String lineColor) {
-		com_title_bar_bg = (RelativeLayout) findViewById(R.id.com_title_bar_bg);
-		com_title_bar_bottom_line = findViewById(R.id.com_title_bar_bottom_line);
-		com_title_bar_left_bt = (ImageView) findViewById(R.id.com_title_bar_left_bt);
-		com_title_bar_content = (MyTextView) findViewById(R.id.com_title_bar_content);
-		com_title_bar_right_bt = (ImageView) findViewById(R.id.com_title_bar_right_bt);
+	public void initTitleBarContent(String content, String leftContent,
+			String rightContent, int right_img_id, int left_img_id) {
+		initTitleBarView();
+		titleBarLeftText.setVisibility(View.VISIBLE);
+		titleBarRightText.setVisibility(View.VISIBLE);
+		titleBarContent.setVisibility(View.VISIBLE);
+		titleBarRightImg.setVisibility(View.VISIBLE);
+		titleBarLeftImg.setVisibility(View.VISIBLE);
 
-		com_title_bar_left_tv = (MyTextView) findViewById(R.id.com_title_bar_left_tv);
-		com_title_bar_right_tv = (MyTextView) findViewById(R.id.com_title_bar_right_tv);
+		titleBarLeftText.setText(leftContent);
+		titleBarRightText.setText(rightContent);
+		titleBarContent.setText(content);
+		titleBarRightImg.setImageResource(right_img_id);
+		titleBarLeftImg.setImageResource(left_img_id);
+	}
 
-		com_title_bar_left_tv.setText(leftContent);
-		com_title_bar_right_tv.setText(rightContent);
-		com_title_bar_content.setText(content);
-		com_title_bar_content.setTextColor(Color.parseColor(contentColor));
-		if (!TextUtils.isEmpty(bgColor))
-			com_title_bar_bg.setBackgroundColor(Color.parseColor(bgColor));
-		if (!TextUtils.isEmpty(lineColor))
-			com_title_bar_bottom_line.setBackgroundColor(Color
-					.parseColor(lineColor));
-		com_title_bar_right_bt.setImageResource(right_img_id);
-		com_title_bar_left_bt.setImageResource(left_img_id);
+	public void initTitleBarIcon(int contentId, int leftImgId,
+			String leftContent, int rightImgId, int rightImgSecondId) {
+		initTitleBarView();
+		titleBarContentImg.setVisibility(View.VISIBLE);
+		titleBarRightImgSecond.setVisibility(View.VISIBLE);
+		titleBarLeftImg.setVisibility(View.VISIBLE);
+		titleBarRightImg.setVisibility(View.VISIBLE);
 
+		titleBarRightImg.setImageResource(rightImgId);
+		titleBarRightImgSecond.setImageResource(rightImgSecondId);
+		titleBarLeftImg.setImageResource(leftImgId);
+		titleBarContentImg.setImageResource(contentId);
+		titleBarLeftText.setText(leftContent);
 	}
 
 	// 左边按钮的点击事件
 	protected void setOnLeftClickLinester(OnClickListener clickListener) {
-		com_title_bar_left_tv.setOnClickListener(clickListener);
-		com_title_bar_left_bt.setOnClickListener(clickListener);
+		titleBarLeftText.setOnClickListener(clickListener);
+		titleBarLeftImg.setOnClickListener(clickListener);
 	}
 
 	// 右边按钮的点击事件
 	protected void setOnRightClickLinester(OnClickListener clickListener) {
-		com_title_bar_right_tv.setOnClickListener(clickListener);
-		com_title_bar_right_bt.setOnClickListener(clickListener);
+		titleBarRightImg.setOnClickListener(clickListener);
+		titleBarRightImgSecond.setOnClickListener(clickListener);
+		titleBarRightText.setOnClickListener(clickListener);
 	}
-	
-	protected void showLeftBarTv(){
-		com_title_bar_left_tv.setVisibility(View.VISIBLE);
+
+	// 右边按钮的点击事件
+	protected void setOnContentClickLinester(OnClickListener clickListener) {
+		titleBarContent.setOnClickListener(clickListener);
+		titleBarContentImg.setOnClickListener(clickListener);
+	}
+
+	protected void showLeftBarTv() {
+		titleBarLeftText.setVisibility(View.VISIBLE);
 	}
 
 	/**

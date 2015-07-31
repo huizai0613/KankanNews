@@ -1,4 +1,4 @@
-package com.xunao.view.photoview;
+package com.kankan.kankanews.photoview;
 
 /*******************************************************************************
  * Copyright 2011, 2012 Chris Banes.

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package com.xunao.view.photoview;
+package com.kankan.kankanews.photoview;
 
 import android.content.Context;
 import android.graphics.RectF;
@@ -22,9 +22,9 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
-import com.xunao.view.photoview.PhotoViewAttacher.OnMatrixChangedListener;
-import com.xunao.view.photoview.PhotoViewAttacher.OnPhotoTapListener;
-import com.xunao.view.photoview.PhotoViewAttacher.OnViewTapListener;
+import com.kankan.kankanews.photoview.PhotoViewAttacher.OnMatrixChangedListener;
+import com.kankan.kankanews.photoview.PhotoViewAttacher.OnPhotoTapListener;
+import com.kankan.kankanews.photoview.PhotoViewAttacher.OnViewTapListener;
 
 public class PhotoView extends ImageView implements IPhotoView {
 

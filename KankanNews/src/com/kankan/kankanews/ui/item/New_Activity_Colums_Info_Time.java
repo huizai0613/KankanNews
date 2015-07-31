@@ -21,7 +21,7 @@ import com.squareup.timessquare.CalendarPickerView.SelectionMode;
 import com.squareup.timessquare.MyCallInterface;
 
 public class New_Activity_Colums_Info_Time extends BaseActivity implements
-		OnClickListener,MyCallInterface {
+		OnClickListener, MyCallInterface {
 
 	private CalendarPickerView calendar;
 	private New_Colums colums;
@@ -35,21 +35,20 @@ public class New_Activity_Colums_Info_Time extends BaseActivity implements
 
 	@Override
 	protected void initView() {
-		
+
 		colums = (New_Colums) getIntent().getSerializableExtra("colums");
 
 		// 初始化头部
-		initTitle_Right_Left_bar("选择日期", "", "", "#ffffff",
-				0, R.drawable.new_ic_back, "#000000",
-				"#000000");
+		initTitleBarContent("选择日期", "", "", 0, R.drawable.new_ic_back);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
 
 		final Calendar nextYear = Calendar.getInstance();
-//		nextYear.add(Calendar.DATE, Integer.valueOf(colums.getProgramStart()));
-//		nextYear.add(Calendar.YEAR, 0);
-		nextYear.add(Calendar.DAY_OF_MONTH,1);
+		// nextYear.add(Calendar.DATE,
+		// Integer.valueOf(colums.getProgramStart()));
+		// nextYear.add(Calendar.YEAR, 0);
+		nextYear.add(Calendar.DAY_OF_MONTH, 1);
 
 		final Calendar lastYear = Calendar.getInstance();
 		lastYear.add(Calendar.YEAR, -1);
@@ -89,13 +88,10 @@ public class New_Activity_Colums_Info_Time extends BaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 
-		case R.id.com_title_bar_left_bt:
-		case R.id.com_title_bar_left_tv:
+		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;
-		case R.id.com_title_bar_right_bt:
-//			ToastUtils.Infotoast(mContext, TimeUtil.unix2date(calendar
-//					.getSelectedDate().getTime()/1000, "yyyy-MM-dd"));
+		case R.id.title_bar_right_img:
 			break;
 		}
 
@@ -103,18 +99,17 @@ public class New_Activity_Colums_Info_Time extends BaseActivity implements
 
 	@Override
 	public void method() {
-		
+
 		Intent intent = new Intent();
-		long time = calendar
-				.getSelectedDate().getTime();
-//		if(time<System.currentTimeMillis())
-//		{
-		intent.putExtra("time", TimeUtil.unix2date(time/1000,"yyyy-MM-dd"));
+		long time = calendar.getSelectedDate().getTime();
+		// if(time<System.currentTimeMillis())
+		// {
+		intent.putExtra("time", TimeUtil.unix2date(time / 1000, "yyyy-MM-dd"));
 		setResult(AndroidConfig.Colums_Time_resultCode, intent);
 		AnimFinsh();
-//		}
-//		ToastUtils.Infotoast(mContext, TimeUtil.unix2date(calendar
-//				.getSelectedDate().getTime()/1000, "yyyy-MM-dd"));
+		// }
+		// ToastUtils.Infotoast(mContext, TimeUtil.unix2date(calendar
+		// .getSelectedDate().getTime()/1000, "yyyy-MM-dd"));
 	}
 
 }

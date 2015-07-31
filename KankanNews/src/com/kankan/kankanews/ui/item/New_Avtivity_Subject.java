@@ -53,12 +53,13 @@ import com.kankan.kankanews.bean.Subject_Item;
 import com.kankan.kankanews.bean.subject_List;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.exception.NetRequestException;
+import com.kankan.kankanews.photoview.PhotoView;
 import com.kankan.kankanews.sina.AccessTokenKeeper;
 import com.kankan.kankanews.sina.Constants;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
-import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.ui.view.board.CustomShareBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
@@ -85,7 +86,6 @@ import com.umeng.socialize.sso.UMSsoHandler;
 //import com.sina.weibo.sdk.auth.WeiboAuthListener;
 //import com.sina.weibo.sdk.constant.WBConstants;
 //import com.sina.weibo.sdk.exception.WeiboException;
-import com.xunao.view.photoview.PhotoView;
 
 public class New_Avtivity_Subject extends BaseVideoActivity implements
 		AdapterView.OnItemClickListener,
@@ -180,9 +180,8 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		String subjectTitle = intent.getStringExtra("title");
 		subjectTitle = "看看专题";
 
-		initTitle_Right_Left_bar(subjectTitle, "", "", "#ffffff",
-				R.drawable.new_ic_more, R.drawable.new_ic_back, "#000000",
-				"#000000");
+		initTitleBarContent(subjectTitle, "", "", R.drawable.new_ic_more,
+				R.drawable.new_ic_back);
 
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
@@ -807,12 +806,10 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.com_title_bar_left_bt:
-		case R.id.com_title_bar_left_tv:
+		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;
-		case R.id.com_title_bar_right_bt:
-		case R.id.com_title_bar_right_tv:
+		case R.id.title_bar_right_img:
 
 			shareUtil = new ShareUtil(new_news, mContext);
 

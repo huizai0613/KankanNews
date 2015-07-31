@@ -50,11 +50,13 @@ import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.SplashActivity;
 import com.kankan.kankanews.ui.TransitionLoadingActivity;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
-import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.ProgressWebView;
 import com.kankan.kankanews.ui.view.VerticalBar;
+import com.kankan.kankanews.ui.view.board.CustomShareBoard;
+import com.kankan.kankanews.ui.view.board.FontColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -139,14 +141,14 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		xwebchromeclient = new xWebChromeClient();
 		webView.setWebChromeClient(xwebchromeclient);
 
-		// 初始化头部
-		initTitle_Right_Left_bar("看看新闻", "关闭", "", "#ffffff",
-				R.drawable.new_ic_more, R.drawable.new_ic_back, "#000000",
-				"#000000");
+		// 初始化头部 int leftImgId, String leftContent,
+		// int rightImgId, int rightImgSecondId, String bgColor
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, "X",
+				R.drawable.ic_font, R.drawable.ic_refresh);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
-
+		setOnContentClickLinester(this);
 	}
 
 	@Override
@@ -166,7 +168,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		int id = v.getId();
 
 		switch (id) {
-		case R.id.com_title_bar_left_bt:
+		case R.id.title_bar_left_img:
 			if (webView.canGoBack()) {
 				webView.goBack();
 				showLeftBarTv();
@@ -174,16 +176,25 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 			}
 			webFinish();
 			break;
-		case R.id.com_title_bar_left_tv:
+		case R.id.title_bar_left_text:
 			webFinish();
 			break;
-		case R.id.com_title_bar_right_bt:
-		case R.id.com_title_bar_right_tv:
+		case R.id.title_bar_right_second_img:
+			this.refresh();
+			break;
+		case R.id.title_bar_content_img:
 			// 一键分享
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
+					Gravity.BOTTOM, 0, 0);
+			break;
+
+		case R.id.title_bar_right_img:
+			FontColumsBoard fontBoard = new FontColumsBoard(this);
+			fontBoard.setAnimationStyle(R.style.popwin_anim_style);
+			fontBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
 			break;
 

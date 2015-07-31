@@ -28,8 +28,7 @@ public class New_Activity_My_FanKui extends BaseActivity {
 		// tongji
 		initAnalytics(AndroidConfig.set_fankui_page);
 
-		initTitle_Right_Left_bar("意见反馈", "", "", "#ffffff", 0,
-				R.drawable.new_ic_back, "#000000", "#000000");
+		initTitleBarContent("意见反馈", "", "", 0, R.drawable.new_ic_back);
 		setOnLeftClickLinester(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

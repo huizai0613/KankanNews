@@ -1,4 +1,4 @@
-package com.xunao.view.photoview;
+package com.kankan.kankanews.photoview;
 
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;

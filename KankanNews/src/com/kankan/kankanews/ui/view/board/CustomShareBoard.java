@@ -2,7 +2,7 @@
  * 
  */
 
-package com.kankan.kankanews.ui.view;
+package com.kankan.kankanews.ui.view.board;
 
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;

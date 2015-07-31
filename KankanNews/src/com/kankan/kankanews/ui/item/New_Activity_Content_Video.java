@@ -69,12 +69,12 @@ import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
-import com.kankan.kankanews.ui.view.CustomShareBoard;
 import com.kankan.kankanews.ui.view.MarqueeTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.StickyScrollView;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
+import com.kankan.kankanews.ui.view.board.CustomShareBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
@@ -425,9 +425,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		registerReceiver(mReceiver, mFilter);
 
 		// 初始化头部
-		initTitle_Right_Left_bar("看看新闻", "", "", "#ffffff",
-				R.drawable.new_ic_more, R.drawable.new_ic_back, "#000000",
-				"#000000");
+		initTitleBarContent("看看新闻", "", "", R.drawable.new_ic_more,
+				R.drawable.new_ic_back);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
@@ -839,8 +838,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		case R.id.content_share_qq_layout:
 		case R.id.content_share_weixin_layout:
 		case R.id.content_share_mail_layout:
-		case R.id.com_title_bar_right_bt:
-		case R.id.com_title_bar_right_tv:
+		case R.id.title_bar_right_img:
 			shareUtil = new ShareUtil(new_news, mContext);
 			isGoShare = true;
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -849,11 +847,10 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 		switch (v.getId()) {
 
-		case R.id.com_title_bar_left_bt:
+		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;
-		case R.id.com_title_bar_right_bt:
-		case R.id.com_title_bar_right_tv:
+		case R.id.title_bar_right_img:
 			// 一键分享
 			shareBoard = new CustomShareBoard(this, shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);

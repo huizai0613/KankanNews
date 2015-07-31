@@ -44,14 +44,13 @@ public abstract class BaseFragment extends Fragment {
 	protected boolean isLoadMore;
 	protected long lastThreadTimeMillis;
 
-	private RelativeLayout com_title_bar_bg;
-	private View com_title_bar_bottom_line;
-	private ImageView com_title_bar_left_bt;
-	private MyTextView com_title_bar_left_tv;
-	private ImageView com_title_bar_content_img;
-	private MyTextView com_title_bar_content;
-	private ImageView com_title_bar_right_bt;
-	private MyTextView com_title_bar_right_tv;
+	protected RelativeLayout titleBarView;
+	protected ImageView titleBarLeftImg;
+	protected MyTextView titleBarLeftText;
+	protected ImageView titleBarContentImg;
+	protected MyTextView titleBarContent;
+	protected MyTextView titleBarRightText;
+	protected ImageView titleBarRightImg;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -162,78 +161,65 @@ public abstract class BaseFragment extends Fragment {
 	 * @param left_img_id
 	 *            左侧图标
 	 */
-	protected void initTitle_Left_bar(View view, int left_img_id,
+	protected void initTitleLeftBar(View view, int left_img_id,
 			int content_img_id, int right_img_id) {
 
 		initTitleView(view);
 
-		com_title_bar_content.setVisibility(View.GONE);
-		com_title_bar_content_img.setVisibility(View.VISIBLE);
-		com_title_bar_content_img.setImageResource(content_img_id);
-		com_title_bar_left_bt.setImageResource(left_img_id);
+		titleBarContent.setVisibility(View.GONE);
+		titleBarContentImg.setVisibility(View.VISIBLE);
+		titleBarContentImg.setImageResource(content_img_id);
+		titleBarLeftImg.setImageResource(left_img_id);
 		// com_title_bar_right_bt.setImageResource(right_img_id);
 
 	}
 
 	// 初始化头部组件
 	private void initTitleView(View view) {
-		com_title_bar_left_bt = (ImageView) view
-				.findViewById(R.id.com_title_bar_left_bt);
-		com_title_bar_content = (MyTextView) view
-				.findViewById(R.id.com_title_bar_content);
-		com_title_bar_left_tv = (MyTextView) view
-				.findViewById(R.id.com_title_bar_left_tv);
-		com_title_bar_right_tv = (MyTextView) view
-				.findViewById(R.id.com_title_bar_right_tv);
-		com_title_bar_right_bt = (ImageView) view
-				.findViewById(R.id.com_title_bar_right_bt);
-		com_title_bar_content_img = (ImageView) view
-				.findViewById(R.id.com_title_bai_content_img);
+		titleBarView = (RelativeLayout) view.findViewById(R.id.title_bar_view);
+		// 左
+		titleBarLeftImg = (ImageView) view
+				.findViewById(R.id.title_bar_left_img);
+		titleBarLeftText = (MyTextView) view
+				.findViewById(R.id.title_bar_left_text);
+		// 中
+		titleBarContentImg = (ImageView) view
+				.findViewById(R.id.title_bar_content_img);
+		titleBarContent = (MyTextView) view
+				.findViewById(R.id.title_bar_content);
+		// 右
+		titleBarRightImg = (ImageView) view
+				.findViewById(R.id.title_bar_right_img);
+		titleBarRightText = (MyTextView) view
+				.findViewById(R.id.title_bar_right_text);
 	}
 
-	public void initTitle_Right_Left_bar(View view, String content,
+	public void initTitleRightLeftBar(View view, String content,
 			String leftContent, String rightContent, String contentColor,
-			int right_img_id, int left_img_id, String bgColor, String lineColor) {
-		com_title_bar_bg = (RelativeLayout) view
-				.findViewById(R.id.com_title_bar_bg);
-		com_title_bar_bottom_line = view
-				.findViewById(R.id.com_title_bar_bottom_line);
-		com_title_bar_left_bt = (ImageView) view
-				.findViewById(R.id.com_title_bar_left_bt);
-		com_title_bar_content = (MyTextView) view
-				.findViewById(R.id.com_title_bar_content);
-		com_title_bar_right_bt = (ImageView) view
-				.findViewById(R.id.com_title_bar_right_bt);
+			int rightImgId, int leftImgId, String bgColor) {
 
-		com_title_bar_left_tv = (MyTextView) view
-				.findViewById(R.id.com_title_bar_left_tv);
-		com_title_bar_right_tv = (MyTextView) view
-				.findViewById(R.id.com_title_bar_right_tv);
-
-		com_title_bar_left_tv.setText(leftContent);
-		com_title_bar_right_tv.setText(rightContent);
-		com_title_bar_content.setText(content);
-		com_title_bar_content.setTextColor(Color.parseColor(contentColor));
+		initTitleView(view);
+		titleBarLeftText.setText(leftContent);
+		titleBarRightText.setText(rightContent);
+		titleBarContent.setText(content);
+		titleBarContent.setTextColor(Color.parseColor(contentColor));
 		if (!TextUtils.isEmpty(bgColor))
-			com_title_bar_bg.setBackgroundColor(Color.parseColor(bgColor));
-		if (!TextUtils.isEmpty(lineColor))
-			com_title_bar_bottom_line.setBackgroundColor(Color
-					.parseColor(lineColor));
-		com_title_bar_right_bt.setImageResource(right_img_id);
-		com_title_bar_left_bt.setImageResource(left_img_id);
+			titleBarView.setBackgroundColor(Color.parseColor(bgColor));
+		titleBarRightImg.setImageResource(rightImgId);
+		titleBarLeftImg.setImageResource(leftImgId);
 
 	}
 
 	// 左边按钮的点击事件
 	protected void setOnLeftClickLinester(OnClickListener clickListener) {
-		com_title_bar_left_tv.setOnClickListener(clickListener);
-		com_title_bar_left_bt.setOnClickListener(clickListener);
+		titleBarLeftText.setOnClickListener(clickListener);
+		titleBarLeftImg.setOnClickListener(clickListener);
 	}
 
 	// 右边按钮的点击事件
 	protected void setOnRightClickLinester(OnClickListener clickListener) {
-		com_title_bar_right_tv.setOnClickListener(clickListener);
-		com_title_bar_right_bt.setOnClickListener(clickListener);
+		titleBarRightText.setOnClickListener(clickListener);
+		titleBarRightImg.setOnClickListener(clickListener);
 	}
 
 	// 只带id和bean跳转界面 若只有单个新闻，

@@ -85,8 +85,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 				.findViewById(R.id.revelations_image_four);
 		imageViews = new ImageView[] { imageOne, imageTwo, imageThree,
 				imageFour };
-		initTitle_Right_Left_bar(inflate, "我要报料", "", "", "#ffffff", 0, 0,
-				"#000000", "#000000");
+		initTitleRightLeftBar(inflate, "我要报料", "", "", "#ffffff", 0, 0,
+				"#000000");
 	}
 
 	private void initLister() {
@@ -192,7 +192,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 				ToastUtils.Errortoast(getActivity(), "报料内容不得为空");
 				break;
 			}
-			if (telText.getText().length() == 0 || !isPhoneNum(telText.getText().toString())) {
+			if (telText.getText().length() == 0
+					|| !isPhoneNum(telText.getText().toString())) {
 				telText.requestFocus();
 				ToastUtils.Errortoast(getActivity(), "请填写正确的电话号码");
 				break;
@@ -209,9 +210,10 @@ public class New_RevelationsFragment extends BaseFragment implements
 
 	private boolean isPhoneNum(String phoneNum) {
 		// TODO Auto-generated method stub
-		Pattern pattern = Pattern.compile("(\\d{11})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))");
+		Pattern pattern = Pattern
+				.compile("(\\d{11})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))");
 		Matcher matcher = pattern.matcher(phoneNum);
-		return  matcher.matches();
+		return matcher.matches();
 	}
 
 	private void goSelect() {

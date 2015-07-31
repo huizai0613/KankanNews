@@ -6,20 +6,15 @@
     android:layout_height="match_parent"
     android:gravity="center" >
 
-    <include layout="@layout/com_title_bar" />
+    <include layout="@layout/base_title_bar" />
 
     <com.kankan.kankanews.ui.view.ProgressWebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingRight="2dip"
         android:layout_marginTop="@dimen/base_action_bar_height"
-        android:scrollbarThumbVertical="@color/gray_cc"
-        android:scrollbarSize="4dip"/>
-	
-    <View 
-        android:layout_below="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="500dip"
-        android:background="@color/black"/>
+        android:paddingRight="2dip"
+        android:scrollbarSize="4dip"
+        android:scrollbarThumbVertical="@color/gray_cc" />
+
 </com.kankan.kankanews.base.view.SildingFinishLayout>

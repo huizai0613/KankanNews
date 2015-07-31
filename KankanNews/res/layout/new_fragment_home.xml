@@ -11,7 +11,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/base_action_bar_height"
-            android:background="@color/deep_gray" >
+            android:background="@color/deeper_gray" >
 
             <ImageView
                 android:layout_width="130dip"

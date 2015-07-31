@@ -113,8 +113,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 				.findViewById(R.id.layout_detele_now);
 		isDayMode = (ToggleButton) inflate.findViewById(R.id.is_day_mode);
 
-		initTitle_Right_Left_bar(inflate, "我", "", "", "#ffffff", 0, 0,
-				"#000000", "#000000");
+		initTitleRightLeftBar(inflate, "我", "", "", "#ffffff", 0, 0, "#000000");
 	}
 
 	private void initLister() {

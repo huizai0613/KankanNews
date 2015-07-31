@@ -25,8 +25,7 @@ public class New_Activity_My_About extends BaseActivity {
 		// tongji
 		initAnalytics(AndroidConfig.set_about_page);
 
-		initTitle_Right_Left_bar("关于", "", "", "#ffffff", 0,
-				R.drawable.new_ic_back, "#000000", "#000000");
+		initTitleBarContent("关于", "", "", 0, R.drawable.new_ic_back);
 
 		setOnLeftClickLinester(new OnClickListener() {
 			@Override

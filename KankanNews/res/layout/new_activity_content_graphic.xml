@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#ffffff" >
 
-    <include layout="@layout/com_title_bar" />
+    <include layout="@layout/base_title_bar" />
 
     <com.kankan.kankanews.ui.view.StickyScrollView
         android:id="@+id/scollView"
@@ -212,7 +212,7 @@
             android:src="@drawable/retry" />
     </LinearLayout>
 
-    <View style="@style/set_item_Line" />
+    <View style="@style/under_line_item" />
 
     <RelativeLayout
         android:id="@+id/rootview"

@@ -38,10 +38,12 @@ import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_NewsPic;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.exception.NetRequestException;
+import com.kankan.kankanews.photoview.PhotoView;
+import com.kankan.kankanews.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import com.kankan.kankanews.sina.AccessTokenKeeper;
 import com.kankan.kankanews.sina.Constants;
 import com.kankan.kankanews.ui.MainActivity;
-import com.kankan.kankanews.ui.view.CustomShareBoard;
+import com.kankan.kankanews.ui.view.board.CustomShareBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
@@ -66,8 +68,6 @@ import com.umeng.socialize.sso.UMSsoHandler;
 //import com.sina.weibo.sdk.auth.WeiboAuthListener;
 //import com.sina.weibo.sdk.constant.WBConstants;
 //import com.sina.weibo.sdk.exception.WeiboException;
-import com.xunao.view.photoview.PhotoView;
-import com.xunao.view.photoview.PhotoViewAttacher.OnPhotoTapListener;
 
 public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 		OnClickListener, OnPageChangeListener {
@@ -121,9 +121,8 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 
 	@Override
 	protected void initView() {
-		initTitle_Right_Left_bar("看看新闻", "", "", "#ffffff",
-				R.drawable.new_ic_more, R.drawable.new_ic_back, "#000000",
-				"#000000");
+		initTitleBarContent("看看新闻", "", "", R.drawable.new_ic_more,
+				R.drawable.new_ic_back);
 
 		vp = (ViewPager) findViewById(R.id.vp);
 		vp_content = (TextView) findViewById(R.id.vp_content);
@@ -332,7 +331,7 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 					top_in.setAnimationListener(new AnimationListener() {
 						@Override
 						public void onAnimationStart(Animation animation) {
-							com_title_bar_bg.setVisibility(View.VISIBLE);
+							titleBarView.setVisibility(View.VISIBLE);
 							rLayout_bottom.setVisibility(View.VISIBLE);
 							vp_content.setVisibility(View.VISIBLE);
 
@@ -361,7 +360,7 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 
 						@Override
 						public void onAnimationEnd(Animation animation) {
-							com_title_bar_bg.setVisibility(View.GONE);
+							titleBarView.setVisibility(View.GONE);
 							rLayout_bottom.setVisibility(View.GONE);
 							vp_content.setVisibility(View.GONE);
 						}
@@ -373,10 +372,10 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 									R.anim.bottom_out);
 					isHide = !isHide;
 					if (isHide) {
-						com_title_bar_bg.startAnimation(top_out);
+						titleBarView.startAnimation(top_out);
 						rLayout_bottom.startAnimation(bottom_out);
 					} else {
-						com_title_bar_bg.startAnimation(top_in);
+						titleBarView.startAnimation(top_in);
 						rLayout_bottom.startAnimation(bottom_in);
 					}
 				}
@@ -422,11 +421,10 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 	public void onClick(View v) {
 
 		switch (v.getId()) {
-		case R.id.com_title_bar_left_bt:
+		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;
-		case R.id.com_title_bar_right_bt:
-		case R.id.com_title_bar_right_tv:
+		case R.id.title_bar_right_img:
 			if (shareUtil == null) {
 				shareUtil = new ShareUtil(new_news, mContext);
 			}

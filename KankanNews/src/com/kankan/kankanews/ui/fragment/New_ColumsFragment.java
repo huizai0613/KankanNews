@@ -24,7 +24,7 @@ import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.ui.item.New_Activity_Colums_Info;
-import com.kankan.kankanews.ui.view.SecondColumsBoard;
+import com.kankan.kankanews.ui.view.board.SecondColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
@@ -56,8 +56,7 @@ public class New_ColumsFragment extends BaseFragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		inflate = inflater.inflate(R.layout.new_fragment_colums, null);
 
-		initTitle_Right_Left_bar(inflate, "栏目", "", "", "#ffffff", 0, 0,
-				"#000000", "#000000");
+		initTitleRightLeftBar(inflate, "栏目", "", "", "#ffffff", 0, 0, "#000000");
 
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 		listview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {

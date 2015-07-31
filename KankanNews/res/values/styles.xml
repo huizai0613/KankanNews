@@ -28,7 +28,7 @@
 
     <style name="ActionBar">
         <item name="android:orientation">horizontal</item>
-        <item name="android:background">@color/dove_gray</item>
+        <item name="android:background">@color/deeper_gray</item>
         <item name="android:layout_width">fill_parent</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_height">@dimen/base_action_bar_height</item>
@@ -139,38 +139,10 @@
     </style>
 
     <!-- 设置分割线 -->
-    <style name="set_item_Line">
+    <style name="under_line_item">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">#bbbbbb</item>
-    </style>
-
-    <!-- 设置分割线1 -->
-    <style name="set_item_Line_1">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">#e0e0e0</item>
-    </style>
-
-    <!-- 设置分割线2 -->
-    <style name="set_item_Line_2">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">#bfbfbf</item>
-    </style>
-
-    <!-- 设置分割线3 -->
-    <style name="set_item_Line_3">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">#a8a8a8</item>
-    </style>
-
-    <!-- 设置分割线4 -->
-    <style name="set_item_Line_4">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">1dp</item>
-        <item name="android:background">#dfdfdf</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">@color/gray_cc</item>
     </style>
 
     <!-- 内容界面分享布局  字体 -->

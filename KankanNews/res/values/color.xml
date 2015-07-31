@@ -14,7 +14,10 @@
 
     <!-- 白色 无透明 -->
     <color name="white_no_alpha">#FFFFFFFF</color>
-
+    
+    <!-- 白灰色颜色 -->
+    <color name="white_gray">#F0F0F0</color>
+    
     <!-- 很淡很淡灰色颜色  头部标题栏 -->
     <color name="dove_gray">#FBFBFB</color>
 
@@ -41,6 +44,9 @@
 
     <!-- 深灰色 比暗灰还黑 -->
     <color name="deep_gray">#363636</color>
+
+    <!-- 更深灰色 比深灰色还黑 -->
+    <color name="deeper_gray">#222222</color>
 
     <!-- 红色 -->
     <color name="red">#FF0000</color>
