@@ -2,6 +2,8 @@ package com.kankan.kankanews.base.view;
 
 import java.util.Date;
 
+import com.kankan.kankanews.utils.DebugLog;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -41,6 +43,14 @@ public class SildingFinishLayout extends RelativeLayout {
 	 * 按下点的Y坐标
 	 */
 	private int downY;
+	/**
+	 * 拿起点的X坐标
+	 */
+	private int upX;
+	/**
+	 * 拿起点的Y坐标
+	 */
+	private int upY;
 	/**
 	 * 临时存储X坐标
 	 */
@@ -185,6 +195,7 @@ public class SildingFinishLayout extends RelativeLayout {
 				downTime = new Date().getTime();
 				downX = tempX = (int) event.getRawX();
 				downY = (int) event.getRawY();
+				DebugLog.e("X:" + downX + " " + "Y:" + downY);
 				v.onTouchEvent(event);
 				break;
 			case MotionEvent.ACTION_MOVE:
@@ -217,38 +228,121 @@ public class SildingFinishLayout extends RelativeLayout {
 						return true;
 					}
 				} else {
+					DebugLog.e("滑了");
 					return v.onTouchEvent(event);
 				}
 				break;
 			case MotionEvent.ACTION_UP:
-				v.onTouchEvent(event);
+				DebugLog.e("抬起来了");
+				upX = (int) event.getRawX();
+				upY = (int) event.getRawY();
+				if (upX <= downX) {
+					scrollOrigin();
+					// return false;
+					return v.onTouchEvent(event);
+				}
 				upTime = new Date().getTime();
 				if (upTime - downTime < closeMaxTime && isSilding) {
 					isFinish = true;
 					scrollRight();
 					break;
 				}
-				isSilding = false;
+
 				if (mParentView.getScrollX() <= -viewWidth / 2) {
 					isFinish = true;
 					scrollRight();
-				} else {
+					isSilding = false;
+				} else if (isSilding) {
 					scrollOrigin();
 					isFinish = false;
+					isSilding = false;
 				}
-				break;
-			}
-
-			// 假如touch的view是AbsListView或者ScrollView 我们处理完上面自己的逻辑之后
-			// 再交给AbsListView, ScrollView自己处理其自己的逻辑
-			if (isTouchOnScrollView(v) || isTouchOnAbsListView(v)) {
 				return v.onTouchEvent(event);
 			}
 
-			// 其他的情况直接返回true
 			return true;
 		}
 
+	}
+
+	public boolean onTouch(MotionEvent ev) {
+		// TODO Auto-generated method stub
+		switch (ev.getAction()) {
+		case MotionEvent.ACTION_DOWN:
+			downTime = new Date().getTime();
+			downX = tempX = (int) ev.getRawX();
+			downY = (int) ev.getRawY();
+			DebugLog.e("X:" + downX + " " + "Y:" + downY);
+			return false;
+		case MotionEvent.ACTION_MOVE:
+			if (effectiveX > 0 && downX > effectiveX)
+				return false;
+			int moveX = (int) ev.getRawX();
+			int deltaX = tempX - moveX;
+			tempX = moveX;
+			if (Math.abs(moveX - downX) > mTouchSlop
+					&& Math.abs((int) ev.getRawY() - downY) < mTouchSlop) {
+				isSilding = true;
+
+				// 若touchView是AbsListView，
+				// 则当手指滑动，取消item的点击事件，不然我们滑动也伴随着item点击事件的发生
+				// if (isTouchOnAbsListView(v)) {
+				// MotionEvent cancelEvent = MotionEvent.obtain(event);
+				// cancelEvent
+				// .setAction(MotionEvent.ACTION_CANCEL
+				// | (event.getActionIndex() <<
+				// MotionEvent.ACTION_POINTER_INDEX_SHIFT));
+				// v.onTouchEvent(cancelEvent);
+				// }
+
+			}
+
+			if (moveX - downX >= 0 && isSilding) {
+				mParentView.scrollBy(deltaX, 0);
+				return true;
+
+				// 屏蔽在滑动过程中ListView ScrollView等自己的滑动事件
+				// if (isTouchOnScrollView(v) || isTouchOnAbsListView(v)) {
+				// return true;
+				// }
+			} else {
+				return false;
+			}
+		case MotionEvent.ACTION_UP:
+			upX = (int) ev.getRawX();
+			upY = (int) ev.getRawY();
+			if (upX <= downX) {
+				scrollOrigin();
+				return false;
+			}
+			upTime = new Date().getTime();
+			if (upTime - downTime < closeMaxTime && isSilding) {
+				isFinish = true;
+				scrollRight();
+				return true;
+			}
+			if (mParentView.getScrollX() <= -viewWidth / 2) {
+				isFinish = true;
+				scrollRight();
+				isSilding = false;
+				return true;
+			} else if (isSilding) {
+				scrollOrigin();
+				isFinish = false;
+				isSilding = false;
+				return true;
+			}
+			return false;
+		}
+
+		// 假如touch的view是AbsListView或者ScrollView 我们处理完上面自己的逻辑之后
+		// 再交给AbsListView, ScrollView自己处理其自己的逻辑
+		// if (isTouchOnScrollView(v) || isTouchOnAbsListView(v)) {
+		// return v.onTouchEvent(event);
+		// }
+
+		// 其他的情况直接返回true
+		return true;
 	}
 
 }

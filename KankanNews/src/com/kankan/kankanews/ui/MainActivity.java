@@ -116,6 +116,7 @@ public class MainActivity extends BaseVideoActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+		this.mApplication.mainActivity = this;
 		spUtil.setFristComing(false);
 
 		Log.e("px2sp", PixelUtil.px2sp(28, this) + "");

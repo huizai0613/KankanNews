@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.kankan.kankanews.base.view.SildingFinishLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sildingFinishLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:gravity="center" >
 
     <include
-        layout="@layout/base_title_bar"
-        android:background="#fefefe" />
+        android:layout_alignParentTop="true"
+        layout="@layout/base_title_bar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/base_action_bar_height" >
 
         <se.emilsjolander.stickylistheaders.StickyListHeadersListView
             android:id="@+id/list"
@@ -71,4 +74,11 @@
         </RelativeLayout>
     </RelativeLayout>
 
-</LinearLayout>
+    <View
+        android:id="@+id/night_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night_mask"
+        android:visibility="gone" />
+
+</com.kankan.kankanews.base.view.SildingFinishLayout>

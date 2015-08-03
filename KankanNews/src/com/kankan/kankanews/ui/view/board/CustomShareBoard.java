@@ -27,7 +27,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 	private BaseActivity mActivity;
 	private ShareUtil shareUtil;
 	private CanBeShared shareObj;
-	private View refreshBox;
+	private View copyBox;
 
 	public CustomShareBoard(BaseActivity activity, ShareUtil shareUtil,
 			CanBeShared shareObj) {
@@ -47,10 +47,9 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		rootView.findViewById(R.id.qq_box).setOnClickListener(this);
 		rootView.findViewById(R.id.sina_box).setOnClickListener(this);
 		rootView.findViewById(R.id.email_box).setOnClickListener(this);
-		rootView.findViewById(R.id.font).setOnClickListener(this);
-		rootView.findViewById(R.id.night).setOnClickListener(this);
-		refreshBox = rootView.findViewById(R.id.refresh_box);
-		refreshBox.setOnClickListener(this);
+		rootView.findViewById(R.id.colums_cancel_but).setOnClickListener(this);
+		copyBox = rootView.findViewById(R.id.copy_box);
+		copyBox.setOnClickListener(this);
 		setContentView(rootView);
 		setWidth(LayoutParams.MATCH_PARENT);
 		setHeight(LayoutParams.WRAP_CONTENT);
@@ -79,24 +78,17 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			shareUtil.directShare(SHARE_MEDIA.SINA);
 			// shareObj.sendSingleMessage();
 			break;
-		case R.id.refresh_box:
-			shareObj.refresh();
-			break;
-		case R.id.font:
-			shareUtil.directShare(SHARE_MEDIA.SINA);
-			// shareObj.sendSingleMessage();
-			break;
-		case R.id.night:
-			shareObj.chage2Night();
+		case R.id.copy_box:
+			mActivity.copy2Clip();
 			break;
 		default:
 			mActivity.shareReBack();
+			dismiss();
 			break;
 		}
-		dismiss();
 	}
 
 	public void closeRefresh() {
-		refreshBox.setVisibility(View.INVISIBLE);
+		copyBox.setVisibility(View.INVISIBLE);
 	}
 }

@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import tv.danmaku.ijk.media.widget.VideoView;
 import android.content.BroadcastReceiver;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -60,6 +61,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_Recommend;
 import com.kankan.kankanews.bean.SuccessMsg;
@@ -75,7 +77,9 @@ import com.kankan.kankanews.ui.view.StickyScrollView;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.ui.view.board.CustomShareBoard;
+import com.kankan.kankanews.ui.view.board.FontColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.Options;
@@ -200,6 +204,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 	private boolean isGoShare = false;
 
+	private View nightView;
+
 	public HttpHandler getDownloadVideo() {
 		return downloadVideo;
 	}
@@ -219,8 +225,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-
-		Log.e("onConfigurationChanged", "onConfigurationChanged");
 		int width = wm.getDefaultDisplay().getWidth();
 		int height = wm.getDefaultDisplay().getHeight();
 		WindowManager.LayoutParams attrs = getWindow().getAttributes();
@@ -425,11 +429,12 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		registerReceiver(mReceiver, mFilter);
 
 		// 初始化头部
-		initTitleBarContent("看看新闻", "", "", R.drawable.new_ic_more,
-				R.drawable.new_ic_back);
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, "X",
+				R.drawable.ic_font, R.drawable.ic_refresh);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
+		setOnContentClickLinester(this);
 	}
 
 	@Override
@@ -483,7 +488,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// content_collect_img = (ImageView)
 		// findViewById(R.id.content_collect_img);
 		video_player = (ImageView) findViewById(R.id.video_player);
-		video_view = (VideoView) findViewById(R.id.video_view);
 
 		mVolumeBrightnessLayout = findViewById(R.id.operation_volume_brightness);
 		mOperationPercent = (ImageView) findViewById(R.id.operation_percent);
@@ -492,6 +496,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		content_comment_list = (LinearLayout) findViewById(R.id.content_comment_list);
 		content_comment_list_list = (LinearLayout) findViewById(R.id.content_comment_list_list);
 
+		nightView = findViewById(R.id.night_view);
 	}
 
 	@Override
@@ -549,6 +554,18 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			}
 			ToastUtils.ErrorToastNoNet(mContext);
 		}
+
+		SildingFinishLayout mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
+		mSildingFinishLayout
+				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
+
+					@Override
+					public void onSildingFinish() {
+						finish();
+					}
+				});
+		// mSildingFinishLayout.setTouchView(mSildingFinishLayout);
+		mSildingFinishLayout.setTouchView(scollView);
 		// initCollectOffline(newsid);
 	}
 
@@ -850,13 +867,23 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;
-		case R.id.title_bar_right_img:
+		case R.id.title_bar_right_second_img:
+			this.refresh();
+			break;
+		case R.id.title_bar_content_img:
 			// 一键分享
-			shareBoard = new CustomShareBoard(this, shareUtil, this);
+			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
+					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
-			isGoShare = true;
+			break;
+
+		case R.id.title_bar_right_img:
+			FontColumsBoard fontBoard = new FontColumsBoard(this);
+			fontBoard.setAnimationStyle(R.style.popwin_anim_style);
+			fontBoard.showAtLocation(mContext.getWindow().getDecorView(),
+					Gravity.BOTTOM, 0, 0);
 			break;
 
 		case R.id.video_controller:
@@ -992,7 +1019,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		video_view.setVideoPath(new_news.getVideourl());
 		video_view.requestFocus();
 		video_view.start();
-		content_video.setVisibility(View.GONE);
+		// content_video.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -1067,6 +1094,10 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		String news_time = TimeUtil.unix2date(newstime, "yyyy-MM-dd HH:mm:ss");
 		// 新闻
 		content_title.setText(new_news.getTitlelist());
+
+		FontUtils.setTextViewFontSize(this, content_title,
+				R.string.news_title_text_size, spUtil.getFontSizeRadix());
+
 		content_time.setText(news_time);
 		// content_filelength.setText(file_lenght);
 		// cotent_onclick.setText(new_news.getOnc......());
@@ -1074,7 +1105,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		if (new_news.getIntro() != null) {
 			content_intro.setText(new_news.getIntro().equals("") ? "暂无简介 "
 					: new_news.getIntro());
-
+			FontUtils.setTextViewFontSize(this, content_intro,
+					R.string.news_content_text_size, spUtil.getFontSizeRadix());
 			ImgUtils.imageLoader.displayImage(new_news.getTitlepic(),
 					content_video, Options.getBigImageOptions(createFromPath));
 		}
@@ -1137,6 +1169,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		isGoShare = false;
 		if (content_video.getVisibility() == View.GONE)
 			video_view.start();
+		if (FontUtils.hasChangeFontSize())
+			changeFontSize();
 	}
 
 	// private Bitmap getCurrentFrame() {
@@ -1231,6 +1265,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		hasBeenPaly = true;
 		small_video_pb.setVisibility(View.GONE);
 		video_pb.setVisibility(View.GONE);
+		content_video.setVisibility(View.GONE);
 	}
 
 	// 播放完成回到初始状态
@@ -1616,4 +1651,43 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		isGoShare = false;
 	}
 
+	@Override
+	public void copy2Clip() {
+		// TODO Auto-generated method stub
+		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		clip.setText(titleurl);
+		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
+	}
+
+	@Override
+	public void changeFontSize() {
+		// TODO Auto-generated method stub
+
+		FontUtils.setTextViewFontSize(this, content_title,
+				R.string.news_title_text_size, spUtil.getFontSizeRadix());
+		FontUtils.setTextViewFontSize(this, content_intro,
+				R.string.news_content_text_size, spUtil.getFontSizeRadix());
+
+		FontUtils.setChangeFontSize(true);
+	}
+
+	@Override
+	public void chage2Day() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.GONE);
+		this.mApplication.mainActivity.chage2Day();
+	}
+
+	@Override
+	public void chage2Night() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.VISIBLE);
+		this.mApplication.mainActivity.chage2Night();
+	}
+
+	@Override
+	public void initNightView(boolean isFullScreen) {
+		if (!spUtil.getIsDayMode())
+			chage2Night();
+	}
 }

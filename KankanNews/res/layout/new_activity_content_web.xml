@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:gravity="center" >
 
-    <include layout="@layout/base_title_bar" />
+    <include
+        android:layout_alignParentTop="true"
+        layout="@layout/base_title_bar" />
 
     <com.kankan.kankanews.ui.view.ProgressWebView
         android:id="@+id/webView"
@@ -16,5 +18,12 @@
         android:paddingRight="2dip"
         android:scrollbarSize="4dip"
         android:scrollbarThumbVertical="@color/gray_cc" />
+
+    <View
+        android:id="@+id/night_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night_mask"
+        android:visibility="gone" />
 
 </com.kankan.kankanews.base.view.SildingFinishLayout>

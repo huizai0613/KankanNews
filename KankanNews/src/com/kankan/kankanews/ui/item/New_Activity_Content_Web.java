@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 
 import org.json.JSONObject;
 
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -57,6 +58,7 @@ import com.kankan.kankanews.ui.view.board.CustomShareBoard;
 import com.kankan.kankanews.ui.view.board.FontColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -86,6 +88,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 	private String title;
 
 	private View xCustomView;
+	private View nightView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,13 +104,14 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 						New_Activity_Content_Web.this.finish();
 					}
 				});
-		mSildingFinishLayout.setEffectiveX(100);
+		mSildingFinishLayout.setEffectiveX(150);
 		mSildingFinishLayout.setTouchView(mSildingFinishLayout);
 		mSildingFinishLayout.setTouchView(webView);
 	}
 
 	@Override
 	protected void initView() {
+		nightView = findViewById(R.id.night_view);
 		webView = (ProgressWebView) findViewById(R.id.webView);
 		WebSettings webSettings = webView.getSettings();
 
@@ -240,7 +244,11 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		// 初始化shareutil类
 		shareUtil = new ShareUtil(new_news, mContext);
 
-		webView.loadUrl(titleurl + "?fromkkApp=1#kk_font=xl");
+//		webView.loadUrl(titleurl + "?fromkkApp=1");
+
+		int index = FontUtils.getFontSetIndex(spUtil.getFontSizeRadix());
+		webView.loadUrl(titleurl + "?fromkkApp=1" + "#kk_font="
+				+ FontUtils.fontSizeWeb[index]);
 
 	}
 
@@ -420,5 +428,43 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 			this.startActivity(intent);
 			overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 		}
+	}
+
+	@Override
+	public void changeFontSize() {
+		// TODO Auto-generated method stub
+		int index = FontUtils.getFontSetIndex(spUtil.getFontSizeRadix());
+		webView.loadUrl(webView.getUrl().split("#")[0] + "#kk_font="
+				+ FontUtils.fontSizeWeb[index]);
+		this.refresh();
+		FontUtils.setChangeFontSize(true);
+	}
+
+	@Override
+	public void chage2Day() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.GONE);
+		this.mApplication.mainActivity.chage2Day();
+	}
+
+	@Override
+	public void chage2Night() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.VISIBLE);
+		this.mApplication.mainActivity.chage2Night();
+	}
+
+	@Override
+	public void copy2Clip() {
+		// TODO Auto-generated method stub
+		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		clip.setText(webView.getUrl());
+		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
+	}
+
+	@Override
+	public void initNightView(boolean isFullScreen) {
+		if (!spUtil.getIsDayMode())
+			chage2Night();
 	}
 }

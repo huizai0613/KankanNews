@@ -7,6 +7,8 @@ import java.net.URLEncoder;
 
 import org.json.JSONObject;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +25,7 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -34,6 +37,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_NewsPic;
 import com.kankan.kankanews.config.AndroidConfig;
@@ -43,8 +47,12 @@ import com.kankan.kankanews.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import com.kankan.kankanews.sina.AccessTokenKeeper;
 import com.kankan.kankanews.sina.Constants;
 import com.kankan.kankanews.ui.MainActivity;
+import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.view.board.CustomShareBoard;
+import com.kankan.kankanews.ui.view.board.FontColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.Options;
@@ -55,21 +63,8 @@ import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.exception.DbException;
 import com.umeng.socialize.sso.UMSsoHandler;
-//import com.sina.weibo.sdk.api.ImageObject;
-//import com.sina.weibo.sdk.api.TextObject;
-//import com.sina.weibo.sdk.api.WeiboMultiMessage;
-//import com.sina.weibo.sdk.api.share.BaseResponse;
-//import com.sina.weibo.sdk.api.share.IWeiboHandler;
-//import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-//import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
-//import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-//import com.sina.weibo.sdk.auth.AuthInfo;
-//import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-//import com.sina.weibo.sdk.auth.WeiboAuthListener;
-//import com.sina.weibo.sdk.constant.WBConstants;
-//import com.sina.weibo.sdk.exception.WeiboException;
 
-public class New_Activity_Content_PicSet extends BaseVideoActivity implements
+public class New_Activity_Content_PicSet extends BaseActivity implements
 		OnClickListener, OnPageChangeListener {
 
 	/** 微博微博分享接口实例 */
@@ -89,6 +84,7 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 
 	private MyVpAdapter myVpAdapter;
 	private New_NewsPic new_NewsPic;
+	private View nightView;
 
 	private String[][] parseImagegroups;
 
@@ -101,10 +97,34 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 
 	private View main_bg;
 
+	private SildingFinishLayout mSildingFinishLayout;
+
+	int curPage;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_pic_set);
+		mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
+		mSildingFinishLayout
+				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
+
+					@Override
+					public void onSildingFinish() {
+						finish();
+					}
+				});
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		// TODO Auto-generated method stub
+		if (curPage == 0) {
+			boolean flag = mSildingFinishLayout.onTouch(ev);
+			if (flag)
+				return flag;
+		}
+		return super.dispatchTouchEvent(ev);
 	}
 
 	@Override
@@ -121,14 +141,14 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 
 	@Override
 	protected void initView() {
-		initTitleBarContent("看看新闻", "", "", R.drawable.new_ic_more,
-				R.drawable.new_ic_back);
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, "",
+				R.drawable.ic_font, R.drawable.ic_refresh);
 
 		vp = (ViewPager) findViewById(R.id.vp);
 		vp_content = (TextView) findViewById(R.id.vp_content);
 		rLayout_bottom = findViewById(R.id.rLayout_bottom);
 		main_bg = findViewById(R.id.main_bg);
-
+		nightView = findViewById(R.id.night_view);
 		main_bg.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -199,8 +219,10 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 	@Override
 	protected void setListener() {
 		vp.setOnPageChangeListener(this);
+		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
+		setOnContentClickLinester(this);
 
 	}
 
@@ -213,8 +235,6 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
 
 	}
-
-	int curPage;
 
 	@Override
 	public void onPageSelected(int arg0) {
@@ -282,18 +302,20 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 		if (parseImagegroups != null) {
 			String str = (position + 1) + "/" + parseImagegroups.length + "　"
 					+ parseImagegroups[position][0];
-			SpannableStringBuilder style = new SpannableStringBuilder(str);
-			// SpannableStringBuilder实现CharSequence接口
-			style.setSpan(new AbsoluteSizeSpan(PixelUtil.dp2px(20)), 0,
-					((position + 1) + "/" + parseImagegroups.length).length(),
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-			if (!TextUtils.isEmpty(parseImagegroups[position][0]))
-				style.setSpan(new AbsoluteSizeSpan(PixelUtil.dp2px(14)),
-						((position + 1) + "/" + parseImagegroups.length)
-								.length() + 1, str.length() - 1,
-						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			vp_content.setText(style);
+			// SpannableStringBuilder style = new SpannableStringBuilder(str);
+			// // SpannableStringBuilder实现CharSequence接口
+			// style.setSpan(new AbsoluteSizeSpan(PixelUtil.dp2px(20)), 0,
+			// ((position + 1) + "/" + parseImagegroups.length).length(),
+			// Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			//
+			// if (!TextUtils.isEmpty(parseImagegroups[position][0]))
+			// style.setSpan(new AbsoluteSizeSpan(PixelUtil.dp2px(14)),
+			// ((position + 1) + "/" + parseImagegroups.length)
+			// .length() + 1, str.length() - 1,
+			// Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			FontUtils.setTextViewFontSize(this, vp_content,
+					R.string.news_content_text_size, spUtil.getFontSizeRadix());
+			vp_content.setText(str);
 		}
 	}
 
@@ -424,17 +446,22 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;
-		case R.id.title_bar_right_img:
-			if (shareUtil == null) {
-				shareUtil = new ShareUtil(new_news, mContext);
-			}
+		case R.id.title_bar_content_img:
 			// 一键分享
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
-
+			break;
+		case R.id.title_bar_right_second_img:
+			this.refresh();
+			break;
+		case R.id.title_bar_right_img:
+			FontColumsBoard fontBoard = new FontColumsBoard(this);
+			fontBoard.setAnimationStyle(R.style.popwin_anim_style);
+			fontBoard.showAtLocation(mContext.getWindow().getDecorView(),
+					Gravity.BOTTOM, 0, 0);
 			break;
 
 		}
@@ -462,4 +489,42 @@ public class New_Activity_Content_PicSet extends BaseVideoActivity implements
 			overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 		}
 	}
+
+	@Override
+	public void chage2Day() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.GONE);
+		this.mApplication.mainActivity.chage2Day();
+	}
+
+	@Override
+	public void chage2Night() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.VISIBLE);
+		this.mApplication.mainActivity.chage2Night();
+	}
+
+	@Override
+	public void copy2Clip() {
+		// TODO Auto-generated method stub
+		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		clip.setText(titleurl);
+		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
+	}
+
+	@Override
+	public void changeFontSize() {
+		// TODO Auto-generated method stub
+
+		FontUtils.setTextViewFontSize(this, vp_content,
+				R.string.news_content_text_size, spUtil.getFontSizeRadix());
+		FontUtils.setChangeFontSize(true);
+	}
+
+	@Override
+	public void initNightView(boolean isFullScreen) {
+		if (!spUtil.getIsDayMode())
+			chage2Night();
+	}
+
 }

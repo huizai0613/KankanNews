@@ -7,51 +7,76 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dip"
+        android:layout_height="80dip"
         android:orientation="horizontal" >
 
         <TextView
             android:layout_width="0dip"
-            android:layout_height="60dip"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="文字大小"
             android:textSize="20dip" />
 
         <LinearLayout
             android:layout_width="0dip"
-            android:layout_height="60dip"
-            android:layout_weight="2" >
+            android:layout_height="match_parent"
+            android:layout_margin="15dip"
+            android:layout_weight="2"
+            android:background="@drawable/font_size_set_layout_border" >
 
             <TextView
+                android:id="@+id/font_small_size"
                 android:layout_width="0dip"
-                android:layout_height="60dip"
-                android:layout_gravity="center"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center"
+                android:padding="3dip"
                 android:text="小"
                 android:textSize="22dip" />
 
+            <View
+                android:layout_width="0.5dip"
+                android:layout_height="match_parent"
+                android:background="@color/red" />
+
             <TextView
+                android:id="@+id/font_normal_size"
                 android:layout_width="0dip"
-                android:layout_height="60dip"
-                android:layout_gravity="center"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center"
+                android:padding="3dip"
                 android:text="中"
                 android:textSize="22dip" />
 
+            <View
+                android:layout_width="0.5dip"
+                android:layout_height="match_parent"
+                android:background="@color/red" />
+
             <TextView
+                android:id="@+id/font_big_size"
                 android:layout_width="0dip"
-                android:layout_height="60dip"
-                android:layout_gravity="center"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center"
+                android:padding="3dip"
                 android:text="大"
                 android:textSize="22dip" />
 
+            <View
+                android:layout_width="0.5dip"
+                android:layout_height="match_parent"
+                android:background="@color/red" />
+
             <TextView
+                android:id="@+id/font_most_size"
                 android:layout_width="0dip"
-                android:layout_height="60dip"
-                android:layout_gravity="center"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:gravity="center"
+                android:padding="3dip"
                 android:text="特大"
                 android:textSize="22dip" />
         </LinearLayout>
@@ -59,22 +84,37 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dip"
+        android:layout_height="80dip"
         android:orientation="horizontal" >
 
         <TextView
             android:layout_width="0dip"
-            android:layout_height="60dip"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="center"
             android:text="夜间模式"
             android:textSize="20dip" />
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="right|center_vertical" >
+
+            <ImageView
+                android:id="@+id/day_night_change"
+                android:layout_width="133dip"
+                android:layout_height="40dip"
+                android:layout_marginRight="15dip"
+                android:src="@drawable/change_night" 
+                android:scaleType="fitEnd"/>
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/font_colums_cancel_but"
         android:layout_width="match_parent"
-        android:layout_height="50dip"
+        android:layout_height="60dip"
         android:background="@color/white"
         android:gravity="center"
         android:text="取消"

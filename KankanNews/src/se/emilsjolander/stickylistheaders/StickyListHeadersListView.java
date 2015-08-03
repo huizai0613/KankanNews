@@ -25,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.SectionIndexer;
 
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankanews.kankanxinwen.R;
 
 /**

@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.BroadcastReceiver;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -118,8 +119,6 @@ public abstract class BaseActivity extends FragmentActivity implements
 		mApplication = (CrashApplication) CrashApplication.getInstance();
 		spUtil = mApplication.getSpUtil();
 		super.onCreate(savedInstanceState);
-		if (isNeedNightView)
-			initNightView(false);
 		// registerReceiver(mDialogReceiver, new IntentFilter("dialog"));
 		imageCache = new HashMap<String, SoftReference<Bitmap>>();
 		DisplayMetrics metric = new DisplayMetrics();
@@ -194,6 +193,8 @@ public abstract class BaseActivity extends FragmentActivity implements
 		initView();
 		initData();
 		setListener();
+		if (isNeedNightView)
+			initNightView(false);
 	}
 
 	protected void initListView() {
@@ -638,6 +639,8 @@ public abstract class BaseActivity extends FragmentActivity implements
 	public void finish() {
 		// TODO Auto-generated method stub
 		super.finish();
+		if (mNightView != null)
+			this.getWindowManager().removeView(mNightView);
 		this.mApplication.removeActivity(this);
 	}
 
@@ -662,5 +665,20 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 	public void chage2Night() {
 		mNightView.setBackgroundResource(R.color.night_mask);
+	}
+
+	public void changeFontSize() {
+
+	}
+
+	public void changeDayMode(boolean isDay) {
+		if (isDay)
+			chage2Day();
+		else
+			chage2Night();
+	}
+
+	public void copy2Clip() {
+
 	}
 }

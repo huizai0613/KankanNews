@@ -79,6 +79,8 @@ public class CrashApplication extends Application {
 
 	private User user;
 
+	public static BaseActivity mainActivity;
+
 	public static boolean isStart() {
 		return isStart;
 	}

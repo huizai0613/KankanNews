@@ -102,12 +102,12 @@ public class New_HomeFragment extends BaseFragment implements
 		setListener();
 
 		initLocaDate = initLocalDate();
-		if (!initLocaDate) {
-			main_bg.setVisibility(View.VISIBLE);
+		if (initLocaDate)
 			showData();
-		}
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			refreshNetDate();
+		} else {
+			main_bg.setVisibility(View.VISIBLE);
 		}
 
 		return inflate;
@@ -206,18 +206,18 @@ public class New_HomeFragment extends BaseFragment implements
 							// New_HomeFragment.this, localView,
 							// R.string.home_cates_text_size_selected,
 							// FontUtils.DEFAULT_FONT_RADIX);
-//							if (columnSelectIndex == i) {
-//								columnTextView.setSelected(true);
-//								FontUtils.setTextViewFontSize(
-//										New_HomeFragment.this, columnTextView,
-//										R.string.home_cates_text_size_selected,
-//										FontUtils.DEFAULT_FONT_RADIX);
-//							} else {
-								FontUtils.setTextViewFontSize(
-										New_HomeFragment.this, localView,
-										R.string.home_cates_text_size,
-										FontUtils.DEFAULT_FONT_RADIX);
-//							}
+							// if (columnSelectIndex == i) {
+							// columnTextView.setSelected(true);
+							// FontUtils.setTextViewFontSize(
+							// New_HomeFragment.this, columnTextView,
+							// R.string.home_cates_text_size_selected,
+							// FontUtils.DEFAULT_FONT_RADIX);
+							// } else {
+							FontUtils.setTextViewFontSize(
+									New_HomeFragment.this, localView,
+									R.string.home_cates_text_size,
+									FontUtils.DEFAULT_FONT_RADIX);
+							// }
 							if (localView != v) {
 								localView.setSelected(false);
 							} else {
@@ -225,8 +225,8 @@ public class New_HomeFragment extends BaseFragment implements
 								mViewpager.setCurrentItem(i, false);
 							}
 						}
-						FontUtils.setTextViewFontSize(
-								New_HomeFragment.this, columnTextView,
+						FontUtils.setTextViewFontSize(New_HomeFragment.this,
+								columnTextView,
 								R.string.home_cates_text_size_selected,
 								FontUtils.DEFAULT_FONT_RADIX);
 					}
@@ -489,6 +489,8 @@ public class New_HomeFragment extends BaseFragment implements
 						break;
 					}
 				}
+			} else {
+				isNeedFreash = true;
 			}
 			if (isNeedFreash) {
 				homeCates = new ArrayList<New_HomeCate>();

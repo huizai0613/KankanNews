@@ -15,11 +15,13 @@ import org.json.JSONObject;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 import se.emilsjolander.stickylistheaders.StickyListHeadersListView;
 import android.annotation.TargetApi;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PixelFormat;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -30,7 +32,9 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -45,6 +49,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_News_Click;
 import com.kankan.kankanews.bean.New_News_Home;
@@ -58,9 +63,13 @@ import com.kankan.kankanews.sina.AccessTokenKeeper;
 import com.kankan.kankanews.sina.Constants;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
+import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.board.CustomShareBoard;
+import com.kankan.kankanews.ui.view.board.FontColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.NewsBrowseUtils;
@@ -73,19 +82,6 @@ import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.exception.DbException;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.sso.UMSsoHandler;
-//import com.sina.weibo.sdk.api.ImageObject;
-//import com.sina.weibo.sdk.api.TextObject;
-//import com.sina.weibo.sdk.api.WeiboMultiMessage;
-//import com.sina.weibo.sdk.api.share.BaseResponse;
-//import com.sina.weibo.sdk.api.share.IWeiboHandler;
-//import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-//import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
-//import com.sina.weibo.sdk.api.share.WeiboShareSDK;
-//import com.sina.weibo.sdk.auth.AuthInfo;
-//import com.sina.weibo.sdk.auth.Oauth2AccessToken;
-//import com.sina.weibo.sdk.auth.WeiboAuthListener;
-//import com.sina.weibo.sdk.constant.WBConstants;
-//import com.sina.weibo.sdk.exception.WeiboException;
 
 public class New_Avtivity_Subject extends BaseVideoActivity implements
 		AdapterView.OnItemClickListener,
@@ -104,6 +100,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	private String titlepic;
 	private String sharedPic;
 	private String titleurl;
+	private MyTextView titleText;
 
 	private LinkedList<Subject_Item> subjectData = new LinkedList<Subject_Item>();
 	private SubjectAdapter mAdapter;
@@ -129,10 +126,40 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	private LinearLayout main_bg;
 	boolean LoaclData = false;
 
+	private SildingFinishLayout mSildingFinishLayout;
+
+	private View nightView;
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		// TODO Auto-generated method stub
+		boolean flag = mSildingFinishLayout.onTouch(ev);
+		if (flag)
+			return flag;
+		return super.dispatchTouchEvent(ev);
+	}
+
+	@Override
+	public void initNightView(boolean isFullScreen) {
+		if (!spUtil.getIsDayMode())
+			chage2Night();
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.subject);
+		mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
+		mSildingFinishLayout
+				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
+
+					@Override
+					public void onSildingFinish() {
+						finish();
+					}
+				});
+		// mSildingFinishLayout.setTouchView(mSildingFinishLayout);
+		// mSildingFinishLayout.setTouchView(stickyList);
 	}
 
 	@Override
@@ -152,6 +179,8 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 
 		content_loading = (RelativeLayout) findViewById(R.id.content_loading);
 		main_bg = (LinearLayout) findViewById(R.id.main_bg);
+
+		nightView = findViewById(R.id.night_view);
 
 		// 禁用手势
 		// setRightFinsh(false);
@@ -177,14 +206,12 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		// 初始化shareutil类
 		shareUtil = new ShareUtil(new_news, mContext);
 
-		String subjectTitle = intent.getStringExtra("title");
-		subjectTitle = "看看专题";
-
-		initTitleBarContent(subjectTitle, "", "", R.drawable.new_ic_more,
-				R.drawable.new_ic_back);
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, "",
+				R.drawable.ic_font, R.drawable.ic_refresh);
 
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
+		setOnContentClickLinester(this);
 
 		// com_title_bar_right_bt.setVisibility(View.GONE);
 
@@ -202,6 +229,10 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		stickyList.setDrawingListUnderStickyHeader(false);
 		stickyList.setAreHeadersSticky(true);
 		stickyList.setAdapter(mAdapter);
+
+		titleText = (MyTextView) headerView.findViewById(R.id.intro);
+		FontUtils.setTextViewFontSize(this, titleText,
+				R.string.news_content_text_size, spUtil.getFontSizeRadix());
 
 		main_bg.setOnClickListener(this);
 
@@ -451,6 +482,10 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 								R.layout.subject_section, parent, false);
 						headerHolder.title = (MyTextView) convertView
 								.findViewById(R.id.text1);
+						FontUtils.setTextViewFontSize(
+								New_Avtivity_Subject.this, headerHolder.title,
+								R.string.home_news_title_text_size,
+								spUtil.getFontSizeRadix());
 						convertView.setTag(headerHolder);
 					} else {
 						if (itemViewType == 1) {
@@ -462,6 +497,10 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 
 							newHolder.title = (MyTextView) convertView
 									.findViewById(R.id.home_news_title);
+							FontUtils.setTextViewFontSize(
+									New_Avtivity_Subject.this, newHolder.title,
+									R.string.home_news_title_text_size,
+									spUtil.getFontSizeRadix());
 							newHolder.newstime_sign = (ImageView) convertView
 									.findViewById(R.id.home_news_newstime_sign);
 							newHolder.newstime = (MyTextView) convertView
@@ -479,6 +518,11 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 							albumsHolder = new NewAlbumsHolder();
 							albumsHolder.title = (MyTextView) convertView
 									.findViewById(R.id.home_albums_title);
+							FontUtils.setTextViewFontSize(
+									New_Avtivity_Subject.this,
+									albumsHolder.title,
+									R.string.home_news_title_text_size,
+									spUtil.getFontSizeRadix());
 							albumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
 									.findViewById(R.id.home_albums_imgs_layout);
 							albumsHolder.albums_image_1 = (ImageView) convertView
@@ -809,15 +853,21 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;
-		case R.id.title_bar_right_img:
-
-			shareUtil = new ShareUtil(new_news, mContext);
-
+		case R.id.title_bar_content_img:
 			// 一键分享
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
+					Gravity.BOTTOM, 0, 0);
+			break;
+		case R.id.title_bar_right_second_img:
+			this.refresh();
+			break;
+		case R.id.title_bar_right_img:
+			FontColumsBoard fontBoard = new FontColumsBoard(this);
+			fontBoard.setAnimationStyle(R.style.popwin_anim_style);
+			fontBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
 			break;
 		case R.id.main_bg:
@@ -827,6 +877,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 				}
 			}
 			break;
+
 		}
 	}
 
@@ -894,8 +945,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 				CommonUtils.doWebpUrl(subjectList.getTitlePic()), photoView,
 				Options.getSmallImageOptions(false));
 
-		MyTextView title = (MyTextView) headerView.findViewById(R.id.intro);
-		title.setText("         " + subjectList.getIntro());
+		titleText.setText("         " + subjectList.getIntro());
 
 		mAdapter.notifyDataSetChanged();
 		main_bg.setVisibility(View.GONE);
@@ -981,4 +1031,45 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		}
 	}
 
+	@Override
+	public void chage2Day() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.GONE);
+		this.mApplication.mainActivity.chage2Day();
+	}
+
+	@Override
+	public void chage2Night() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.VISIBLE);
+		this.mApplication.mainActivity.chage2Night();
+	}
+
+	@Override
+	public void copy2Clip() {
+		// TODO Auto-generated method stub
+		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		clip.setText(titleurl);
+		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
+	}
+
+	@Override
+	public void changeFontSize() {
+		// TODO Auto-generated method stub
+		FontUtils.setTextViewFontSize(this, titleText,
+				R.string.news_content_text_size, spUtil.getFontSizeRadix());
+		FontUtils.setChangeFontSize(true);
+
+		int first = stickyList.getFirstVisiblePosition();
+		stickyList.setAdapter(mAdapter);
+		stickyList.setSelection(first);
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (FontUtils.hasChangeFontSize())
+			changeFontSize();
+	}
 }

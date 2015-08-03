@@ -71,9 +71,6 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 
 	private View scroll_view;
 
-	private String[] fontSizeShow = new String[] { "小", "中", "大", "特大" };
-	private float[] fontSize = new float[] { 0.8f, 1, 1.2f, 1.4f };
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -256,15 +253,15 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 			// mActivity.startAnimActivity(New_Activity_My_About.class);
 			float radix = spUtil.getFontSizeRadix();
 			int index = 1;
-			for (int i = 0; i < fontSize.length; i++) {
-				if (fontSize[i] == radix) {
+			for (int i = 0; i < FontUtils.fontSize.length; i++) {
+				if (FontUtils.fontSize[i] == radix) {
 					index = i;
 					break;
 				}
 			}
 			AlertDialog ad = new AlertDialog.Builder(this.mActivity)
 					.setTitle("选择区域")
-					.setSingleChoiceItems(fontSizeShow, index,
+					.setSingleChoiceItems(FontUtils.fontSizeShow, index,
 							new RadioOnClick(index)).create();
 			// areaRadioListView = ad.getListView();
 			ad.show();
@@ -438,9 +435,9 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 			// TODO Auto-generated method stub
 			setIndex(which);
 			Toast.makeText(New_MyFragment.this.mActivity,
-					"您已经选择了： " + index + ":" + fontSizeShow[index],
+					"您已经选择了： " + index + ":" + FontUtils.fontSizeShow[index],
 					Toast.LENGTH_LONG).show();
-			spUtil.saveFontSizeRadix(fontSize[index]);
+			spUtil.saveFontSizeRadix(FontUtils.fontSize[index]);
 			FontUtils.setChangeFontSize(true);
 			dialog.dismiss();
 		}

@@ -115,6 +115,14 @@
                     android:textSize="12dip" />
             </LinearLayout>
         </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/two"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_below="@id/one"
+        android:orientation="horizontal" >
 
         <RelativeLayout
             android:id="@+id/wechat_circle_box"
@@ -151,14 +159,6 @@
                     android:textSize="12dip" />
             </LinearLayout>
         </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/two"
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:layout_below="@id/one"
-        android:orientation="horizontal" >
 
         <RelativeLayout
             android:id="@+id/email_box"
@@ -197,7 +197,7 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/refresh_box"
+            android:id="@+id/copy_box"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -231,53 +231,17 @@
                     android:textSize="12dip" />
             </LinearLayout>
         </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <ImageButton
-                android:id="@+id/font"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/umeng_socialize_qq_on" />
-
-            <TextView
-                android:id="@+id/font_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/email"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dip"
-                android:text="字体设置"
-                android:textSize="12dip" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="invisible" >
-
-            <ImageButton
-                android:id="@+id/night"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerInParent="true"
-                android:background="@drawable/umeng_socialize_qq_on" />
-
-            <TextView
-                android:id="@+id/night_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/email"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dip"
-                android:text="夜间模式"
-                android:textSize="12dip" />
-        </RelativeLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/colums_cancel_but"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_below="@id/two"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@android:color/black"
+        android:textSize="24dip" />
 
 </RelativeLayout>

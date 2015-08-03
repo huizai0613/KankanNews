@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.kankan.kankanews.base.view.SildingFinishLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sildingFinishLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:gravity="center" >
 
     <include layout="@layout/base_title_bar" />
 
@@ -35,8 +38,7 @@
                         android:id="@+id/content_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:lineSpacingExtra="6dp"
-                        android:textSize="25dp" />
+                        android:lineSpacingExtra="6dp" />
 
                     <com.kankan.kankanews.ui.view.MyTextView
                         android:id="@+id/content_time"
@@ -149,8 +151,7 @@
                         <RelativeLayout
                             android:id="@+id/smallrootview"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="#ff000000" >
+                            android:layout_height="wrap_content" >
 
                             <tv.danmaku.ijk.media.widget.VideoView
                                 android:id="@+id/video_view"
@@ -178,14 +179,14 @@
                                 android:clickable="true"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/default_news_display" />
-						 
+
                             <ImageView
                                 android:id="@+id/video_player"
                                 android:layout_width="70dip"
                                 android:layout_height="70dip"
                                 android:layout_centerInParent="true"
                                 android:src="@drawable/ic_liveplay" />
- 
+
                             <LinearLayout
                                 android:id="@+id/video_pb"
                                 android:layout_width="80dip"
@@ -222,11 +223,11 @@
                         android:id="@+id/content_comment_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
                         android:layout_marginTop="20dp"
                         android:orientation="vertical"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        android:layout_marginBottom="20dp"
                         android:visibility="gone" >
 
                         <LinearLayout
@@ -260,15 +261,13 @@
                                     android:background="#e5e5e5" />
                             </LinearLayout>
                         </LinearLayout>
-                        
-                        <LinearLayout 
+
+                        <LinearLayout
                             android:id="@+id/content_comment_list_list"
-                            android:layout_height="wrap_content"
                             android:layout_width="match_parent"
-                            android:orientation="vertical">
-                            
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" >
                         </LinearLayout>
-                        
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -406,4 +405,11 @@
         android:background="@drawable/player_guide"
         android:visibility="gone" />
 
-</RelativeLayout>
+    <View
+        android:id="@+id/night_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night_mask"
+        android:visibility="gone" />
+
+</com.kankan.kankanews.base.view.SildingFinishLayout>

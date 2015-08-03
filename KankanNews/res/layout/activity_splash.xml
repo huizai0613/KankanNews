@@ -48,18 +48,10 @@
         android:scaleType="fitXY"
         android:src="@drawable/logtxt" />
 
-    <View
-        android:id="@+id/transparent_view"
-        android:layout_width="match_parent"
-        android:layout_height="0.1px"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/transparent" />
-
     <ImageView
         android:id="@+id/red_flower"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/transparent_view"
         android:src="@drawable/red_flower_img" />
 
 </RelativeLayout>
