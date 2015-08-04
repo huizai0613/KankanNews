@@ -61,6 +61,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_Recommend;
@@ -78,6 +79,7 @@ import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.ui.view.board.CustomShareBoard;
 import com.kankan.kankanews.ui.view.board.FontColumsBoard;
+import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
@@ -203,8 +205,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	private int childCount;
 
 	private boolean isGoShare = false;
-
-	private View nightView;
 
 	public HttpHandler getDownloadVideo() {
 		return downloadVideo;
@@ -429,7 +429,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		registerReceiver(mReceiver, mFilter);
 
 		// 初始化头部
-		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, "X",
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, R.drawable.ic_close_white,
 				R.drawable.ic_font, R.drawable.ic_refresh);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
@@ -564,7 +564,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 						finish();
 					}
 				});
-		// mSildingFinishLayout.setTouchView(mSildingFinishLayout);
+		mSildingFinishLayout.setTouchView(mSildingFinishLayout);
 		mSildingFinishLayout.setTouchView(scollView);
 		// initCollectOffline(newsid);
 	}
@@ -856,6 +856,9 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		case R.id.content_share_weixin_layout:
 		case R.id.content_share_mail_layout:
 		case R.id.title_bar_right_img:
+			if (ClickUtils.isFastDoubleClick()) {
+				return;
+			}
 			shareUtil = new ShareUtil(new_news, mContext);
 			isGoShare = true;
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -1675,19 +1678,13 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	public void chage2Day() {
 		// TODO Auto-generated method stub
 		nightView.setVisibility(View.GONE);
-		this.mApplication.mainActivity.chage2Day();
+		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
 	}
 
 	@Override
 	public void chage2Night() {
 		// TODO Auto-generated method stub
 		nightView.setVisibility(View.VISIBLE);
-		this.mApplication.mainActivity.chage2Night();
-	}
-
-	@Override
-	public void initNightView(boolean isFullScreen) {
-		if (!spUtil.getIsDayMode())
-			chage2Night();
+		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
 	}
 }

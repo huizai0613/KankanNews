@@ -1,55 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
-    android:gravity="center_horizontal"
-    android:orientation="vertical" >
+    android:background="#ffffff" >
 
-    <include layout="@layout/base_title_bar" />
-
-    <ImageView
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="70dp"
-        android:src="@drawable/new_icon_about_bg" />
-
-    <com.kankan.kankanews.ui.view.MyTextView
-        android:id="@+id/version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dip"
-        android:textColor="@color/mid_gray"
-        android:textSize="16dp" />
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <include layout="@layout/base_title_bar" />
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="70dp"
+            android:src="@drawable/new_icon_about_bg" />
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:gravity="center_horizontal"
-            android:orientation="vertical" >
+            android:layout_marginTop="20dip"
+            android:textColor="@color/mid_gray"
+            android:textSize="16dp" />
 
-            <com.kankan.kankanews.ui.view.MyTextView
-                android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="上海看看牛视网络传播有限公司"
-                android:textColor="@color/mid_gray"
-                android:textSize="12dp" />
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
 
-            <com.kankan.kankanews.ui.view.MyTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="Copyright © 2014-2015 Kankanews.com Inc. All Rights Reserved."
-                android:textColor="@color/mid_gray"
-                android:textSize="10dp" />
-        </LinearLayout>
-    </RelativeLayout>
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="上海看看牛视网络传播有限公司"
+                    android:textColor="@color/mid_gray"
+                    android:textSize="12dp" />
 
-</LinearLayout>
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Copyright © 2014-2015 Kankanews.com Inc. All Rights Reserved."
+                    android:textColor="@color/mid_gray"
+                    android:textSize="10dp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:id="@+id/night_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night_mask"
+        android:visibility="gone" />
+
+</RelativeLayout>

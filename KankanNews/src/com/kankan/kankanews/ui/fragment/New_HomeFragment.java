@@ -474,7 +474,6 @@ public class New_HomeFragment extends BaseFragment implements
 
 	@Override
 	protected void onSuccessArray(JSONArray jsonObject) {
-		DebugLog.e("加载回来了");
 		if (jsonObject != null) {
 			boolean isNeedFreash = false;
 			main_bg.setVisibility(View.GONE);

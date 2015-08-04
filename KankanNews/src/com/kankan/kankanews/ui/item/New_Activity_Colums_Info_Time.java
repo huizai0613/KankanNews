@@ -7,11 +7,13 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
+import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -26,20 +28,33 @@ public class New_Activity_Colums_Info_Time extends BaseActivity implements
 	private CalendarPickerView calendar;
 	private New_Colums colums;
 
+	private SildingFinishLayout mSildingFinishLayout;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_colums_info_time);
+		mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
+		mSildingFinishLayout
+				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
+
+					@Override
+					public void onSildingFinish() {
+						finish();
+					}
+				});
+		mSildingFinishLayout.setTouchView(mSildingFinishLayout);
 	}
 
 	@Override
 	protected void initView() {
+		nightView = findViewById(R.id.night_view);
 
 		colums = (New_Colums) getIntent().getSerializableExtra("colums");
 
 		// 初始化头部
-		initTitleBarContent("选择日期", "", "", 0, R.drawable.new_ic_back);
+		initTitleLeftBar("选择日期", R.drawable.new_ic_back);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
@@ -112,4 +127,11 @@ public class New_Activity_Colums_Info_Time extends BaseActivity implements
 		// .getSelectedDate().getTime()/1000, "yyyy-MM-dd"));
 	}
 
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		boolean flag = mSildingFinishLayout.onTouch(ev);
+		if (flag)
+			return flag;
+		return super.dispatchTouchEvent(ev);
+	}
 }

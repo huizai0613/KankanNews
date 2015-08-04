@@ -79,7 +79,7 @@ public class CrashApplication extends Application {
 
 	private User user;
 
-	public static BaseActivity mainActivity;
+	private BaseActivity mainActivity;
 
 	public static boolean isStart() {
 		return isStart;
@@ -404,4 +404,18 @@ public class CrashApplication extends Application {
 		this.position = position;
 	}
 
+	public BaseActivity getMainActivity() {
+		return mainActivity;
+	}
+
+	public void setMainActivity(BaseActivity mainActivity) {
+		this.mainActivity = mainActivity;
+	}
+
+	public void changeMainActivityDayMode() {
+		if (this.mainActivity.spUtil.getIsDayMode())
+			this.mainActivity.chage2Day();
+		else
+			this.mainActivity.chage2Night();
+	}
 }

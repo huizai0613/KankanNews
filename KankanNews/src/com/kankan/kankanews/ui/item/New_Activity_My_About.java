@@ -25,7 +25,7 @@ public class New_Activity_My_About extends BaseActivity {
 		// tongji
 		initAnalytics(AndroidConfig.set_about_page);
 
-		initTitleBarContent("关于", "", "", 0, R.drawable.new_ic_back);
+		initTitleLeftBar("关于", R.drawable.new_ic_back);
 
 		setOnLeftClickLinester(new OnClickListener() {
 			@Override
@@ -50,7 +50,7 @@ public class New_Activity_My_About extends BaseActivity {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-
+		nightView = findViewById(R.id.night_view);
 	}
 
 	@Override

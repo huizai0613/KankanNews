@@ -42,6 +42,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.config.AndroidConfig;
@@ -67,7 +68,7 @@ import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.exception.DbException;
 import com.umeng.socialize.sso.UMSsoHandler;
 
-public class New_Activity_Content_Web extends BaseVideoActivity implements
+public class New_Activity_Content_Web extends BaseActivity implements
 		OnClickListener {
 
 	// 分享类
@@ -147,7 +148,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 
 		// 初始化头部 int leftImgId, String leftContent,
 		// int rightImgId, int rightImgSecondId, String bgColor
-		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, "X",
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, R.drawable.ic_close_white,
 				R.drawable.ic_font, R.drawable.ic_refresh);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
@@ -180,7 +181,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 			}
 			webFinish();
 			break;
-		case R.id.title_bar_left_text:
+		case R.id.title_bar_left_img_second:
 			webFinish();
 			break;
 		case R.id.title_bar_right_second_img:
@@ -244,7 +245,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 		// 初始化shareutil类
 		shareUtil = new ShareUtil(new_news, mContext);
 
-//		webView.loadUrl(titleurl + "?fromkkApp=1");
+		// webView.loadUrl(titleurl + "?fromkkApp=1");
 
 		int index = FontUtils.getFontSetIndex(spUtil.getFontSizeRadix());
 		webView.loadUrl(titleurl + "?fromkkApp=1" + "#kk_font="
@@ -422,7 +423,7 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 	public void finish() {
 		// TODO Auto-generated method stub
 		super.finish();
-		if (this.mApplication.mBaseActivityList.size() == 0) {
+		if (this.mApplication.getMainActivity() == null) {
 			Intent intent = getIntent();
 			intent.setClass(this, MainActivity.class);
 			this.startActivity(intent);
@@ -444,14 +445,14 @@ public class New_Activity_Content_Web extends BaseVideoActivity implements
 	public void chage2Day() {
 		// TODO Auto-generated method stub
 		nightView.setVisibility(View.GONE);
-		this.mApplication.mainActivity.chage2Day();
+		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
 	}
 
 	@Override
 	public void chage2Night() {
 		// TODO Auto-generated method stub
 		nightView.setVisibility(View.VISIBLE);
-		this.mApplication.mainActivity.chage2Night();
+		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
 	}
 
 	@Override

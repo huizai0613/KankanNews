@@ -28,7 +28,7 @@ public class New_Activity_My_FanKui extends BaseActivity {
 		// tongji
 		initAnalytics(AndroidConfig.set_fankui_page);
 
-		initTitleBarContent("意见反馈", "", "", 0, R.drawable.new_ic_back);
+		initTitleLeftBar("意见反馈", R.drawable.new_ic_back);
 		setOnLeftClickLinester(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -67,7 +67,7 @@ public class New_Activity_My_FanKui extends BaseActivity {
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-
+		nightView = findViewById(R.id.night_view);
 	}
 
 	@Override

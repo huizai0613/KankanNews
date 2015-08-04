@@ -148,12 +148,14 @@ public class FontColumsBoard extends PopupWindow implements OnClickListener {
 			changeRedBg(mostSize);
 	}
 
-	public void changeRedBg(View view) {
+	public void changeRedBg(TextView view) {
 		view.setBackgroundColor(Color.RED);
+		view.setTextColor(Color.WHITE);
 	}
 
-	public void changeWhiteBg(View view) {
+	public void changeWhiteBg(TextView view) {
 		view.setBackgroundColor(Color.WHITE);
+		view.setTextColor(Color.BLACK);
 	}
 
 	public void changeNightImg(boolean isDay) {

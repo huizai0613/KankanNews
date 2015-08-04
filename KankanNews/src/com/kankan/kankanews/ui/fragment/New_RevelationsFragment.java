@@ -85,8 +85,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 				.findViewById(R.id.revelations_image_four);
 		imageViews = new ImageView[] { imageOne, imageTwo, imageThree,
 				imageFour };
-		initTitleRightLeftBar(inflate, "我要报料", "", "", "#ffffff", 0, 0,
-				"#000000");
+		initTitleBar(inflate, "我要报料");
 	}
 
 	private void initLister() {

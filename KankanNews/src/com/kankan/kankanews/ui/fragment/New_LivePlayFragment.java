@@ -149,7 +149,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 			if (shareBoard != null && shareBoard.isShowing()) {
 				shareBoard.dismiss();
 			}
-			mActivity.getWindowManager().removeView(this.mActivity.mNightView);
 			fullscrenn_but.setVisibility(View.GONE);
 			mActivity.bottomBarVisible(View.GONE);
 			liveStart.setVisibility(View.GONE);
@@ -157,7 +156,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 			mActivity.getWindow().setAttributes(attrs);
 			mActivity.getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-			this.mActivity.initNightView(true);
 			smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			liveVideoView.setmRootViewHeight(this.mActivity.mScreenWidth);
@@ -174,7 +172,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 			liveVideoView.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,
 					LayoutParams.MATCH_PARENT);
 		} else {
-			mActivity.getWindowManager().removeView(this.mActivity.mNightView);
 			fullscrenn_but.setVisibility(View.VISIBLE);
 			fullScreenLayout.setVisibility(View.GONE);
 			fullLiveStart.setVisibility(View.GONE);
@@ -187,7 +184,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 			// 取消全屏设置
 			mActivity.getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-			this.mActivity.initNightView(false);
 			smallrootview.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT,
 					(int) (mActivity.mScreenWidth / 16 * 9)));
@@ -750,9 +746,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 															.setVideoPath(new_LivePlay
 																	.getStreamurl());
 
-													NetUtils
-															.getInstance(
-																	New_LivePlayFragment.this.mActivity)
+													NetUtils.getInstance(
+															New_LivePlayFragment.this.mActivity)
 															.getAnalyse(
 																	New_LivePlayFragment.this.mActivity,
 																	"live",
@@ -787,9 +782,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 										liveVideoView.setVideoPath(new_LivePlay
 												.getStreamurl());
 
-										NetUtils
-												.getInstance(
-														New_LivePlayFragment.this.mActivity)
+										NetUtils.getInstance(
+												New_LivePlayFragment.this.mActivity)
 												.getAnalyse(
 														New_LivePlayFragment.this.mActivity,
 														"live",

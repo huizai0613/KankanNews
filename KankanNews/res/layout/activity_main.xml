@@ -119,4 +119,11 @@
             android:background="#c8c8c8" />
     </RelativeLayout>
 
+    <View
+        android:id="@+id/night_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night_mask"
+        android:visibility="gone" />
+
 </RelativeLayout>

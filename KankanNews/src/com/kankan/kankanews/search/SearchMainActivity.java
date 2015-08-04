@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +23,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -43,13 +46,19 @@ import com.iss.view.pulltorefresh.PullToRefreshBase;
 import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseActivity;
+import com.kankan.kankanews.base.IA.CrashApplication;
+import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News_Search;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
+import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
+import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 
 public class SearchMainActivity extends BaseActivity implements OnClickListener {
@@ -91,6 +100,10 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	private View loadingLayout;
 
 	private static String[] hotWord;
+
+	private SildingFinishLayout mSildingFinishLayout;
+
+	private View nightView;
 
 	private class SeachListViewHolder {
 		ImageView titlePic;
@@ -150,6 +163,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	protected void initView() {
 		// TODO Auto-generated method stub
 		inflate = LayoutInflater.from(this);
+		mSildingFinishLayout = (SildingFinishLayout) this
+				.findViewById(R.id.sildingFinishLayout);
 		searchContent = (EditText) this.findViewById(R.id.search_content);
 		cancelBut = (TextView) this.findViewById(R.id.search_cancel_but);
 		closeBut = (ImageView) this.findViewById(R.id.search_close_but);
@@ -167,6 +182,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 				.findViewById(R.id.search_no_net_layout);
 		noDataLayout = (LinearLayout) this
 				.findViewById(R.id.search_no_data_layout);
+		nightView = this.findViewById(R.id.night_view);
 
 	}
 
@@ -209,6 +225,13 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			}
 
 		});
+		mSildingFinishLayout
+				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
+					@Override
+					public void onSildingFinish() {
+						finish();
+					}
+				});
 	}
 
 	@Override
@@ -519,18 +542,12 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 					holder = new SeachListViewHolder();
 					holder.titlePic = (ImageView) convertView
 							.findViewById(R.id.home_news_titlepic);
-
 					holder.title = (MyTextView) convertView
 							.findViewById(R.id.home_news_title);
-					// holder.title.setTextSize(New_HomeItemFragment.this
-					// .getResources().getDimension(
-					// textNomalSize[PixelUtil.getScale()]));
 					holder.newsTime = (MyTextView) convertView
 							.findViewById(R.id.search_news_newstime);
 					holder.click = (MyTextView) convertView
 							.findViewById(R.id.search_news_click_num);
-					// holder.home_news_play = (ImageView) convertView
-					// .findViewById(R.id.home_news_play);
 					convertView.setTag(holder);
 				} else if (itemViewType == 1) {
 					convertView = inflate.inflate(
@@ -558,13 +575,15 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			}
 
 			if (itemViewType == 0) {
+				FontUtils.setTextViewFontSize(SearchMainActivity.this,
+						holder.title, R.string.home_news_title_text_size,
+						spUtil.getFontSizeRadix());
 				final New_News_Search news = searchList.get(position);
 				news.setTitlePic(CommonUtils.doWebpUrl(news.getTitlePic()));
 				ImgUtils.imageLoader.displayImage(news.getTitlePic(),
 						holder.titlePic, ImgUtils.homeImageOptions);
 
 				holder.title.setText(dealHighLightText(news.getTitle()));
-				// holder.newstime.setText(news.getClickNum());
 
 				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 				long newsTime = Long.parseLong(news.getNewsTime()) * 1000;
@@ -576,6 +595,9 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 					@Override
 					public void onClick(View v) {
 						// TODO Auto-generated method stub
+						if (ClickUtils.isFastDoubleClick()) {
+							return;
+						}
 						SearchMainActivity.this.startAnimActivityByParameter(
 								New_Activity_Content_Video.class,
 								news.getMId(), news.getType(),
@@ -670,6 +692,9 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
+					if (ClickUtils.isFastDoubleClick()) {
+						return;
+					}
 					int position = (Integer) v.findViewById(
 							R.id.search_his_remove).getTag();
 					if (itemType == 0) {
@@ -850,5 +875,32 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		} else {
 			return srcSearchText;
 		}
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		// TODO Auto-generated method stub
+		boolean flag = mSildingFinishLayout.onTouch(ev);
+		if (flag)
+			return flag;
+		return super.dispatchTouchEvent(ev);
+	}
+
+	@Override
+	public void chage2Day() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void chage2Night() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public void initNightView(boolean isFullScreen) {
+		if (!spUtil.getIsDayMode())
+			chage2Night();
 	}
 }

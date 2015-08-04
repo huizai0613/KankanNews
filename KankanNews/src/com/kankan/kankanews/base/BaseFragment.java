@@ -46,11 +46,12 @@ public abstract class BaseFragment extends Fragment {
 
 	protected RelativeLayout titleBarView;
 	protected ImageView titleBarLeftImg;
-	protected MyTextView titleBarLeftText;
+	protected ImageView titleBarLeftImgSecond;
 	protected ImageView titleBarContentImg;
 	protected MyTextView titleBarContent;
 	protected MyTextView titleBarRightText;
 	protected ImageView titleBarRightImg;
+	protected ImageView titleBarRightImgSecond;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -180,8 +181,8 @@ public abstract class BaseFragment extends Fragment {
 		// 左
 		titleBarLeftImg = (ImageView) view
 				.findViewById(R.id.title_bar_left_img);
-		titleBarLeftText = (MyTextView) view
-				.findViewById(R.id.title_bar_left_text);
+		titleBarLeftImgSecond = (ImageView) view
+				.findViewById(R.id.title_bar_left_img_second);
 		// 中
 		titleBarContentImg = (ImageView) view
 				.findViewById(R.id.title_bar_content_img);
@@ -190,29 +191,49 @@ public abstract class BaseFragment extends Fragment {
 		// 右
 		titleBarRightImg = (ImageView) view
 				.findViewById(R.id.title_bar_right_img);
+		titleBarRightImgSecond = (ImageView) view
+				.findViewById(R.id.title_bar_right_img);
 		titleBarRightText = (MyTextView) view
 				.findViewById(R.id.title_bar_right_text);
+
+		titleBarLeftImg.setVisibility(View.GONE);
+		titleBarLeftImgSecond.setVisibility(View.GONE);
+		titleBarContentImg.setVisibility(View.GONE);
+		titleBarContent.setVisibility(View.GONE);
+		titleBarRightImgSecond.setVisibility(View.GONE);
+		titleBarRightImg.setVisibility(View.GONE);
+		titleBarRightText.setVisibility(View.GONE);
 	}
 
-	public void initTitleRightLeftBar(View view, String content,
-			String leftContent, String rightContent, String contentColor,
-			int rightImgId, int leftImgId, String bgColor) {
+	public void initTitleRightLeftBar(View view, String content, int leftImgId,
+			int rightImgId, int leftImgIdSecond, String rightContent) {
 
 		initTitleView(view);
-		titleBarLeftText.setText(leftContent);
+		titleBarLeftImgSecond.setVisibility(View.VISIBLE);
+		titleBarRightText.setVisibility(View.VISIBLE);
+		titleBarContent.setVisibility(View.VISIBLE);
+		titleBarRightImg.setVisibility(View.VISIBLE);
+		titleBarLeftImg.setVisibility(View.VISIBLE);
+
+		titleBarLeftImgSecond.setImageResource(leftImgIdSecond);
 		titleBarRightText.setText(rightContent);
 		titleBarContent.setText(content);
-		titleBarContent.setTextColor(Color.parseColor(contentColor));
-		if (!TextUtils.isEmpty(bgColor))
-			titleBarView.setBackgroundColor(Color.parseColor(bgColor));
 		titleBarRightImg.setImageResource(rightImgId);
 		titleBarLeftImg.setImageResource(leftImgId);
+
+	}
+	
+	public void initTitleBar(View view, String content) {
+
+		initTitleView(view);
+		titleBarContent.setVisibility(View.VISIBLE);
+		titleBarContent.setText(content);
 
 	}
 
 	// 左边按钮的点击事件
 	protected void setOnLeftClickLinester(OnClickListener clickListener) {
-		titleBarLeftText.setOnClickListener(clickListener);
+		titleBarLeftImgSecond.setOnClickListener(clickListener);
 		titleBarLeftImg.setOnClickListener(clickListener);
 	}
 
@@ -220,6 +241,7 @@ public abstract class BaseFragment extends Fragment {
 	protected void setOnRightClickLinester(OnClickListener clickListener) {
 		titleBarRightText.setOnClickListener(clickListener);
 		titleBarRightImg.setOnClickListener(clickListener);
+		titleBarRightImgSecond.setOnClickListener(clickListener);
 	}
 
 	// 只带id和bean跳转界面 若只有单个新闻，

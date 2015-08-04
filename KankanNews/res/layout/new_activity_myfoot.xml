@@ -1,41 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f6f6f6"
-    android:orientation="vertical" >
+    android:background="#f6f6f6" >
 
     <include layout="@layout/base_title_bar" />
-    
-    <RelativeLayout 
-        android:layout_height="match_parent"
-        android:layout_width="match_parent">
 
-    <ListView
-        android:id="@+id/myfoot_listview"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none" >
-    </ListView>
+        android:layout_marginTop="@dimen/base_action_bar_height" >
 
-    <LinearLayout
-        android:id="@+id/no_foot_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:visibility="gone" >
+        <ListView
+            android:id="@+id/myfoot_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" >
+        </ListView>
 
-        <ImageView
-            style="@style/no_img_style"
-            android:src="@drawable/icon_no_foot" />
+        <LinearLayout
+            android:id="@+id/no_foot_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone" >
 
-        <com.kankan.kankanews.ui.view.MyTextView
-            style="@style/no_text_style"
-            android:text="暂无观看记录" />
-    </LinearLayout>
+            <ImageView
+                style="@style/no_img_style"
+                android:src="@drawable/icon_no_foot" />
 
+            <com.kankan.kankanews.ui.view.MyTextView
+                style="@style/no_text_style"
+                android:text="暂无观看记录" />
+        </LinearLayout>
     </RelativeLayout>
-    
-</LinearLayout>
+
+    <View
+        android:id="@+id/night_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night_mask"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -110,7 +110,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 				.findViewById(R.id.layout_detele_now);
 		isDayMode = (ToggleButton) inflate.findViewById(R.id.is_day_mode);
 
-		initTitleRightLeftBar(inflate, "我", "", "", "#ffffff", 0, 0, "#000000");
+		initTitleBar(inflate, "我");
 	}
 
 	private void initLister() {
@@ -435,7 +435,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 			// TODO Auto-generated method stub
 			setIndex(which);
 			Toast.makeText(New_MyFragment.this.mActivity,
-					"您已经选择了： " + index + ":" + FontUtils.fontSizeShow[index],
+					"您已经选择了： " + FontUtils.fontSizeShow[index],
 					Toast.LENGTH_LONG).show();
 			spUtil.saveFontSizeRadix(FontUtils.fontSize[index]);
 			FontUtils.setChangeFontSize(true);

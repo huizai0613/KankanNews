@@ -13,20 +13,19 @@
         <ImageView
             android:id="@+id/title_bar_left_img"
             android:layout_width="@dimen/base_action_bar_height"
-            android:layout_height="25dip"
+            android:layout_height="@dimen/base_action_bar_height"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:paddingLeft="10dip"
             android:paddingRight="20dip" />
 
-        <com.kankan.kankanews.ui.view.MyTextView
-            android:id="@+id/title_bar_left_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/title_bar_left_img_second"
+            android:layout_width="@dimen/base_action_bar_height"
+            android:layout_height="@dimen/base_action_bar_height"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/title_bar_left_img"
-            android:textColor="@color/white"
-            android:textSize="15dp"
+            android:padding="8dip"
             android:visibility="gone" />
 
         <com.kankan.kankanews.ui.view.MyTextView
@@ -36,6 +35,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="65dip"
             android:singleLine="true"
+            android:textColor="@color/white"
             android:textSize="@dimen/base_action_bar_title_size" />
 
         <ImageView
@@ -65,7 +65,7 @@
                 android:layout_width="25dip"
                 android:layout_height="@dimen/base_action_bar_height"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"/>
+                android:layout_centerVertical="true" />
         </RelativeLayout>
 
         <com.kankan.kankanews.ui.view.MyTextView

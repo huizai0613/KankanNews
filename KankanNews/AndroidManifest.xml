@@ -116,12 +116,14 @@
             android:name="com.kankan.kankanews.ui.item.New_Activity_Colums_Info"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/Kankan_Theme_Day_Alpha" >
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_Colums_Info_Time"
             android:exported="false"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/Kankan_Theme_Day_Alpha" >
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_Content_Web"
@@ -147,7 +149,8 @@
         <activity
             android:name="com.kankan.kankanews.search.SearchMainActivity"
             android:exported="false"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait"
+            android:theme="@style/Kankan_Theme_Day_Alpha" >
         </activity>
 
         <receiver

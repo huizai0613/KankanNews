@@ -76,6 +76,7 @@ public class ShareUtil {
 			public void onComplete(SHARE_MEDIA platform, int eCode,
 					SocializeEntity entity) {
 				// String showText = "分享成功";
+				DebugLog.e("分享成功");
 				((BaseActivity) activity).Commit_Share(platform);
 
 				if (platform.equals(SHARE_MEDIA.EMAIL)) {

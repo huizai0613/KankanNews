@@ -45,6 +45,7 @@ import com.kankan.kankanews.ui.fragment.New_MyFragment;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
@@ -89,6 +90,26 @@ public class MainActivity extends BaseVideoActivity {
 	}
 
 	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		if (spUtil.getIsDayMode())
+			chage2Day();
+		else
+			chage2Night();
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		if (spUtil.getIsDayMode())
+			chage2Day();
+		else
+			chage2Night();
+	}
+
+	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		Serializable serializableExtra = intent.getSerializableExtra("LIVE");
@@ -116,9 +137,8 @@ public class MainActivity extends BaseVideoActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		this.mApplication.mainActivity = this;
 		spUtil.setFristComing(false);
-
+		this.mApplication.setMainActivity(this);
 		Log.e("px2sp", PixelUtil.px2sp(28, this) + "");
 
 		wm = (WindowManager) getApplicationContext().getSystemService(
@@ -152,7 +172,6 @@ public class MainActivity extends BaseVideoActivity {
 					fragment.setSelectPlay(true);
 					fragment.setSelectPlayID(Integer.parseInt(bun
 							.getString("LIVE_ID")));
-					Log.e("isSelectPlay", "已播放" + bun.getString("LIVE_ID"));
 					touchTab(tab_two);
 				} else {
 					touchTab(tab_one); // 正常启动
@@ -168,8 +187,6 @@ public class MainActivity extends BaseVideoActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.e("PixelUtil.getScale()", mContext.getResources()
-				.getDisplayMetrics().densityDpi + "");
 		if (lastTime != 0) {
 			if ((TimeUtil.now() - lastTime) / 60 >= 10) {
 				if (curTouchTab == tab_one) {
@@ -198,6 +215,8 @@ public class MainActivity extends BaseVideoActivity {
 		tab_three = (RelativeLayout) findViewById(R.id.tab_three);
 		tab_four = (RelativeLayout) findViewById(R.id.tab_four);
 		tab_five = (RelativeLayout) findViewById(R.id.tab_five);
+		
+		nightView =  findViewById(R.id.night_view);
 
 		// 初始化fragments
 		New_HomeFragment mainFragment = new New_HomeFragment();

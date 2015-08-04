@@ -83,12 +83,8 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			break;
 		default:
 			mActivity.shareReBack();
-			dismiss();
 			break;
 		}
-	}
-
-	public void closeRefresh() {
-		copyBox.setVisibility(View.INVISIBLE);
+		dismiss();
 	}
 }

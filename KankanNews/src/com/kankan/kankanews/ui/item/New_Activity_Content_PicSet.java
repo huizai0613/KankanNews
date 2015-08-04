@@ -37,6 +37,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_NewsPic;
@@ -141,7 +142,7 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 
 	@Override
 	protected void initView() {
-		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, "",
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, R.drawable.ic_close_white,
 				R.drawable.ic_font, R.drawable.ic_refresh);
 
 		vp = (ViewPager) findViewById(R.id.vp);
@@ -494,14 +495,14 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 	public void chage2Day() {
 		// TODO Auto-generated method stub
 		nightView.setVisibility(View.GONE);
-		this.mApplication.mainActivity.chage2Day();
+		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
 	}
 
 	@Override
 	public void chage2Night() {
 		// TODO Auto-generated method stub
 		nightView.setVisibility(View.VISIBLE);
-		this.mApplication.mainActivity.chage2Night();
+		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
 	}
 
 	@Override

@@ -6,5 +6,7 @@
     <string name="home_cates_text_size_selected">18</string>
     <string name="news_content_text_size">18</string>
     <string name="news_title_text_size">22</string>
+    <string name="colums_info_title_text_size">18</string>
+    <string name="colums_info_detail_text_size">14</string>
 
 </resources>

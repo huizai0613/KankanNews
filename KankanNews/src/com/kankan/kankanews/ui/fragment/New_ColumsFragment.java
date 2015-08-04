@@ -56,7 +56,7 @@ public class New_ColumsFragment extends BaseFragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		inflate = inflater.inflate(R.layout.new_fragment_colums, null);
 
-		initTitleRightLeftBar(inflate, "栏目", "", "", "#ffffff", 0, 0, "#000000");
+		initTitleBar(inflate, "栏目");
 
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 		listview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {

@@ -65,7 +65,9 @@ import com.kankan.kankanews.ui.view.AutoImageTag;
 import com.kankan.kankanews.ui.view.AutoImageVIew;
 import com.kankan.kankanews.ui.view.AutoScrollViewPager;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
@@ -183,7 +185,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		inflate = inflater.inflate(R.layout.new_fragment_home_item, null);
-		Log.e("onCreateView", "onCreateView");
 		instance = NetUtils.getInstance(mActivity);
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 		screnn_pb = (LinearLayout) inflate.findViewById(R.id.screnn_pb);
@@ -916,7 +917,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					@Override
 					public void onClick(View v) {
-						//
+						if (ClickUtils.isFastDoubleClick()) {
+							return;
+						}
 						openNews(news);
 						if (!NewsBrowseUtils.isBrowed(news.getId())) {
 							MyTextView textView = (MyTextView) v
@@ -977,6 +980,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						if (ClickUtils.isFastDoubleClick()) {
+							return;
+						}
 						openNews(news);
 						if (!NewsBrowseUtils.isBrowed(news.getId())) {
 							MyTextView textView = (MyTextView) v
@@ -1011,6 +1017,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 					@Override
 					public void onClick(View v) {
 						// 专题
+						if (ClickUtils.isFastDoubleClick()) {
+							return;
+						}
 						openNews(news);
 						if (!NewsBrowseUtils.isBrowed(news.getId())) {
 							MyTextView textView = (MyTextView) v
@@ -1148,7 +1157,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			try {
 				JSONArray jsonArray = jsonObject;
 				if (jsonArray != null && jsonArray.length() > 0) {
-					for (int i = 0; i < jsonArray.length(); i++) {
+					for (int i = 0; i < new_news_clicks.size(); i++) {
 						JSONObject jsonObject1 = (JSONObject) jsonArray.get(i);
 						String clickTime = jsonObject1
 								.optString(new_news_clicks.get(i).getId()
@@ -1181,9 +1190,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 	public void changeFontSize() {
 		// TODO Auto-generated method stub
-		int first = listview.getFirstVisiblePosition();
-		listview.setAdapter(adapter);
-		listview.setSelection(first);
+		if (listview != null) {
+			int first = listview.getFirstVisiblePosition();
+			listview.setAdapter(adapter);
+			listview.setSelection(first);
+		}
 	}
 
 }

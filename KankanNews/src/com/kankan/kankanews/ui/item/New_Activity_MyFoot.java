@@ -51,14 +51,15 @@ public class New_Activity_MyFoot extends BaseActivity implements
 	protected void initView() {
 		myListView = (ListView) findViewById(R.id.myfoot_listview);
 		no_foot_layout = (LinearLayout) findViewById(R.id.no_foot_layout);
+		nightView = findViewById(R.id.night_view);
 		// scroll_view = findViewById(R.id.scroll_view);
 		// scroll_view.setLayoutParams(new LinearLayout.LayoutParams(
 		// LinearLayout.LayoutParams.MATCH_PARENT, mContext.mScreenHeight
 		// - PixelUtil.dp2px(51)));
 
 		// 初始化头部
-		initTitleBarContent("浏览记录", "", "",
-				R.drawable.new_icon_delete, R.drawable.new_ic_back);
+		initTitleBarContent("浏览记录", 0, "", R.drawable.new_icon_delete,
+				R.drawable.new_ic_back);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);

@@ -69,7 +69,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 	protected RelativeLayout titleBarView;
 	protected ImageView titleBarLeftImg;
-	protected MyTextView titleBarLeftText;
+	protected ImageView titleBarLeftImgSecond;
 	protected ImageView titleBarContentImg;
 	protected MyTextView titleBarContent;
 	protected MyTextView titleBarRightText;
@@ -79,7 +79,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 	protected boolean isRightFinsh = true;
 	protected HashMap<String, SoftReference<Bitmap>> imageCache;
 
-	public View mNightView;
+	public View nightView;
 
 	public boolean isFinsh;
 	protected boolean isNeedNightView = true;
@@ -393,7 +393,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 		titleBarView = (RelativeLayout) findViewById(R.id.title_bar_view);
 		// 左
 		titleBarLeftImg = (ImageView) findViewById(R.id.title_bar_left_img);
-		titleBarLeftText = (MyTextView) findViewById(R.id.title_bar_left_text);
+		titleBarLeftImgSecond = (ImageView) findViewById(R.id.title_bar_left_img_second);
 		// 中
 		titleBarContentImg = (ImageView) findViewById(R.id.title_bar_content_img);
 		titleBarContent = (MyTextView) findViewById(R.id.title_bar_content);
@@ -403,7 +403,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 		titleBarRightText = (MyTextView) findViewById(R.id.title_bar_right_text);
 
 		titleBarLeftImg.setVisibility(View.GONE);
-		titleBarLeftText.setVisibility(View.GONE);
+		titleBarLeftImgSecond.setVisibility(View.GONE);
 		titleBarContentImg.setVisibility(View.GONE);
 		titleBarContent.setVisibility(View.GONE);
 		titleBarRightImgSecond.setVisibility(View.GONE);
@@ -433,16 +433,13 @@ public abstract class BaseActivity extends FragmentActivity implements
 		titleBarLeftImg.setImageResource(left_img_id);
 	}
 
-	protected void initTitleLeftBar(String content, String leftContent,
-			int left_img_id) {
+	protected void initTitleLeftBar(String content, int leftImgId) {
 		initTitleBarView();
-		titleBarLeftText.setVisibility(View.VISIBLE);
 		titleBarContent.setVisibility(View.VISIBLE);
 		titleBarLeftImg.setVisibility(View.VISIBLE);
 
-		titleBarLeftText.setText(leftContent);
 		titleBarContent.setText(content);
-		titleBarLeftImg.setImageResource(left_img_id);
+		titleBarLeftImg.setImageResource(leftImgId);
 
 	}
 
@@ -465,16 +462,16 @@ public abstract class BaseActivity extends FragmentActivity implements
 		titleBarRightImg.setImageResource(right_img_id);
 	}
 
-	public void initTitleBarContent(String content, String leftContent,
+	public void initTitleBarContent(String content, int leftImgSecondId,
 			String rightContent, int right_img_id, int left_img_id) {
 		initTitleBarView();
-		titleBarLeftText.setVisibility(View.VISIBLE);
+		titleBarLeftImgSecond.setVisibility(View.VISIBLE);
 		titleBarRightText.setVisibility(View.VISIBLE);
 		titleBarContent.setVisibility(View.VISIBLE);
 		titleBarRightImg.setVisibility(View.VISIBLE);
 		titleBarLeftImg.setVisibility(View.VISIBLE);
 
-		titleBarLeftText.setText(leftContent);
+		titleBarLeftImgSecond.setImageResource(leftImgSecondId);
 		titleBarRightText.setText(rightContent);
 		titleBarContent.setText(content);
 		titleBarRightImg.setImageResource(right_img_id);
@@ -482,7 +479,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 	}
 
 	public void initTitleBarIcon(int contentId, int leftImgId,
-			String leftContent, int rightImgId, int rightImgSecondId) {
+			int leftImgSecondId, int rightImgId, int rightImgSecondId) {
 		initTitleBarView();
 		titleBarContentImg.setVisibility(View.VISIBLE);
 		titleBarRightImgSecond.setVisibility(View.VISIBLE);
@@ -493,12 +490,12 @@ public abstract class BaseActivity extends FragmentActivity implements
 		titleBarRightImgSecond.setImageResource(rightImgSecondId);
 		titleBarLeftImg.setImageResource(leftImgId);
 		titleBarContentImg.setImageResource(contentId);
-		titleBarLeftText.setText(leftContent);
+		titleBarLeftImgSecond.setImageResource(leftImgSecondId);
 	}
 
 	// 左边按钮的点击事件
 	protected void setOnLeftClickLinester(OnClickListener clickListener) {
-		titleBarLeftText.setOnClickListener(clickListener);
+		titleBarLeftImgSecond.setOnClickListener(clickListener);
 		titleBarLeftImg.setOnClickListener(clickListener);
 	}
 
@@ -516,7 +513,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 	}
 
 	protected void showLeftBarTv() {
-		titleBarLeftText.setVisibility(View.VISIBLE);
+		titleBarLeftImgSecond.setVisibility(View.VISIBLE);
 	}
 
 	/**
@@ -639,32 +636,24 @@ public abstract class BaseActivity extends FragmentActivity implements
 	public void finish() {
 		// TODO Auto-generated method stub
 		super.finish();
-		if (mNightView != null)
-			this.getWindowManager().removeView(mNightView);
 		this.mApplication.removeActivity(this);
 	}
 
 	public void initNightView(boolean isFullScreen) {
-		int _flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
-				| WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-		if (isFullScreen)
-			_flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-		WindowManager.LayoutParams mNightViewParam = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.TYPE_APPLICATION, _flags,
-				PixelFormat.TRANSPARENT);
-		WindowManager mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-		mNightView = new View(this);
-		mWindowManager.addView(mNightView, mNightViewParam);
 		if (!spUtil.getIsDayMode())
 			chage2Night();
 	}
 
 	public void chage2Day() {
-		mNightView.setBackgroundResource(android.R.color.transparent);
+		// mNightView.setBackgroundResource(android.R.color.transparent);
+		if (nightView != null)
+			nightView.setVisibility(View.GONE);
 	}
 
 	public void chage2Night() {
-		mNightView.setBackgroundResource(R.color.night_mask);
+		// mNightView.setBackgroundResource(R.color.night_mask);
+		if (nightView != null)
+			nightView.setVisibility(View.VISIBLE);
 	}
 
 	public void changeFontSize() {

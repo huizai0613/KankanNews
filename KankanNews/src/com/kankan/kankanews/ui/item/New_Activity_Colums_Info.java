@@ -14,6 +14,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer.OnErrorListener;
 import tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener;
 import tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener;
 import tv.danmaku.ijk.media.widget.VideoView;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -53,6 +54,8 @@ import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.base.IA.CrashApplication;
+import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.bean.New_Colums_Info;
 import com.kankan.kankanews.bean.New_Colums_Second;
@@ -65,6 +68,7 @@ import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.ui.view.board.CustomShareBoard;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -126,6 +130,8 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	private ImageView mOperationPercent;
 	private WindowManager wm;
 
+	private SildingFinishLayout mSildingFinishLayout;
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -182,7 +188,17 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_colums_info);
+		mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
+		mSildingFinishLayout
+				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
 
+					@Override
+					public void onSildingFinish() {
+						finish();
+					}
+				});
+		mSildingFinishLayout.setTouchView(mSildingFinishLayout);
+		mSildingFinishLayout.setTouchView(listview);
 	}
 
 	@Override
@@ -208,6 +224,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		small_video_pb = (LinearLayout) findViewById(R.id.small_video_pb);
 		mVolumeBrightnessLayout = findViewById(R.id.operation_volume_brightness);
 		mOperationPercent = (ImageView) findViewById(R.id.operation_percent);
+		nightView = findViewById(R.id.night_view);
 
 		colums = (New_Colums) getIntent().getSerializableExtra("colums");
 		secondColums = (New_Colums_Second) getIntent().getSerializableExtra(
@@ -237,6 +254,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 					return;
 				curPlayNo = position - 2;
 				myAdapter.notifyDataSetChanged();
+				view.setSelected(true);
 				videoPlay();
 			}
 
@@ -360,7 +378,6 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			// 一键分享
 			shareBoard = new CustomShareBoard((BaseActivity) this, shareUtil,
 					this);
-			shareBoard.closeRefresh();
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(this.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
@@ -567,14 +584,14 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 					convertView = LayoutInflater.from(mContext).inflate(
 							R.layout.new_colums_info_item, null);
 					newsItemHolder = new NewsItemHolder();
-					newsItemHolder.rootView = (LinearLayout) convertView
-							.findViewById(R.id.home_news_root_view);
+					newsItemHolder.rootView = convertView
+							.findViewById(R.id.conlums_item_root_view);
 					newsItemHolder.titlepic = (ImageView) convertView
-							.findViewById(R.id.home_news_titlepic);
+							.findViewById(R.id.conlums_item_titlepic);
 					newsItemHolder.title = (TextView) convertView
-							.findViewById(R.id.home_news_title);
+							.findViewById(R.id.conlums_item_title);
 					newsItemHolder.newstime = (TextView) convertView
-							.findViewById(R.id.home_news_newstime);
+							.findViewById(R.id.conlums_item_newstime);
 					convertView.setTag(newsItemHolder);
 				} else if (itemViewType == 2) {
 					convertView = LayoutInflater.from(mContext).inflate(
@@ -595,6 +612,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 				}
 			}
 			if (itemViewType == 0) {
+				setInfoDetailHolderFontSize();
 				columsInfoDetailHolder.detailTitle.setText(new_colums_infos
 						.get(curPlayNo).getTitle());
 				columsInfoDetailHolder.detailTime.setText(TimeUtil.unix2date(
@@ -656,59 +674,29 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 				}
 
 			} else if (itemViewType == 1) {
+				setItemTitleFontSize();
 				final New_Colums_Info mcolums_info = new_colums_infos
 						.get(position - 1);
 				mcolums_info.setTitlepic(CommonUtils.doWebpUrl(mcolums_info
 						.getTitlepic()));
 				final int news_type = Integer.valueOf(mcolums_info.getType());
 
-				// imageLoader.displayImage(mcolums_info.getTitlepic(),
-				// newsItemHolder.titlepic,
-				// Options.getSmallImageOptions(false));
 				newsItemHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
 				ImgUtils.imageLoader.displayImage(mcolums_info.getTitlepic(),
 						newsItemHolder.titlepic, ImgUtils.homeImageOptions);
-				// CommonUtils.zoomImage(imageLoader,
-				// mcolums_info.getTitlepic(),
-				// newsItemHolder.titlepic, mContext, imageCache);
 
 				newsItemHolder.title.setText(mcolums_info.getTitle());
 				newsItemHolder.newstime.setText(TimeUtil.unix2date(
 						Long.valueOf(mcolums_info.getNewstime()),
 						"yyyy-MM-dd HH:mm"));
 				if (curPlayNo == position - 1) {
-					newsItemHolder.rootView.setBackgroundColor(Color.LTGRAY);
+					newsItemHolder.rootView.setBackgroundColor(getResources()
+							.getColor(R.color.thin_gray));
 				} else {
 					newsItemHolder.rootView.setBackgroundColor(getResources()
-							.getColor(R.color.light_gray));
+							.getColor(R.color.white));
 				}
-				// convertView.setOnClickListener(new OnClickListener() {
-				// @Override
-				// public void onClick(View arg0) {
-				// if (news_type % 10 == 1) {
-				// startAnimActivityByParameter(
-				// New_Activity_Content_Video.class,
-				// mcolums_info.getId(),
-				// mcolums_info.getType(),
-				// mcolums_info.getTitleurl(),
-				// mcolums_info.getNewstime(),
-				// mcolums_info.getTitle(),
-				// mcolums_info.getTitlepic(),
-				// mcolums_info.getSharedPic());
-				// } else if (news_type % 10 == 2) {
-				// startAnimActivityByParameter(
-				// New_Activity_Content_Web.class,
-				// mcolums_info.getId(),
-				// mcolums_info.getType(),
-				// mcolums_info.getTitleurl(),
-				// mcolums_info.getNewstime(),
-				// mcolums_info.getTitle(),
-				// mcolums_info.getTitlepic(),
-				// mcolums_info.getSharedPic());
-				// }
-				// }
-				// });
 			} else if (itemViewType == 2) {
 				int padding_in_dp = 10; // 6 dps
 				final float scale = getResources().getDisplayMetrics().density;
@@ -724,7 +712,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		ImageView titlepic;
 		TextView title;
 		TextView newstime;
-		LinearLayout rootView;
+		View rootView;
 	}
 
 	// 没有更多数据
@@ -758,10 +746,29 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		}
 	}
 
-	private void videoPlay() {
-		// isCom = false;
-		// video_view.release(true);
+	public void setInfoDetailHolderFontSize() {
+		// TODO Auto-generated method stub
+		FontUtils
+				.setTextViewFontSize(this, columsInfoDetailHolder.detailTitle,
+						R.string.colums_info_title_text_size,
+						spUtil.getFontSizeRadix());
+		FontUtils.setTextViewFontSize(this,
+				columsInfoDetailHolder.detailContentOmit,
+				R.string.colums_info_detail_text_size,
+				spUtil.getFontSizeRadix());
+		FontUtils.setTextViewFontSize(this,
+				columsInfoDetailHolder.detailContent,
+				R.string.colums_info_detail_text_size,
+				spUtil.getFontSizeRadix());
+	}
 
+	public void setItemTitleFontSize() {
+		// TODO Auto-generated method stub
+		FontUtils.setTextViewFontSize(this, newsItemHolder.title,
+				R.string.home_news_title_text_size, spUtil.getFontSizeRadix());
+	}
+
+	private void videoPlay() {
 		columsVideoImage.setVisibility(View.VISIBLE);
 		video_pb.setVisibility(View.VISIBLE);
 
@@ -842,7 +849,6 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 	@Override
 	public void finish() {
-
 		if (columsVideoView != null) {
 			columsVideoView.stopPlayback();
 			columsVideoView = null;
@@ -894,53 +900,15 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		switch (what) {
 
 		case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
-			Log.e("MEDIA_INFO_BUFFERING_START", "MEDIA_INFO_BUFFERING_START");
 			columsVideoView.pause();
-			// isload = true;
-			// if (!noShowPB) {
 			video_pb.setVisibility(View.VISIBLE);
-			// small_video_pb.setVisibility(View.VISIBLE);
 			columsVideoController.setEnabled(false);
-			// noShowPB = false;
-			// }
 			break;
 		case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
-			Log.e("MEDIA_INFO_BUFFERING_END", "MEDIA_INFO_BUFFERING_END");
-			// if (!this.isPause) {
-			// if (content_video.getVisibility() == View.VISIBLE) {
-			// content_video.setVisibility(View.GONE);
-			// }
-			// isload = false;
-			// if (spUtil.getFirstFull() && isFullScrenn) {
-			// isPlayer = false;
-			// player_guide.setVisibility(View.VISIBLE);
-			// noShowPB = true;
-			// } else {
 			if (!this.isPause)
 				columsVideoView.start();
-			// }
-			// video_controller.setEnabled(true);
-			// goneContentVideoTempImage();
-
 			columsVideoController.setEnabled(true);
 			video_pb.setVisibility(View.GONE);
-			// small_video_pb.setVisibility(View.GONE);
-
-			// } else {
-			// if (content_video.getVisibility() == View.VISIBLE) {
-			// content_video.setVisibility(View.GONE);
-			// }
-			// isload = false;
-			// if (spUtil.getFirstFull() && isFullScrenn) {
-			// isPlayer = false;
-			// player_guide.setVisibility(View.VISIBLE);
-			// noShowPB = true;
-			// }
-			// video_controller.setEnabled(true);
-			// goneContentVideoTempImage();
-			// video_pb.setVisibility(View.GONE);
-			// // small_video_pb.setVisibility(View.GONE);
-			// }
 			break;
 		}
 		return true;
@@ -1080,7 +1048,33 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 				endGesture();
 				break;
 			}
+		} else if (ev.getRawY() > (this.mScreenWidth / 16 * 9 + 100)) {
+			boolean flag = mSildingFinishLayout.onTouch(ev);
+			if (flag)
+				return flag;
 		}
 		return super.dispatchTouchEvent(ev);
+	}
+
+	@Override
+	public void chage2Day() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.GONE);
+		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
+	}
+
+	@Override
+	public void chage2Night() {
+		// TODO Auto-generated method stub
+		nightView.setVisibility(View.VISIBLE);
+		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
+	}
+
+	@Override
+	public void copy2Clip() {
+		// TODO Auto-generated method stub
+		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		clip.setText(new_colums_infos.get(curPlayNo).getTitleurl());
+		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
 	}
 }

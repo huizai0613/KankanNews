@@ -49,6 +49,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_News_Click;
@@ -67,6 +68,7 @@ import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.board.CustomShareBoard;
 import com.kankan.kankanews.ui.view.board.FontColumsBoard;
+import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
@@ -206,7 +208,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		// 初始化shareutil类
 		shareUtil = new ShareUtil(new_news, mContext);
 
-		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, "",
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, R.drawable.ic_close_white,
 				R.drawable.ic_font, R.drawable.ic_refresh);
 
 		setOnLeftClickLinester(this);
@@ -644,6 +646,9 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 							@Override
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
+								if (ClickUtils.isFastDoubleClick()) {
+									return;
+								}
 								if (news_type % 10 == 1) {
 
 									MyTextView textView = (MyTextView) v
@@ -734,6 +739,9 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 						convertView.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View arg0) {
+								if (ClickUtils.isFastDoubleClick()) {
+									return;
+								}
 								MyTextView textView = (MyTextView) arg0
 										.findViewById(R.id.home_albums_title);
 								NewsBrowseUtils.hasBrowedNews(item.getId());
@@ -1035,14 +1043,14 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	public void chage2Day() {
 		// TODO Auto-generated method stub
 		nightView.setVisibility(View.GONE);
-		this.mApplication.mainActivity.chage2Day();
+		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
 	}
 
 	@Override
 	public void chage2Night() {
 		// TODO Auto-generated method stub
 		nightView.setVisibility(View.VISIBLE);
-		this.mApplication.mainActivity.chage2Night();
+		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
 	}
 
 	@Override

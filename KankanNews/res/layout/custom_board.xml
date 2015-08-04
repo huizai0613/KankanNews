@@ -216,7 +216,8 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/re"
+                    android:background="@drawable/ic_share_copy"
+                    android:padding="20dip"
                     android:clickable="false" />
 
                 <TextView
@@ -227,7 +228,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dip"
                     android:clickable="false"
-                    android:text="刷新"
+                    android:text="复制链接"
                     android:textSize="12dip" />
             </LinearLayout>
         </RelativeLayout>
