@@ -511,7 +511,7 @@ public class NetUtils {
 				// httpRequest.setHeader("MOBILE_DEVICE_INFO",
 				// android.os.Build.MODEL);
 				String operatorName = telephonyManager.getNetworkOperatorName()
-						.trim().endsWith("") ? "null" : telephonyManager
+						.trim().equals("") ? "null" : telephonyManager
 						.getNetworkOperatorName();
 				httpRequest.setHeader(
 						"User-Agent",
@@ -527,7 +527,8 @@ public class NetUtils {
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				Log.e("ItnetUtils.addNewNewsAnalyse", e.getLocalizedMessage() + "");
+				Log.e("ItnetUtils.addNewNewsAnalyse", e.getLocalizedMessage()
+						+ "");
 			}
 		}
 	}

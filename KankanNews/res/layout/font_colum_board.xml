@@ -1,90 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white_gray"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content" >
+
+    <View
+        android:id="@+id/font_back_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night_mask" />
+
+    <TextView
+        android:id="@+id/font_colums_cancel_but"
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@android:color/black"
+        android:textSize="24dip" />
 
     <LinearLayout
+        android:id="@+id/font_colums_night_root_view"
         android:layout_width="match_parent"
         android:layout_height="80dip"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="文字大小"
-            android:textSize="20dip" />
-
-        <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_margin="18dip"
-            android:layout_weight="2"
-            android:background="@drawable/font_size_set_layout_border" >
-
-            <TextView
-                android:id="@+id/font_small_size"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="1dip"
-                android:text="小"
-                android:textSize="20dip" />
-
-            <View
-                android:layout_width="0.5dip"
-                android:layout_height="match_parent"
-                android:background="@color/red" />
-
-            <TextView
-                android:id="@+id/font_normal_size"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="1dip"
-                android:text="中"
-                android:textSize="20dip" />
-
-            <View
-                android:layout_width="0.5dip"
-                android:layout_height="match_parent"
-                android:background="@color/red" />
-
-            <TextView
-                android:id="@+id/font_big_size"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="1dip"
-                android:text="大"
-                android:textSize="20dip" />
-
-            <View
-                android:layout_width="0.5dip"
-                android:layout_height="match_parent"
-                android:background="@color/red" />
-
-            <TextView
-                android:id="@+id/font_most_size"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:padding="1dip"
-                android:text="特大"
-                android:textSize="20dip" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dip"
+        android:layout_above="@+id/font_colums_cancel_but"
+        android:background="@color/white_gray"
         android:orientation="horizontal" >
 
         <TextView
@@ -106,19 +47,78 @@
                 android:layout_width="133dip"
                 android:layout_height="40dip"
                 android:layout_marginRight="15dip"
-                android:src="@drawable/change_night" 
-                android:scaleType="fitEnd"/>
+                android:scaleType="fitEnd"
+                android:src="@drawable/change_night" />
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/font_colums_cancel_but"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="60dip"
-        android:background="@color/white"
-        android:gravity="center"
-        android:text="取消"
-        android:textColor="@android:color/black"
-        android:textSize="24dip" />
+        android:layout_height="80dip"
+        android:layout_above="@+id/font_colums_night_root_view"
+        android:background="@color/white_gray"
+        android:orientation="horizontal" >
 
-</LinearLayout>
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="文字大小"
+            android:textSize="20dip" />
+
+        <LinearLayout
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_margin="20dip"
+            android:layout_weight="2" >
+
+            <!-- android:background="@drawable/font_size_set_layout_border" -->
+
+            <TextView
+                android:id="@+id/font_small_size"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="小"
+                android:textSize="18dip" /> 
+
+            <TextView
+                android:id="@+id/font_normal_size"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dip"
+                android:text="中"
+                android:textSize="18dip" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="@color/red" />
+
+            <TextView
+                android:id="@+id/font_big_size"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dip"
+                android:text="大"
+                android:textSize="18dip" />
+
+            <TextView
+                android:id="@+id/font_most_size"
+                android:layout_width="0dip"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="1dip"
+                android:text="特大"
+                android:textSize="18dip" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

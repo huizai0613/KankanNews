@@ -59,11 +59,16 @@
                     <com.kankan.kankanews.ui.view.MarqueeTextView
                         style="@style/set_layout_left_text"
                         android:text="允许2G/3G/4G网络播放/缓存" />
-
+                    <!--
                     <ImageView
                         android:id="@+id/layout_download"
                         style="@style/set_layout_right_image"
-                        android:src="@drawable/icon_set_on" />
+                        android:src="@drawable/icon_set_on" />
+                    -->
+
+                    <com.zcw.togglebutton.ToggleButton
+                        android:id="@+id/layout_download"
+                        style="@style/set_layout_right_image" />
                 </LinearLayout>
 
                 <View style="@style/new_set_item_Line" />

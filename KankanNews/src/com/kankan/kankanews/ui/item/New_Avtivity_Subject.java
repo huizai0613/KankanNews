@@ -128,18 +128,20 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	private LinearLayout main_bg;
 	boolean LoaclData = false;
 
-	private SildingFinishLayout mSildingFinishLayout;
+	// private SildingFinishLayout mSildingFinishLayout;
 
 	private View nightView;
 
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
-		boolean flag = mSildingFinishLayout.onTouch(ev);
-		if (flag)
-			return flag;
-		return super.dispatchTouchEvent(ev);
-	}
+	// @Override
+	// public boolean dispatchTouchEvent(MotionEvent ev) {
+	// // TODO Auto-generated method stub
+	// if (this.mApplication.getMainActivity() != null) {
+	// boolean flag = mSildingFinishLayout.onTouch(ev);
+	// if (flag)
+	// return flag;
+	// }
+	// return super.dispatchTouchEvent(ev);
+	// }
 
 	@Override
 	public void initNightView(boolean isFullScreen) {
@@ -151,15 +153,17 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.subject);
-		mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
-		mSildingFinishLayout
-				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
-
-					@Override
-					public void onSildingFinish() {
-						finish();
-					}
-				});
+		// mSildingFinishLayout = (SildingFinishLayout)
+		// findViewById(R.id.sildingFinishLayout);
+		// mSildingFinishLayout
+		// .setOnSildingFinishListener(new
+		// SildingFinishLayout.OnSildingFinishListener() {
+		//
+		// @Override
+		// public void onSildingFinish() {
+		// finish();
+		// }
+		// });
 		// mSildingFinishLayout.setTouchView(mSildingFinishLayout);
 		// mSildingFinishLayout.setTouchView(stickyList);
 	}
@@ -208,8 +212,9 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		// 初始化shareutil类
 		shareUtil = new ShareUtil(new_news, mContext);
 
-		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, R.drawable.ic_close_white,
-				R.drawable.ic_font, R.drawable.ic_refresh);
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
+				R.drawable.ic_close_white, R.drawable.ic_font,
+				R.drawable.ic_refresh);
 
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
@@ -1030,13 +1035,13 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
-		super.finish();
-		if (this.mApplication.mBaseActivityList.size() == 0) {
+		if (this.mApplication.getMainActivity() == null) {
 			Intent intent = getIntent();
 			intent.setClass(this, MainActivity.class);
 			this.startActivity(intent);
 			overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 		}
+		super.finish();
 	}
 
 	@Override
@@ -1066,7 +1071,7 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 		// TODO Auto-generated method stub
 		FontUtils.setTextViewFontSize(this, titleText,
 				R.string.news_content_text_size, spUtil.getFontSizeRadix());
-		FontUtils.setChangeFontSize(true);
+		FontUtils.chagneFontSizeGlobal();
 
 		int first = stickyList.getFirstVisiblePosition();
 		stickyList.setAdapter(mAdapter);
@@ -1077,7 +1082,13 @@ public class New_Avtivity_Subject extends BaseVideoActivity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		if (FontUtils.hasChangeFontSize())
+		if (FontUtils.isSubjectFontSizeHasChanged()) {
 			changeFontSize();
+			FontUtils.setSubjectFontSizeHasChanged(false);
+		}
+		if (!spUtil.getIsDayMode())
+			chage2Night();
+		else
+			chage2Day();
 	}
 }

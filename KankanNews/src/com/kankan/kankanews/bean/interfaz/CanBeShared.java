@@ -9,4 +9,6 @@ public interface CanBeShared {
 	void chage2Day();
 
 	void chage2Night();
+	
+	void copy2Clip();
 }

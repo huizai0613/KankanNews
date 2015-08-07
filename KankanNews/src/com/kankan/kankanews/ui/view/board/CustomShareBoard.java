@@ -48,6 +48,7 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 		rootView.findViewById(R.id.sina_box).setOnClickListener(this);
 		rootView.findViewById(R.id.email_box).setOnClickListener(this);
 		rootView.findViewById(R.id.colums_cancel_but).setOnClickListener(this);
+		rootView.findViewById(R.id.colums_back_view).setOnClickListener(this);
 		copyBox = rootView.findViewById(R.id.copy_box);
 		copyBox.setOnClickListener(this);
 		setContentView(rootView);
@@ -79,8 +80,9 @@ public class CustomShareBoard extends PopupWindow implements OnClickListener {
 			// shareObj.sendSingleMessage();
 			break;
 		case R.id.copy_box:
-			mActivity.copy2Clip();
+			shareObj.copy2Clip();
 			break;
+		case R.id.colums_back_view:
 		default:
 			mActivity.shareReBack();
 			break;

@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.kankan.kankanews.base.view.SildingFinishLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/sildingFinishLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center" >
+    android:layout_height="match_parent">
 
     <include layout="@layout/base_title_bar" />
 
@@ -151,7 +149,8 @@
                         <RelativeLayout
                             android:id="@+id/smallrootview"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" >
+                            android:layout_height="wrap_content"
+                            android:background="@color/black" >
 
                             <tv.danmaku.ijk.media.widget.VideoView
                                 android:id="@+id/video_view"
@@ -178,7 +177,7 @@
                                 android:layout_alignParentTop="true"
                                 android:clickable="true"
                                 android:scaleType="centerCrop"
-                                android:src="@drawable/default_news_display" />
+                                android:src="@drawable/live_video_image" />
 
                             <ImageView
                                 android:id="@+id/video_player"
@@ -213,7 +212,7 @@
                             android:id="@+id/content_intro"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:lineSpacingExtra="4dp"
+                            android:lineSpacingExtra="6dp"
                             android:paddingTop="10dp"
                             android:textSize="16dp"
                             android:textStyle="italic" />
@@ -322,7 +321,7 @@
         android:id="@+id/rootview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000"
+        android:background="@color/black"
         android:clickable="true"
         android:visibility="gone" >
 
@@ -412,4 +411,4 @@
         android:background="@color/night_mask"
         android:visibility="gone" />
 
-</com.kankan.kankanews.base.view.SildingFinishLayout>
+</RelativeLayout>

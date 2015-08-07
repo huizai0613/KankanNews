@@ -119,7 +119,7 @@ public class New_Activity_MyFoot extends BaseActivity implements
 
 	private void delete() {
 		final InfoMsgHint dialog = new InfoMsgHint(mContext, R.style.MyDialog1);
-		dialog.setContent("清空浏览记录", "亲，想掩盖些什么呢？", "清空", "取消");
+		dialog.setContent("清空浏览记录", "亲，确定想清空记录吗？", "清空", "取消");
 		dialog.setCancleListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

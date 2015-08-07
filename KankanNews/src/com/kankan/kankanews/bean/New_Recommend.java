@@ -18,6 +18,7 @@ public class New_Recommend extends BaseBean<New_Recommend> {
 	private String spclassid;
 	private String ztid;
 	private String mid;
+	private String newsClicks;
 
 	@Override
 	public JSONObject toJSON() {
@@ -41,6 +42,7 @@ public class New_Recommend extends BaseBean<New_Recommend> {
 			spclassid = jsonObj.optString("spclassid");
 			ztid = jsonObj.optString("ztid");
 			mid = jsonObj.optString("mid");
+			newsClicks = jsonObj.optString("clicknum");
 
 			return this;
 		} else {
@@ -134,6 +136,14 @@ public class New_Recommend extends BaseBean<New_Recommend> {
 
 	public void setSharedPic(String sharedPic) {
 		this.sharedPic = sharedPic;
+	}
+
+	public String getNewsClicks() {
+		return newsClicks;
+	}
+
+	public void setNewsClicks(String newsClicks) {
+		this.newsClicks = newsClicks;
 	}
 	
 }

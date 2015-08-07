@@ -17,8 +17,7 @@
         android:layout_below="@id/viewpager"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/news_bask_space"
-        android:paddingRight="@dimen/news_bask_space" >
+        android:paddingLeft="@dimen/news_bask_space" >
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/new_title"
@@ -37,7 +36,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:layout_weight="1.5"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal" >
         </LinearLayout>

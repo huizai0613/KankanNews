@@ -12,6 +12,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/base_action_bar_height"
         android:scrollbars="none" >
 
         <LinearLayout

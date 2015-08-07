@@ -55,7 +55,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 		CanBeShared {
 
 	public DbUtils dbUtils;
-	protected Loading_Dialog loading_dialog;
+//	protected Loading_Dialog loading_dialog;
 	public CrashApplication mApplication;
 	public SharePreferenceUtil spUtil;
 	public int mScreenWidth;
@@ -75,7 +75,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 	protected MyTextView titleBarRightText;
 	protected ImageView titleBarRightImg;
 	protected ImageView titleBarRightImgSecond;
-	// private GestureDetector gestureDetector;
+	 private GestureDetector gestureDetector;
 	protected boolean isRightFinsh = true;
 	protected HashMap<String, SoftReference<Bitmap>> imageCache;
 
@@ -88,17 +88,17 @@ public abstract class BaseActivity extends FragmentActivity implements
 		this.isRightFinsh = isRightFinsh;
 	}
 
-	// @Override
-	// public boolean dispatchTouchEvent(MotionEvent ev) {
-	//
-	// try {
-	// gestureDetector.onTouchEvent(ev);
-	// return super.dispatchTouchEvent(ev);
-	// } catch (IllegalArgumentException e) {
-	// return true;
-	// }
-	//
-	// }
+	 @Override
+	 public boolean dispatchTouchEvent(MotionEvent ev) {
+	
+	 try {
+	 gestureDetector.onTouchEvent(ev);
+	 return super.dispatchTouchEvent(ev);
+	 } catch (IllegalArgumentException e) {
+	 return true;
+	 }
+	
+	 }
 
 	@Override
 	protected void onDestroy() {
@@ -129,61 +129,61 @@ public abstract class BaseActivity extends FragmentActivity implements
 		mContext = this;
 		mApplication.addActivity(this);
 		netUtils = NetUtils.getInstance(this);
-		loading_dialog = new Loading_Dialog(mContext, R.style.MyDialogStyle);
+//		loading_dialog = new Loading_Dialog(mContext, R.style.MyDialogStyle);
 
 		dbUtils = mApplication.getDbUtils();
 
-		// gestureDetector = new GestureDetector(this,
-		// new GestureDetector.OnGestureListener() {
-		//
-		// @Override
-		// public boolean onSingleTapUp(MotionEvent e) {
-		// // TODO Auto-generated method stub
-		// return false;
-		// }
-		//
-		// @Override
-		// public void onShowPress(MotionEvent e) {
-		// // TODO Auto-generated method stub
-		//
-		// }
-		//
-		// @Override
-		// public boolean onScroll(MotionEvent e1, MotionEvent e2,
-		// float distanceX, float distanceY) {
-		//
-		// return false;
-		// }
-		//
-		// @Override
-		// public void onLongPress(MotionEvent e) {
-		// // TODO Auto-generated method stub
-		//
-		// }
-		//
-		// // 右滑手势
-		// @Override
-		// public boolean onFling(MotionEvent e1, MotionEvent e2,
-		// float velocityX, float velocityY) {
-		// if (isRightFinsh) {
-		// // 右滑动
-		// if (e2.getX() - e1.getX() > 200
-		// && Math.abs(e2.getY() - e1.getY()) < Math
-		// .abs(e2.getX() - e1.getX())) {
-		// onBackPressed();
-		// isFinsh = true;
-		// return true;
-		// }
-		// }
-		// return false;
-		// }
-		//
-		// @Override
-		// public boolean onDown(MotionEvent e) {
-		// // TODO Auto-generated method stub
-		// return false;
-		// }
-		// });
+		gestureDetector = new GestureDetector(this,
+				new GestureDetector.OnGestureListener() {
+
+					@Override
+					public boolean onSingleTapUp(MotionEvent e) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+
+					@Override
+					public void onShowPress(MotionEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public boolean onScroll(MotionEvent e1, MotionEvent e2,
+							float distanceX, float distanceY) {
+
+						return false;
+					}
+
+					@Override
+					public void onLongPress(MotionEvent e) {
+						// TODO Auto-generated method stub
+
+					}
+
+					// 右滑手势
+					@Override
+					public boolean onFling(MotionEvent e1, MotionEvent e2,
+							float velocityX, float velocityY) {
+						if (isRightFinsh) {
+							// 右滑动
+							if (e2.getX() - e1.getX() > 200
+									&& Math.abs(e2.getY() - e1.getY()) < Math
+											.abs(e2.getX() - e1.getX())) {
+								onBackPressed();
+								isFinsh = true;
+								return true;
+							}
+						}
+						return false;
+					}
+
+					@Override
+					public boolean onDown(MotionEvent e) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+				});
 
 	}
 
@@ -635,8 +635,13 @@ public abstract class BaseActivity extends FragmentActivity implements
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
-		super.finish();
 		this.mApplication.removeActivity(this);
+		super.finish();
+	}
+
+	public void finishNoRemove() {
+		// TODO Auto-generated method stub
+		super.finish();
 	}
 
 	public void initNightView(boolean isFullScreen) {

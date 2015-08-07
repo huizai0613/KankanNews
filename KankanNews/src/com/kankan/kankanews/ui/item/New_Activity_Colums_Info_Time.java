@@ -35,16 +35,18 @@ public class New_Activity_Colums_Info_Time extends BaseActivity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_colums_info_time);
-		mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
-		mSildingFinishLayout
-				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
-
-					@Override
-					public void onSildingFinish() {
-						finish();
-					}
-				});
-		mSildingFinishLayout.setTouchView(mSildingFinishLayout);
+		// mSildingFinishLayout = (SildingFinishLayout)
+		// findViewById(R.id.sildingFinishLayout);
+		// mSildingFinishLayout
+		// .setOnSildingFinishListener(new
+		// SildingFinishLayout.OnSildingFinishListener() {
+		//
+		// @Override
+		// public void onSildingFinish() {
+		// finish();
+		// }
+		// });
+		// mSildingFinishLayout.setTouchView(mSildingFinishLayout);
 	}
 
 	@Override
@@ -127,11 +129,11 @@ public class New_Activity_Colums_Info_Time extends BaseActivity implements
 		// .getSelectedDate().getTime()/1000, "yyyy-MM-dd"));
 	}
 
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		boolean flag = mSildingFinishLayout.onTouch(ev);
-		if (flag)
-			return flag;
-		return super.dispatchTouchEvent(ev);
-	}
+	// @Override
+	// public boolean dispatchTouchEvent(MotionEvent ev) {
+	// boolean flag = mSildingFinishLayout.onTouch(ev);
+	// if (flag)
+	// return flag;
+	// return super.dispatchTouchEvent(ev);
+	// }
 }

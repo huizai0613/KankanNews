@@ -93,10 +93,6 @@ public class MainActivity extends BaseVideoActivity {
 	protected void onRestart() {
 		// TODO Auto-generated method stub
 		super.onRestart();
-		if (spUtil.getIsDayMode())
-			chage2Day();
-		else
-			chage2Night();
 	}
 
 	@Override
@@ -215,8 +211,8 @@ public class MainActivity extends BaseVideoActivity {
 		tab_three = (RelativeLayout) findViewById(R.id.tab_three);
 		tab_four = (RelativeLayout) findViewById(R.id.tab_four);
 		tab_five = (RelativeLayout) findViewById(R.id.tab_five);
-		
-		nightView =  findViewById(R.id.night_view);
+
+		nightView = findViewById(R.id.night_view);
 
 		// 初始化fragments
 		New_HomeFragment mainFragment = new New_HomeFragment();
@@ -516,6 +512,8 @@ public class MainActivity extends BaseVideoActivity {
 		super.shareReBack();
 		New_LivePlayFragment fragment = (New_LivePlayFragment) fragments.get(1);
 		fragment.isFirst = false;
+		if (this.curTab == 1)
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 	}
 
 	public void closeClick() {
@@ -535,4 +533,11 @@ public class MainActivity extends BaseVideoActivity {
 		tab_four.setClickable(true);
 		tab_five.setClickable(true);
 	}
+
+	@Override
+	public void finish() {
+		// TODO Auto-generated method stub
+		super.finishNoRemove();
+	}
+
 }

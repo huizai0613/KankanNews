@@ -58,7 +58,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 	private View inflate;
 
 	private LinearLayout layout_my_foot;
-	private ImageView layout_download;
+	private ToggleButton layout_download;
 	private LinearLayout layout_about;
 	private LinearLayout layout_point;
 	private LinearLayout layout_fankui;
@@ -98,7 +98,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		layout_my_foot = (LinearLayout) inflate
 				.findViewById(R.id.layout_my_foot);
 
-		layout_download = (ImageView) inflate
+		layout_download = (ToggleButton) inflate
 				.findViewById(R.id.layout_download);
 		layout_about = (LinearLayout) inflate.findViewById(R.id.layout_about);
 		font_size_set = (LinearLayout) inflate.findViewById(R.id.font_size_set);
@@ -115,8 +115,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 
 	private void initLister() {
 		layout_my_foot.setOnClickListener(this);
-		layout_about.setOnClickListener(this);
-		layout_download.setOnClickListener(this);
+		layout_about.setOnClickListener(this); 
 		layout_updata.setOnClickListener(this);
 		layout_fankui.setOnClickListener(this);
 		font_size_set.setOnClickListener(this);
@@ -133,6 +132,14 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 				} else {
 					New_MyFragment.this.mActivity.chage2Day();
 				}
+			}
+		});
+		layout_download.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+
+			@Override
+			public void onToggle(boolean on) {
+				// TODO Auto-generated method stub
+				mActivity.spUtil.setFlow(on);
 			}
 		});
 
@@ -178,28 +185,21 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		layout_detele_now.setText("当前缓存" + Float.toString(filele_rusult) + "M");
 	}
 
-	private void initData() {
-
-		init_flow();
+	private void initData() { 
 
 		if (spUtil.getIsDayMode()) {
 			isDayMode.setToggleOff();
 		} else {
 			isDayMode.setToggleOn();
 		}
-
+		if (mActivity.spUtil.isFlow()) {
+			layout_download.setToggleOn();
+		} else {
+			layout_download.setToggleOff();
+		}
 		layout_version.setText("当前版本  " + CommonUtils.getVersion(mActivity));
 
-	}
-
-	// 初始化按钮 flow流量
-	private void init_flow() {
-		if (mActivity.spUtil.isFlow() == true) {
-			layout_download.setImageResource(R.drawable.icon_set_on);
-		} else {
-			layout_download.setImageResource(R.drawable.icon_set_off);
-		}
-	}
+	} 
 
 	@Override
 	protected boolean initLocalDate() {
@@ -272,16 +272,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 
 		case R.id.layout_delete:
 			delete();
-			break;
-
-		case R.id.layout_download:
-			if (mActivity.spUtil.isFlow() == true) {
-				mActivity.spUtil.setFlow(false);
-			} else {
-				mActivity.spUtil.setFlow(true);
-			}
-			init_flow();
-			break;
+			break; 
 
 		case R.id.layout_fankui:
 			Intent intent = new Intent();
@@ -438,7 +429,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 					"您已经选择了： " + FontUtils.fontSizeShow[index],
 					Toast.LENGTH_LONG).show();
 			spUtil.saveFontSizeRadix(FontUtils.fontSize[index]);
-			FontUtils.setChangeFontSize(true);
+			FontUtils.chagneFontSizeGlobal();
 			dialog.dismiss();
 		}
 	}

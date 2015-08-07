@@ -12,7 +12,7 @@ public class DebugLog {
 
 	public static int e(String msg) {
 		if (DEBUG) {
-			return Log.e(tag, msg);
+			return Log.e(tag, msg == null ? "NULL" : msg);
 		}
 		return 0;
 	}

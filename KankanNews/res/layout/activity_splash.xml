@@ -48,10 +48,4 @@
         android:scaleType="fitXY"
         android:src="@drawable/logtxt" />
 
-    <ImageView
-        android:id="@+id/red_flower"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/red_flower_img" />
-
 </RelativeLayout>

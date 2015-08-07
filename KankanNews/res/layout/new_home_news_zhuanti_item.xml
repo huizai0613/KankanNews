@@ -19,17 +19,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:lineSpacingExtra="4.5dp"
             android:textSize="32sp"
-            android:textStyle="bold"
-            android:paddingRight="32dp" />
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/home_news_newstype"
             android:layout_width="25dp"
             android:layout_height="15dip"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:scaleType="fitXY"
+            android:src="@drawable/new_icon_sign_subject"
+            android:visibility="gone" />
+
+        <!--
+            android:paddingRight="32dp"
+        <ImageView
+            android:id="@+id/home_news_newstype"
+            android:layout_width="25dp"
+            android:layout_height="15dip"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:scaleType="fitXY"
             android:src="@drawable/new_icon_sign_subject" />
+        -->
     </RelativeLayout>
 
     <ImageView

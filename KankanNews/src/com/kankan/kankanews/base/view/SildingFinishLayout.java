@@ -2,13 +2,10 @@ package com.kankan.kankanews.base.view;
 
 import java.util.Date;
 
-import com.kankan.kankanews.utils.DebugLog;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -195,7 +192,6 @@ public class SildingFinishLayout extends RelativeLayout {
 				downTime = new Date().getTime();
 				downX = tempX = (int) event.getRawX();
 				downY = (int) event.getRawY();
-				DebugLog.e("X:" + downX + " " + "Y:" + downY);
 				v.onTouchEvent(event);
 				break;
 			case MotionEvent.ACTION_MOVE:
@@ -228,12 +224,10 @@ public class SildingFinishLayout extends RelativeLayout {
 						return true;
 					}
 				} else {
-					DebugLog.e("滑了");
 					return v.onTouchEvent(event);
 				}
 				break;
 			case MotionEvent.ACTION_UP:
-				DebugLog.e("抬起来了");
 				upX = (int) event.getRawX();
 				upY = (int) event.getRawY();
 				if (upX <= downX) {
@@ -272,7 +266,6 @@ public class SildingFinishLayout extends RelativeLayout {
 			downTime = new Date().getTime();
 			downX = tempX = (int) ev.getRawX();
 			downY = (int) ev.getRawY();
-			DebugLog.e("X:" + downX + " " + "Y:" + downY);
 			return false;
 		case MotionEvent.ACTION_MOVE:
 			if (effectiveX > 0 && downX > effectiveX)

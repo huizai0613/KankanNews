@@ -81,6 +81,7 @@ import com.kankan.kankanews.ui.view.board.CustomShareBoard;
 import com.kankan.kankanews.ui.view.board.FontColumsBoard;
 import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
@@ -206,6 +207,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 	private boolean isGoShare = false;
 
+	private FontColumsBoard fontBoard;
+
 	public HttpHandler getDownloadVideo() {
 		return downloadVideo;
 	}
@@ -225,158 +228,17 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
+		if (isPause)
+			return;
 		int width = wm.getDefaultDisplay().getWidth();
 		int height = wm.getDefaultDisplay().getHeight();
-		WindowManager.LayoutParams attrs = getWindow().getAttributes();
 		if (width > height) {
-			if (shareBoard != null && shareBoard.isShowing()) {
-				shareBoard.dismiss();
-				isGoShare = false;
-			}
 			// video_view.setFull(true);
-			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
-			CommonUtils.clickevent(mContext, "action", "放大",
-					AndroidConfig.video_fullscreen_event);
-
-			full_screen_guide.setVisibility(View.GONE);
-			spUtil.setFirstContent(false);
-			if (isload || spUtil.getFirstFull()) {
-				isPlayer = false;
-			} else {
-				isPlayer = true;
-			}
-
-			// TODO
-			if (video_view.getVideoURI() == null) {
-				goneContentVideoTempImage();
-				isload = true;
-				playState();
-				isCom = true;
-				if (!spUtil.getFirstFull()) {
-					play();
-				}
-			}
-
-			if (spUtil.getFirstFull()) {
-				isPlayer = false;
-				player_guide.setVisibility(View.VISIBLE);
-				noShowPB = true;
-				spUtil.setFirstFull(false);
-			}
-			// if (video_view.isPlaying()) {
-			// video_view.pause();
-			// }
-			if (smallWidth == 0) {
-				smallWidth = video_view.getWidth();
-				smallHeight = video_view.getHeight();
-			}
-
-			isFullScrenn = true;
-			setRightFinsh(false);
-			content_video.setVisibility(View.GONE);
-			video_controller
-					.setmControllerType(ControllerType.FullScrennController);
-			attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
-			getWindow().setAttributes(attrs);
-			getWindow().addFlags(
-					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-
-			smallrootview.removeView(video_view);
-			smallrootview.removeView(video_controller);
-
-			rootview.setVisibility(View.VISIBLE);
-			scollView.setVisibility(View.GONE);
-			// bottom_bar.setVisibility(View.GONE);
-			// TODO
-			// video_view.setOrentation(true);
-			rootview.addView(video_view, 0);
-			rootview.addView(video_controller, 1,
-					new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
-							LayoutParams.MATCH_PARENT));
-			video_controller.changeView();
-			if (isPlayer) {
-				Log.e("isPlayer", "isPlayer");
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						isPlayer = false;
-						if (video_view != null) {
-							if (isCom) {
-								Log.e("isCom", isCom + "");
-								playState();
-								// play();
-								isCom = false;
-							}
-							// if(needSeekTo != 0)
-							// video_view.seekTo(needSeekTo);
-							if (!isGoShare && !spUtil.getFirstFull())
-								video_view.start();
-						}
-						video_controller.getContent_video_temp_image()
-								.setVisibility(View.GONE);
-					}
-				}, 100);
-
-			}
-
+			this.horizontalScreen();
 		} else {
-
 			// video_view.setFull(false);
-			video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
-			if (video_view.isPlaying()) {
-				video_view.pause();
-				isPlayer = true;
-			} else {
-				video_controller.getContent_video_temp_image().setVisibility(
-						View.VISIBLE);
-				// TODO
-				// video_controller.getContent_video_temp_image().setImageBitmap(
-				// video_view.getCurrentFrame());
-			}
+			this.verticalScreen(true);
 
-			attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			getWindow().setAttributes(attrs);
-			// 取消全屏设置
-			getWindow().clearFlags(
-					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-			isFullScrenn = false;
-			setRightFinsh(true);
-			player_guide.setVisibility(View.GONE);
-			video_controller.setmControllerType(ControllerType.SmallController);
-			rootview.setVisibility(View.GONE);
-			scollView.setVisibility(View.VISIBLE);
-			// bottom_bar.setVisibility(View.VISIBLE);
-			rootview.removeView(video_view);
-			rootview.removeView(video_controller);
-			// TODO
-			// video_view.setOrentation(true);
-			smallrootview.addView(video_view, 0);
-			smallrootview.addView(video_controller, 1);
-			video_controller.changeView();
-			if (video_view.getVideoURI() == null) {
-				isPlayer = true;
-			}
-			if (isPlayer) {
-
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						isPlayer = false;
-						if (video_view.getVideoURI() == null) {
-							Log.e("video_view", "video_view");
-							playState();
-							play();
-						} else {
-							video_view.start();
-						}
-
-						video_controller.show();
-						// if(needSeekTo != 0)
-						// video_view.seekTo(needSeekTo);
-					}
-				}, 100);
-
-			}
 		}
 	}
 
@@ -429,8 +291,9 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		registerReceiver(mReceiver, mFilter);
 
 		// 初始化头部
-		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, R.drawable.ic_close_white,
-				R.drawable.ic_font, R.drawable.ic_refresh);
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
+				R.drawable.ic_close_white, R.drawable.ic_font,
+				R.drawable.ic_refresh);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
@@ -555,17 +418,21 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			ToastUtils.ErrorToastNoNet(mContext);
 		}
 
-		SildingFinishLayout mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
-		mSildingFinishLayout
-				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
-
-					@Override
-					public void onSildingFinish() {
-						finish();
-					}
-				});
-		mSildingFinishLayout.setTouchView(mSildingFinishLayout);
-		mSildingFinishLayout.setTouchView(scollView);
+		// if (this.mApplication.getMainActivity() != null) {
+		// SildingFinishLayout mSildingFinishLayout = (SildingFinishLayout)
+		// findViewById(R.id.sildingFinishLayout);
+		// mSildingFinishLayout
+		// .setOnSildingFinishListener(new
+		// SildingFinishLayout.OnSildingFinishListener() {
+		//
+		// @Override
+		// public void onSildingFinish() {
+		// finish();
+		// }
+		// });
+		// mSildingFinishLayout.setTouchView(mSildingFinishLayout);
+		// mSildingFinishLayout.setTouchView(scollView);
+		// }
 		// initCollectOffline(newsid);
 	}
 
@@ -844,7 +711,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		}
 		isNetOk = false;
 		ToastUtils.Errortoast(mContext, "网络不可用");
-		content_loading.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -855,7 +721,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		case R.id.content_share_qq_layout:
 		case R.id.content_share_weixin_layout:
 		case R.id.content_share_mail_layout:
-		case R.id.title_bar_right_img:
+		case R.id.title_bar_content_img:
 			if (ClickUtils.isFastDoubleClick()) {
 				return;
 			}
@@ -883,7 +749,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			break;
 
 		case R.id.title_bar_right_img:
-			FontColumsBoard fontBoard = new FontColumsBoard(this);
+			fontBoard = new FontColumsBoard(this);
 			fontBoard.setAnimationStyle(R.style.popwin_anim_style);
 			fontBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
@@ -909,7 +775,12 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 			break;
 		// 微博分享
 		case R.id.content_share_shina_layout:
-			shareUtil.directShare(SHARE_MEDIA.SINA);
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					shareUtil.directShare(SHARE_MEDIA.SINA);
+				}
+			}, 300);
 			// sendSingleMessage();
 			break;
 		// qq分享
@@ -1042,12 +913,14 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-				}
-			}, 1000);
+			// new Handler().postDelayed(new Runnable() {
+			// @Override
+			// public void run() {
+			// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+			// }
+			// }, 1000);
+
+			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
 		}
 	}
 
@@ -1059,12 +932,14 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 
 		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-			new Handler().postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-				}
-			}, 1000);
+			// new Handler().postDelayed(new Runnable() {
+			// @Override
+			// public void run() {
+			// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+			// }
+			// }, 1000);
+
+			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
 		}
 	}
 
@@ -1106,8 +981,9 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// cotent_onclick.setText(new_news.getOnc......());
 
 		if (new_news.getIntro() != null) {
-			content_intro.setText(new_news.getIntro().equals("") ? "暂无简介 "
-					: new_news.getIntro());
+			content_intro
+					.setText(new_news.getIntro().equals("") ? "\u3000\u3000暂无简介 "
+							: "\u3000\u3000" + new_news.getIntro());
 			FontUtils.setTextViewFontSize(this, content_intro,
 					R.string.news_content_text_size, spUtil.getFontSizeRadix());
 			ImgUtils.imageLoader.displayImage(new_news.getTitlepic(),
@@ -1157,7 +1033,17 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// video_controller.getContent_video_temp_image().setImageBitmap(
 		// currentFrame);
 		// }
+		DebugLog.e("pause");
 
+		// if (this.getRequestedOrientation() ==
+		// ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+		// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		// this.verticalScreen();
+		// }
+		if (this.rootview.getVisibility() == View.VISIBLE) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			this.verticalScreen(false);
+		}
 		video_view.pause();
 		isPause = true;
 		// }
@@ -1168,8 +1054,15 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
+		DebugLog.e("onResume");
 		isPause = false;
 		isGoShare = false;
+		// if (this.getRequestedOrientation() ==
+		// ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+		// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		// this.verticalScreen();
+		// }
+		setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
 		if (content_video.getVisibility() == View.GONE)
 			video_view.start();
 		if (FontUtils.hasChangeFontSize())
@@ -1244,12 +1137,14 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		if (isFullScrenn) {
 			if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-				new Handler().postDelayed(new Runnable() {
-					@Override
-					public void run() {
-						setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-					}
-				}, 3000);
+				// new Handler().postDelayed(new Runnable() {
+				// @Override
+				// public void run() {
+				// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+				// }
+				// }, 1000);
+
+				setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
 			}
 		}
 		isCom = true;
@@ -1268,7 +1163,23 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		hasBeenPaly = true;
 		small_video_pb.setVisibility(View.GONE);
 		video_pb.setVisibility(View.GONE);
-		content_video.setVisibility(View.GONE);
+		if (this.isFullScrenn) {
+			// new Handler().postDelayed(new Runnable() {
+			// @Override
+			// public void run() {
+			// TODO Auto-generated method stub
+			// full_content_video.setVisibility(View.GONE);
+			// }
+			// }, 600);
+		} else {
+			// new Handler().postDelayed(new Runnable() {
+			// @Override
+			// public void run() {
+			// TODO Auto-generated method stub
+			content_video.setVisibility(View.GONE);
+			// }
+			// }, 400);
+		}
 	}
 
 	// 播放完成回到初始状态
@@ -1291,6 +1202,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	// 播放视频状态
 	private void playState() {
 		video_pb.setVisibility(View.VISIBLE);
+		small_video_pb.setVisibility(View.VISIBLE);
 		// small_video_pb.setVisibility(View.VISIBLE);
 		video_player.setVisibility(View.GONE);
 	}
@@ -1416,7 +1328,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		}
 	}
 
-	private static CustomShareBoard shareBoard;
 	private boolean noShowPB;
 	private boolean isload;
 
@@ -1552,6 +1463,9 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 					.findViewById(R.id.home_news_titlepic);
 			TextView home_news_title = (TextView) v
 					.findViewById(R.id.home_news_title);
+			ImageView home_news_newstime_sign = (ImageView) v
+					.findViewById(R.id.home_news_newstime_sign);
+			home_news_newstime_sign.setVisibility(View.VISIBLE);
 			// TextView recommend_intro = (TextView)
 			// v.findViewById(R.id.recommend_intro);
 			TextView home_news_newstime = (TextView) v
@@ -1563,9 +1477,9 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 					home_news_titlepic, ImgUtils.homeImageOptions);
 
 			home_news_title.setText(mNew_Recommend.getTitle());
-			home_news_newstime.setText(TimeUtil.unix2date(
-					Long.valueOf(mNew_Recommend.getNewstime()), "yyyy-MM-dd"));
-
+			// home_news_newstime.setText(TimeUtil.unix2date(
+			// Long.valueOf(mNew_Recommend.getNewstime()), "yyyy-MM-dd"));
+			home_news_newstime.setText(mNew_Recommend.getNewsClicks());
 			v.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View arg0) {
@@ -1637,14 +1551,14 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 				content_video.setBackgroundDrawable(null);
 			}
 		}
-		System.gc();
-		super.finish();
-		if (this.mApplication.mBaseActivityList.size() == 0) {
+		if (this.mApplication.getMainActivity() == null) {
 			Intent intent = getIntent();
 			intent.setClass(this, MainActivity.class);
 			this.startActivity(intent);
 			overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 		}
+		System.gc();
+		super.finish();
 	}
 
 	@Override
@@ -1652,6 +1566,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// TODO Auto-generated method stub
 		super.shareReBack();
 		isGoShare = false;
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 	}
 
 	@Override
@@ -1665,13 +1580,11 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	@Override
 	public void changeFontSize() {
 		// TODO Auto-generated method stub
-
 		FontUtils.setTextViewFontSize(this, content_title,
 				R.string.news_title_text_size, spUtil.getFontSizeRadix());
 		FontUtils.setTextViewFontSize(this, content_intro,
 				R.string.news_content_text_size, spUtil.getFontSizeRadix());
-
-		FontUtils.setChangeFontSize(true);
+		FontUtils.chagneFontSizeGlobal();
 	}
 
 	@Override
@@ -1686,5 +1599,145 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// TODO Auto-generated method stub
 		nightView.setVisibility(View.VISIBLE);
 		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
+	}
+
+	private void verticalScreen(boolean isNeedPlay) {
+		DebugLog.e("竖了");
+		WindowManager.LayoutParams attrs = getWindow().getAttributes();
+		video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
+		if (video_view.isPlaying() || video_view.getVideoURI() != null) {
+			video_view.pause();
+			isPlayer = true;
+		} else {
+			video_controller.getContent_video_temp_image().setVisibility(
+					View.VISIBLE);
+		}
+
+		attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		getWindow().setAttributes(attrs);
+		// 取消全屏设置
+		getWindow()
+				.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+		isFullScrenn = false;
+		setRightFinsh(true);
+		player_guide.setVisibility(View.GONE);
+		video_controller.setmControllerType(ControllerType.SmallController);
+		rootview.setVisibility(View.GONE);
+		scollView.setVisibility(View.VISIBLE);
+		// bottom_bar.setVisibility(View.VISIBLE);
+		rootview.removeView(video_view);
+		rootview.removeView(video_controller);
+		// TODO
+		// video_view.setOrentation(true);
+		smallrootview.addView(video_view, 0);
+		smallrootview.addView(video_controller, 1);
+		video_controller.changeView();
+		if (video_view.getVideoURI() == null) {
+			isPlayer = true;
+		}
+		if (isPlayer && isNeedPlay) {
+
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					isPlayer = false;
+					if (video_view.getVideoURI() == null) {
+						Log.e("video_view", "video_view");
+						playState();
+						play();
+					} else {
+						video_view.start();
+					}
+
+					video_controller.show();
+					// if(needSeekTo != 0)
+					// video_view.seekTo(needSeekTo);
+				}
+			}, 100);
+
+		}
+	}
+
+	private void horizontalScreen() {
+		WindowManager.LayoutParams attrs = getWindow().getAttributes();
+		if (fontBoard != null && fontBoard.isShowing())
+			fontBoard.dismiss();
+		DebugLog.e("heng" + this);
+		video_view.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
+		CommonUtils.clickevent(mContext, "action", "放大",
+				AndroidConfig.video_fullscreen_event);
+
+		full_screen_guide.setVisibility(View.GONE);
+		spUtil.setFirstContent(false);
+		if (isload || spUtil.getFirstFull()) {
+			isPlayer = false;
+		} else {
+			isPlayer = true;
+		}
+
+		// TODO
+		if (video_view.getVideoURI() == null) {
+			goneContentVideoTempImage();
+			isload = true;
+			playState();
+			isCom = true;
+			if (!spUtil.getFirstFull()) {
+				play();
+			}
+		}
+
+		if (spUtil.getFirstFull()) {
+			player_guide.setVisibility(View.VISIBLE);
+			spUtil.setFirstFull(false);
+			video_view.pause();
+		}
+		if (smallWidth == 0) {
+			smallWidth = video_view.getWidth();
+			smallHeight = video_view.getHeight();
+		}
+
+		isFullScrenn = true;
+		setRightFinsh(false);
+		content_video.setVisibility(View.GONE);
+		video_controller
+				.setmControllerType(ControllerType.FullScrennController);
+		attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+		getWindow().setAttributes(attrs);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+		smallrootview.removeView(video_view);
+		smallrootview.removeView(video_controller);
+
+		rootview.setVisibility(View.VISIBLE);
+		scollView.setVisibility(View.GONE);
+		// bottom_bar.setVisibility(View.GONE);
+		// TODO
+		// video_view.setOrentation(true);
+		rootview.addView(video_view, 0);
+		rootview.addView(video_controller, 1, new RelativeLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+		video_controller.changeView();
+		if (isPlayer) {
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					isPlayer = false;
+					if (video_view != null) {
+						if (isCom) {
+							playState();
+							// play();
+							isCom = false;
+						}
+						// if(needSeekTo != 0)
+						// video_view.seekTo(needSeekTo);
+						if (!isGoShare && !spUtil.getFirstFull())
+							video_view.start();
+					}
+					video_controller.getContent_video_temp_image()
+							.setVisibility(View.GONE);
+				}
+			}, 100);
+
+		}
 	}
 }

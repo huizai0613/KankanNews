@@ -63,11 +63,13 @@ import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.dialog.TishiMsgHint;
 import com.kankan.kankanews.exception.NetRequestException;
+import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.ui.view.board.CustomShareBoard;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
@@ -188,17 +190,19 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_colums_info);
-		mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
-		mSildingFinishLayout
-				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
-
-					@Override
-					public void onSildingFinish() {
-						finish();
-					}
-				});
-		mSildingFinishLayout.setTouchView(mSildingFinishLayout);
-		mSildingFinishLayout.setTouchView(listview);
+		// mSildingFinishLayout = (SildingFinishLayout)
+		// findViewById(R.id.sildingFinishLayout);
+		// mSildingFinishLayout
+		// .setOnSildingFinishListener(new
+		// SildingFinishLayout.OnSildingFinishListener() {
+		//
+		// @Override
+		// public void onSildingFinish() {
+		// finish();
+		// }
+		// });
+		// mSildingFinishLayout.setTouchView(mSildingFinishLayout);
+		// mSildingFinishLayout.setTouchView(listview);
 	}
 
 	@Override
@@ -255,6 +259,9 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 				curPlayNo = position - 2;
 				myAdapter.notifyDataSetChanged();
 				view.setSelected(true);
+				if (columsInfoDetailHolder.showBut != null)
+					columsInfoDetailHolder.showBut
+							.setBackgroundResource(R.drawable.ic_arrowshow);
 				videoPlay();
 			}
 
@@ -381,17 +388,15 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(this.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			break;
 		case R.id.colums_info_back:
 			onBackPressed();
 			break;
 		case R.id.colums_video_controller:
-			// if (video_view.isPlaying() || hasBeenPaly) {
-			Log.e("colums_video_controller", "colums_video_controller");
 			if (!columsVideoController.isShow()
 					&& video_pb.getVisibility() != View.VISIBLE)
 				columsVideoController.show();
-			// }
 			break;
 		case R.id.calendar_but:
 			startAnimActivity2ObjForResult(New_Activity_Colums_Info_Time.class,
@@ -405,6 +410,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		// TODO Auto-generated method stub
 		super.onResume();
 		isPause = false;
+		setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
 		if (columsVideoView != null) {
 			columsVideoView.start();
 		}
@@ -891,14 +897,19 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 	@Override
 	public void onPrepared(IMediaPlayer mp) {
-		columsVideoImage.setVisibility(View.GONE);
 		video_pb.setVisibility(View.GONE);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				columsVideoImage.setVisibility(View.GONE);
+			}
+		}, 600);
 	}
 
 	@Override
 	public boolean onInfo(IMediaPlayer mp, int what, int extra) {
 		switch (what) {
-
 		case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
 			columsVideoView.pause();
 			video_pb.setVisibility(View.VISIBLE);
@@ -1048,11 +1059,14 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 				endGesture();
 				break;
 			}
-		} else if (ev.getRawY() > (this.mScreenWidth / 16 * 9 + 100)) {
-			boolean flag = mSildingFinishLayout.onTouch(ev);
-			if (flag)
-				return flag;
 		}
+		// else if (ev.getRawY() > (this.mScreenWidth / 16 * 9 + 100)) {
+		// if (this.mApplication.getMainActivity() != null) {
+		// boolean flag = mSildingFinishLayout.onTouch(ev);
+		// if (flag)
+		// return flag;
+		// }
+		// }
 		return super.dispatchTouchEvent(ev);
 	}
 
@@ -1076,5 +1090,12 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 		clip.setText(new_colums_infos.get(curPlayNo).getTitleurl());
 		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
+	}
+
+	@Override
+	public void shareReBack() {
+		// TODO Auto-generated method stub
+		super.shareReBack();
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 	}
 }

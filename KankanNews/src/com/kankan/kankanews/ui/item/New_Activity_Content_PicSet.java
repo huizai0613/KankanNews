@@ -98,7 +98,7 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 
 	private View main_bg;
 
-	private SildingFinishLayout mSildingFinishLayout;
+	// private SildingFinishLayout mSildingFinishLayout;
 
 	int curPage;
 
@@ -106,27 +106,31 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_pic_set);
-		mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
-		mSildingFinishLayout
-				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
-
-					@Override
-					public void onSildingFinish() {
-						finish();
-					}
-				});
+		// mSildingFinishLayout = (SildingFinishLayout)
+		// findViewById(R.id.sildingFinishLayout);
+		// mSildingFinishLayout
+		// .setOnSildingFinishListener(new
+		// SildingFinishLayout.OnSildingFinishListener() {
+		//
+		// @Override
+		// public void onSildingFinish() {
+		// finish();
+		// }
+		// });
 	}
 
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
-		if (curPage == 0) {
-			boolean flag = mSildingFinishLayout.onTouch(ev);
-			if (flag)
-				return flag;
-		}
-		return super.dispatchTouchEvent(ev);
-	}
+	// @Override
+	// public boolean dispatchTouchEvent(MotionEvent ev) {
+	// // TODO Auto-generated method stub
+	// if (this.mApplication.getMainActivity() != null) {
+	// if (curPage == 0) {
+	// boolean flag = mSildingFinishLayout.onTouch(ev);
+	// if (flag)
+	// return flag;
+	// }
+	// }
+	// return super.dispatchTouchEvent(ev);
+	// }
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -142,8 +146,9 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 
 	@Override
 	protected void initView() {
-		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, R.drawable.ic_close_white,
-				R.drawable.ic_font, R.drawable.ic_refresh);
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
+				R.drawable.ic_close_white, R.drawable.ic_font,
+				R.drawable.ic_refresh);
 
 		vp = (ViewPager) findViewById(R.id.vp);
 		vp_content = (TextView) findViewById(R.id.vp_content);
@@ -349,57 +354,65 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 			photoView.setOnPhotoTapListener(new OnPhotoTapListener() {
 				@Override
 				public void onPhotoTap(View view, float x, float y) {
-					Animation top_in = AnimationUtils.loadAnimation(
-							New_Activity_Content_PicSet.this, R.anim.top_in);
-					top_in.setAnimationListener(new AnimationListener() {
-						@Override
-						public void onAnimationStart(Animation animation) {
-							titleBarView.setVisibility(View.VISIBLE);
-							rLayout_bottom.setVisibility(View.VISIBLE);
-							vp_content.setVisibility(View.VISIBLE);
-
-						}
-
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-						}
-
-						@Override
-						public void onAnimationEnd(Animation animation) {
-
-						}
-					});
-					Animation top_out = AnimationUtils.loadAnimation(
-							New_Activity_Content_PicSet.this, R.anim.top_out);
-					top_out.setAnimationListener(new AnimationListener() {
-						@Override
-						public void onAnimationStart(Animation animation) {
-
-						}
-
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-						}
-
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							titleBarView.setVisibility(View.GONE);
-							rLayout_bottom.setVisibility(View.GONE);
-							vp_content.setVisibility(View.GONE);
-						}
-					});
-					Animation bottom_in = AnimationUtils.loadAnimation(
-							New_Activity_Content_PicSet.this, R.anim.bottom_in);
-					Animation bottom_out = AnimationUtils
-							.loadAnimation(New_Activity_Content_PicSet.this,
-									R.anim.bottom_out);
+					DebugLog.e("卧槽  点进来了");
+//					Animation top_in = AnimationUtils.loadAnimation(
+//							New_Activity_Content_PicSet.this, R.anim.top_in);
+//					top_in.setAnimationListener(new AnimationListener() {
+//						@Override
+//						public void onAnimationStart(Animation animation) {
+//							titleBarView.setVisibility(View.VISIBLE);
+//							rLayout_bottom.setVisibility(View.VISIBLE);
+//							vp_content.setVisibility(View.VISIBLE);
+//
+//						}
+//
+//						@Override
+//						public void onAnimationRepeat(Animation animation) {
+//						}
+//
+//						@Override
+//						public void onAnimationEnd(Animation animation) {
+//
+//						}
+//					});
+//					Animation top_out = AnimationUtils.loadAnimation(
+//							New_Activity_Content_PicSet.this, R.anim.top_out);
+//					top_out.setAnimationListener(new AnimationListener() {
+//						@Override
+//						public void onAnimationStart(Animation animation) {
+//
+//						}
+//
+//						@Override
+//						public void onAnimationRepeat(Animation animation) {
+//						}
+//
+//						@Override
+//						public void onAnimationEnd(Animation animation) {
+//							titleBarView.setVisibility(View.GONE);
+//							rLayout_bottom.setVisibility(View.GONE);
+//							vp_content.setVisibility(View.GONE);
+//						}
+//					});
+//					Animation bottom_in = AnimationUtils.loadAnimation(
+//							New_Activity_Content_PicSet.this, R.anim.bottom_in);
+//					Animation bottom_out = AnimationUtils
+//							.loadAnimation(New_Activity_Content_PicSet.this,
+//									R.anim.bottom_out);
 					isHide = !isHide;
 					if (isHide) {
-						titleBarView.startAnimation(top_out);
-						rLayout_bottom.startAnimation(bottom_out);
+//						titleBarView.startAnimation(top_out);
+//						rLayout_bottom.startAnimation(bottom_out);
+						 titleBarView.setVisibility(View.GONE);
+						 rLayout_bottom.setVisibility(View.GONE);
+						 vp_content.setVisibility(View.GONE);
 					} else {
-						titleBarView.startAnimation(top_in);
-						rLayout_bottom.startAnimation(bottom_in);
+//						titleBarView.startAnimation(top_in);
+//						rLayout_bottom.startAnimation(bottom_in);
+
+						 titleBarView.setVisibility(View.VISIBLE);
+						 rLayout_bottom.setVisibility(View.VISIBLE);
+						 vp_content.setVisibility(View.VISIBLE);
 					}
 				}
 			});
@@ -482,13 +495,13 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 	@Override
 	public void finish() {
 		System.gc();
-		super.finish();
-		if (this.mApplication.mBaseActivityList.size() == 0) {
+		if (this.mApplication.getMainActivity() == null) {
 			Intent intent = getIntent();
 			intent.setClass(this, MainActivity.class);
 			this.startActivity(intent);
 			overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 		}
+		super.finish();
 	}
 
 	@Override
@@ -519,7 +532,7 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 
 		FontUtils.setTextViewFontSize(this, vp_content,
 				R.string.news_content_text_size, spUtil.getFontSizeRadix());
-		FontUtils.setChangeFontSize(true);
+		FontUtils.chagneFontSizeGlobal();
 	}
 
 	@Override

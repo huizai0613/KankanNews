@@ -41,9 +41,9 @@
                 android:id="@+id/mColumnHorizontalScrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/bright_gray"
                 android:fadingEdge="@null"
-                android:scrollbars="none"
-                android:background="@color/bright_gray" >
+                android:scrollbars="none" >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -75,7 +75,8 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/base_action_bar_height" />
     </LinearLayout>
 
     <LinearLayout

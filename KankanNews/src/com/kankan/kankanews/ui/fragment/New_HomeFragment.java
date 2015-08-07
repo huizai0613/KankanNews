@@ -9,6 +9,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -110,6 +111,8 @@ public class New_HomeFragment extends BaseFragment implements
 			main_bg.setVisibility(View.VISIBLE);
 		}
 
+		DebugLog.e(Build.VERSION.SDK_INT + "" );
+
 		return inflate;
 	}
 
@@ -117,8 +120,12 @@ public class New_HomeFragment extends BaseFragment implements
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		if (FontUtils.hasChangeFontSize())
+		if (FontUtils.isMainActivityFontSizeHasChanged()) {
+			for (New_HomeItemFragment fragment : fragments) {
+				fragment.isNeedChangeFontSize = true;
+			}
 			fragments.get(currentFragmentIndex).changeFontSize();
+		}
 	}
 
 	public Resources getResourcesSelf() {

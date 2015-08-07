@@ -101,7 +101,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 
 	private static String[] hotWord;
 
-	private SildingFinishLayout mSildingFinishLayout;
+	// private SildingFinishLayout mSildingFinishLayout;
 
 	private View nightView;
 
@@ -146,6 +146,20 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	}
 
 	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (!spUtil.getIsDayMode())
+			chage2Night();
+		else
+			chage2Day();
+		if (FontUtils.isSearchFontSizeHasChanged()) {
+			this.changeFontSize();
+			FontUtils.setSearchFontSizeHasChanged(false);
+		}
+	}
+
+	@Override
 	protected void initListView() {
 		// TODO Auto-generated method stub
 		searchListView.setMode(Mode.PULL_FROM_END);
@@ -163,8 +177,8 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	protected void initView() {
 		// TODO Auto-generated method stub
 		inflate = LayoutInflater.from(this);
-		mSildingFinishLayout = (SildingFinishLayout) this
-				.findViewById(R.id.sildingFinishLayout);
+		// mSildingFinishLayout = (SildingFinishLayout) this
+		// .findViewById(R.id.sildingFinishLayout);
 		searchContent = (EditText) this.findViewById(R.id.search_content);
 		cancelBut = (TextView) this.findViewById(R.id.search_cancel_but);
 		closeBut = (ImageView) this.findViewById(R.id.search_close_but);
@@ -225,13 +239,14 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			}
 
 		});
-		mSildingFinishLayout
-				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
-					@Override
-					public void onSildingFinish() {
-						finish();
-					}
-				});
+		// mSildingFinishLayout
+		// .setOnSildingFinishListener(new
+		// SildingFinishLayout.OnSildingFinishListener() {
+		// @Override
+		// public void onSildingFinish() {
+		// finish();
+		// }
+		// });
 	}
 
 	@Override
@@ -766,8 +781,15 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 			cancelSearchContentFocus();
 			hideHisList();
 			searchList.clear();
-			if (searchAdapt != null)
+			searchListView.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					searchListView.onRefreshComplete();
+				}
+			}, 0);
+			if (searchAdapt != null) {
 				searchAdapt.notifyDataSetChanged();
+			}
 			noNetLayout.setVisibility(View.GONE);
 			loadingLayout.setVisibility(View.GONE);
 			hotWordLayout.setVisibility(View.VISIBLE);
@@ -877,14 +899,14 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		}
 	}
 
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
-		boolean flag = mSildingFinishLayout.onTouch(ev);
-		if (flag)
-			return flag;
-		return super.dispatchTouchEvent(ev);
-	}
+	// @Override
+	// public boolean dispatchTouchEvent(MotionEvent ev) {
+	// // TODO Auto-generated method stub
+	// boolean flag = mSildingFinishLayout.onTouch(ev);
+	// if (flag)
+	// return flag;
+	// return super.dispatchTouchEvent(ev);
+	// }
 
 	@Override
 	public void chage2Day() {
@@ -903,4 +925,17 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 		if (!spUtil.getIsDayMode())
 			chage2Night();
 	}
+
+	@Override
+	public void changeFontSize() {
+		// TODO Auto-generated method stub
+		super.changeFontSize();
+		if (searchListView != null
+				&& searchListView.getVisibility() == View.VISIBLE) {
+			int first = searchListView.getFirstVisiblePosition();
+			searchListView.setAdapter(searchAdapt);
+			searchListView.setSelection(first);
+		}
+	}
+
 }

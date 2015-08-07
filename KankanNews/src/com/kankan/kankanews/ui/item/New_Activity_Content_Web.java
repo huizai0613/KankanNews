@@ -96,18 +96,23 @@ public class New_Activity_Content_Web extends BaseActivity implements
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.new_activity_content_web);
-		SildingFinishLayout mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
-		mSildingFinishLayout
-				.setOnSildingFinishListener(new SildingFinishLayout.OnSildingFinishListener() {
-
-					@Override
-					public void onSildingFinish() {
-						New_Activity_Content_Web.this.finish();
-					}
-				});
-		mSildingFinishLayout.setEffectiveX(150);
-		mSildingFinishLayout.setTouchView(mSildingFinishLayout);
-		mSildingFinishLayout.setTouchView(webView);
+		// if (this.mApplication.getMainActivity() != null) {
+		// SildingFinishLayout mSildingFinishLayout = (SildingFinishLayout)
+		// findViewById(R.id.sildingFinishLayout);
+		// mSildingFinishLayout
+		// .setOnSildingFinishListener(new
+		// SildingFinishLayout.OnSildingFinishListener() {
+		//
+		// @Override
+		// public void onSildingFinish() {
+		// webView.loadUrl("about:blank");
+		// New_Activity_Content_Web.this.finish();
+		// }
+		// });
+		// mSildingFinishLayout.setEffectiveX(150);
+		// mSildingFinishLayout.setTouchView(mSildingFinishLayout);
+		// mSildingFinishLayout.setTouchView(webView);
+		// }
 	}
 
 	@Override
@@ -148,8 +153,9 @@ public class New_Activity_Content_Web extends BaseActivity implements
 
 		// 初始化头部 int leftImgId, String leftContent,
 		// int rightImgId, int rightImgSecondId, String bgColor
-		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back, R.drawable.ic_close_white,
-				R.drawable.ic_font, R.drawable.ic_refresh);
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
+				R.drawable.ic_close_white, R.drawable.ic_font,
+				R.drawable.ic_refresh);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
@@ -422,23 +428,34 @@ public class New_Activity_Content_Web extends BaseActivity implements
 	@Override
 	public void finish() {
 		// TODO Auto-generated method stub
-		super.finish();
 		if (this.mApplication.getMainActivity() == null) {
 			Intent intent = getIntent();
 			intent.setClass(this, MainActivity.class);
 			this.startActivity(intent);
 			overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 		}
+		super.finish();
+		this.overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 	}
 
 	@Override
 	public void changeFontSize() {
 		// TODO Auto-generated method stub
 		int index = FontUtils.getFontSetIndex(spUtil.getFontSizeRadix());
-		webView.loadUrl(webView.getUrl().split("#")[0] + "#kk_font="
-				+ FontUtils.fontSizeWeb[index]);
-		this.refresh();
-		FontUtils.setChangeFontSize(true);
+		// webView.loadUrl(webView.getUrl().split("#")[0] + "#kk_font="
+		// + FontUtils.fontSizeWeb[index]);
+		// webView.loadUrl("#kk_font="
+		// + FontUtils.fontSizeWeb[index]);
+		// webView.loadUrl("javascript:window.location.hash='#kk_font="
+		// + FontUtils.fontSizeWeb[index] + "'");
+		// webView.loadUrl("javascript:alert('xxxx')");
+		// webView.loadUrl("javascript:$('body').removeClass('font_s font_m font_l font_xl')");
+		// webView.loadUrl("javascript:$('body').addClass('font_"
+		// + FontUtils.fontSizeWeb[index] + "')");
+		// this.refresh();
+		webView.loadUrl("javascript:KKSetFontSize('"
+				+ FontUtils.fontSizeWeb[index] + "',1)");
+		FontUtils.chagneFontSizeGlobal();
 	}
 
 	@Override

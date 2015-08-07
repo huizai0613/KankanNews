@@ -69,35 +69,32 @@
                         android:text="俄罗斯总统会见朝鲜最高领导人特使"
                         android:textSize="16dp" />
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="20dp"
-                        android:layout_marginTop="5dp" >
+                        android:layout_height="16dp"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_vertical|left"
+                        android:orientation="horizontal" >
 
                         <ImageView
                             android:id="@+id/home_news_newstime_sign"
-                            android:layout_width="18dp"
-                            android:layout_height="14dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_width="15dp"
+                            android:layout_height="12dp"
                             android:layout_marginRight="5dp"
                             android:scaleType="fitXY"
                             android:src="@drawable/new_icon_looktime"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                         <com.kankan.kankanews.ui.view.MyTextView
                             android:id="@+id/home_news_newstime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentBottom="true"
-                            android:ellipsize="end"
-                            android:maxLines="1"
                             android:singleLine="true"
-                            android:text="2015-02-05"
-                            android:textColor="#999999"
-                            android:textSize="12dp" />
-                        
-                    </RelativeLayout>
+                            android:text="0"
+                            android:textColor="@color/mid_gray"
+                            android:textSize="12dp"
+                            android:visibility="visible" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
@@ -105,10 +102,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginLeft="10dp"
-                android:background="#e5e5e5"
-                />
+                android:background="#e5e5e5" />
         </LinearLayout>
     </LinearLayout>
-
 
 </LinearLayout>

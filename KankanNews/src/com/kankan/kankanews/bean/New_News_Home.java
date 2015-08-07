@@ -50,9 +50,6 @@ public class New_News_Home extends BaseBean<New_News_Home> {
 		titlepic = jsonObj.optString("titlepic");
 		sharedPic = jsonObj.optString("titlepic");
 		type = jsonObj.optString("type");
-		if (type.equalsIgnoreCase("5")) {
-			System.out.println(12);
-		}
 
 		sourceid = jsonObj.optString("sourceid");
 		newstime = jsonObj.optString("newstime");

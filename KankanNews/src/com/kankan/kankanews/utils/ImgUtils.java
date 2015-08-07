@@ -45,15 +45,17 @@ public class ImgUtils {
 	public static DisplayImageOptions homeImageOptions;
 	public static DisplayImageOptions liveImageOptions;
 	public static ImageLoaderConfiguration picSetImageOptions;
-	
+
 	static {
-		homeImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true)// 设置下载的图片是否缓存在内存中
+		homeImageOptions = new DisplayImageOptions.Builder()
+				.cacheInMemory(true)// 设置下载的图片是否缓存在内存中
 				.cacheOnDisc(true)// 设置下载的图片是否缓存在SD卡中
-				 .showImageOnLoading(R.drawable.default_news_display) //设置图片在下载期间显示的图片  
-				 .showImageForEmptyUri(R.drawable.default_news_display)//设置图片Uri为空或是错误的时候显示的图片  
-				.showImageOnFail(R.drawable.default_news_display)  //设置图片加载/解码过程中错误时候显示的图片
+				.showImageOnLoading(R.drawable.default_news_display) // 设置图片在下载期间显示的图片
+				.showImageForEmptyUri(R.drawable.default_news_display)// 设置图片Uri为空或是错误的时候显示的图片
+				.showImageOnFail(R.drawable.default_news_display) // 设置图片加载/解码过程中错误时候显示的图片
 				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)// 设置图片以如何的编码方式显示
-				.bitmapConfig(Bitmap.Config.RGB_565)// 设置图片的解码类型//  EXACTLY_STRETCHED
+				.bitmapConfig(Bitmap.Config.RGB_565)// 设置图片的解码类型//
+													// EXACTLY_STRETCHED
 				.decodingOptions(new BitmapFactory.Options())// 设置图片的解码配置
 				// .delayBeforeLoading(int delayInMillis)//int
 				// delayInMillis为你设置的下载前的延迟时间
@@ -61,15 +63,17 @@ public class ImgUtils {
 				// .preProcessor(BitmapProcessor preProcessor)
 				.resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
 				.build();// 构建完成
-		
-		liveImageOptions = new DisplayImageOptions.Builder().cacheInMemory(true)// 设置下载的图片是否缓存在内存中
-//				.cacheOnDisc(true)// 设置下载的图片是否缓存在SD卡中
+
+		liveImageOptions = new DisplayImageOptions.Builder()
+				.cacheInMemory(true)// 设置下载的图片是否缓存在内存中
+				// .cacheOnDisc(true)// 设置下载的图片是否缓存在SD卡中
 				.cacheOnDisk(true)
-//				 .showImageOnLoading(R.drawable.livebg2) //设置图片在下载期间显示的图片  
-//				 .showImageForEmptyUri(R.drawable.livebg2)//设置图片Uri为空或是错误的时候显示的图片  
-//				.showImageOnFail(R.drawable.livebg2)  //设置图片加载/解码过程中错误时候显示的图片
+				// .showImageOnLoading(R.drawable.livebg2) //设置图片在下载期间显示的图片
+				// .showImageForEmptyUri(R.drawable.livebg2)//设置图片Uri为空或是错误的时候显示的图片
+				// .showImageOnFail(R.drawable.livebg2) //设置图片加载/解码过程中错误时候显示的图片
 				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)// 设置图片以如何的编码方式显示
-				.bitmapConfig(Bitmap.Config.RGB_565)// 设置图片的解码类型//  EXACTLY_STRETCHED
+				.bitmapConfig(Bitmap.Config.RGB_565)// 设置图片的解码类型//
+													// EXACTLY_STRETCHED
 				.decodingOptions(new BitmapFactory.Options())// 设置图片的解码配置
 				// .delayBeforeLoading(int delayInMillis)//int
 				// delayInMillis为你设置的下载前的延迟时间
@@ -78,7 +82,7 @@ public class ImgUtils {
 				.resetViewBeforeLoading(true)// 设置图片在下载前是否重置，复位
 				.build();// 构建完成
 	}
-	
+
 	public static Map<String, String> sendImage(String fileUrl) {
 		Map<String, String> result = new HashMap<String, String>();
 		HttpURLConnection conn = null;
@@ -120,7 +124,7 @@ public class ImgUtils {
 			conn.setRequestProperty("connection", "keep-alive");
 
 			ByteArrayOutputStream fileOut = getSmallBitmap(fileUrl);
-			
+
 			long fileLength = fileOut.toByteArray().length;
 
 			Log.e("UPLOAD_FILE_LENGTH", fileLength + "");
@@ -200,25 +204,25 @@ public class ImgUtils {
 		result.put("ResponseContent", "ERROR");
 		return result;
 	}
-	
-	public static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
-    // Raw height and width of image
-    final int height = options.outHeight;
-    final int width = options.outWidth;
-    int inSampleSize = 1;
 
-    if (height > reqHeight || width > reqWidth) {
-        if (width > height) {
-            inSampleSize = Math.round((float)height / (float)reqHeight);
-        } else {
-            inSampleSize = Math.round((float)width / (float)reqWidth);
-        }
-        return inSampleSize + 1;
-    }
-    return inSampleSize;
-}
-	
+	public static int calculateInSampleSize(BitmapFactory.Options options,
+			int reqWidth, int reqHeight) {
+		// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 1;
+
+		if (height > reqHeight || width > reqWidth) {
+			if (width > height) {
+				inSampleSize = Math.round((float) height / (float) reqHeight);
+			} else {
+				inSampleSize = Math.round((float) width / (float) reqWidth);
+			}
+			return inSampleSize + 1;
+		}
+		return inSampleSize;
+	}
+
 	public static Bitmap decodeImage(String path, int showWidth, int showHeight) {
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
@@ -249,9 +253,9 @@ public class ImgUtils {
 		if (fileLength <= 262144)
 			scale = 60;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        
-        if (filePath.endsWith(".jpg") || filePath.endsWith(".JPG"))
-        	bm.compress(Bitmap.CompressFormat.JPEG, scale, baos);
+
+		if (filePath.endsWith(".jpg") || filePath.endsWith(".JPG"))
+			bm.compress(Bitmap.CompressFormat.JPEG, scale, baos);
 		if (filePath.endsWith(".jpeg") || filePath.endsWith(".JPEG"))
 			bm.compress(Bitmap.CompressFormat.JPEG, scale, baos);
 		if (filePath.endsWith(".png") || filePath.endsWith(".PNG"))
@@ -260,18 +264,22 @@ public class ImgUtils {
 	}
 
 	public static Bitmap getNetImage(String url) {
+		InputStream in = null;
 		try {
 			// 建立网络连接
 			URL imageURl = new URL(url);
 			URLConnection con = imageURl.openConnection();
 			con.connect();
-			InputStream in = con.getInputStream();
-			return BitmapFactory.decodeStream(in);
+			in = con.getInputStream();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			DebugLog.e(e.getLocalizedMessage());
 			Log.e("getNetImage", e.getLocalizedMessage(), e);
 			return null;
 		}
+		DebugLog.e("试着加载了");
+		Bitmap bit = BitmapFactory.decodeStream(in);
+		return bit;
 	}
-	
+
 }

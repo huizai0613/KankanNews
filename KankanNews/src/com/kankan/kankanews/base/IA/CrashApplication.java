@@ -6,6 +6,7 @@ import java.io.File;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -276,7 +277,8 @@ public class CrashApplication extends Application {
 	}
 
 	public void removeActivity(BaseActivity activity) {
-		mBaseActivityList.remove(activity);
+		if (activity != this.mainActivity)
+			mBaseActivityList.remove(activity);
 	}
 
 	/*
@@ -305,9 +307,9 @@ public class CrashApplication extends Application {
 		}
 		mRequestCallBackPauses.clear();
 
-		for (Activity activity : mBaseActivityList) {
+		for (BaseActivity activity : mBaseActivityList) {
 			if (activity != null) {
-				activity.finish();
+				activity.finishNoRemove();
 			}
 		}
 		isStart = false;
@@ -413,9 +415,11 @@ public class CrashApplication extends Application {
 	}
 
 	public void changeMainActivityDayMode() {
-		if (this.mainActivity.spUtil.getIsDayMode())
-			this.mainActivity.chage2Day();
-		else
-			this.mainActivity.chage2Night();
+		if (this.mainActivity != null) {
+			if (this.mainActivity.spUtil.getIsDayMode())
+				this.mainActivity.chage2Day();
+			else
+				this.mainActivity.chage2Night();
+		}
 	}
 }

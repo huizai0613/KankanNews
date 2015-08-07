@@ -121,6 +121,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 	private boolean hasLoaded = false;
 
+	public boolean isNeedChangeFontSize = false;
+
 	int[] textNomalSize = { R.dimen.news_textsize_1, R.dimen.news_textsize_2,
 			R.dimen.news_textsize_3, R.dimen.news_textsize_4 };
 
@@ -160,7 +162,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 
 		if (isVisibleToUser) {
-			if (FontUtils.hasChangeFontSize())
+			if (isNeedChangeFontSize)
 				this.changeFontSize();
 			if (lastTime != 0) {
 				if ((TimeUtil.now() - lastTime) / 60 >= 10) {
@@ -222,10 +224,10 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 				if (pagerHolder != null && pagerHolder.pager != null
 						&& images != null) {
-					if (!pagerHolder.pager.isAutoScroll() && images.size() > 1) {
-						pagerHolder.pager.startAutoScroll(3000);
-						pagerHolder.pager.setSwipeScrollDurationFactor(0.5);
-					}
+//					if (!pagerHolder.pager.isAutoScroll() && images.size() > 1) {
+//						pagerHolder.pager.startAutoScroll(3000);
+//						pagerHolder.pager.setSwipeScrollDurationFactor(0.5);
+//					}
 				}
 			}
 
@@ -718,23 +720,27 @@ public class New_HomeItemFragment extends BaseFragment implements
 					if (images.size() > 1) {
 						pagerHolder.pager.setCurrentItem(Integer.MAX_VALUE / 2
 								- Integer.MAX_VALUE / 2 % images.size());
-						imagePagerAdapter.setInfiniteLoop(true);
-						pagerHolder.pager.startAutoScroll(3000);
-						pagerHolder.pager.setSwipeScrollDurationFactor(0.5);
+//						imagePagerAdapter.setInfiniteLoop(true);
+//						pagerHolder.pager.startAutoScroll(3000);
+//						pagerHolder.pager.setSwipeScrollDurationFactor(0.5);
 
 					} else {
-						imagePagerAdapter.setInfiniteLoop(false);
-						pagerHolder.pager.stopAutoScroll();
+//						imagePagerAdapter.setInfiniteLoop(false);
+//						pagerHolder.pager.stopAutoScroll();
 					}
 					pagerHolder.pager.setAdapter(imagePagerAdapter);
 
 					int size = points.size();
 					if (size > 1) {
+						for (View v : points) {
+							if (v.getParent() != null)
+								((LinearLayout) v.getParent()).removeView(v);
+							pagerHolder.point_content.addView(v);
+							v.setBackgroundResource(R.drawable.point_gray);
+						}
 						points.get(0).setBackgroundResource(
 								R.drawable.point_red);
-						for (View v : points) {
-							pagerHolder.point_content.addView(v);
-						}
+						pagerHolder.pager.setCurrentItem(0);
 						pagerHolder.point_content.setVisibility(View.VISIBLE);
 
 					} else {
@@ -851,6 +857,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final int news_type = Integer.valueOf(news.getType());
 				newHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
+				
 				ImgUtils.imageLoader.displayImage(news.getTitlepic(),
 						newHolder.titlepic, ImgUtils.homeImageOptions);
 
@@ -1190,11 +1197,14 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 	public void changeFontSize() {
 		// TODO Auto-generated method stub
+		if (!this.isNeedChangeFontSize)
+			return;
 		if (listview != null) {
 			int first = listview.getFirstVisiblePosition();
 			listview.setAdapter(adapter);
 			listview.setSelection(first);
 		}
+		this.isNeedChangeFontSize = false;
 	}
 
 }

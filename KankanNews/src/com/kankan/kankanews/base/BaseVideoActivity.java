@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import android.content.pm.ActivityInfo;
 import android.os.Handler;
+import android.os.Message;
 import android.widget.LinearLayout;
 
 import com.android.volley.VolleyError;
@@ -20,6 +21,21 @@ public abstract class BaseVideoActivity extends BaseActivity {
 
 	public LinearLayout video_pb;
 	public LinearLayout small_video_pb;
+
+	protected static final int SET_FULL_MESSAGE = 2048;
+
+	protected Handler setFullHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case SET_FULL_MESSAGE:
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+				break;
+
+			default:
+				break;
+			}
+		}
+	};
 
 	// 从全屏到小屏
 	public void fullScrenntoSamll() {

@@ -19,6 +19,7 @@ import tv.danmaku.ijk.media.widget.VideoView;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -197,23 +198,23 @@ public class New_LivePlayFragment extends BaseFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		closeVideoView();
-		if (!isFirst && mActivity.curTouchTab == mActivity.tab_two) {
-			if (CommonUtils.isNetworkAvailable(mActivity)) {
-				refreshNetDate();
-				isFirst = true;
+		// closeVideoView();
+		if (mActivity.curTouchTab == mActivity.tab_two)
+			if (!isFirst) {
+				if (CommonUtils.isNetworkAvailable(mActivity)) {
+					refreshNetDate();
+					isFirst = true;
+				} else {
+					screnn_pb.setVisibility(View.GONE);
+					main_bg.setVisibility(View.VISIBLE);
+				}
 			} else {
-				ToastUtils.ErrorToastNoNet(mActivity);
-				screnn_pb.setVisibility(View.GONE);
-				main_bg.setVisibility(View.VISIBLE);
+				// isFirst = false;
+				if (liveVideoView != null) {
+					liveVideoView.start();
+					liveStart.setVisibility(View.GONE);
+				}
 			}
-		} else {
-			// isFirst = false;
-			if (liveVideoView != null) {
-				liveVideoView.start();
-				liveStart.setVisibility(View.GONE);
-			}
-		}
 
 	}
 
@@ -246,7 +247,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 				.findViewById(R.id.smallrootview);
 		rootview = (RelativeLayout) inflate.findViewById(R.id.rootview);
 		liveVideoView = (VideoView) inflate.findViewById(R.id.live_video_view);
-		liveVideoView.setMediaBufferingIndicator(mVideoLoadingLayout);
+		// liveVideoView.setMediaBufferingIndicator(mVideoLoadingLayout);
 		liveVideoView.setUserAgent("KKApp");
 
 		livePause = inflate.findViewById(R.id.live_pause);
@@ -476,7 +477,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 					livePlayTitle.setText("正在播放:" + news.getTitle());
 					fullScreenLivePlayTitle.setText("正在播放:" + news.getTitle());
 					liveStart.setVisibility(View.GONE);
-					mVideoLoadingLayout.setVisibility(View.GONE);
+					// mVideoLoadingLayout.setVisibility(View.GONE);
 					liveStart.setVisibility(View.GONE);
 					liveVideoView.stopPlayback();
 					liveVideoView.setVideoPath(news.getStreamurl());
@@ -504,7 +505,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 								this.mActivity, "live", news.getTitle(),
 								news.getTitleurl());
 
-						mVideoLoadingLayout.setVisibility(View.GONE);
+						// mVideoLoadingLayout.setVisibility(View.GONE);
 						mActivity
 								.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 						break;
@@ -739,8 +740,8 @@ public class New_LivePlayFragment extends BaseFragment implements
 																	.getTitle());
 													// 更改直播频道
 													// video_view.release(true);
-													mVideoLoadingLayout
-															.setVisibility(View.GONE);
+													// mVideoLoadingLayout
+													// .setVisibility(View.GONE);
 													closeVideoView();
 													liveVideoView
 															.setVideoPath(new_LivePlay
@@ -773,10 +774,12 @@ public class New_LivePlayFragment extends BaseFragment implements
 												+ new_LivePlay.getTitle());
 										// 更改直播频道
 										// video_view.release(true);
-										mVideoLoadingLayout
-												.setVisibility(View.GONE);
+										// mVideoLoadingLayout
+										// .setVisibility(View.GONE);
 										liveVideoView.stopPlayback();
 										liveVideoImage
+												.setVisibility(View.VISIBLE);
+										mVideoLoadingLayout
 												.setVisibility(View.VISIBLE);
 										liveStart.setVisibility(View.GONE);
 										liveVideoView.setVideoPath(new_LivePlay
@@ -1003,14 +1006,14 @@ public class New_LivePlayFragment extends BaseFragment implements
 		switch (id) {
 		case R.id.live_share_but:
 			Log.e("live_share_but", liveVideoView.getLayoutParams().height + "");
-			;
-
 			if (nowLiveNew == null) {
 				ToastUtils.Errortoast(mActivity, "抱歉,获取不到当前直播信息，请点击播放重新尝试");
 				return;
 			}
 			nowLiveNew.setSharedPic(null);
 			shareUtil = new ShareUtil(nowLiveNew, this.mActivity);
+			this.mActivity
+					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			this.mActivity.shareUtil = shareUtil;
 			// 一键分享
 			shareBoard = new CustomShareBoard((BaseActivity) this.mActivity,
@@ -1090,6 +1093,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 		// TODO Auto-generated method stub
 		liveVideoView.pause();
 		liveVideoImage.setVisibility(View.GONE);
+		mVideoLoadingLayout.setVisibility(View.GONE);
 		if (mActivity.curTouchTab == mActivity.tab_two)
 			liveVideoView.start();
 	}
@@ -1133,6 +1137,17 @@ public class New_LivePlayFragment extends BaseFragment implements
 	public void closeVideoView() {
 		liveVideoView.stopPlayback();
 		liveVideoImage.setVisibility(View.VISIBLE);
+
+		mVideoLoadingLayout.setVisibility(View.VISIBLE);
 		liveStart.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void copy2Clip() {
+		// TODO Auto-generated method stub
+		ClipboardManager clip = (ClipboardManager) this.mActivity
+				.getSystemService(Context.CLIPBOARD_SERVICE);
+		clip.setText(nowLiveNew.getTitleurl());
+		ToastUtils.Infotoast(this.mActivity, "已将链接复制进黏贴板");
 	}
 }

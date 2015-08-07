@@ -25,6 +25,7 @@ import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
 import com.kankan.kankanews.ui.view.AutoImageTag;
+import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankanews.kankanxinwen.R;
@@ -119,7 +120,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 
 				@Override
 				public void onClick(View v) {
-
+					if (ClickUtils.isFastDoubleClick())
+						return;
 					New_News_Top news = getmTopNewsList
 							.get(getPosition(position));
 					switch (Integer.valueOf(news.getType()) % 10) {
@@ -170,15 +172,17 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 			ImgUtils.imageLoader.displayImage(
 					imageIdList.get(getPosition(position)).getUrlPath()
 							.split("::::::")[0], v, ImgUtils.homeImageOptions);
-//			CommonUtils.zoomImage(
-//					imageLoader,
-//					imageIdList.get(getPosition(position)).getUrlPath()
-//							.split("::::::")[0], v, context);
+			// CommonUtils.zoomImage(
+			// imageLoader,
+			// imageIdList.get(getPosition(position)).getUrlPath()
+			// .split("::::::")[0], v, context);
 
 			v.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
+					if (ClickUtils.isFastDoubleClick())
+						return;
 
 					New_News_Top news = getmTopNewsList
 							.get(getPosition(position));

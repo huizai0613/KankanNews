@@ -1,10 +1,10 @@
 ﻿<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kankanews.kankanxinwen"
-    android:versionCode="10"
-    android:versionName="2.4.1" >
+    android:versionCode="11"
+    android:versionName="2.4.2" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="16"
         android:targetSdkVersion="21" />
 
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -58,8 +58,7 @@
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Avtivity_Subject"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Kankan_Theme_Day_Alpha" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.GuideActivity"
@@ -96,8 +95,7 @@
             android:name="com.kankan.kankanews.ui.item.New_Activity_Content_Video"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Kankan_Theme_Day_Alpha" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_Content_Graphic"
@@ -109,27 +107,23 @@
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_Content_PicSet"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Kankan_Theme_Day_Alpha" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_Colums_Info"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Kankan_Theme_Day_Alpha" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_Colums_Info_Time"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Kankan_Theme_Day_Alpha" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_Content_Web"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Kankan_Theme_Day_Alpha" >
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_MyFoot"
@@ -149,8 +143,7 @@
         <activity
             android:name="com.kankan.kankanews.search.SearchMainActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Kankan_Theme_Day_Alpha" >
+            android:screenOrientation="portrait" >
         </activity>
 
         <receiver

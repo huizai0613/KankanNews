@@ -32,6 +32,7 @@ import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.search.SearchMainActivity;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -41,6 +42,7 @@ import com.lidroid.xutils.exception.DbException;
 import com.networkbench.agent.impl.NBSAppAgent;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
 
 /**
  * class desc: 启动画面 (1)判断是否是首次加载应用--采取读取SharedPreferences的方法
@@ -56,6 +58,7 @@ public class SplashActivity extends BaseActivity {
 	private static final int AD_GO_HOME = 1001;
 	private static final int GO_GUIDE = 1010;
 	private static final int AD_GO_GUIDE = 1011;
+	private static final int GO_TRANS = 1030;
 	private static final int CLICK_GO_HOME = 1020;
 	private static final int REMOVE_MESSAGES = 2000;
 	private static final int REMOVE_ALL_MESSAGES = 3000;
@@ -90,12 +93,16 @@ public class SplashActivity extends BaseActivity {
 			case GO_GUIDE:
 				goGuide();
 				break;
+			case GO_TRANS:
+				goTrasition();
+				break;
 			case REMOVE_MESSAGES:
 				mHandler.removeMessages(GO_GUIDE);
 				mHandler.removeMessages(GO_HOME);
 				break;
 			case REMOVE_ALL_MESSAGES:
 				mHandler.removeMessages(GO_GUIDE);
+				mHandler.removeMessages(GO_TRANS);
 				mHandler.removeMessages(GO_HOME);
 				mHandler.removeMessages(AD_GO_GUIDE);
 				mHandler.removeMessages(AD_GO_HOME);
@@ -117,8 +124,8 @@ public class SplashActivity extends BaseActivity {
 		instance = NetUtils.getInstance(this);
 
 		// 听云 放在友盟之后
-//		NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
-//				.withLocationServiceEnabled(true).start(this);
+		NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
+				.withLocationServiceEnabled(true).start(this);
 
 		mApplication.setStart(true);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -135,9 +142,18 @@ public class SplashActivity extends BaseActivity {
 		setRightFinsh(false);
 
 		init();
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			DebugLog.e(bundle.getString("PUSH_NEWS_ID"));
+
+			for (String key : bundle.keySet()) {
+				DebugLog.e("key: " + key + "  " + bundle.getString(key));
+			}
+		}
 
 		// createShortcut();
 		// String device_token = UmengRegistrar.getRegistrationId(this);
+		// DebugLog.e(device_token);
 	}
 
 	@Override
@@ -155,7 +171,7 @@ public class SplashActivity extends BaseActivity {
 			hasCallAds = true;
 			if (CommonUtils.isNetworkAvailableNoToast(this)) {
 				Map<String, String> params = new HashMap<String, String>();
-				params.put("aid", "107167");
+				params.put("aid", AndroidConfig.ADVERT_ID);
 				params.put("ts", new Date().getTime() + "");
 				params.put("fmt", "json");
 				params.put("ver", "1");
@@ -170,6 +186,9 @@ public class SplashActivity extends BaseActivity {
 				getLocalAdvert();
 				mHandler.sendEmptyMessage(REMOVE_MESSAGES);
 				if (advert == null) {
+					Bundle bundle = getIntent().getExtras();
+					if (bundle != null && bundle.containsKey("PUSH_NEWS_ID"))
+						return;
 					if (isFirstIn || !version.equals(spUtil.getVersion())) {
 						// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
 						mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
@@ -180,6 +199,10 @@ public class SplashActivity extends BaseActivity {
 					}
 					return;
 				} else {
+					showAdvert();
+					Bundle bundle = getIntent().getExtras();
+					if (bundle != null && bundle.containsKey("PUSH_NEWS_ID"))
+						return;
 					if (isFirstIn || !version.equals(spUtil.getVersion())) {
 						// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
 						mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
@@ -188,7 +211,6 @@ public class SplashActivity extends BaseActivity {
 						mHandler.sendEmptyMessageDelayed(AD_GO_HOME,
 								AD_HAS_DELAY_MILLIS);
 					}
-					showAdvert();
 					return;
 				}
 			}
@@ -205,11 +227,17 @@ public class SplashActivity extends BaseActivity {
 			CommonUtils.deleteDir(CommonUtils.getImageCachePath(mContext));
 		}
 		// 判断程序与第几次运行，如果是第一次运行则跳转到引导界面，否则跳转到主界面
-		if (isFirstIn || !version.equals(spUtil.getVersion())) {
-			// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
-			mHandler.sendEmptyMessageDelayed(GO_GUIDE, SPLASH_DELAY_MILLIS);
-		} else {
-			mHandler.sendEmptyMessageDelayed(GO_HOME, SPLASH_DELAY_MILLIS);
+
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null && bundle.containsKey("PUSH_NEWS_ID"))
+			mHandler.sendEmptyMessageDelayed(GO_TRANS, SPLASH_DELAY_MILLIS);
+		else {
+			if (isFirstIn || !version.equals(spUtil.getVersion())) {
+				// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
+				mHandler.sendEmptyMessageDelayed(GO_GUIDE, SPLASH_DELAY_MILLIS);
+			} else {
+				mHandler.sendEmptyMessageDelayed(GO_HOME, SPLASH_DELAY_MILLIS);
+			}
 		}
 	}
 
@@ -353,8 +381,12 @@ public class SplashActivity extends BaseActivity {
 	protected void onSuccess(JSONObject jsonObject) {
 		// TODO Auto-generated method stub
 		mHandler.sendEmptyMessage(REMOVE_MESSAGES);
+		Bundle bundle = getIntent().getExtras();
 		if (jsonObject.optString("status").equals("failure")) {
 			clearLocalAdvert();
+			if (bundle != null && bundle.containsKey("PUSH_NEWS_ID")) {
+				return;
+			}
 			if (isFirstIn || !version.equals(spUtil.getVersion())) {
 				// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
 				mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
@@ -368,19 +400,21 @@ public class SplashActivity extends BaseActivity {
 		if (advert == null)
 			advert = new Advert();
 		advert.parseJSON(jsonObject);
-
-		if (isFirstIn || !version.equals(spUtil.getVersion())) {
-			// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
-			mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE, AD_HAS_DELAY_MILLIS);
-		} else {
-			mHandler.sendEmptyMessageDelayed(AD_GO_HOME, AD_HAS_DELAY_MILLIS);
-		}
 		if (advert != null) {
 			showAdvert();
 			saveAdvertLocal();
 		} else {
 			getLocalAdvert();
 			showAdvert();
+		}
+		if (bundle != null && bundle.containsKey("PUSH_NEWS_ID")) {
+			return;
+		}
+		if (isFirstIn || !version.equals(spUtil.getVersion())) {
+			// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
+			mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE, AD_HAS_DELAY_MILLIS);
+		} else {
+			mHandler.sendEmptyMessageDelayed(AD_GO_HOME, AD_HAS_DELAY_MILLIS);
 		}
 	}
 

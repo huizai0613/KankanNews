@@ -8,6 +8,12 @@ import android.widget.TextView;
 public class FontUtils {
 	public static boolean fontSizeHasChanged = false;
 
+	public static boolean mainActivityFontSizeHasChanged = false;
+
+	public static boolean subjectFontSizeHasChanged = false;
+
+	public static boolean searchFontSizeHasChanged = false;
+
 	public static float DEFAULT_FONT_RADIX = 1;
 
 	public static String[] fontSizeShow = new String[] { "小", "中", "大", "特大" };
@@ -39,9 +45,19 @@ public class FontUtils {
 		return fontSizeHasChanged;
 	}
 
-	public static void setChangeFontSize(boolean hasChanged) {
+	public static void setChangseFontSize(boolean hasChanged) {
 		// TODO Auto-generated method stub
 		fontSizeHasChanged = hasChanged;
+	}
+
+	public static void chagneFontSizeGlobal() {
+
+		mainActivityFontSizeHasChanged = true;
+
+		subjectFontSizeHasChanged = true;
+
+		searchFontSizeHasChanged = true;
+
 	}
 
 	public static int getFontSetIndex(float radix) {
@@ -52,5 +68,32 @@ public class FontUtils {
 		if (radix == fontSize[3])
 			return 3;
 		return 1;
+	}
+
+	public static boolean isMainActivityFontSizeHasChanged() {
+		return mainActivityFontSizeHasChanged;
+	}
+
+	public static void setMainActivityFontSizeHasChanged(
+			boolean mainActivityFontSizeHasChanged) {
+		FontUtils.mainActivityFontSizeHasChanged = mainActivityFontSizeHasChanged;
+	}
+
+	public static boolean isSubjectFontSizeHasChanged() {
+		return subjectFontSizeHasChanged;
+	}
+
+	public static void setSubjectFontSizeHasChanged(
+			boolean subjectFontSizeHasChanged) {
+		FontUtils.subjectFontSizeHasChanged = subjectFontSizeHasChanged;
+	}
+
+	public static boolean isSearchFontSizeHasChanged() {
+		return searchFontSizeHasChanged;
+	}
+
+	public static void setSearchFontSizeHasChanged(
+			boolean searchFontSizeHasChanged) {
+		FontUtils.searchFontSizeHasChanged = searchFontSizeHasChanged;
 	}
 }

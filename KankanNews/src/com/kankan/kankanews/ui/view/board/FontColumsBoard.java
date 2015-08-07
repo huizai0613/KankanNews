@@ -43,6 +43,7 @@ public class FontColumsBoard extends PopupWindow implements OnClickListener {
 	private TextView mostSize;
 	private ImageView dayNight;
 	public SharePreferenceUtil spUtil;
+	private View backView;
 
 	public class ColumItem {
 		ImageView logo;
@@ -69,6 +70,7 @@ public class FontColumsBoard extends PopupWindow implements OnClickListener {
 		bigSize = (TextView) rootView.findViewById(R.id.font_big_size);
 		mostSize = (TextView) rootView.findViewById(R.id.font_most_size);
 		dayNight = (ImageView) rootView.findViewById(R.id.day_night_change);
+		backView = rootView.findViewById(R.id.font_back_view);
 		changeNightImg(spUtil.getIsDayMode());
 
 		initFontSizeLayout();
@@ -88,6 +90,7 @@ public class FontColumsBoard extends PopupWindow implements OnClickListener {
 		bigSize.setOnClickListener(this);
 		mostSize.setOnClickListener(this);
 		dayNight.setOnClickListener(this);
+		backView.setOnClickListener(this);
 	}
 
 	@Override
@@ -95,25 +98,29 @@ public class FontColumsBoard extends PopupWindow implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.font_small_size:
 			initFontSizeLayout();
-			changeRedBg(smallSize);
+			changeBg(smallSize, R.drawable.font_size_set_left_item_border_red,
+					Color.WHITE);
 			spUtil.saveFontSizeRadix(FontUtils.fontSize[0]);
 			activity.changeFontSize();
 			break;
 		case R.id.font_normal_size:
 			initFontSizeLayout();
-			changeRedBg(normalSize);
+			changeBg(normalSize, R.drawable.font_size_set_item_border_red,
+					Color.WHITE);
 			spUtil.saveFontSizeRadix(FontUtils.fontSize[1]);
 			activity.changeFontSize();
 			break;
 		case R.id.font_big_size:
 			initFontSizeLayout();
-			changeRedBg(bigSize);
+			changeBg(bigSize, R.drawable.font_size_set_item_border_red,
+					Color.WHITE);
 			spUtil.saveFontSizeRadix(FontUtils.fontSize[2]);
 			activity.changeFontSize();
 			break;
 		case R.id.font_most_size:
 			initFontSizeLayout();
-			changeRedBg(mostSize);
+			changeBg(mostSize, R.drawable.font_size_set_right_item_border_red,
+					Color.WHITE);
 			spUtil.saveFontSizeRadix(FontUtils.fontSize[3]);
 			activity.changeFontSize();
 			break;
@@ -123,6 +130,7 @@ public class FontColumsBoard extends PopupWindow implements OnClickListener {
 			changeNightImg(isDay);
 			activity.changeDayMode(isDay);
 			break;
+		case R.id.font_back_view:
 		default:
 			dismiss();
 			break;
@@ -130,32 +138,33 @@ public class FontColumsBoard extends PopupWindow implements OnClickListener {
 	}
 
 	public void initFontSizeLayout() {
-		changeWhiteBg(smallSize);
-		changeWhiteBg(normalSize);
-		changeWhiteBg(bigSize);
-		changeWhiteBg(mostSize);
+		changeBg(smallSize, R.drawable.font_size_set_left_item_border,
+				Color.BLACK);
+		changeBg(normalSize, R.drawable.font_size_set_item_border, Color.BLACK);
+		changeBg(bigSize, R.drawable.font_size_set_item_border, Color.BLACK);
+		changeBg(mostSize, R.drawable.font_size_set_right_item_border,
+				Color.BLACK);
 	}
 
 	public void setCurFontSizeBg() {
 		float radix = spUtil.getFontSizeRadix();
 		if (radix == FontUtils.fontSize[0])
-			changeRedBg(smallSize);
+			changeBg(smallSize, R.drawable.font_size_set_left_item_border_red,
+					Color.WHITE);
 		if (radix == FontUtils.fontSize[1])
-			changeRedBg(normalSize);
+			changeBg(normalSize, R.drawable.font_size_set_item_border_red,
+					Color.WHITE);
 		if (radix == FontUtils.fontSize[2])
-			changeRedBg(bigSize);
+			changeBg(bigSize, R.drawable.font_size_set_item_border_red,
+					Color.WHITE);
 		if (radix == FontUtils.fontSize[3])
-			changeRedBg(mostSize);
+			changeBg(mostSize, R.drawable.font_size_set_right_item_border_red,
+					Color.WHITE);
 	}
 
-	public void changeRedBg(TextView view) {
-		view.setBackgroundColor(Color.RED);
-		view.setTextColor(Color.WHITE);
-	}
-
-	public void changeWhiteBg(TextView view) {
-		view.setBackgroundColor(Color.WHITE);
-		view.setTextColor(Color.BLACK);
+	public void changeBg(TextView view, int resId, int textColor) {
+		view.setBackgroundResource(resId);
+		view.setTextColor(textColor);
 	}
 
 	public void changeNightImg(boolean isDay) {

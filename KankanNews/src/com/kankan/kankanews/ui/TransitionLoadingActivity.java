@@ -1,68 +1,21 @@
 package com.kankan.kankanews.ui;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.json.JSONObject;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 
 import com.android.volley.VolleyError;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.kankan.kankanews.base.BaseActivity;
-import com.kankan.kankanews.base.BaseFragment;
-import com.kankan.kankanews.base.BaseVideoActivity;
-import com.kankan.kankanews.base.download.MyRequestCallBack;
-import com.kankan.kankanews.bean.MyCollect;
-import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.bean.New_News_Home;
-import com.kankan.kankanews.bean.User_Collect_Offline;
-import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankanews.ui.fragment.New_ColumsFragment;
-import com.kankan.kankanews.ui.fragment.New_HomeFragment;
-import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
-import com.kankan.kankanews.ui.fragment.New_MyFragment;
-import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
 import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
-import com.kankan.kankanews.ui.view.MyTextView;
-import com.kankan.kankanews.utils.CommonUtils;
-import com.kankan.kankanews.utils.Options;
-import com.kankan.kankanews.utils.PixelUtil;
-import com.kankan.kankanews.utils.ShareUtil;
-import com.kankan.kankanews.utils.TimeUtil;
 import com.kankanews.kankanxinwen.R;
-import com.lidroid.xutils.http.HttpHandler;
-import com.networkbench.agent.impl.NBSAppAgent;
-import com.umeng.message.PushAgent;
-import com.umeng.socialize.sso.UMSsoHandler;
-import com.umeng.update.UmengUpdateAgent;
 
 public class TransitionLoadingActivity extends BaseActivity {
 
