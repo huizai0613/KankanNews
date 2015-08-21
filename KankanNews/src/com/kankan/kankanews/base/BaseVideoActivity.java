@@ -2,6 +2,8 @@ package com.kankan.kankanews.base;
 
 import org.json.JSONObject;
 
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +11,7 @@ import android.widget.LinearLayout;
 
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.config.AndroidConfig;
+import com.kankan.kankanews.receiver.NetChangeReceiver;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -24,6 +27,8 @@ public abstract class BaseVideoActivity extends BaseActivity {
 
 	protected static final int SET_FULL_MESSAGE = 2048;
 
+	protected BroadcastReceiver netChangeReceiver;
+
 	protected Handler setFullHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -35,6 +40,15 @@ public abstract class BaseVideoActivity extends BaseActivity {
 				break;
 			}
 		}
+	};
+	
+	@Override
+	protected void onCreate(android.os.Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		IntentFilter mFilter = new IntentFilter();
+		mFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+		netChangeReceiver = new NetChangeReceiver(this);
+		registerReceiver(netChangeReceiver, mFilter);
 	};
 
 	// 从全屏到小屏
@@ -112,5 +126,14 @@ public abstract class BaseVideoActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 
 	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(netChangeReceiver);
+	}
+
+	public abstract void netChanged();
 
 }

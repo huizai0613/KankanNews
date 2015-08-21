@@ -540,4 +540,9 @@ public class MainActivity extends BaseVideoActivity {
 		super.finishNoRemove();
 	}
 
+	@Override
+	public void netChanged() {
+		// TODO Auto-generated method stub
+		
+	}
 }

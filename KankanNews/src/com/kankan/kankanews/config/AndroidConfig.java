@@ -169,12 +169,11 @@ public class AndroidConfig {
 
 	// 广告获取接口
 	public static final String ADVERT_GET = "http://afp.csbew.com/s.htm";
-	
-	//广告线上ID
-	public static final String ADVERT_ID = "107167";
-	//广告测试ID
-	public static final String ADVERT_ID_DEBUG = "108535";
 
+	// 广告线上ID
+	public static final String ADVERT_ID = "107167";
+	// 广告测试ID
+	public static final String ADVERT_ID_DEBUG = "108535";
 
 	public static final int MAX_SEARCH_HIS_NUM = 5;
 	// 内容搜索接口

@@ -115,7 +115,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 
 	private void initLister() {
 		layout_my_foot.setOnClickListener(this);
-		layout_about.setOnClickListener(this); 
+		layout_about.setOnClickListener(this);
 		layout_updata.setOnClickListener(this);
 		layout_fankui.setOnClickListener(this);
 		font_size_set.setOnClickListener(this);
@@ -174,6 +174,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 		// // 初始化缓存大小
+		initToggle();
 		float filelength = getFolderSize(CommonUtils
 				.getImageCachePath(mActivity.getApplicationContext()))
 				/ 1024
@@ -185,21 +186,12 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		layout_detele_now.setText("当前缓存" + Float.toString(filele_rusult) + "M");
 	}
 
-	private void initData() { 
+	private void initData() {
 
-		if (spUtil.getIsDayMode()) {
-			isDayMode.setToggleOff();
-		} else {
-			isDayMode.setToggleOn();
-		}
-		if (mActivity.spUtil.isFlow()) {
-			layout_download.setToggleOn();
-		} else {
-			layout_download.setToggleOff();
-		}
+		initToggle();
 		layout_version.setText("当前版本  " + CommonUtils.getVersion(mActivity));
 
-	} 
+	}
 
 	@Override
 	protected boolean initLocalDate() {
@@ -272,7 +264,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 
 		case R.id.layout_delete:
 			delete();
-			break; 
+			break;
 
 		case R.id.layout_fankui:
 			Intent intent = new Intent();
@@ -431,6 +423,19 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 			spUtil.saveFontSizeRadix(FontUtils.fontSize[index]);
 			FontUtils.chagneFontSizeGlobal();
 			dialog.dismiss();
+		}
+	}
+
+	private void initToggle() {
+		if (mActivity.spUtil.getIsDayMode()) {
+			isDayMode.setToggleOff();
+		} else {
+			isDayMode.setToggleOn();
+		}
+		if (mActivity.spUtil.isFlow()) {
+			layout_download.setToggleOn();
+		} else {
+			layout_download.setToggleOff();
 		}
 	}
 }

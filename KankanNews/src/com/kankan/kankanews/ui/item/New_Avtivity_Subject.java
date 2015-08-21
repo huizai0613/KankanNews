@@ -1,8 +1,6 @@
 package com.kankan.kankanews.ui.item;
 
 import java.io.ByteArrayOutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,20 +19,16 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -50,27 +44,19 @@ import com.android.volley.Response.Listener;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.base.IA.CrashApplication;
-import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_News_Click;
-import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_Subject_Json;
 import com.kankan.kankanews.bean.Subject_Item;
 import com.kankan.kankanews.bean.subject_List;
-import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.photoview.PhotoView;
-import com.kankan.kankanews.sina.AccessTokenKeeper;
-import com.kankan.kankanews.sina.Constants;
 import com.kankan.kankanews.ui.MainActivity;
-import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
-import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
-import com.kankan.kankanews.ui.view.board.CustomShareBoard;
-import com.kankan.kankanews.ui.view.board.FontColumsBoard;
+import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
+import com.kankan.kankanews.ui.view.popup.FontColumsBoard;
 import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
-import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;
@@ -85,7 +71,7 @@ import com.lidroid.xutils.exception.DbException;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.sso.UMSsoHandler;
 
-public class New_Avtivity_Subject extends BaseVideoActivity implements
+public class New_Avtivity_Subject extends BaseActivity implements
 		AdapterView.OnItemClickListener,
 		StickyListHeadersListView.OnHeaderClickListener,
 		StickyListHeadersListView.OnStickyHeaderOffsetChangedListener,

@@ -85,6 +85,16 @@ public class New_Activity_MyFoot extends BaseActivity implements
 	}
 
 	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (!spUtil.getIsDayMode())
+			chage2Night();
+		else
+			chage2Day();
+	}
+
+	@Override
 	protected void setListener() {
 		// TODO Auto-generated method stub
 		myListView.setOnItemClickListener(this);

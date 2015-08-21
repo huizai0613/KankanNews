@@ -170,7 +170,7 @@
                             </com.kankan.kankanews.ui.view.VideoViewController>
 
                             <ImageView
-                                android:id="@+id/content_video"
+                                android:id="@+id/content_video_bg"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_alignParentLeft="true"
@@ -180,7 +180,7 @@
                                 android:src="@drawable/live_video_image" />
 
                             <ImageView
-                                android:id="@+id/video_player"
+                                android:id="@+id/content_video_player"
                                 android:layout_width="70dip"
                                 android:layout_height="70dip"
                                 android:layout_centerInParent="true"

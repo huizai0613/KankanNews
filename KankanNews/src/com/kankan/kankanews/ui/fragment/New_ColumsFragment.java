@@ -24,7 +24,7 @@ import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.ui.item.New_Activity_Colums_Info;
-import com.kankan.kankanews.ui.view.board.SecondColumsBoard;
+import com.kankan.kankanews.ui.view.popup.SecondColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.NetUtils;

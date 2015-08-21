@@ -271,7 +271,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 		protected Map<String, String> doInBackground(String... params) {
 			// TODO Auto-generated method stub
 			Map<String, String> taskResult = new HashMap<String, String>();
-
+			imagesSelectedUrl.clear();
 			for (int i = 0; i < imagesSelected.size(); i++) {
 				if (i < imagesSelectedUrl.size())
 					continue;

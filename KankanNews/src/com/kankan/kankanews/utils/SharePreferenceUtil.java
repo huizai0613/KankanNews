@@ -272,7 +272,7 @@ public class SharePreferenceUtil {
 		editor.commit();
 	}
 
-	/** 字体大小调整基数 */
+	/** 是否为日间模式 */
 	public boolean getIsDayMode() {
 		return mSharedPreferences.getBoolean(IS_DAY_MODE, true);
 	}

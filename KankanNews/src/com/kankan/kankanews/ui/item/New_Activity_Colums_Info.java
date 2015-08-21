@@ -67,7 +67,7 @@ import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
-import com.kankan.kankanews.ui.view.board.CustomShareBoard;
+import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
@@ -1098,4 +1098,11 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		super.shareReBack();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 	}
+
+	@Override
+	public void netChanged() {
+		// TODO Auto-generated method stub
+
+	}
+
 }

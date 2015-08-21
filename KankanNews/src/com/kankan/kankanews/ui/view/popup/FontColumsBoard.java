@@ -2,7 +2,7 @@
  * 
  */
 
-package com.kankan.kankanews.ui.view.board;
+package com.kankan.kankanews.ui.view.popup;
 
 import android.content.Context;
 import android.graphics.Color;
