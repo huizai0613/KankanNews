@@ -435,8 +435,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			layoutParams.rightMargin = PixelUtil.dp2px(4);
 			points = new ArrayList<View>();
 			View point;
-			images = new ArrayList<AutoImageTag>();
-			AutoImageVIew imageView = null;
+			images = new ArrayList<AutoImageTag>(); 
 			for (final New_News_Top tn : getmTopNewsList) {
 				// imageView = new AutoImageVIew(mActivity);
 				tn.setTitlepic(CommonUtils.doWebpUrl(tn.getTitlepic()));
@@ -1071,7 +1070,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					.get(1);
 			fragment.setSelectPlay(true);
 			fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
-			mActivity.touchTab(mActivity.tab_two);
+			mActivity.touchTab(mActivity.tabLive);
 
 		} else if (news.getZtype().equals("1")) {
 			mActivity.startSubjectActivityByParameter(

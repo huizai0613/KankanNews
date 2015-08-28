@@ -163,11 +163,7 @@ public class NetUtils {
 	 */
 	public void CommitShare(String mid, String type,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
-		HashMap<String, String> hashMap = new HashMap<String, String>();
-		if (CrashApplication.getInstance().getUser() != null) {
-			hashMap.put("uid", CrashApplication.getInstance().getUser()
-					.getUser_id());
-		}
+		HashMap<String, String> hashMap = new HashMap<String, String>(); 
 		hashMap.put("id", mid);
 		hashMap.put("type", type);
 		mCustomRequest = new CustomRequest(Request.Method.POST,
@@ -471,6 +467,18 @@ public class NetUtils {
 				null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequestArray);
 
+	}
+
+	/**
+	 * 获取报料首页条目
+	 */
+	public void getRevelationsHomeList(Listener<JSONObject> reponseListener,
+			ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(
+				Request.Method.GET,
+				AndroidConfig.New_NETHOST + AndroidConfig.REVELATIONS_HOME_DATA,
+				null, reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
 	}
 
 	public void getAnalyse(Context context, String type, String title,

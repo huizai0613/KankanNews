@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <com.kankan.kankanews.ui.view.AutoScrollViewPager
+        android:id="@+id/revelations_activity_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </com.kankan.kankanews.ui.view.AutoScrollViewPager>
+
+    <LinearLayout
+        android:id="@+id/revelations_activity_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewpager"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/news_bask_space" >
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/revelations_activity_title"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dip"
+            android:paddingTop="10dip"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/revelations_activity_point_content"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </LinearLayout>
+    <!--
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dip"
+            android:layout_below="@id/viewpager_content"
+            android:background="#f6f6f6" />
+    -->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:layout_below="@id/revelations_activity_content"
+        android:background="@color/gray_cc" />
+
+</RelativeLayout>

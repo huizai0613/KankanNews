@@ -1,4 +1,4 @@
-package com.kankan.kankanews.search;
+package com.kankan.kankanews.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

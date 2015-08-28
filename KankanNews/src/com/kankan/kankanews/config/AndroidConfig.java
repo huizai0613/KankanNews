@@ -157,6 +157,8 @@ public class AndroidConfig {
 	// ------------------------------------------------------------------报料------------------------------------------------------------------------
 	// 最大图片可选
 	public static final int MAX_PIC_SELECTED = 4;
+	// 报料列表数据
+	public static final String REVELATIONS_HOME_DATA = "/v5/newsbreak/breakinfo/index";
 	// 报料图片上传接口
 	public static final String REVELATIONS_IMAGE_POST = "http://api.app.kankanews.com/kankan/v5/newsbreak/pic/1";
 

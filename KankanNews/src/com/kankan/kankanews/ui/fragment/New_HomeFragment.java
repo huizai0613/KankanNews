@@ -34,7 +34,8 @@ import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_HomeCate;
 import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.exception.NetRequestException;
-import com.kankan.kankanews.search.SearchMainActivity;
+import com.kankan.kankanews.ui.MeSetActivity;
+import com.kankan.kankanews.ui.SearchMainActivity;
 import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
@@ -57,6 +58,7 @@ public class New_HomeFragment extends BaseFragment implements
 	private HorizontalScrollView mColumnHorizontalScrollView;
 	private LinearLayout mRadioGroup_content;
 	private ImageView searchBut;
+	private ImageView meSetBut;
 	// private ImageView shade_right;
 
 	private ViewPager mViewpager;
@@ -70,7 +72,7 @@ public class New_HomeFragment extends BaseFragment implements
 	private int currentFragmentIndex;
 	private boolean isEnd;
 
-	public ArrayList<New_HomeItemFragment> fragments;
+	public ArrayList<BaseFragment> fragments;
 
 	int[] textNomalSize = { R.dimen.textsize_1, R.dimen.textsize_2,
 			R.dimen.textsize_3, R.dimen.textsize_4 };
@@ -97,6 +99,8 @@ public class New_HomeFragment extends BaseFragment implements
 		main_bg = inflate.findViewById(R.id.main_bg);
 
 		searchBut = (ImageView) inflate.findViewById(R.id.home_search_but);
+		meSetBut = (ImageView) inflate.findViewById(R.id.me_set_but);
+
 		mViewpager = (ViewPager) inflate.findViewById(R.id.viewpager);
 		mViewpager.setOffscreenPageLimit(0);
 
@@ -111,7 +115,7 @@ public class New_HomeFragment extends BaseFragment implements
 			main_bg.setVisibility(View.VISIBLE);
 		}
 
-		DebugLog.e(Build.VERSION.SDK_INT + "" );
+		DebugLog.e(Build.VERSION.SDK_INT + "");
 
 		return inflate;
 	}
@@ -121,10 +125,12 @@ public class New_HomeFragment extends BaseFragment implements
 		// TODO Auto-generated method stub
 		super.onResume();
 		if (FontUtils.isMainActivityFontSizeHasChanged()) {
-			for (New_HomeItemFragment fragment : fragments) {
-				fragment.isNeedChangeFontSize = true;
+			for (int i = 1; i < fragments.size(); i++) {
+				((New_HomeItemFragment) fragments.get(i)).isNeedChangeFontSize = true;
 			}
-			fragments.get(currentFragmentIndex).changeFontSize();
+			if (currentFragmentIndex != 0)
+				((New_HomeItemFragment) fragments.get(currentFragmentIndex))
+						.changeFontSize();
 		}
 	}
 
@@ -145,6 +151,18 @@ public class New_HomeFragment extends BaseFragment implements
 				New_HomeFragment.this.startActivity(new Intent(
 						New_HomeFragment.this.mActivity,
 						SearchMainActivity.class));
+				New_HomeFragment.this.mActivity.overridePendingTransition(
+						R.anim.in_from_right, R.anim.alpha_out);// R.anim.out_to_top
+			}
+		});
+
+		meSetBut.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				New_HomeFragment.this.startActivity(new Intent(
+						New_HomeFragment.this.mActivity,
+						MeSetActivity.class));
 				New_HomeFragment.this.mActivity.overridePendingTransition(
 						R.anim.in_from_right, R.anim.alpha_out);// R.anim.out_to_top
 			}
@@ -171,15 +189,11 @@ public class New_HomeFragment extends BaseFragment implements
 				final MyTextView columnTextView = new MyTextView(mActivity);
 				columnTextView.setTextAppearance(mActivity,
 						R.style.top_category_scroll_view_item_text);
-
 				columnTextView.setGravity(Gravity.CENTER);
 				columnTextView.setId(i);
 				columnTextView.setText(homeCates.get(i).getTitle());
 				columnTextView.setTextColor(getResources().getColorStateList(
 						R.color.home_category_text_color));
-				// columnTextView
-				// .setBackgroundResource(R.drawable.select_columnitem);
-
 				if (columnSelectIndex == i) {
 					columnTextView.setSelected(true);
 					FontUtils.setTextViewFontSize(this, columnTextView,
@@ -190,8 +204,6 @@ public class New_HomeFragment extends BaseFragment implements
 							R.string.home_cates_text_size,
 							FontUtils.DEFAULT_FONT_RADIX);
 				}
-				// columnTextView.setTextSize(getResourcesSelf().getDimension(
-				// textNomalSize[PixelUtil.getScale()]));
 				columnTextView.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -202,29 +214,10 @@ public class New_HomeFragment extends BaseFragment implements
 									.getChildAt(i);
 							TextView localView = (TextView) layout
 									.getChildAt(0);
-
-							// localView
-							// .setTextSize(getResourcesSelf()
-							// .getDimensionPixelSize(
-							// textNomalSize[PixelUtil
-							// .getScale()]));
-
-							// FontUtils.setTextViewFontSize(
-							// New_HomeFragment.this, localView,
-							// R.string.home_cates_text_size_selected,
-							// FontUtils.DEFAULT_FONT_RADIX);
-							// if (columnSelectIndex == i) {
-							// columnTextView.setSelected(true);
-							// FontUtils.setTextViewFontSize(
-							// New_HomeFragment.this, columnTextView,
-							// R.string.home_cates_text_size_selected,
-							// FontUtils.DEFAULT_FONT_RADIX);
-							// } else {
 							FontUtils.setTextViewFontSize(
 									New_HomeFragment.this, localView,
 									R.string.home_cates_text_size,
 									FontUtils.DEFAULT_FONT_RADIX);
-							// }
 							if (localView != v) {
 								localView.setSelected(false);
 							} else {
@@ -265,13 +258,16 @@ public class New_HomeFragment extends BaseFragment implements
 	// 初始化ViewPager
 	private void initViewPager() {
 
-		fragments = new ArrayList<New_HomeItemFragment>();
-		New_HomeItemFragment fragment = null;
+		fragments = new ArrayList<BaseFragment>();
 		if (homeCates != null) {
 			for (New_HomeCate hc : homeCates) {
-				fragment = new New_HomeItemFragment();
-				fragment.setAppclassidAndSP(hc.getAppclassid(), hc.getSp());
-				fragments.add(fragment);
+				if (hc.getAppclassid().equals("COLUMNS"))
+					fragments.add(new New_ColumsFragment());
+				else {
+					New_HomeItemFragment fragment = new New_HomeItemFragment();
+					fragment.setAppclassidAndSP(hc.getAppclassid(), hc.getSp());
+					fragments.add(fragment);
+				}
 			}
 
 			adapter = new FragmentStatePagerAdapter(
@@ -313,6 +309,7 @@ public class New_HomeFragment extends BaseFragment implements
 			mViewpager.setDrawingCacheEnabled(false);
 			mViewpager.setOnPageChangeListener(this);
 			mViewpager.setAdapter(adapter);
+			mViewpager.setCurrentItem(1, false);
 		}
 
 	}
@@ -425,7 +422,7 @@ public class New_HomeFragment extends BaseFragment implements
 	private LinearLayout.LayoutParams Linparams;
 
 	// 当前选中的tab
-	public int columnSelectIndex = 0;
+	public int columnSelectIndex = 1;
 
 	private FragmentStatePagerAdapter adapter;
 
@@ -500,6 +497,10 @@ public class New_HomeFragment extends BaseFragment implements
 			}
 			if (isNeedFreash) {
 				homeCates = new ArrayList<New_HomeCate>();
+				New_HomeCate columnCate = new New_HomeCate();
+				columnCate.setAppclassid("COLUMNS");
+				columnCate.setTitle("栏目");
+				homeCates.add(columnCate);
 				New_HomeCate mNew_HomeCate = null;
 				for (int i = 0; i < length; i++) {
 					mNew_HomeCate = new New_HomeCate();

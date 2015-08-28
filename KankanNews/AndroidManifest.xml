@@ -141,7 +141,12 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.kankan.kankanews.search.SearchMainActivity"
+            android:name="com.kankan.kankanews.ui.SearchMainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.kankan.kankanews.ui.MeSetActivity"
             android:exported="false"
             android:screenOrientation="portrait" >
         </activity>

@@ -30,7 +30,6 @@ import com.kankan.kankanews.bean.New_News_Click;
 import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.config.AndroidConfig;
-import com.kankan.kankanews.search.SearchMainActivity;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;

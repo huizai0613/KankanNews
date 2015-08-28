@@ -1,57 +1,21 @@
 package com.kankan.kankanews.bean;
 
-import org.json.JSONObject;
+import java.io.Serializable;
+import java.util.List;
 
-import com.kankan.kankanews.base.BaseBean;
-import com.kankan.kankanews.exception.NetRequestException;
-
-public class New_News_Top extends BaseBean<New_News_Top> {
-
+public class RevelationsNew implements Serializable {
 	private String id;
 	private String title;
 	private String titleurl;
 	private String titlepic;
-	private String sharedPic;
 	private String type;
 	private String sourceid;
 	private String newstime;
 	private String spclassid;
 	private String ztid;
+	private String intro;
+	private String sharepic;
 	private String mid;
-	private String classid;
-
-	public String getClassid() {
-		return classid;
-	}
-
-	public void setClassid(String classid) {
-		this.classid = classid;
-	}
-
-	@Override
-	public JSONObject toJSON() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public New_News_Top parseJSON(JSONObject jsonObj)
-			throws NetRequestException {
-
-		id = jsonObj.optString("id");
-		title = jsonObj.optString("title");
-		titleurl = jsonObj.optString("titleurl");
-		titlepic = jsonObj.optString("titlepic");
-		sharedPic = jsonObj.optString("titlepic");
-		type = jsonObj.optString("type");
-		sourceid = jsonObj.optString("sourceid");
-		newstime = jsonObj.optString("newstime");
-		spclassid = jsonObj.optString("spclassid");
-		ztid = jsonObj.optString("ztid");
-		mid = jsonObj.optString("mid");
-
-		return this;
-	}
 
 	public String getId() {
 		return id;
@@ -125,20 +89,28 @@ public class New_News_Top extends BaseBean<New_News_Top> {
 		this.ztid = ztid;
 	}
 
+	public String getIntro() {
+		return intro;
+	}
+
+	public void setIntro(String intro) {
+		this.intro = intro;
+	}
+
+	public String getSharepic() {
+		return sharepic;
+	}
+
+	public void setSharepic(String sharepic) {
+		this.sharepic = sharepic;
+	}
+
 	public String getMid() {
 		return mid;
 	}
 
 	public void setMid(String mid) {
 		this.mid = mid;
-	}
-
-	public String getSharedPic() {
-		return sharedPic;
-	}
-
-	public void setSharedPic(String sharedPic) {
-		this.sharedPic = sharedPic;
 	}
 
 }

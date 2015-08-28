@@ -1,60 +1,59 @@
 package com.kankan.kankanews.ui.fragment;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.Selection;
-import android.text.TextWatcher;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.AbsListView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.ImageView.ScaleType;
 
 import com.android.volley.VolleyError;
+import com.iss.view.pulltorefresh.PullToRefreshBase;
+import com.iss.view.pulltorefresh.PullToRefreshListView;
+import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.kankan.kankanews.base.BaseFragment;
-import com.kankan.kankanews.config.AndroidConfig;
-import com.kankan.kankanews.picsel.PicPreviewActivity;
-import com.kankan.kankanews.picsel.PicSelectedMainActivity;
+import com.kankan.kankanews.bean.New_News_Top;
+import com.kankan.kankanews.bean.RevelationsHomeList;
+import com.kankan.kankanews.bean.SerializableObj;
+import com.kankan.kankanews.ui.view.AutoScrollViewPager;
+import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
-import com.kankan.kankanews.utils.ImageLoader;
-import com.kankan.kankanews.utils.ImageLoader.Type;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
+import com.lidroid.xutils.exception.DbException;
 
 public class New_RevelationsFragment extends BaseFragment implements
 		OnClickListener {
 
 	private View inflate;
+	private View retryView;
+	private View loadingView;
 
-	private EditText contentText;
-	private TextView contentNumText;
-	private EditText telText;
-	private Button postBut;
-	private ImageView imageOne;
-	private ImageView imageTwo;
-	private ImageView imageThree;
-	private ImageView imageFour;
-	private ImageView[] imageViews = null;
-	private List<String> imagesSelected = new LinkedList<String>();
-	private List<String> imagesSelectedUrl = new LinkedList<String>();
+	private PullToRefreshListView revelationsListView;
+	private RevelationsHomeList revelationsHomeList;
+	private String revelationsHomeListJson;
+
+	private RevelationsListAdapter revelationsListAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -71,85 +70,178 @@ public class New_RevelationsFragment extends BaseFragment implements
 	}
 
 	public void initview() {
-		contentText = (EditText) inflate
-				.findViewById(R.id.revelations_post_content);
-		contentNumText = (TextView) inflate
-				.findViewById(R.id.revelations_post_content_num);
-		telText = (EditText) inflate.findViewById(R.id.revelations_post_tel);
-		postBut = (Button) inflate.findViewById(R.id.revelations_post_button);
-		imageOne = (ImageView) inflate.findViewById(R.id.revelations_image_one);
-		imageTwo = (ImageView) inflate.findViewById(R.id.revelations_image_two);
-		imageThree = (ImageView) inflate
-				.findViewById(R.id.revelations_image_three);
-		imageFour = (ImageView) inflate
-				.findViewById(R.id.revelations_image_four);
-		imageViews = new ImageView[] { imageOne, imageTwo, imageThree,
-				imageFour };
-		initTitleBar(inflate, "我要报料");
+		initTitleBar(inflate, "报料大厅");
+		revelationsListView = (PullToRefreshListView) inflate
+				.findViewById(R.id.revelations_list_view);
+		retryView = inflate.findViewById(R.id.revelations_retry_view);
+		loadingView = inflate.findViewById(R.id.revelations_loading_view);
+
+		initListView();
+	}
+
+	protected void initListView() {
+		// TODO Auto-generated method stub
+		revelationsListView.setMode(Mode.PULL_FROM_START);
+		revelationsListView.getLoadingLayoutProxy(true, false).setPullLabel(
+				"下拉可以刷新");
+		revelationsListView.getLoadingLayoutProxy(true, false).setReleaseLabel(
+				"释放后刷新");
+		revelationsListView
+				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
+
+					@Override
+					public void onPullDownToRefresh(
+							PullToRefreshBase refreshView) {
+						String time = TimeUtil.getTime(new Date());
+						refreshView.getLoadingLayoutProxy()
+								.setLastUpdatedLabel("最后更新:" + time);
+						refreshNetDate();
+					}
+
+					@Override
+					public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+						loadMoreNetDate();
+					}
+				});
 	}
 
 	private void initLister() {
-		postBut.setOnClickListener(this);
-		imageOne.setOnClickListener(this);
-		imageTwo.setOnClickListener(this);
-		imageThree.setOnClickListener(this);
-		imageFour.setOnClickListener(this);
-		contentText.addTextChangedListener(new MaxLengthWatcher(300,
-				contentText));
-
+		retryView.setOnClickListener(this);
 	}
 
 	private void initData() {
+		boolean flag = this.initLocalDate();
+		if (flag) {
+			showData(true);
+			loadingView.setVisibility(View.GONE);
+			revelationsListView.showHeadLoadingView();
+		}
+		refreshNetDate();
+	}
+
+	private void showData(boolean needRefresh) {
+		revelationsListView.onRefreshComplete();
+		if (needRefresh) {
+			revelationsListAdapter = new RevelationsListAdapter();
+			revelationsListView.setAdapter(revelationsListAdapter);
+		} else {
+			revelationsListAdapter.notifyDataSetChanged();
+		}
 
 	}
 
-	class MaxLengthWatcher implements TextWatcher {
+	private class ActivityPageChangeListener implements
+			ViewPager.OnPageChangeListener {
 
-		private int maxLen = 0;
-		private EditText editText = null;
-
-		public MaxLengthWatcher(int maxLen, EditText editText) {
-			this.maxLen = maxLen;
-			this.editText = editText;
+		@Override
+		public void onPageScrollStateChanged(int arg0) {
 		}
 
-		public void afterTextChanged(Editable arg0) {
-			// TODO Auto-generated method stub
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2) {
 
 		}
 
-		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-				int arg3) {
-			// TODO Auto-generated method stub
+		@Override
+		public void onPageSelected(int arg0) {
 
 		}
 
-		public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-				int arg3) {
-			// TODO Auto-generated method stub
-			Editable editable = editText.getText();
-			int len = editable.length();
+	}
 
-			if (len > maxLen) {
-				int selEndIndex = Selection.getSelectionEnd(editable);
-				String str = editable.toString();
-				// 截取新字符串
-				String newStr = str.substring(0, maxLen);
-				editText.setText(newStr);
-				editable = editText.getText();
+	private class ActivityViewPageAdapter extends PagerAdapter {
 
-				// 新字符串的长度
-				int newLen = editable.length();
-				// 旧光标位置超过字符串长度
-				if (selEndIndex > newLen) {
-					selEndIndex = editable.length();
-				}
-				// 设置新光标所在的位置
-				Selection.setSelection(editable, selEndIndex);
+		@Override
+		public int getCount() {
+			return revelationsHomeList.getActivity().size();
+		}
+
+		@Override
+		public boolean isViewFromObject(View view, Object object) {
+			return view == object;
+		}
+
+		@Override
+		public Object instantiateItem(ViewGroup container, int position) {
+			Log.e("position", position + "");
+			ImageView imageView = new ImageView(
+					New_RevelationsFragment.this.mActivity);
+			imageView.setScaleType(ScaleType.CENTER_CROP);
+			imageView.setLayoutParams(new ViewGroup.LayoutParams(
+					ViewGroup.LayoutParams.MATCH_PARENT,
+					(int) (mActivity.mScreenWidth / 3)));
+			ImgUtils.imageLoader.displayImage(revelationsHomeList.getActivity()
+					.get(position).getTitlepic(), imageView,
+					ImgUtils.homeImageOptions);
+			container.addView(imageView);
+			return imageView;
+		}
+	}
+
+	private class RevelationsListTopHolder {
+		AutoScrollViewPager activityViewPager;
+		LinearLayout activityContent;
+		MyTextView activityTitle;
+	}
+
+	private class RevelationsListAdapter extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			// return revelationsHomeList.getBreaknews().size() + 1;
+			return 1;
+		}
+
+		@Override
+		public int getViewTypeCount() {
+			return 2;
+		}
+
+		@Override
+		public int getItemViewType(int position) {
+			if (position == 0 && revelationsHomeList.getActivity() != null
+					&& revelationsHomeList.getActivity().size() != 0) {
+				return 0;
+			} else
+				return 1;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			int itemViewType = getItemViewType(position);
+
+			if (convertView == null) {
+				// if (itemViewType == 0) {
+				convertView = inflate.inflate(mActivity,
+						R.layout.item_revelations_list_activity, null);
+				RevelationsListTopHolder topHolder = new RevelationsListTopHolder();
+				topHolder.activityViewPager = (AutoScrollViewPager) convertView
+						.findViewById(R.id.revelations_activity_viewpager);
+				topHolder.activityContent = (LinearLayout) convertView
+						.findViewById(R.id.revelations_activity_content);
+				topHolder.activityTitle = (MyTextView) convertView
+						.findViewById(R.id.revelations_activity_title);
+				topHolder.activityViewPager
+						.setOnPageChangeListener(new ActivityPageChangeListener());
+				topHolder.activityViewPager
+						.setAdapter(new ActivityViewPageAdapter());
+				convertView.setTag(topHolder);
+				// }
+			} else {
+
 			}
-			contentNumText.setText(editable.length() + "/300字");
+			return convertView;
 		}
-
 	}
 
 	@Override
@@ -157,221 +249,85 @@ public class New_RevelationsFragment extends BaseFragment implements
 		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch (id) {
-		case R.id.revelations_image_one:
-			if (imagesSelected.size() == 0) {
-				goSelect();
-			} else {
-				foPreview();
-			}
-			break;
-		case R.id.revelations_image_two:
-			if (imagesSelected.size() == 1) {
-				goSelect();
-			} else {
-				foPreview();
-			}
-			break;
-		case R.id.revelations_image_three:
-			if (imagesSelected.size() == 2) {
-				goSelect();
-			} else {
-				foPreview();
-			}
-			break;
-		case R.id.revelations_image_four:
-			if (imagesSelected.size() == 3) {
-				goSelect();
-			} else {
-				foPreview();
-			}
-			break;
-		case R.id.revelations_post_button:
-			if (contentText.getText().length() == 0) {
-				contentText.requestFocus();
-				ToastUtils.Errortoast(getActivity(), "报料内容不得为空");
-				break;
-			}
-			if (telText.getText().length() == 0
-					|| !isPhoneNum(telText.getText().toString())) {
-				telText.requestFocus();
-				ToastUtils.Errortoast(getActivity(), "请填写正确的电话号码");
-				break;
-			}
-			if (CommonUtils.isNetworkAvailable(mActivity)) {
-				new PostTask().execute("");
-			}
-			postBut.setText("正在提交");
-			postBut.setEnabled(false);
-			postBut.setBackgroundColor(Color.parseColor("#BEBEBE"));
-			break;
+		case R.id.revelations_retry_view:
+			refreshNetDate();
 		}
-	}
-
-	private boolean isPhoneNum(String phoneNum) {
-		// TODO Auto-generated method stub
-		Pattern pattern = Pattern
-				.compile("(\\d{11})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))");
-		Matcher matcher = pattern.matcher(phoneNum);
-		return matcher.matches();
-	}
-
-	private void goSelect() {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent(this.getActivity(),
-				PicSelectedMainActivity.class);
-		intent.putExtra("IMAGE_SELECTED_LIST", (Serializable) imagesSelected);
-		this.startActivityForResult(intent,
-				AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
-	}
-
-	private void foPreview() {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent(this.getActivity(), PicPreviewActivity.class);
-		intent.putExtra("IMAGE_SELECTED_LIST", (Serializable) imagesSelected);
-		this.startActivityForResult(intent,
-				AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
-		super.onActivityResult(requestCode, resultCode, data);
-		switch (resultCode) {
-		case AndroidConfig.REVELATIONS_FRAGMENT_RESULT_OK:
-			imagesSelected.clear();
-			imagesSelectedUrl.clear();
-			List<String> mainSeleted = (List<String>) data
-					.getSerializableExtra("NEW_IMAGE_SELECTED_LIST");
-			imagesSelected.addAll(mainSeleted);
-			refreshImages();
-			break;
-		}
-	}
-
-	private void refreshImages() {
-		// TODO Auto-generated method stub
-		for (int i = 0; i < imageViews.length; i++) {
-			if (i < imagesSelected.size()) {
-				ImageLoader.getInstance(3, Type.LIFO).loadImage(
-						imagesSelected.get(i), imageViews[i]);
-				imageViews[i].setVisibility(View.VISIBLE);
-			} else if (i == imagesSelected.size()) {
-				imageViews[i].setImageResource(R.drawable.revelations_add_pic);
-				imageViews[i].setVisibility(View.VISIBLE);
-			} else {
-				imageViews[i].setVisibility(View.INVISIBLE);
-			}
-		}
-	}
-
-	private class PostTask extends AsyncTask<String, Void, Map<String, String>> {
-
-		// Map<String, String> ResultCode ResultText
-		@Override
-		protected Map<String, String> doInBackground(String... params) {
-			// TODO Auto-generated method stub
-			Map<String, String> taskResult = new HashMap<String, String>();
-			imagesSelectedUrl.clear();
-			for (int i = 0; i < imagesSelected.size(); i++) {
-				if (i < imagesSelectedUrl.size())
-					continue;
-				Map<String, String> response = ImgUtils
-						.sendImage(imagesSelected.get(i));
-				if (response.get("ResponseCode").equals(
-						AndroidConfig.RESPONSE_CODE_OK)) {
-					imagesSelectedUrl.add(response.get("ResponseContent"));
-				} else {
-					taskResult.put("ResultCode", "ERROR");
-					taskResult.put("ResultText", "上传图片失败请重新上传");
-					return taskResult;
-				}
-			}
-
-			String tel = telText.getText().toString();
-			String content = contentText.getText().toString();
-			StringBuffer imageUrls = new StringBuffer();
-			for (int i = 0; i < imagesSelectedUrl.size(); i++) {
-				imageUrls.append(imagesSelectedUrl.get(i));
-				if (i != imagesSelectedUrl.size() - 1)
-					imageUrls.append("|");
-			}
-			// instance.postRevelationContent(tel, content,
-			// imageUrls.toString(), this.mListenerObject, mErrorListener);
-			Map<String, String> result = ImgUtils.sendRevelationsContent(tel,
-					content, imageUrls.toString());
-			taskResult.put("ResultCode", result.get("ResponseCode"));
-			taskResult.put("ResultText", result.get("ResponseContent"));
-			return taskResult;
-		}
-
-		@Override
-		protected void onPostExecute(Map<String, String> result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			if (result.get("ResultCode").equals(AndroidConfig.RESPONSE_CODE_OK)) {
-				ToastUtils.Infotoast(getActivity(), "上传成功");
-				cleanRevelation();
-			} else {
-				ToastUtils.Errortoast(getActivity(), "内容上传失败请重新上传");
-				postBut.setText("提交");
-				postBut.setEnabled(true);
-				postBut.setBackgroundColor(Color.parseColor("#FF0000"));
-			}
-		}
-
-	}
-
-	private void cleanRevelation() {
-		// TODO Auto-generated method stub
-		telText.setText("");
-		contentText.setText("");
-		imagesSelected.clear();
-		imagesSelectedUrl.clear();
-		imageOne.setImageResource(R.drawable.revelations_add_pic);
-		imageOne.setVisibility(View.VISIBLE);
-		imageTwo.setVisibility(View.INVISIBLE);
-		imageThree.setVisibility(View.INVISIBLE);
-		imageFour.setVisibility(View.INVISIBLE);
-		postBut.setText("提交");
-		postBut.setEnabled(true);
-		postBut.setBackgroundColor(Color.parseColor("#FF0000"));
-	}
-
-	private void sendRevelationContent() {
-
-	}
-
-	private void sendImagesError(String msg) {
-		ToastUtils.Errortoast(getActivity(), msg);
 	}
 
 	@Override
 	protected void onSuccessObject(JSONObject jsonObject) {
-		ToastUtils.Infotoast(getActivity(), jsonObject.toString());
+		revelationsHomeListJson = jsonObject.toString();
+		boolean needRefresh = (revelationsHomeList == null);
+		// ToastUtils.Infotoast(getActivity(), jsonObject.toString());
+		revelationsHomeList = JsonUtils.toObject(revelationsHomeListJson,
+				RevelationsHomeList.class);
+		if (revelationsHomeList != null) {
+			loadingView.setVisibility(View.GONE);
+			saveLocalDate();
+			showData(needRefresh);
+		}
 	}
 
 	@Override
 	protected void onFailure(VolleyError error) {
 		// TODO Auto-generated method stub
-		ToastUtils.Errortoast(getActivity(), "内容上传失败请重新上传");
+		ToastUtils.Errortoast(getActivity(), "获取报料列表失败");
+		loadingView.setVisibility(View.GONE);
+		if (revelationsHomeList == null)
+			retryView.setVisibility(View.VISIBLE);
 	}
 
 	@Override
 	protected boolean initLocalDate() {
 		// TODO Auto-generated method stub
+		try {
+			SerializableObj object = (SerializableObj) mActivity.dbUtils
+					.findFirst(Selector.from(SerializableObj.class).where(
+							"classType", "=", "RevelationsHomeList"));
+			if (object != null) {
+				revelationsHomeListJson = object.getJsonStr();
+				revelationsHomeList = JsonUtils.toObject(
+						revelationsHomeListJson, RevelationsHomeList.class);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return false;
 	}
 
 	@Override
 	protected void saveLocalDate() {
 		// TODO Auto-generated method stub
-
+		try {
+			SerializableObj obj = new SerializableObj("0",
+					revelationsHomeListJson, "RevelationsHomeList");
+			mActivity.dbUtils.delete(SerializableObj.class,
+					WhereBuilder.b("classType", "=", "RevelationsHomeList"));
+			mActivity.dbUtils.save(obj);
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	protected void refreshNetDate() {
 		// TODO Auto-generated method stub
-
+		if (CommonUtils.isNetworkAvailable(mActivity)) {
+			this.netUtils.getRevelationsHomeList(mListenerObject,
+					mErrorListener);
+		} else {
+			handler.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					revelationsListView.onRefreshComplete();
+				}
+			}, 500);
+		}
 	}
 
 	@Override
@@ -384,6 +340,20 @@ public class New_RevelationsFragment extends BaseFragment implements
 	protected void onSuccessArray(JSONArray jsonObject) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
+		super.refresh();
+		revelationsListView.setSelection(0);
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				revelationsListView.setmCurrentMode(Mode.PULL_FROM_START);
+				revelationsListView.setRefreshing(false);
+			}
+		}, 100);
 	}
 
 }

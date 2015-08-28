@@ -36,8 +36,7 @@ import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.bean.New_Recommend;
-import com.kankan.kankanews.bean.User;
-import com.kankan.kankanews.bean.User_Collect_Offline;
+import com.kankan.kankanews.bean.RevelationsHomeList;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.SharePreferenceUtil;
@@ -72,13 +71,9 @@ public class CrashApplication extends Application {
 
 	public TreeMap<String, MyRequestCallBack> mRequestCallBackeds = new TreeMap<String, MyRequestCallBack>();
 
-	public TreeMap<String, User_Collect_Offline> mUser_Collect_Offlines = new TreeMap<String, User_Collect_Offline>();
-
 	public LinkedList<BaseActivity> mBaseActivityList = new LinkedList<BaseActivity>();
 	public boolean isAattch = false;
 	public boolean isLogin = false;
-
-	private User user;
 
 	private BaseActivity mainActivity;
 
@@ -135,7 +130,7 @@ public class CrashApplication extends Application {
 		AssetManager mgr = getAssets();
 		tf = Typeface.createFromAsset(mgr, "nomal.TTF");
 
-		dbUtils = DbUtils.create(this, "kankan", 5, new DbUpgradeListener() {
+		dbUtils = DbUtils.create(this, "kankan", 6, new DbUpgradeListener() {
 			@Override
 			public void onUpgrade(DbUtils arg0, int arg1, int arg2) {
 				// TODO Auto-generated method stub
@@ -150,6 +145,7 @@ public class CrashApplication extends Application {
 					arg0.dropTable(New_Colums_Info.class);
 					arg0.dropTable(Content_News.class);
 					arg0.dropTable(Advert.class);
+					arg0.dropTable(RevelationsHomeList.class);
 					arg0.createTableIfNotExist(New_News_Home.class);
 					arg0.createTableIfNotExist(New_News_Top.class);
 					arg0.createTableIfNotExist(New_News.class);
@@ -160,6 +156,7 @@ public class CrashApplication extends Application {
 					arg0.createTableIfNotExist(New_Colums_Info.class);
 					arg0.createTableIfNotExist(Content_News.class);
 					arg0.createTableIfNotExist(Advert.class);
+					arg0.createTableIfNotExist(RevelationsHomeList.class);
 				} catch (DbException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -170,7 +167,6 @@ public class CrashApplication extends Application {
 
 		// Vitamio.initialize(this,
 		// getResources().getIdentifier("libarm", "raw", getPackageName()));
-		checkLogin();
 		File cacheDir = CommonUtils.getImageCachePath(getApplicationContext());
 		initImageLoader(this, cacheDir);
 
@@ -241,22 +237,6 @@ public class CrashApplication extends Application {
 
 	}
 
-	public void checkLogin() {
-		getSpUtil();
-		String user_id = shareUtils.getUserId();
-		String user_name = shareUtils.getUserName();
-		String user_poster = shareUtils.getUserPost();
-		if (user_id == "" || user_name == "" || user_poster == "") {
-			isLogin = false;
-		} else {
-			isLogin = true;
-			user = new User();
-			user.setUser_id(user_id);
-			user.setUser_name(user_name);
-			user.setUser_poster(user_poster);
-		}
-	}
-
 	public static CrashApplication getInstance() {
 		// TODO Auto-generated method stub
 		return mInstance;
@@ -288,24 +268,6 @@ public class CrashApplication extends Application {
 	public void exit() {
 
 		// 閻炴稏鍔庨妵姘跺箰婢跺鍟奾ome闂佸尅鎷�,缂佸顑呯花顓㈠礆妫颁胶鍟婇柛姘瑜帮拷
-		Set<Entry<String, HttpHandler>> entrySetHandler = mHttpHandlereds
-				.entrySet();
-
-		for (Entry<String, HttpHandler> e : entrySetHandler) {
-			mUser_Collect_Offlines.get(e.getKey()).setType(
-					User_Collect_Offline.DOWNLOADSTOP);
-
-			e.getValue().cancel();
-		}
-
-		Set<Entry<String, MyRequestCallBack>> entrySetCallBack = mRequestCallBackPauses
-				.entrySet();
-
-		for (Entry<String, MyRequestCallBack> e : entrySetCallBack) {
-			mUser_Collect_Offlines.get(e.getKey()).setType(
-					User_Collect_Offline.DOWNLOADSTOP);
-		}
-		mRequestCallBackPauses.clear();
 
 		for (BaseActivity activity : mBaseActivityList) {
 			if (activity != null) {
@@ -376,14 +338,6 @@ public class CrashApplication extends Application {
 				i = 0;
 			}
 		}
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	private int[] arrayid;

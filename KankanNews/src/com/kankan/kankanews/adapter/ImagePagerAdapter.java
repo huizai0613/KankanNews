@@ -148,7 +148,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								.get(1);
 						f.setSelectPlay(true);
 						f.setSelectPlayID(Integer.parseInt(news.getZtid()));
-						fragment.mActivity.touchTab(fragment.mActivity.tab_two);
+						fragment.mActivity.touchTab(fragment.mActivity.tabLive);
 						break;
 					// 其他
 					default:
@@ -210,7 +210,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								.get(1);
 						f.setSelectPlay(true);
 						f.setSelectPlayID(Integer.parseInt(news.getZtid()));
-						fragment.mActivity.touchTab(fragment.mActivity.tab_two);
+						fragment.mActivity.touchTab(fragment.mActivity.tabLive);
 						break;
 					// 其他
 					default:
