@@ -1,40 +1,47 @@
 package com.kankan.kankanews.ui.fragment;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.AbsListView.OnScrollListener;
-import android.widget.ImageView.ScaleType;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.iss.view.pulltorefresh.PullToRefreshBase;
-import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
+import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseFragment;
-import com.kankan.kankanews.bean.New_News_Top;
+import com.kankan.kankanews.bean.Keyboard;
+import com.kankan.kankanews.bean.RevelationsBreaknews;
 import com.kankan.kankanews.bean.RevelationsHomeList;
 import com.kankan.kankanews.bean.SerializableObj;
-import com.kankan.kankanews.ui.view.AutoScrollViewPager;
+import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
@@ -54,6 +61,10 @@ public class New_RevelationsFragment extends BaseFragment implements
 	private String revelationsHomeListJson;
 
 	private RevelationsListAdapter revelationsListAdapter;
+
+	private RevelationsListTopHolder topHolder;
+
+	private RevelationsListNewsHolder newsHolder;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -127,7 +138,6 @@ public class New_RevelationsFragment extends BaseFragment implements
 		} else {
 			revelationsListAdapter.notifyDataSetChanged();
 		}
-
 	}
 
 	private class ActivityPageChangeListener implements
@@ -139,14 +149,21 @@ public class New_RevelationsFragment extends BaseFragment implements
 
 		@Override
 		public void onPageScrolled(int arg0, float arg1, int arg2) {
-
 		}
 
 		@Override
 		public void onPageSelected(int arg0) {
-
+			if (topHolder != null) {
+				topHolder.activityTitle.setText(revelationsHomeList
+						.getActivity().get(arg0).getTitle());
+				for (View v : topHolder.activityPointViews) {
+					v.setBackgroundResource(R.drawable.point_gray);
+				}
+				topHolder.activityPointViews.get(
+						arg0 % topHolder.activityPointViews.size())
+						.setBackgroundResource(R.drawable.point_red);
+			}
 		}
-
 	}
 
 	private class ActivityViewPageAdapter extends PagerAdapter {
@@ -162,34 +179,53 @@ public class New_RevelationsFragment extends BaseFragment implements
 		}
 
 		@Override
-		public Object instantiateItem(ViewGroup container, int position) {
-			Log.e("position", position + "");
-			ImageView imageView = new ImageView(
-					New_RevelationsFragment.this.mActivity);
-			imageView.setScaleType(ScaleType.CENTER_CROP);
-			imageView.setLayoutParams(new ViewGroup.LayoutParams(
-					ViewGroup.LayoutParams.MATCH_PARENT,
-					(int) (mActivity.mScreenWidth / 3)));
-			ImgUtils.imageLoader.displayImage(revelationsHomeList.getActivity()
-					.get(position).getTitlepic(), imageView,
-					ImgUtils.homeImageOptions);
-			container.addView(imageView);
-			return imageView;
+		public Object instantiateItem(View container, int position) {
+			if (topHolder != null & topHolder.activityImageViews == null)
+				topHolder.activityImageViews = new ArrayList<ImageView>();
+			if (topHolder.activityImageViews.size() <= position + 1) {
+				ImageView imageView = new ImageView(
+						New_RevelationsFragment.this.mActivity);
+				imageView.setScaleType(ScaleType.FIT_XY);
+				imageView.setLayoutParams(new ViewGroup.LayoutParams(
+						ViewGroup.LayoutParams.MATCH_PARENT,
+						(int) (mActivity.mScreenWidth * 111 / 310)));
+				ImgUtils.imageLoader.displayImage(revelationsHomeList
+						.getActivity().get(position).getTitlepic(), imageView,
+						ImgUtils.homeImageOptions);
+				((ViewPager) container).addView(imageView);
+				return imageView;
+			}
+			return topHolder.activityImageViews.get(position);
+		}
+
+		@Override
+		public void destroyItem(ViewGroup container, int position, Object object) {
+			// TODO Auto-generated method stub
+			// super.destroyItem(container, position, object);
 		}
 	}
 
 	private class RevelationsListTopHolder {
-		AutoScrollViewPager activityViewPager;
-		LinearLayout activityContent;
+		android.support.v4.view.ViewPager activityViewPager;
+		LinearLayout activityPointContent;
 		MyTextView activityTitle;
+		List<ImageView> activityImageViews;
+		List<View> activityPointViews;
+	}
+
+	private class RevelationsListNewsHolder {
+		RelativeLayout breaknewsMoreContent;
+		LinearLayout keyboardIconContent;
 	}
 
 	private class RevelationsListAdapter extends BaseAdapter {
 
 		@Override
 		public int getCount() {
-			// return revelationsHomeList.getBreaknews().size() + 1;
-			return 1;
+			if (revelationsHomeList.getActivity() != null
+					&& revelationsHomeList.getActivity().size() > 0)
+				return revelationsHomeList.getBreaknews().size() + 1;
+			return revelationsHomeList.getBreaknews().size();
 		}
 
 		@Override
@@ -221,24 +257,114 @@ public class New_RevelationsFragment extends BaseFragment implements
 			int itemViewType = getItemViewType(position);
 
 			if (convertView == null) {
-				// if (itemViewType == 0) {
-				convertView = inflate.inflate(mActivity,
-						R.layout.item_revelations_list_activity, null);
-				RevelationsListTopHolder topHolder = new RevelationsListTopHolder();
-				topHolder.activityViewPager = (AutoScrollViewPager) convertView
-						.findViewById(R.id.revelations_activity_viewpager);
-				topHolder.activityContent = (LinearLayout) convertView
-						.findViewById(R.id.revelations_activity_content);
-				topHolder.activityTitle = (MyTextView) convertView
-						.findViewById(R.id.revelations_activity_title);
-				topHolder.activityViewPager
-						.setOnPageChangeListener(new ActivityPageChangeListener());
-				topHolder.activityViewPager
-						.setAdapter(new ActivityViewPageAdapter());
-				convertView.setTag(topHolder);
-				// }
-			} else {
+				if (itemViewType == 0) {
+					convertView = inflate.inflate(mActivity,
+							R.layout.item_revelations_list_activity, null);
+					topHolder = new RevelationsListTopHolder();
+					topHolder.activityViewPager = (android.support.v4.view.ViewPager) convertView
+							.findViewById(R.id.revelations_activity_viewpager);
+					topHolder.activityPointContent = (LinearLayout) convertView
+							.findViewById(R.id.revelations_activity_point_content);
+					topHolder.activityTitle = (MyTextView) convertView
+							.findViewById(R.id.revelations_activity_title);
+					topHolder.activityViewPager
+							.setOnPageChangeListener(new ActivityPageChangeListener());
+					topHolder.activityViewPager
+							.setLayoutParams(new RelativeLayout.LayoutParams(
+									RelativeLayout.LayoutParams.MATCH_PARENT,
+									(int) (mActivity.mScreenWidth * 111 / 310)));
+					topHolder.activityViewPager
+							.setAdapter(new ActivityViewPageAdapter());
+					if (topHolder.activityPointViews == null)
+						topHolder.activityPointViews = new ArrayList<View>();
 
+					android.widget.LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+							PixelUtil.dp2px(6), PixelUtil.dp2px(6));
+					for (int i = 0; i < revelationsHomeList.getActivity()
+							.size(); i++) {
+						View point = new View(mActivity);
+						layoutParams.rightMargin = PixelUtil.dp2px(2);
+						point.setLayoutParams(layoutParams);
+						point.setBackgroundResource(R.drawable.point_gray);
+						topHolder.activityPointViews.add(point);
+					}
+					int size = topHolder.activityPointViews.size();
+					if (size > 1) {
+						for (View v : topHolder.activityPointViews) {
+							if (v.getParent() != null)
+								((LinearLayout) v.getParent()).removeView(v);
+							topHolder.activityPointContent.addView(v);
+							v.setBackgroundResource(R.drawable.point_gray);
+						}
+						topHolder.activityPointViews.get(0)
+								.setBackgroundResource(R.drawable.point_red);
+						topHolder.activityViewPager.setCurrentItem(0);
+						topHolder.activityPointContent
+								.setVisibility(View.VISIBLE);
+
+					} else {
+						topHolder.activityPointContent.setVisibility(View.GONE);
+					}
+					convertView.setTag(topHolder);
+				} else if (itemViewType == 1) {
+					convertView = inflate.inflate(mActivity,
+							R.layout.item_revelations_list_break, null);
+					newsHolder = new RevelationsListNewsHolder();
+					newsHolder.breaknewsMoreContent = (RelativeLayout) convertView
+							.findViewById(R.id.revelations_breaknews_more_content);
+					newsHolder.keyboardIconContent = (LinearLayout) convertView
+							.findViewById(R.id.revelations_breaknews_keyboard_icon_content);
+					convertView.setTag(newsHolder);
+				}
+			} else {
+				if (itemViewType == 0) {
+					topHolder = (RevelationsListTopHolder) convertView.getTag();
+				} else if (itemViewType == 1) {
+					newsHolder = (RevelationsListNewsHolder) convertView
+							.getTag();
+				}
+			}
+
+			if (itemViewType == 0) {
+				topHolder.activityTitle.setText(revelationsHomeList
+						.getActivity().get(position).getTitle());
+				FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
+						topHolder.activityTitle,
+						R.string.home_news_title_text_size,
+						spUtil.getFontSizeRadix());
+			} else if (itemViewType == 1) {
+				int breakLocation = position
+						- (revelationsHomeList.getActivity().size() > 0 ? 1 : 0);
+				// if ((position == 0 &&
+				// revelationsHomeList.getActivity().size() == 0)
+				// || (position == 1 && revelationsHomeList.getActivity()
+				// .size() > 0))
+				if (breakLocation == 0)
+					newsHolder.breaknewsMoreContent.setVisibility(View.VISIBLE);
+				else
+					newsHolder.breaknewsMoreContent.setVisibility(View.GONE);
+				RevelationsBreaknews news = revelationsHomeList.getBreaknews()
+						.get(breakLocation);
+				List<Keyboard> keyboardList = news.getKeyboard();
+				newsHolder.keyboardIconContent.removeAllViews();
+				for (Keyboard keyboard : keyboardList) {
+					TextView view = new BorderTextView(
+							New_RevelationsFragment.this.mActivity,
+							keyboard.getColor());
+					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+							LayoutParams.MATCH_PARENT,
+							LayoutParams.WRAP_CONTENT);
+					int px = PixelUtil.dp2px(5);
+					params.setMargins(0, px, 0, px);
+					view.setLayoutParams(params);
+					view.setGravity(Gravity.CENTER);
+					int px3 = PixelUtil.dp2px(3);
+					view.setPadding(0, px3, 0, px3);
+					view.setText(keyboard.getText());
+					view.setTextSize(PixelUtil.dp2px(6));
+					view.setTextColor(Color.parseColor(keyboard.getColor()));
+					newsHolder.keyboardIconContent.addView(view);
+				}
 			}
 			return convertView;
 		}

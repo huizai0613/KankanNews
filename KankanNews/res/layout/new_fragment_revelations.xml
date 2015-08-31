@@ -5,7 +5,7 @@
 
     <include
         layout="@layout/base_title_bar"
-        android:background="#000000" />
+        android:background="@color/black" />
 
     <com.iss.view.pulltorefresh.PullToRefreshListView
         android:id="@+id/revelations_list_view"

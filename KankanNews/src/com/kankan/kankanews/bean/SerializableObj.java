@@ -14,6 +14,10 @@ public class SerializableObj implements Serializable {
 	private String jsonStr;
 	private String classType;
 
+	public SerializableObj() {
+
+	}
+
 	public SerializableObj(String id, String jsonStr, String classType) {
 		super();
 		this.id = id;

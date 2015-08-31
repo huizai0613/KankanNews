@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/f6_gray"
+    android:paddingLeft="@dimen/news_bask_space"
+    android:paddingRight="@dimen/news_bask_space" >
+
+    <RelativeLayout
+        android:id="@+id/revelations_breaknews_more_content"
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        android:gravity="center_vertical" >
+
+        <LinearLayout
+            android:id="@+id/revelations_breaknews_icon_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="30dip"
+                android:layout_height="30dip"
+                android:layout_marginRight="@dimen/news_bask_space"
+                android:src="@drawable/ic_horn" />
+
+            <com.kankan.kankanews.ui.view.MyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dip"
+                android:gravity="center_vertical"
+                android:text="网友报料"
+                android:textSize="20dip" />
+        </LinearLayout>
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dip"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:text="更多 >"
+            android:textSize="20dip" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/separation_line_height"
+            android:layout_alignParentBottom="true"
+            android:background="@color/gray_cc" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/revelations_breaknews_more_content"
+        android:layout_marginTop="@dimen/news_bask_space"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="50dip"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:src="@drawable/ic_default_user" />
+
+            <LinearLayout
+                android:id="@+id/revelations_breaknews_keyboard_icon_content"
+                android:layout_width="50dip"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="6dip" >
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

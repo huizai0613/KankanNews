@@ -825,6 +825,8 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 			} else {
 				if (columsVideoView != null) {
+					Log.e("new_colums_infos.get(curPlayNo).getVideoUrl()",
+							new_colums_infos.get(curPlayNo).getVideoUrl());
 					columsVideoView.stopPlayback();
 					columsVideoController.reset();
 					columsVideoView.setVideoPath(new_colums_infos
