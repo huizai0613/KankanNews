@@ -120,6 +120,12 @@ public class TimeUtil {
 		return strTime;
 	}
 
+	public static String timeStrToString(String time, String formatType) {
+		SimpleDateFormat format = new SimpleDateFormat(formatType);
+		long newsTime = Long.parseLong(time) * 1000;
+		return format.format(new Date(newsTime));
+	}
+
 	// string类型转换为date类型
 	// strTime要转换的string类型的时间，formatType要转换的格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日
 	// HH时mm分ss秒，

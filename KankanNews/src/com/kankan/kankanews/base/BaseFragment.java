@@ -222,7 +222,7 @@ public abstract class BaseFragment extends Fragment {
 		titleBarLeftImg.setImageResource(leftImgId);
 
 	}
-	
+
 	public void initTitleBar(View view, String content) {
 
 		initTitleView(view);
@@ -300,6 +300,12 @@ public abstract class BaseFragment extends Fragment {
 			MobclickAgent.onPageStart(analyticsId);
 		}
 	}
+
+	public void refresh() {
+	};
+
+	public void recycle() {
+	};
 
 	/**
 	 * 统计

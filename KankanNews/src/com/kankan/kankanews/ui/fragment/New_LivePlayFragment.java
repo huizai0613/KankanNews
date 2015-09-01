@@ -199,7 +199,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 	public void onResume() {
 		super.onResume();
 		// closeVideoView();
-		if (mActivity.curTouchTab == mActivity.tab_two)
+		if (mActivity.curTouchTab == mActivity.tabLive)
 			if (!isFirst) {
 				if (CommonUtils.isNetworkAvailable(mActivity)) {
 					refreshNetDate();
@@ -1094,7 +1094,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 		liveVideoView.pause();
 		liveVideoImage.setVisibility(View.GONE);
 		mVideoLoadingLayout.setVisibility(View.GONE);
-		if (mActivity.curTouchTab == mActivity.tab_two)
+		if (mActivity.curTouchTab == mActivity.tabLive)
 			liveVideoView.start();
 	}
 

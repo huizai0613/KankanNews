@@ -56,7 +56,7 @@ public class New_ColumsFragment extends BaseFragment {
 		super.onCreateView(inflater, container, savedInstanceState);
 		inflate = inflater.inflate(R.layout.new_fragment_colums, null);
 
-		initTitleBar(inflate, "栏目");
+//		initTitleBar(inflate, "栏目");
 
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 		listview.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
@@ -192,7 +192,7 @@ public class New_ColumsFragment extends BaseFragment {
 
 		@Override
 		public int getCount() {
-			return lists.size() + 1;
+			return lists.size();
 		}
 
 		@Override
@@ -208,8 +208,6 @@ public class New_ColumsFragment extends BaseFragment {
 
 		@Override
 		public int getItemViewType(int position) {
-			if (position == lists.size())
-				return 2;
 			if (lists.get(position).size() == 1
 					&& lists.get(position).get(0).getType().equals("1")) {
 				return 0;
@@ -222,18 +220,13 @@ public class New_ColumsFragment extends BaseFragment {
 		@Override
 		public int getViewTypeCount() {
 			// TODO Auto-generated method stub
-			return 3;
+			return 2;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 
 			int itemViewType = getItemViewType(position);
-			if (itemViewType == 2) {
-				convertView = inflate.inflate(mActivity,
-						R.layout.new_item_blank, null);
-				return convertView;
-			}
 			if (convertView == null) {
 				if (itemViewType == 0) {
 					viewOne = new HolderViewOne();

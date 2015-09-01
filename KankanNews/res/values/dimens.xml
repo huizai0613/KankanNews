@@ -128,6 +128,7 @@
     <!-- 高度 -->
     <dimen name="separation_line_height">1px</dimen>
     <dimen name="base_action_bar_height">44dip</dimen>
+    <dimen name="bottom_bar_real_height">54dip</dimen>
     <dimen name="home_cates_title_height">36dip</dimen>
     <!-- 字体大小 -->
     <dimen name="base_action_bar_title_size">20dip</dimen>
@@ -135,13 +136,13 @@
     <dimen name="textsize_2">9dip</dimen>
     <dimen name="textsize_3">7dip</dimen>
     <dimen name="textsize_4">5dip</dimen>
-    
-	<!-- 字体大小 -->
+
+    <!-- 字体大小 -->
     <dimen name="news_textsize_1">9dip</dimen>
     <dimen name="news_textsize_2">8sp</dimen>
     <dimen name="news_textsize_3">5.5sp</dimen>
     <dimen name="news_textsize_4">4.5sp</dimen>
-    
+
     <!-- Padding  10dp -->
     <dimen name="padding_10dp">10dp</dimen>
     <dimen name="calendar_day_headers_paddingbottom">4dp</dimen>

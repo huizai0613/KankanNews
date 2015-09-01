@@ -94,11 +94,6 @@
                 android:text="中"
                 android:textSize="18dip" />
 
-            <View
-                android:layout_width="1dip"
-                android:layout_height="match_parent"
-                android:background="@color/red" />
-
             <TextView
                 android:id="@+id/font_big_size"
                 android:layout_width="0dip"

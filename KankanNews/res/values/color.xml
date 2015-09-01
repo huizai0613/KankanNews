@@ -20,8 +20,14 @@
     <!-- 白灰色颜色 -->
     <color name="white_gray">#F0F0F0</color>
 
+    <!-- 报料列表背景色 -->
+    <color name="f6_gray">#F6F6F6</color>
+
     <!-- 很淡很淡灰色颜色  头部标题栏 -->
     <color name="dove_gray">#FBFBFB</color>
+
+    <!-- 报料活动与列表间隙 -->
+    <color name="six_e_gray">#EEEEEE</color>
 
     <!-- 淡灰色 列表未选中颜色 -->
     <color name="thin_gray">#E6E6E6</color>
@@ -52,6 +58,9 @@
 
     <!-- 红色 -->
     <color name="red">#FF0000</color>
+
+    <!-- 蓝色 -->
+    <color name="blue">#0000FF</color>
 
     <!-- 日历组件颜色 -->
     <color name="calendar_active_month_bg">#fff5f7f9</color>

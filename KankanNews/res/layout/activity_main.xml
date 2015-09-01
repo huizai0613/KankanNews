@@ -13,111 +13,68 @@
         android:orientation="vertical" >
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/menu_bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/base_action_bar_height"
+        android:layout_height="@dimen/bottom_bar_real_height"
         android:layout_alignParentBottom="true"
-        android:background="@color/white_90" >
+        android:gravity="bottom"
+        android:background="@android:color/transparent" >
 
-        <LinearLayout
-            android:id="@+id/menu_bottom"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:id="@+id/tab_home"
+            android:layout_width="0dip"
             android:layout_height="@dimen/base_action_bar_height"
-            android:layout_alignParentBottom="true" >
+            android:layout_weight="1"
+            android:background="@drawable/tab_home_left_right_item_border"
+            android:clickable="true"
+            android:onClick="touchTab"
+            android:paddingBottom="4dip"
+            android:paddingTop="4dip" >
 
-            <RelativeLayout
-                android:id="@+id/tab_one"
-                android:layout_width="0dip"
+            <ImageView
+                android:id="@+id/tab_img"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:onClick="touchTab"
-                android:paddingBottom="4dip"
-                android:paddingTop="4dip" >
+                android:src="@drawable/tab_home_nomal" />
+        </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/tab_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/tab_one_nomal" />
-            </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/tab_revelate"
+            android:layout_width="0dip"
+            android:layout_height="@dimen/base_action_bar_height"
+            android:layout_weight="1"
+            android:background="@color/white_90"
+            android:clickable="true"
+            android:onClick="touchTab"
+            android:paddingBottom="4dip"
+            android:paddingTop="4dip" >
 
-            <RelativeLayout
-                android:id="@+id/tab_two"
-                android:layout_width="0dip"
+            <ImageView
+                android:id="@id/tab_img"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:onClick="touchTab"
-                android:paddingBottom="4dip"
-                android:paddingTop="4dip" >
+                android:src="@drawable/tab_revelate_nomal" />
+        </RelativeLayout>
 
-                <ImageView
-                    android:id="@id/tab_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/tab_two_nomal" />
-            </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/tab_live"
+            android:layout_width="0dip"
+            android:layout_height="@dimen/base_action_bar_height"
+            android:layout_weight="1"
+            android:background="@drawable/tab_home_left_right_item_border"
+            android:clickable="true"
+            android:onClick="touchTab"
+            android:paddingBottom="4dip"
+            android:paddingTop="4dip" >
 
-            <RelativeLayout
-                android:id="@+id/tab_three"
-                android:layout_width="0dip"
+            <ImageView
+                android:id="@id/tab_img"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:onClick="touchTab"
-                android:paddingBottom="4dip"
-                android:paddingTop="4dip" >
-
-                <ImageView
-                    android:id="@id/tab_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/tab_three_nomal" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/tab_five"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:onClick="touchTab"
-                android:paddingBottom="4dip"
-                android:paddingTop="4dip" >
-
-                <ImageView
-                    android:id="@id/tab_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/tab_five_nomal" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/tab_four"
-                android:layout_width="0dip"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:onClick="touchTab"
-                android:paddingBottom="4dip"
-                android:paddingTop="4dip" >
-
-                <ImageView
-                    android:id="@id/tab_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/tab_four_nomal" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dip"
-            android:layout_above="@id/menu_bottom"
-            android:background="#c8c8c8" />
-    </RelativeLayout>
+                android:src="@drawable/tab_live_nomal" />
+        </RelativeLayout>
+    </LinearLayout> 
 
     <View
         android:id="@+id/night_view"

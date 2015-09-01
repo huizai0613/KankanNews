@@ -1501,7 +1501,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 						fragment.setSelectPlayID(Integer
 								.parseInt(mNew_Recommend.getZtid()));
 						((MainActivity) mContext)
-								.touchTab(((MainActivity) mContext).tab_two);
+								.touchTab(((MainActivity) mContext).tabLive);
 
 					} else {
 						mContext.startAnimActivityByParameter(
