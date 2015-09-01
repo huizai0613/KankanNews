@@ -5,8 +5,10 @@ import com.kankan.kankanews.utils.CommonUtils;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.TextView;
 
 public class MyTextView extends TextView {
@@ -28,5 +30,22 @@ public class MyTextView extends TextView {
 
 	private void initFontStyle() {
 		setTypeface(CrashApplication.getInstance().getTf());// 设置字体
+	}
+
+	public int getAvailableWidth() {
+		return getWidth() - getPaddingLeft() - getPaddingRight();
+	}
+
+	public boolean isOverFlowed() {
+		Paint paint = getPaint();
+		if (getAvailableWidth() == 0 || getLineCount() == 0)
+			return false;
+		float width = paint.measureText(getText().toString())
+				/ this.getLineCount();
+		Log.e("getAvailableWidth", getAvailableWidth() + " " + width + " "
+				+ this.getLineCount());
+		if (width > getAvailableWidth())
+			return true;
+		return false;
 	}
 }

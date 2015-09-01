@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,9 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -64,7 +67,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 
 	private RevelationsListTopHolder topHolder;
 
-	private RevelationsListNewsHolder newsHolder;
+	private RevelationsBreaksListNewsHolder newsHolder;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -213,9 +216,13 @@ public class New_RevelationsFragment extends BaseFragment implements
 		List<View> activityPointViews;
 	}
 
-	private class RevelationsListNewsHolder {
-		RelativeLayout breaknewsMoreContent;
+	private class RevelationsBreaksListNewsHolder {
+		RelativeLayout moreContent;
 		LinearLayout keyboardIconContent;
+		MyTextView phoneNumText;
+		MyTextView newsText;
+		MyTextView allNewsTextBut;
+		GridView newsImageGridView;
 	}
 
 	private class RevelationsListAdapter extends BaseAdapter {
@@ -301,7 +308,6 @@ public class New_RevelationsFragment extends BaseFragment implements
 						topHolder.activityViewPager.setCurrentItem(0);
 						topHolder.activityPointContent
 								.setVisibility(View.VISIBLE);
-
 					} else {
 						topHolder.activityPointContent.setVisibility(View.GONE);
 					}
@@ -309,18 +315,26 @@ public class New_RevelationsFragment extends BaseFragment implements
 				} else if (itemViewType == 1) {
 					convertView = inflate.inflate(mActivity,
 							R.layout.item_revelations_list_break, null);
-					newsHolder = new RevelationsListNewsHolder();
-					newsHolder.breaknewsMoreContent = (RelativeLayout) convertView
+					newsHolder = new RevelationsBreaksListNewsHolder();
+					newsHolder.moreContent = (RelativeLayout) convertView
 							.findViewById(R.id.revelations_breaknews_more_content);
 					newsHolder.keyboardIconContent = (LinearLayout) convertView
 							.findViewById(R.id.revelations_breaknews_keyboard_icon_content);
+					newsHolder.phoneNumText = (MyTextView) convertView
+							.findViewById(R.id.revelations_breaknews_phonenum);
+					newsHolder.newsText = (MyTextView) convertView
+							.findViewById(R.id.revelations_breaknews_newstext);
+					newsHolder.allNewsTextBut = (MyTextView) convertView
+							.findViewById(R.id.revelations_breaknews_alltext_but);
+					newsHolder.newsImageGridView = (GridView) convertView
+							.findViewById(R.id.revelations_breaknews_image_grid);
 					convertView.setTag(newsHolder);
 				}
 			} else {
 				if (itemViewType == 0) {
 					topHolder = (RevelationsListTopHolder) convertView.getTag();
 				} else if (itemViewType == 1) {
-					newsHolder = (RevelationsListNewsHolder) convertView
+					newsHolder = (RevelationsBreaksListNewsHolder) convertView
 							.getTag();
 				}
 			}
@@ -335,16 +349,48 @@ public class New_RevelationsFragment extends BaseFragment implements
 			} else if (itemViewType == 1) {
 				int breakLocation = position
 						- (revelationsHomeList.getActivity().size() > 0 ? 1 : 0);
-				// if ((position == 0 &&
-				// revelationsHomeList.getActivity().size() == 0)
-				// || (position == 1 && revelationsHomeList.getActivity()
-				// .size() > 0))
 				if (breakLocation == 0)
-					newsHolder.breaknewsMoreContent.setVisibility(View.VISIBLE);
+					newsHolder.moreContent.setVisibility(View.VISIBLE);
 				else
-					newsHolder.breaknewsMoreContent.setVisibility(View.GONE);
-				RevelationsBreaknews news = revelationsHomeList.getBreaknews()
-						.get(breakLocation);
+					newsHolder.moreContent.setVisibility(View.GONE);
+				final RevelationsBreaknews news = revelationsHomeList
+						.getBreaknews().get(breakLocation);
+				newsHolder.phoneNumText.setText("网友 "
+						+ news.getPhonenum()
+						+ " "
+						+ TimeUtil.timeStrToString(news.getNewstime(),
+								"yyyy-MM-dd"));
+				newsHolder.newsText.setText(news.getNewstext());
+				boolean isOver = newsHolder.newsText.isOverFlowed();
+				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
+				Log.e("isOver", isOver + "");
+				if (isOver || newsHolder.newsText.getLineCount() > 3) {
+					newsHolder.allNewsTextBut.setVisibility(View.VISIBLE);
+					if (newsHolder.newsText.getLineCount() > 3)
+						newsHolder.allNewsTextBut.setText("收起");
+					else
+						newsHolder.allNewsTextBut.setText("全文");
+				} else
+					newsHolder.allNewsTextBut.setVisibility(View.GONE);
+				newsHolder.allNewsTextBut
+						.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								boolean isOver = isOverFlowed((MyTextView) v
+										.getTag());
+								if (isOver) {
+									((MyTextView) v).setText("收起");
+									((MyTextView) v.getTag()).setMaxLines(100);
+									v.postInvalidate();
+								} else {
+									((MyTextView) v).setText("全文");
+									((MyTextView) v.getTag()).setMaxLines(3);
+									v.postInvalidate();
+								}
+							}
+						});
 				List<Keyboard> keyboardList = news.getKeyboard();
 				newsHolder.keyboardIconContent.removeAllViews();
 				for (Keyboard keyboard : keyboardList) {
@@ -359,11 +405,20 @@ public class New_RevelationsFragment extends BaseFragment implements
 					view.setLayoutParams(params);
 					view.setGravity(Gravity.CENTER);
 					int px3 = PixelUtil.dp2px(3);
-					view.setPadding(0, px3, 0, px3);
+					view.setPadding(px3, px3, px3, px3);
 					view.setText(keyboard.getText());
 					view.setTextSize(PixelUtil.dp2px(6));
 					view.setTextColor(Color.parseColor(keyboard.getColor()));
 					newsHolder.keyboardIconContent.addView(view);
+				}
+				if (news.getImagegroup() == null)
+					newsHolder.newsImageGridView.setVisibility(View.GONE);
+				else {
+					newsHolder.newsImageGridView.setVisibility(View.VISIBLE);
+					String[] imagegroup = news.getImagegroup().split("\\|");
+					ImageGroupGridAdapter gridAdapter = new ImageGroupGridAdapter();
+					gridAdapter.setImageGroup(imagegroup);
+					newsHolder.newsImageGridView.setAdapter(gridAdapter);
 				}
 			}
 			return convertView;
@@ -401,6 +456,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 		loadingView.setVisibility(View.GONE);
 		if (revelationsHomeList == null)
 			retryView.setVisibility(View.VISIBLE);
+		else
+			revelationsListView.onRefreshComplete();
 	}
 
 	@Override
@@ -482,4 +539,57 @@ public class New_RevelationsFragment extends BaseFragment implements
 		}, 100);
 	}
 
+	public boolean isOverFlowed(TextView view) {
+		Log.e("getText", view.getText() + "");
+		Log.e("getEllipsisCount",
+				view.getLayout().getEllipsisCount(view.getLineCount() - 1) + "");
+		return view.getLayout().getEllipsisCount(view.getLineCount() - 1) > 0;
+	}
+
+	private class ImageGroupGridAdapter extends BaseAdapter {
+		private String[] imageGroup;
+
+		public void setImageGroup(String[] imageGroup) {
+			this.imageGroup = imageGroup;
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			if (imageGroup.length == 4)
+				return 5;
+			return imageGroup.length;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			if (imageGroup.length == 4)
+				return null;
+			return imageGroup[position];
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			if (convertView == null) {
+				convertView = inflate.inflate(mActivity,
+						R.layout.revelations_breaksnews_image_grid_item, null);
+				ImageView imageView = (ImageView) convertView
+						.findViewById(R.id.breaknews_image_item);
+				ImgUtils.imageLoader.displayImage(imageGroup[position],
+						imageView, ImgUtils.homeImageOptions);
+			} else {
+
+			}
+
+			return convertView;
+		}
+	}
 }

@@ -224,10 +224,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 				if (pagerHolder != null && pagerHolder.pager != null
 						&& images != null) {
-//					if (!pagerHolder.pager.isAutoScroll() && images.size() > 1) {
-//						pagerHolder.pager.startAutoScroll(3000);
-//						pagerHolder.pager.setSwipeScrollDurationFactor(0.5);
-//					}
+					// if (!pagerHolder.pager.isAutoScroll() && images.size() >
+					// 1) {
+					// pagerHolder.pager.startAutoScroll(3000);
+					// pagerHolder.pager.setSwipeScrollDurationFactor(0.5);
+					// }
 				}
 			}
 
@@ -435,7 +436,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			layoutParams.rightMargin = PixelUtil.dp2px(4);
 			points = new ArrayList<View>();
 			View point;
-			images = new ArrayList<AutoImageTag>(); 
+			images = new ArrayList<AutoImageTag>();
 			for (final New_News_Top tn : getmTopNewsList) {
 				// imageView = new AutoImageVIew(mActivity);
 				tn.setTitlepic(CommonUtils.doWebpUrl(tn.getTitlepic()));
@@ -719,13 +720,13 @@ public class New_HomeItemFragment extends BaseFragment implements
 					if (images.size() > 1) {
 						pagerHolder.pager.setCurrentItem(Integer.MAX_VALUE / 2
 								- Integer.MAX_VALUE / 2 % images.size());
-//						imagePagerAdapter.setInfiniteLoop(true);
-//						pagerHolder.pager.startAutoScroll(3000);
-//						pagerHolder.pager.setSwipeScrollDurationFactor(0.5);
+						// imagePagerAdapter.setInfiniteLoop(true);
+						// pagerHolder.pager.startAutoScroll(3000);
+						// pagerHolder.pager.setSwipeScrollDurationFactor(0.5);
 
 					} else {
-//						imagePagerAdapter.setInfiniteLoop(false);
-//						pagerHolder.pager.stopAutoScroll();
+						// imagePagerAdapter.setInfiniteLoop(false);
+						// pagerHolder.pager.stopAutoScroll();
 					}
 					pagerHolder.pager.setAdapter(imagePagerAdapter);
 
@@ -856,7 +857,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 				final int news_type = Integer.valueOf(news.getType());
 				newHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
-				
+
 				ImgUtils.imageLoader.displayImage(news.getTitlepic(),
 						newHolder.titlepic, ImgUtils.homeImageOptions);
 

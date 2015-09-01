@@ -51,6 +51,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/revelations_breaknews_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/revelations_breaknews_more_content"
@@ -77,6 +78,70 @@
                 android:padding="6dip" >
             </LinearLayout>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/news_bask_space"
+            android:gravity="center_horizontal"
+            android:orientation="vertical" >
+
+            <com.kankan.kankanews.ui.view.MyTextView
+                android:id="@+id/revelations_breaknews_phonenum"
+                android:layout_width="match_parent"
+                android:layout_height="20dip"
+                android:singleLine="true"
+                android:textColor="@color/mid_gray"
+                android:textSize="12dip" />
+
+            <com.kankan.kankanews.ui.view.MyTextView
+                android:id="@+id/revelations_breaknews_newstext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="5dip"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="4.5dip"
+                android:maxLines="3"
+                android:textColor="@color/deep_gray"
+                android:textSize="18dip" />
+
+            <com.kankan.kankanews.ui.view.MyTextView
+                android:id="@+id/revelations_breaknews_alltext_but"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="全文"
+                android:textColor="@color/blue"
+                android:textSize="16dip"
+                android:visibility="gone" />
+
+            <GridView
+                android:id="@+id/revelations_breaknews_image_grid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:horizontalSpacing="10dip"
+                android:numColumns="3"
+                android:padding="0dip"
+                android:verticalSpacing="10dip" >
+            </GridView>
+
+            <View
+                android:id="@+id/revelations_breaknews_about_report_separation_line"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/separation_line_height"
+                android:layout_alignParentBottom="true"
+                android:background="@color/gray_cc" />
+        </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="40dip"
+        android:layout_height="40dip"
+        android:layout_below="@+id/revelations_breaknews_content"
+        android:layout_marginLeft="5dip"
+        android:layout_marginTop="-21dip"
+        android:src="@drawable/ic_about_report" />
 
 </RelativeLayout>

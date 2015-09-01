@@ -11,7 +11,6 @@
         android:gravity="left|center_vertical"
         android:lineSpacingExtra="4dp"
         android:singleLine="true"
-        android:text="俄罗斯总统会见朝鲜最高领导人特使"
         android:textColor="#9E9E9E"
         android:textSize="18dp" />
 

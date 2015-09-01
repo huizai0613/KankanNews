@@ -59,6 +59,9 @@
     <!-- 红色 -->
     <color name="red">#FF0000</color>
 
+    <!-- 蓝色 -->
+    <color name="blue">#0000FF</color>
+
     <!-- 日历组件颜色 -->
     <color name="calendar_active_month_bg">#fff5f7f9</color>
     <color name="calendar_divider">#ffbababa</color>
