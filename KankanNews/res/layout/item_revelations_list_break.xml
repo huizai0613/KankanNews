@@ -136,7 +136,14 @@
         </LinearLayout>
     </LinearLayout>
 
+    <ListView
+        android:id="@+id/revelations_breaknews_about_report_news_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
     <ImageView
+        android:id="@+id/revelations_breaknews_about_report_icon"
         android:layout_width="40dip"
         android:layout_height="40dip"
         android:layout_below="@+id/revelations_breaknews_content"

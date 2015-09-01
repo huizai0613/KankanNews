@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,6 +38,7 @@ import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.Keyboard;
 import com.kankan.kankanews.bean.RevelationsBreaknews;
 import com.kankan.kankanews.bean.RevelationsHomeList;
+import com.kankan.kankanews.bean.RevelationsNew;
 import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
@@ -223,6 +225,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 		MyTextView newsText;
 		MyTextView allNewsTextBut;
 		GridView newsImageGridView;
+		ListView aboutReportListView;
+		ImageView aboutReportIcon;
 	}
 
 	private class RevelationsListAdapter extends BaseAdapter {
@@ -328,6 +332,10 @@ public class New_RevelationsFragment extends BaseFragment implements
 							.findViewById(R.id.revelations_breaknews_alltext_but);
 					newsHolder.newsImageGridView = (GridView) convertView
 							.findViewById(R.id.revelations_breaknews_image_grid);
+					newsHolder.aboutReportListView = (ListView) convertView
+							.findViewById(R.id.revelations_breaknews_about_report_news_list);
+					newsHolder.aboutReportIcon = (ImageView) convertView
+							.findViewById(R.id.revelations_breaknews_about_report_icon);
 					convertView.setTag(newsHolder);
 				}
 			} else {
@@ -420,6 +428,9 @@ public class New_RevelationsFragment extends BaseFragment implements
 					gridAdapter.setImageGroup(imagegroup);
 					newsHolder.newsImageGridView.setAdapter(gridAdapter);
 				}
+				newsHolder.aboutReportListView
+						.setAdapter(new AboutReportNewsListAdapter(news
+								.getRelatednews()));
 			}
 			return convertView;
 		}
@@ -592,4 +603,42 @@ public class New_RevelationsFragment extends BaseFragment implements
 			return convertView;
 		}
 	}
+
+	private class AboutReportNewsListAdapter extends BaseAdapter {
+		private List<RevelationsNew> revelationsNew;
+
+		public AboutReportNewsListAdapter(List<RevelationsNew> revelationsNew) {
+			this.revelationsNew = revelationsNew;
+		}
+
+		@Override
+		public int getCount() {
+			// TODO Auto-generated method stub
+			return revelationsNew.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			// TODO Auto-generated method stub
+			return revelationsNew.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			// TODO Auto-generated method stub
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			// TODO Auto-generated method stub
+			if (convertView == null) {
+			} else {
+
+			}
+
+			return convertView;
+		}
+	}
+
 }

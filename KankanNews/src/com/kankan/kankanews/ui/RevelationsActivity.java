@@ -39,7 +39,7 @@ import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 
-public class New_RevelationsFragment extends BaseFragment implements
+public class RevelationsActivity extends BaseFragment implements
 		OnClickListener {
 
 	private View inflate;
