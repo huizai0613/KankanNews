@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -18,10 +19,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ImageView.ScaleType;
@@ -42,6 +43,7 @@ import com.kankan.kankanews.bean.RevelationsNew;
 import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.ui.view.NestingGridView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
@@ -70,6 +72,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 	private RevelationsListTopHolder topHolder;
 
 	private RevelationsBreaksListNewsHolder newsHolder;
+
+	private BreaknewsAboutReportHolder aboutReportHolder;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -210,6 +214,11 @@ public class New_RevelationsFragment extends BaseFragment implements
 		}
 	}
 
+	private class BreaknewsAboutReportHolder {
+		ImageView newsTitilePic;
+		MyTextView newsTitile;
+	}
+
 	private class RevelationsListTopHolder {
 		android.support.v4.view.ViewPager activityViewPager;
 		LinearLayout activityPointContent;
@@ -221,10 +230,11 @@ public class New_RevelationsFragment extends BaseFragment implements
 	private class RevelationsBreaksListNewsHolder {
 		RelativeLayout moreContent;
 		LinearLayout keyboardIconContent;
+		LinearLayout aboutReportContent;
 		MyTextView phoneNumText;
 		MyTextView newsText;
 		MyTextView allNewsTextBut;
-		GridView newsImageGridView;
+		NestingGridView newsImageGridView;
 		ListView aboutReportListView;
 		ImageView aboutReportIcon;
 	}
@@ -330,12 +340,14 @@ public class New_RevelationsFragment extends BaseFragment implements
 							.findViewById(R.id.revelations_breaknews_newstext);
 					newsHolder.allNewsTextBut = (MyTextView) convertView
 							.findViewById(R.id.revelations_breaknews_alltext_but);
-					newsHolder.newsImageGridView = (GridView) convertView
+					newsHolder.newsImageGridView = (NestingGridView) convertView
 							.findViewById(R.id.revelations_breaknews_image_grid);
 					newsHolder.aboutReportListView = (ListView) convertView
 							.findViewById(R.id.revelations_breaknews_about_report_news_list);
 					newsHolder.aboutReportIcon = (ImageView) convertView
 							.findViewById(R.id.revelations_breaknews_about_report_icon);
+					newsHolder.aboutReportContent = (LinearLayout) convertView
+							.findViewById(R.id.revelations_breaknews_about_report_content);
 					convertView.setTag(newsHolder);
 				}
 			} else {
@@ -369,17 +381,36 @@ public class New_RevelationsFragment extends BaseFragment implements
 						+ TimeUtil.timeStrToString(news.getNewstime(),
 								"yyyy-MM-dd"));
 				newsHolder.newsText.setText(news.getNewstext());
-				boolean isOver = newsHolder.newsText.isOverFlowed();
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
-				Log.e("isOver", isOver + "");
-				if (isOver || newsHolder.newsText.getLineCount() > 3) {
-					newsHolder.allNewsTextBut.setVisibility(View.VISIBLE);
-					if (newsHolder.newsText.getLineCount() > 3)
-						newsHolder.allNewsTextBut.setText("收起");
-					else
-						newsHolder.allNewsTextBut.setText("全文");
-				} else
-					newsHolder.allNewsTextBut.setVisibility(View.GONE);
+				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);
+				newsHolder.newsText
+						.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+
+							@Override
+							public void onLayoutChange(View v, int left,
+									int top, int right, int bottom,
+									int oldLeft, int oldTop, int oldRight,
+									int oldBottom) {
+								// TODO Auto-generated method stub
+								MyTextView textVi = (MyTextView) v;
+//								LinearLayout parent = (LinearLayout)(v.getParent());
+//								MyTextView allBut = (MyTextView) parent.findViewById(R.id.revelations_breaknews_alltext_but);
+								// Log.e("v",
+								// textVi.getLayout() + " "
+								// + textVi.getText());
+								boolean isOver = isOverFlowed(textVi);
+								 MyTextView allBut = (MyTextView) textVi
+								 .getTag();
+								if (isOver || textVi.getLineCount() > 3) {
+									allBut.setVisibility(View.VISIBLE);
+									if (textVi.getLineCount() > 3)
+										allBut.setText("收起");
+									else
+										allBut.setText("全文");
+								} else
+									allBut.setVisibility(View.GONE);
+							}
+						});
 				newsHolder.allNewsTextBut
 						.setOnClickListener(new OnClickListener() {
 
@@ -397,40 +428,52 @@ public class New_RevelationsFragment extends BaseFragment implements
 									((MyTextView) v.getTag()).setMaxLines(3);
 									v.postInvalidate();
 								}
+								revelationsListAdapter.notifyDataSetChanged();
 							}
 						});
 				List<Keyboard> keyboardList = news.getKeyboard();
 				newsHolder.keyboardIconContent.removeAllViews();
-				for (Keyboard keyboard : keyboardList) {
-					TextView view = new BorderTextView(
-							New_RevelationsFragment.this.mActivity,
-							keyboard.getColor());
-					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-							LayoutParams.MATCH_PARENT,
-							LayoutParams.WRAP_CONTENT);
-					int px = PixelUtil.dp2px(5);
-					params.setMargins(0, px, 0, px);
-					view.setLayoutParams(params);
-					view.setGravity(Gravity.CENTER);
-					int px3 = PixelUtil.dp2px(3);
-					view.setPadding(px3, px3, px3, px3);
-					view.setText(keyboard.getText());
-					view.setTextSize(PixelUtil.dp2px(6));
-					view.setTextColor(Color.parseColor(keyboard.getColor()));
-					newsHolder.keyboardIconContent.addView(view);
-				}
-				if (news.getImagegroup() == null)
+				// for (Keyboard keyboard : keyboardList) {
+				// TextView view = new BorderTextView(
+				// New_RevelationsFragment.this.mActivity,
+				// keyboard.getColor());
+				// LinearLayout.LayoutParams params = new
+				// LinearLayout.LayoutParams(
+				// LayoutParams.MATCH_PARENT,
+				// LayoutParams.WRAP_CONTENT);
+				// int px = PixelUtil.dp2px(5);
+				// params.setMargins(0, px, 0, px);
+				// view.setLayoutParams(params);
+				// view.setGravity(Gravity.CENTER);测试1
+				// int px3 = PixelUtil.dp2px(3);
+				// view.setPadding(px3, px3, px3, px3);
+				// view.setText(keyboard.getText());
+				// view.setTextSize(PixelUtil.dp2px(6));
+				// view.setTextColor(Color.parseColor(keyboard.getColor()));
+				// newsHolder.keyboardIconContent.addView(view);
+				// }
+				if (news.getImagegroup() == null
+						|| news.getImagegroup().trim().equals(""))
 					newsHolder.newsImageGridView.setVisibility(View.GONE);
 				else {
 					newsHolder.newsImageGridView.setVisibility(View.VISIBLE);
 					String[] imagegroup = news.getImagegroup().split("\\|");
 					ImageGroupGridAdapter gridAdapter = new ImageGroupGridAdapter();
 					gridAdapter.setImageGroup(imagegroup);
+					newsHolder.newsImageGridView.setSelector(new ColorDrawable(
+							Color.TRANSPARENT));
 					newsHolder.newsImageGridView.setAdapter(gridAdapter);
 				}
-				newsHolder.aboutReportListView
-						.setAdapter(new AboutReportNewsListAdapter(news
-								.getRelatednews()));
+				if (news.getRelatednews().size() == 0) {
+					newsHolder.aboutReportContent.setVisibility(View.GONE);
+					newsHolder.aboutReportIcon.setVisibility(View.GONE);
+				} else {
+					newsHolder.aboutReportIcon.setVisibility(View.VISIBLE);
+					newsHolder.aboutReportContent.setVisibility(View.VISIBLE);
+					newsHolder.aboutReportListView
+							.setAdapter(new AboutReportNewsListAdapter(news
+									.getRelatednews()));
+				}
 			}
 			return convertView;
 		}
@@ -551,9 +594,6 @@ public class New_RevelationsFragment extends BaseFragment implements
 	}
 
 	public boolean isOverFlowed(TextView view) {
-		Log.e("getText", view.getText() + "");
-		Log.e("getEllipsisCount",
-				view.getLayout().getEllipsisCount(view.getLineCount() - 1) + "");
 		return view.getLayout().getEllipsisCount(view.getLineCount() - 1) > 0;
 	}
 
@@ -567,16 +607,16 @@ public class New_RevelationsFragment extends BaseFragment implements
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			if (imageGroup.length == 4)
-				return 5;
+			// if (imageGroup.length == 4)
+			// return 5;
 			return imageGroup.length;
 		}
 
 		@Override
 		public Object getItem(int position) {
 			// TODO Auto-generated method stub
-			if (imageGroup.length == 4)
-				return null;
+			// if (imageGroup.length == 4)
+			// return null;
 			return imageGroup[position];
 		}
 
@@ -591,9 +631,11 @@ public class New_RevelationsFragment extends BaseFragment implements
 			// TODO Auto-generated method stub
 			if (convertView == null) {
 				convertView = inflate.inflate(mActivity,
-						R.layout.revelations_breaksnews_image_grid_item, null);
+						R.layout.item_revelations_breaksnews_image_grid_item,
+						null);
 				ImageView imageView = (ImageView) convertView
 						.findViewById(R.id.breaknews_image_item);
+				imageView.setMaxHeight((int) (parent.getWidth() / 3 * 0.75));
 				ImgUtils.imageLoader.displayImage(imageGroup[position],
 						imageView, ImgUtils.homeImageOptions);
 			} else {
@@ -633,9 +675,23 @@ public class New_RevelationsFragment extends BaseFragment implements
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
 			if (convertView == null) {
+				convertView = inflate.inflate(mActivity,
+						R.layout.item_revelations_breaknews_about_report, null);
+				aboutReportHolder = new BreaknewsAboutReportHolder();
+				aboutReportHolder.newsTitilePic = (ImageView) convertView
+						.findViewById(R.id.about_report_news_titlepic);
+				aboutReportHolder.newsTitile = (MyTextView) convertView
+						.findViewById(R.id.about_report_news_title);
+				convertView.setTag(aboutReportHolder);
 			} else {
-
+				aboutReportHolder = (BreaknewsAboutReportHolder) convertView
+						.getTag();
 			}
+			ImgUtils.imageLoader.displayImage(revelationsNew.get(position)
+					.getTitlepic(), aboutReportHolder.newsTitilePic,
+					ImgUtils.homeImageOptions);
+			aboutReportHolder.newsTitile.setText(revelationsNew.get(position)
+					.getTitle());
 
 			return convertView;
 		}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/news_bask_space"
+    android:layout_marginRight="@dimen/news_bask_space"
+    android:layout_marginTop="@dimen/news_bask_space"
+    android:background="@color/thin_gray" >
+
+    <ImageView
+        android:id="@+id/about_report_news_titlepic"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="8dip"
+        android:scaleType="fitXY"
+        android:src="@drawable/default_news_display" />
+
+    <com.kankan.kankanews.ui.view.MyTextView
+        android:id="@+id/about_report_news_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dip"
+        android:layout_toRightOf="@+id/about_report_news_titlepic"
+        android:ellipsize="end"
+        android:lineSpacingExtra="4.5dp"
+        android:maxLines="3"
+        android:minLines="2"
+        android:textStyle="bold" />
+
+</RelativeLayout>

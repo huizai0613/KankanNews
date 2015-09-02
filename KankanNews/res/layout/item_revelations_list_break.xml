@@ -73,6 +73,7 @@
                 android:id="@+id/revelations_breaknews_keyboard_icon_content"
                 android:layout_width="50dip"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="20dip"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="6dip" >
@@ -112,35 +113,53 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:layout_marginBottom="5dip"
                 android:text="全文"
                 android:textColor="@color/blue"
                 android:textSize="16dip"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
-            <GridView
+            <com.kankan.kankanews.ui.view.NestingGridView
                 android:id="@+id/revelations_breaknews_image_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/news_bask_space"
                 android:horizontalSpacing="10dip"
                 android:numColumns="3"
                 android:padding="0dip"
+                android:scrollbars="none"
                 android:verticalSpacing="10dip" >
-            </GridView>
-
-            <View
-                android:id="@+id/revelations_breaknews_about_report_separation_line"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/separation_line_height"
-                android:layout_alignParentBottom="true"
-                android:background="@color/gray_cc" />
+            </com.kankan.kankanews.ui.view.NestingGridView>
         </LinearLayout>
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/revelations_breaknews_about_report_news_list"
+    <LinearLayout
+        android:id="@+id/revelations_breaknews_about_report_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/revelations_breaknews_content"
+        android:layout_marginLeft="50dip"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/news_bask_space" >
+
+        <View
+            android:id="@+id/revelations_breaknews_about_report_separation_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/separation_line_height"
+            android:layout_alignParentBottom="true"
+            android:background="@color/gray_cc" />
+
+        <com.kankan.kankanews.ui.view.NestingListView
+            android:id="@+id/revelations_breaknews_about_report_news_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/news_bask_space"
+            android:layout_marginTop="@dimen/news_bask_space"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10dip"
+            android:scrollbars="none" >
+        </com.kankan.kankanews.ui.view.NestingListView>
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/revelations_breaknews_about_report_icon"
@@ -150,5 +169,12 @@
         android:layout_marginLeft="5dip"
         android:layout_marginTop="-21dip"
         android:src="@drawable/ic_about_report" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_cc"
+        android:paddingTop="10dip" />
 
 </RelativeLayout>

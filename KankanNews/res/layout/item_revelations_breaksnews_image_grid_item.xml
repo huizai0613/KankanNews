@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.kankan.kankanews.ui.view.ScaleRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
@@ -7,8 +7,8 @@
         android:id="@+id/breaknews_image_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
         android:layout_gravity="center"
+        android:adjustViewBounds="true"
         android:scaleType="fitXY" />
 
-</RelativeLayout>
+</com.kankan.kankanews.ui.view.ScaleRelativeLayout>

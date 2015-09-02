@@ -41,9 +41,7 @@ public class MyTextView extends TextView {
 		if (getAvailableWidth() == 0 || getLineCount() == 0)
 			return false;
 		float width = paint.measureText(getText().toString())
-				/ this.getLineCount();
-		Log.e("getAvailableWidth", getAvailableWidth() + " " + width + " "
-				+ this.getLineCount());
+				/ this.getLineCount(); 
 		if (width > getAvailableWidth())
 			return true;
 		return false;
