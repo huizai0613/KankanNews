@@ -163,7 +163,7 @@ public class NetUtils {
 	 */
 	public void CommitShare(String mid, String type,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
-		HashMap<String, String> hashMap = new HashMap<String, String>(); 
+		HashMap<String, String> hashMap = new HashMap<String, String>();
 		hashMap.put("id", mid);
 		hashMap.put("type", type);
 		mCustomRequest = new CustomRequest(Request.Method.POST,
@@ -478,6 +478,19 @@ public class NetUtils {
 				Request.Method.GET,
 				AndroidConfig.New_NETHOST + AndroidConfig.REVELATIONS_HOME_DATA,
 				null, reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
+	}
+
+	/**
+	 * 获取报料活动详情
+	 */
+	public void getRevelationsActivityList(String aid, String timestamp,
+			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(Request.Method.GET,
+				AndroidConfig.New_NETHOST
+						+ AndroidConfig.REVELATIONS_ACTIVITY_DATA + "/aid/"
+						+ aid + "timestamp" + timestamp, null, reponseListener,
+				errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
 

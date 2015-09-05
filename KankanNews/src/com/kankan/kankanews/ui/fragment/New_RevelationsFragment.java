@@ -7,6 +7,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -41,6 +42,9 @@ import com.kankan.kankanews.bean.RevelationsBreaknews;
 import com.kankan.kankanews.bean.RevelationsHomeList;
 import com.kankan.kankanews.bean.RevelationsNew;
 import com.kankan.kankanews.bean.SerializableObj;
+import com.kankan.kankanews.ui.MainActivity;
+import com.kankan.kankanews.ui.RevelationsActivityDetailActivity;
+import com.kankan.kankanews.ui.item.New_Activity_My_FanKui;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.NestingGridView;
@@ -55,6 +59,8 @@ import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
+import com.umeng.fb.FeedbackAgent;
+import com.umeng.fb.fragment.FeedbackFragment;
 
 public class New_RevelationsFragment extends BaseFragment implements
 		OnClickListener {
@@ -188,7 +194,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 		}
 
 		@Override
-		public Object instantiateItem(View container, int position) {
+		public Object instantiateItem(View container, final int position) {
 			if (topHolder != null & topHolder.activityImageViews == null)
 				topHolder.activityImageViews = new ArrayList<ImageView>();
 			if (topHolder.activityImageViews.size() <= position + 1) {
@@ -202,6 +208,20 @@ public class New_RevelationsFragment extends BaseFragment implements
 						.getActivity().get(position).getTitlepic(), imageView,
 						ImgUtils.homeImageOptions);
 				((ViewPager) container).addView(imageView);
+				imageView.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						String aid = revelationsHomeList.getActivity()
+								.get(position).getId();
+						Intent intent = new Intent(
+								New_RevelationsFragment.this.mActivity,
+								RevelationsActivityDetailActivity.class);
+						intent.putExtra("_AID_", aid);
+						startActivity(intent);
+					}
+				});
 				return imageView;
 			}
 			return topHolder.activityImageViews.get(position);
@@ -393,14 +413,16 @@ public class New_RevelationsFragment extends BaseFragment implements
 									int oldBottom) {
 								// TODO Auto-generated method stub
 								MyTextView textVi = (MyTextView) v;
-//								LinearLayout parent = (LinearLayout)(v.getParent());
-//								MyTextView allBut = (MyTextView) parent.findViewById(R.id.revelations_breaknews_alltext_but);
+								// LinearLayout parent =
+								// (LinearLayout)(v.getParent());
+								// MyTextView allBut = (MyTextView)
+								// parent.findViewById(R.id.revelations_breaknews_alltext_but);
 								// Log.e("v",
 								// textVi.getLayout() + " "
 								// + textVi.getText());
 								boolean isOver = isOverFlowed(textVi);
-								 MyTextView allBut = (MyTextView) textVi
-								 .getTag();
+								MyTextView allBut = (MyTextView) textVi
+										.getTag();
 								if (isOver || textVi.getLineCount() > 3) {
 									allBut.setVisibility(View.VISIBLE);
 									if (textVi.getLineCount() > 3)
