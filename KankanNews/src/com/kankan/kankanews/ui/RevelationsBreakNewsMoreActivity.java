@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -31,9 +32,16 @@ import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.Keyboard;
+import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.RevelationsActicityList;
 import com.kankan.kankanews.bean.RevelationsBreaknews;
 import com.kankan.kankanews.bean.RevelationsNew;
+import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
+import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
+import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
+import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
+import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
+import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.NestingGridView;
@@ -46,17 +54,16 @@ import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 
-public class RevelationsActivityDetailActivity extends BaseActivity implements
+public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 		OnClickListener {
-	private String aid;
 	private LayoutInflater inflate;
 	private View retryView;
 	private View loadingView;
 
-	private PullToRefreshListView activityListView;
+	private PullToRefreshListView breaknewsListView;
 
 	private RevelationsActicityList revelationsActivityList;
-	private ActivityListAdapter activityListAdapter;
+	private BreaknewsListAdapter breaknewsListAdapter;
 
 	private ActivityListTopHolder topHolder;
 	private BreaknewsAboutReportHolder aboutReportHolder;
@@ -69,7 +76,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		this.setContentView(R.layout.activity_revelations_activity_detail);
+		this.setContentView(R.layout.activity_revelations_breaknews_more);
 
 	}
 
@@ -77,13 +84,13 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		// TODO Auto-generated method stub
 		isLoadEnd = false;
 		if (CommonUtils.isNetworkAvailable(this)) {
-			this.netUtils.getRevelationsActivityList(this.aid, "",
-					this.mListener, mErrorListener);
+			this.netUtils.getRevelationsBreaknewsMore("", this.mListener,
+					mErrorListener);
 		} else {
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					activityListView.onRefreshComplete();
+					breaknewsListView.onRefreshComplete();
 				}
 			}, 500);
 		}
@@ -92,38 +99,36 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 	@Override
 	protected void initView() {
 		// TODO Auto-generated method stub
-		initTitleBar("活动详情");
+		initTitleLeftBar("报料", R.drawable.new_ic_back);
 		inflate = LayoutInflater.from(this);
-		loadingView = this.findViewById(R.id.activity_loading_view);
-		retryView = this.findViewById(R.id.activity_retry_view);
-		activityListView = (PullToRefreshListView) this
-				.findViewById(R.id.activity_list_view);
+		loadingView = this.findViewById(R.id.breaknews_loading_view);
+		retryView = this.findViewById(R.id.breaknews_retry_view);
+		breaknewsListView = (PullToRefreshListView) this
+				.findViewById(R.id.breaknews_list_view);
+		nightView = findViewById(R.id.night_view);
 		initListView();
 	}
 
 	@Override
 	protected void initData() {
 		// TODO Auto-generated method stub
-		this.aid = this.getIntent().getStringExtra("_AID_");
-		if (this.aid == null)
-			this.finish();
 		refreshNetDate();
 	}
 
 	protected void initListView() {
 		// TODO Auto-generated method stub
-		activityListView.setMode(Mode.BOTH);
-		activityListView.getLoadingLayoutProxy(true, false).setPullLabel(
+		breaknewsListView.setMode(Mode.BOTH);
+		breaknewsListView.getLoadingLayoutProxy(true, false).setPullLabel(
 				"下拉可以刷新");
-		activityListView.getLoadingLayoutProxy(true, false).setReleaseLabel(
+		breaknewsListView.getLoadingLayoutProxy(true, false).setReleaseLabel(
 				"释放后刷新");
-		activityListView.getLoadingLayoutProxy(false, true).setPullLabel(
+		breaknewsListView.getLoadingLayoutProxy(false, true).setPullLabel(
 				"上拉加载更多");
-		activityListView.getLoadingLayoutProxy(false, true).setRefreshingLabel(
-				"刷新中…");
-		activityListView.getLoadingLayoutProxy(false, true).setReleaseLabel(
+		breaknewsListView.getLoadingLayoutProxy(false, true)
+				.setRefreshingLabel("刷新中…");
+		breaknewsListView.getLoadingLayoutProxy(false, true).setReleaseLabel(
 				"松开立即加载");
-		activityListView
+		breaknewsListView
 				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
 
 					@Override
@@ -145,22 +150,22 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 	protected void loadMoreNetDate() {
 		// TODO Auto-generated method stub
 		if (isLoadEnd || !CommonUtils.isNetworkAvailable(this)) {
-			activityListView.postDelayed(new Runnable() {
+			breaknewsListView.postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					activityListView.onRefreshComplete();
+					breaknewsListView.onRefreshComplete();
 				}
 			}, 300);
 			return;
 		}
 		List<RevelationsBreaknews> breaknews = this.revelationsActivityList
 				.getBreaknews();
-		this.netUtils.getRevelationsActivityList(this.aid,
+		this.netUtils.getRevelationsBreaknewsMore(
 				breaknews.get(breaknews.size() - 1).getNewstime(),
 				new Listener<JSONObject>() {
 					@Override
 					public void onResponse(JSONObject jsonObject) {
-						activityListView.onRefreshComplete();
+						breaknewsListView.onRefreshComplete();
 						RevelationsActicityList moreList = JsonUtils.toObject(
 								jsonObject.toString(),
 								RevelationsActicityList.class);
@@ -171,7 +176,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 							revelationsActivityList.getBreaknews().addAll(
 									moreList.getBreaknews());
 						}
-						activityListAdapter.notifyDataSetChanged();
+						breaknewsListAdapter.notifyDataSetChanged();
 					}
 				}, mErrorListener);
 	}
@@ -180,6 +185,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 	protected void setListener() {
 		// TODO Auto-generated method stub
 		retryView.setOnClickListener(this);
+		setOnLeftClickLinester(this);
 	}
 
 	@Override
@@ -189,6 +195,9 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		switch (id) {
 		case R.id.revelations_retry_view:
 			refreshNetDate();
+		case R.id.title_bar_left_img:
+			onBackPressed();
+			break;
 		}
 	}
 
@@ -209,12 +218,12 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 
 	private void showData(boolean needRefresh) {
 		if (needRefresh) {
-			activityListAdapter = new ActivityListAdapter();
-			activityListView.setAdapter(activityListAdapter);
+			breaknewsListAdapter = new BreaknewsListAdapter();
+			breaknewsListView.setAdapter(breaknewsListAdapter);
 		} else {
-			activityListAdapter.notifyDataSetChanged();
+			breaknewsListAdapter.notifyDataSetChanged();
 		}
-		activityListView.onRefreshComplete();
+		breaknewsListView.onRefreshComplete();
 	}
 
 	@Override
@@ -225,7 +234,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		if (revelationsActivityList == null)
 			retryView.setVisibility(View.VISIBLE);
 		else
-			activityListView.onRefreshComplete();
+			breaknewsListView.onRefreshComplete();
 	}
 
 	private class ActivityListTopHolder {
@@ -255,29 +264,26 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		MyTextView newsTitile;
 	}
 
-	private class ActivityListAdapter extends BaseAdapter {
+	private class BreaknewsListAdapter extends BaseAdapter {
 
 		@Override
 		public int getCount() {
 			if (isLoadEnd)
-				return revelationsActivityList.getBreaknews().size() + 1 + 1;
-			return revelationsActivityList.getBreaknews().size() + 1;
+				return revelationsActivityList.getBreaknews().size() + 1;
+			return revelationsActivityList.getBreaknews().size();
 		}
 
 		@Override
 		public int getViewTypeCount() {
-			return 3;
+			return 2;
 		}
 
 		@Override
 		public int getItemViewType(int position) {
-			if (position == 0 && revelationsActivityList.getActivity() != null) {
-				return 0;
-			} else if (position == (revelationsActivityList.getBreaknews()
-					.size() + 1)) {
-				return 2;
-			} else
+			if (position == revelationsActivityList.getBreaknews().size()) {
 				return 1;
+			} else
+				return 0;
 		}
 
 		@Override
@@ -296,22 +302,6 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 
 			if (convertView == null) {
 				if (itemViewType == 0) {
-					convertView = inflate.inflate(
-							R.layout.item_revelations_activity_list_activity,
-							null);
-					topHolder = new ActivityListTopHolder();
-					topHolder.activityImageView = (ImageView) convertView
-							.findViewById(R.id.activity_list_imageview);
-					topHolder.activityTitle = (MyTextView) convertView
-							.findViewById(R.id.activity_list_title);
-					topHolder.activityIntro = (MyTextView) convertView
-							.findViewById(R.id.activity_list_intro);
-					topHolder.activityImageView
-							.setLayoutParams(new RelativeLayout.LayoutParams(
-									RelativeLayout.LayoutParams.MATCH_PARENT,
-									(int) (RevelationsActivityDetailActivity.this.mScreenWidth * 111 / 310)));
-					convertView.setTag(topHolder);
-				} else if (itemViewType == 1) {
 					convertView = inflate.inflate(
 							R.layout.item_revelations_list_break, null);
 					newsHolder = new RevelationsBreaksListNewsHolder();
@@ -334,7 +324,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 					newsHolder.aboutReportContent = (LinearLayout) convertView
 							.findViewById(R.id.revelations_breaknews_about_report_content);
 					convertView.setTag(newsHolder);
-				} else if (itemViewType == 2) {
+				} else if (itemViewType == 1) {
 					convertView = inflate.inflate(R.layout.item_list_foot_text,
 							null);
 					finishHolder = new LoadedFinishHolder();
@@ -344,38 +334,14 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 				}
 			} else {
 				if (itemViewType == 0) {
-					topHolder = (ActivityListTopHolder) convertView.getTag();
-				} else if (itemViewType == 1) {
 					newsHolder = (RevelationsBreaksListNewsHolder) convertView
 							.getTag();
-				} else if (itemViewType == 2) {
+				} else if (itemViewType == 1) {
 					finishHolder = (LoadedFinishHolder) convertView.getTag();
 				}
 			}
-
 			if (itemViewType == 0) {
-				com.kankan.kankanews.bean.RevelationsActivity activity = revelationsActivityList
-						.getActivity();
-				ImgUtils.imageLoader.displayImage(activity.getTitlepic(),
-						topHolder.activityImageView, ImgUtils.homeImageOptions);
-				topHolder.activityTitle.setText(revelationsActivityList
-						.getActivity().getTitle());
-				topHolder.activityIntro.setText(revelationsActivityList
-						.getActivity().getIntro());
-				FontUtils.setTextViewFontSize(
-						RevelationsActivityDetailActivity.this,
-						topHolder.activityTitle,
-						R.string.home_news_title_text_size,
-						spUtil.getFontSizeRadix());
-				FontUtils.setTextViewFontSize(
-						RevelationsActivityDetailActivity.this,
-						topHolder.activityIntro,
-						R.string.home_news_title_text_size,
-						spUtil.getFontSizeRadix());
-			} else if (itemViewType == 1) {
-				int breakLocation = position
-						- (revelationsActivityList.getActivity() != null ? 1
-								: 0);
+				int breakLocation = position;
 				newsHolder.moreContent.setVisibility(View.GONE);
 				final RevelationsBreaknews news = revelationsActivityList
 						.getBreaknews().get(breakLocation);
@@ -385,6 +351,10 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 						+ TimeUtil.timeStrToString(news.getNewstime(),
 								"yyyy-MM-dd"));
 				newsHolder.newsText.setText(news.getNewstext());
+				FontUtils.setTextViewFontSize(
+						RevelationsBreakNewsMoreActivity.this,
+						newsHolder.newsText, R.string.news_content_text_size,
+						spUtil.getFontSizeRadix());
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
 				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);
 				newsHolder.newsText
@@ -435,14 +405,14 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 									((MyTextView) v.getTag()).setMaxLines(3);
 									v.postInvalidate();
 								}
-								activityListAdapter.notifyDataSetChanged();
+								breaknewsListAdapter.notifyDataSetChanged();
 							}
 						});
 				List<Keyboard> keyboardList = news.getKeyboard();
 				newsHolder.keyboardIconContent.removeAllViews();
 				for (Keyboard keyboard : keyboardList) {
 					TextView view = new BorderTextView(
-							RevelationsActivityDetailActivity.this,
+							RevelationsBreakNewsMoreActivity.this,
 							keyboard.getColor());
 					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 							LinearLayout.LayoutParams.MATCH_PARENT,
@@ -515,7 +485,8 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			// TODO Auto-generated method stub
 			ImageView imageView = null;
 			if (convertView == null) {
@@ -536,12 +507,41 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 			if (imageGroup.length == 4 && position == 2) {
 				// imageView.setVisibility(View.GONE);
 				imageView.setBackground(null);
+				imageView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+					}
+				});
 			} else if (imageGroup.length == 4 && position > 2) {
-				ImgUtils.imageLoader.displayImage(imageGroup[position - 1],
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(imageGroup[position - 1]),
 						imageView, ImgUtils.homeImageOptions);
+				imageView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(
+								RevelationsBreakNewsMoreActivity.this,
+								PhotoViewActivity.class);
+						intent.putExtra("_IMAGE_GROUP_", imageGroup);
+						intent.putExtra("_PHOTO_CUR_NUM_", position - 1);
+						startActivity(intent);
+					}
+				});
 			} else {
-				ImgUtils.imageLoader.displayImage(imageGroup[position],
-						imageView, ImgUtils.homeImageOptions);
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(imageGroup[position]), imageView,
+						ImgUtils.homeImageOptions);
+				imageView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(
+								RevelationsBreakNewsMoreActivity.this,
+								PhotoViewActivity.class);
+						intent.putExtra("_IMAGE_GROUP_", imageGroup);
+						intent.putExtra("_PHOTO_CUR_NUM_", position);
+						startActivity(intent);
+					}
+				});
 			}
 			return convertView;
 		}
@@ -573,7 +573,8 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			// TODO Auto-generated method stub
 			if (convertView == null) {
 				convertView = inflate.inflate(
@@ -588,17 +589,85 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 				aboutReportHolder = (BreaknewsAboutReportHolder) convertView
 						.getTag();
 			}
-			ImgUtils.imageLoader.displayImage(revelationsNew.get(position)
-					.getTitlepic(), aboutReportHolder.newsTitilePic,
-					ImgUtils.homeImageOptions);
+			ImgUtils.imageLoader.displayImage(CommonUtils
+					.doWebpUrl(revelationsNew.get(position).getTitlepic()),
+					aboutReportHolder.newsTitilePic, ImgUtils.homeImageOptions);
 			aboutReportHolder.newsTitile.setText(revelationsNew.get(position)
 					.getTitle());
 
+			FontUtils.setTextViewFontSize(
+					RevelationsBreakNewsMoreActivity.this,
+					aboutReportHolder.newsTitile,
+					R.string.home_news_title_text_size,
+					spUtil.getFontSizeRadix());
+			convertView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					openNews(revelationsNew.get(position));
+				}
+			});
 			return convertView;
 		}
 	}
 
 	public boolean isOverFlowed(TextView view) {
 		return view.getLayout().getEllipsisCount(view.getLineCount() - 1) > 0;
+	}
+
+	private void openNews(RevelationsNew news) {
+		//
+		final int news_type = Integer.valueOf(news.getType());
+		if (news_type % 10 == 1) {
+			this.startAnimActivityByParameter(New_Activity_Content_Video.class,
+					news.getMid(), news.getType(), news.getTitleurl(),
+					news.getNewstime(), news.getTitle(), news.getTitlepic(),
+					news.getTitlepic());
+		} else if (news_type % 10 == 2) {
+			final String[] pics = news.getTitlepic().split("::::::");
+			this.startAnimActivityByParameter(
+					New_Activity_Content_PicSet.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					news.getTitle(), news.getTitlepic(), pics[1]);
+		} else if (news_type % 10 == 5) {
+			// 专题
+			this.startSubjectActivityByParameter(New_Avtivity_Subject.class,
+					news.getZtid(), news.getTitle(), news.getTitlepic(),
+					news.getTitleurl(), news.getTitlepic(), news.getTitlepic());
+		}
+		// else if (news.getZtype().equals("1")) {
+		// this.startSubjectActivityByParameter(New_Avtivity_Subject.class,
+		// news.getZtid(), news.getTitle(), news.getTitlepic(),
+		// news.getTitleurl(), news.getTitlepic(), news.getTitlepic());
+		// }
+		else {
+			this.startAnimActivityByParameter(New_Activity_Content_Web.class,
+					news.getMid(), news.getType(), news.getTitleurl(),
+					news.getNewstime(), news.getTitle(), news.getTitlepic(),
+					news.getTitlepic());
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (FontUtils.isRevelationsBreaknewsFontSizeHasChanged()) {
+			changeFontSize();
+			FontUtils.setRevelationsBreaknewsFontSizeHasChanged(false);
+		}
+		if (!spUtil.getIsDayMode())
+			chage2Night();
+		else
+			chage2Day();
+	}
+
+	@Override
+	public void changeFontSize() {
+		// TODO Auto-generated method stub
+		int first = breaknewsListView.getFirstVisiblePosition();
+		breaknewsListView.setAdapter(breaknewsListAdapter);
+		breaknewsListView.setSelection(first);
 	}
 }

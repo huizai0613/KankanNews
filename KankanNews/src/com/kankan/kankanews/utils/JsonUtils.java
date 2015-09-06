@@ -1,5 +1,7 @@
 package com.kankan.kankanews.utils;
 
+import java.lang.reflect.Type;
+
 import com.google.gson.Gson;
 
 public class JsonUtils {
@@ -21,5 +23,9 @@ public class JsonUtils {
 		// e.printStackTrace();
 		// }
 		return gson.fromJson(json, classOfT);
+	}
+
+	public static <T> T toObjectByType(String json, Type typeOfT) {
+		return gson.fromJson(json, typeOfT);
 	}
 }

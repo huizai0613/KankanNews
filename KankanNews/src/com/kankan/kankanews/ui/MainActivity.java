@@ -43,7 +43,7 @@ import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.base.download.MyRequestCallBack;
 import com.kankan.kankanews.bean.MyCollect;
-import com.kankan.kankanews.bean.New_LivePlay; 
+import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.ui.fragment.New_ColumsFragment;
 import com.kankan.kankanews.ui.fragment.New_HomeFragment;
@@ -354,6 +354,11 @@ public class MainActivity extends BaseVideoActivity {
 			if (tabView == curTouchTab) {
 				tab_img.setImageResource(touchImg[i]);
 				if (tabView == tabRevelate) {
+					RelativeLayout.LayoutParams imgParams = new RelativeLayout.LayoutParams(
+							RelativeLayout.LayoutParams.MATCH_PARENT,
+							RelativeLayout.LayoutParams.MATCH_PARENT);
+					imgParams.setMargins(5, 5, 5, 5);
+					tab_img.setLayoutParams(imgParams);
 					float realHeight = getResources().getDimension(
 							R.dimen.bottom_bar_real_height);
 					ViewGroup.LayoutParams params = tabView.getLayoutParams();
@@ -366,16 +371,24 @@ public class MainActivity extends BaseVideoActivity {
 					// anim.setInterpolator(new CycleInterpolator(2f));
 					// anim.setDuration( 300 );
 					// tabView.setAnimation(anim);
-					TranslateAnimation shakeAnim = (TranslateAnimation)AnimationUtils.loadAnimation(this,
-							R.anim.shake_y);
-//					shakeAnim.setRepeatCount(Integer.MAX_VALUE);
-					tabView.startAnimation(shakeAnim);
+					// TranslateAnimation shakeAnim = (TranslateAnimation)
+					// AnimationUtils
+					// .loadAnimation(this, R.anim.shake_y);
+					// shakeAnim.setRepeatCount(Integer.MAX_VALUE);
+					// tabView.startAnimation(shakeAnim);
 				} else {
 					tabView.setBackgroundResource(R.drawable.tab_home_left_right_item_border_selected);
 				}
 			} else {
 				tab_img.setImageResource(nomalImg[i]);
 				if (tabView == tabRevelate) {
+					RelativeLayout.LayoutParams imgParams = new RelativeLayout.LayoutParams(
+							RelativeLayout.LayoutParams.MATCH_PARENT,
+							RelativeLayout.LayoutParams.MATCH_PARENT);
+					imgParams.setMargins(PixelUtil.dp2px(12),
+							PixelUtil.dp2px(12), PixelUtil.dp2px(12),
+							PixelUtil.dp2px(12));
+					tab_img.setLayoutParams(imgParams);
 					float realHeight = getResources().getDimension(
 							R.dimen.base_action_bar_height);
 					ViewGroup.LayoutParams params = tabView.getLayoutParams();
@@ -436,7 +449,7 @@ public class MainActivity extends BaseVideoActivity {
 			if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
 				String reason = intent.getStringExtra(SYSTEM_REASON);
 				if (TextUtils.equals(reason, SYSTEM_HOME_KEY)) {
-					// 表示按了home键,程序到了后台 
+					// 表示按了home键,程序到了后台
 
 				}
 			}

@@ -8,28 +8,16 @@
         android:background="@color/black" />
 
     <com.iss.view.pulltorefresh.PullToRefreshListView
-        android:id="@+id/activity_list_view"
+        android:id="@+id/breaknews_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/base_action_bar_height"
         android:layout_marginTop="@dimen/base_action_bar_height"
         android:divider="@null"
         android:scrollbars="none" >
     </com.iss.view.pulltorefresh.PullToRefreshListView>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/base_action_bar_height"
-        android:layout_alignParentBottom="true" >
-
-        <com.kankan.kankanews.ui.view.MyTextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="我要参与" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/activity_retry_view"
+        android:id="@+id/breaknews_retry_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/base_action_bar_height"
@@ -46,7 +34,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/activity_loading_view"
+        android:id="@+id/breaknews_loading_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/base_action_bar_height"
@@ -62,5 +50,12 @@
             android:indeterminateOnly="true"
             android:visibility="visible" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/night_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night_mask"
+        android:visibility="gone" />
 
 </RelativeLayout>

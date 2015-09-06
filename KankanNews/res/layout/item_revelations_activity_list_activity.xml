@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white" >
+
+    <ImageView
+        android:id="@+id/activity_list_imageview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY" >
+    </ImageView>
+
+    <LinearLayout
+        android:id="@+id/revelations_activity_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_list_imageview"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/news_bask_space"
+        android:paddingRight="@dimen/news_bask_space" >
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/activity_list_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingTop="10dip"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/activity_list_intro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingBottom="10dip"
+            android:paddingTop="10dip"
+            android:textColor="@color/mid_gray"
+            android:textStyle="bold" />
+    </LinearLayout>
+    <!--
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dip"
+            android:layout_below="@id/viewpager_content"
+            android:background="#f6f6f6" />
+    -->
+
+    <View
+        android:id="@+id/separation_line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:layout_below="@id/revelations_activity_content"
+        android:background="@color/gray_cc" />
+
+    <View
+        android:id="@+id/separation_block"
+        android:layout_width="match_parent"
+        android:layout_height="10dip"
+        android:layout_below="@id/separation_line"
+        android:background="@color/six_e_gray" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:layout_below="@id/separation_block"
+        android:background="@color/gray_cc" />
+
+</RelativeLayout>

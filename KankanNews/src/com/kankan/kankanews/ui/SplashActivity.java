@@ -123,8 +123,8 @@ public class SplashActivity extends BaseActivity {
 		instance = NetUtils.getInstance(this);
 
 		// 听云 放在友盟之后
-		NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
-				.withLocationServiceEnabled(true).start(this);
+//		NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
+//				.withLocationServiceEnabled(true).start(this);
 
 		mApplication.setStart(true);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);

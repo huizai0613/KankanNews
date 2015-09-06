@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/f6_gray" >
+
+    <com.kankan.kankanews.ui.view.MyTextView
+        android:id="@+id/list_has_loaded_item_textview"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_action_bar_height"
+        android:gravity="center"
+        android:paddingBottom="10dip"
+        android:paddingTop="10dip"
+        android:text="已加载全部"
+        android:textColor="#A6A6A6"
+        android:textSize="20dp" />
+
+    <RelativeLayout
+        android:id="@+id/list_load_more_item"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/base_action_bar_height"
+        android:layout_marginBottom="60dip"
+        android:layout_marginLeft="@dimen/news_bask_space"
+        android:layout_marginRight="@dimen/news_bask_space"
+        android:layout_marginTop="@dimen/news_bask_space"
+        android:background="@color/thin_gray"
+        android:visibility="gone" >
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingBottom="10dip"
+            android:paddingTop="10dip"
+            android:text="点击查看更多报料"
+            android:textColor="#A6A6A6"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
+</RelativeLayout>

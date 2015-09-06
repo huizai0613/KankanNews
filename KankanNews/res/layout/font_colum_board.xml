@@ -82,7 +82,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="小"
-                android:textSize="18dip" /> 
+                android:textSize="18dip" />
 
             <TextView
                 android:id="@+id/font_normal_size"
@@ -93,6 +93,11 @@
                 android:padding="1dip"
                 android:text="中"
                 android:textSize="18dip" />
+
+            <View
+                android:layout_width="1dip"
+                android:layout_height="match_parent"
+                android:background="@color/red" />
 
             <TextView
                 android:id="@+id/font_big_size"

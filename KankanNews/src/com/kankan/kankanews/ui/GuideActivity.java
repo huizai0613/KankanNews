@@ -8,7 +8,9 @@ import org.json.JSONObject;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.IA.CrashApplication;
+import com.kankan.kankanews.utils.Base64;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.RsaUtils;
 import com.kankan.kankanews.utils.SharePreferenceUtil;
 import com.kankanews.kankanxinwen.R;
 import android.app.Activity;
@@ -21,6 +23,7 @@ import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,6 +69,16 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 		// 初始化应用的版本号
 		version = CommonUtils.getVersionName(this);
 
+		RsaUtils s = new RsaUtils();
+		String str;
+		try {
+			str = new String(Base64.encode(s.encrypt(s.getpublicksy(),
+					"{tel:2387289317}".getBytes())));
+			Log.e("str", str);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		// this.chage2Day();
 	}
 

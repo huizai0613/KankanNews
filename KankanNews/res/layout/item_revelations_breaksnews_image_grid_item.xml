@@ -9,6 +9,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY" />
+        android:scaleType="centerCrop" />
 
 </com.kankan.kankanews.ui.view.ScaleRelativeLayout>

@@ -26,15 +26,15 @@ public class ScaleRelativeLayout extends RelativeLayout {
 		// our view. We can't really know what it is since we will be
 		// adding and removing different arbitrary views and do not
 		// want the layout to change as this happens.
-		setMeasuredDimension(getDefaultSize(0, widthMeasureSpec),
-				getDefaultSize(0, heightMeasureSpec));
-
-		// Children are just made to fill our space.
-		int childWidthSize = getMeasuredWidth();
-		int childHeightSize = getMeasuredHeight();
-		// 高度和宽度一样
-		widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidthSize,
-				MeasureSpec.EXACTLY);
+//		setMeasuredDimension(getDefaultSize(0, widthMeasureSpec),
+//				getDefaultSize(0, heightMeasureSpec));
+//
+//		// Children are just made to fill our space.
+//		int childWidthSize = getMeasuredWidth();
+//		int childHeightSize = getMeasuredHeight();
+//		// 高度和宽度一样
+//		widthMeasureSpec = MeasureSpec.makeMeasureSpec(childWidthSize,
+//				MeasureSpec.EXACTLY);
 //		heightMeasureSpec = widthMeasureSpec;
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 	}

@@ -18,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_bar_real_height"
         android:layout_alignParentBottom="true"
-        android:gravity="bottom"
-        android:background="@android:color/transparent" >
+        android:background="@android:color/transparent"
+        android:gravity="bottom" >
 
         <RelativeLayout
             android:id="@+id/tab_home"
@@ -36,6 +36,7 @@
                 android:id="@+id/tab_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="12dip"
                 android:src="@drawable/tab_home_nomal" />
         </RelativeLayout>
 
@@ -54,6 +55,7 @@
                 android:id="@id/tab_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="12dip"
                 android:src="@drawable/tab_revelate_nomal" />
         </RelativeLayout>
 
@@ -72,9 +74,10 @@
                 android:id="@id/tab_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="12dip"
                 android:src="@drawable/tab_live_nomal" />
         </RelativeLayout>
-    </LinearLayout> 
+    </LinearLayout>
 
     <View
         android:id="@+id/night_view"
