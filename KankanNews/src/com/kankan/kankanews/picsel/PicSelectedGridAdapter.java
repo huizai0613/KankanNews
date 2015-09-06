@@ -77,7 +77,7 @@ public class PicSelectedGridAdapter extends CommonAdapter<String>
 						mImageView.setColorFilter(Color.parseColor("#77000000"));
 					}
 				}
-				selectedNum.setText(mSelectedImage.size() + "/4张");
+				selectedNum.setText(mSelectedImage.size() + "/9张");
 			}
 		});
 		
@@ -89,7 +89,7 @@ public class PicSelectedGridAdapter extends CommonAdapter<String>
 			mSelect.setImageResource(R.drawable.pictures_selected);
 			mImageView.setColorFilter(Color.parseColor("#77000000"));
 		}
-		selectedNum.setText(mSelectedImage.size() + "/4张");
+		selectedNum.setText(mSelectedImage.size() + "/9张");
 
 	}
 }

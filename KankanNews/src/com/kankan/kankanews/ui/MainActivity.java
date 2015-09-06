@@ -261,6 +261,9 @@ public class MainActivity extends BaseVideoActivity {
 			refreshMianItem();
 		} else if (id == R.id.tab_live && curTouchTab == tabLive) {
 			refreshLive();
+		} else if (id == R.id.tab_revelate && curTouchTab == tabRevelate) {
+			Intent intent = new Intent(this, RevelationsActivity.class);
+			this.startActivity(intent);
 		}
 		changeTab(id);
 		changeFragment(id);

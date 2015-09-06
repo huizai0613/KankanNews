@@ -18,6 +18,7 @@
     </com.iss.view.pulltorefresh.PullToRefreshListView>
 
     <LinearLayout
+        android:id="@+id/go_revelations_but"
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_action_bar_height"
         android:layout_alignParentBottom="true" >
@@ -25,7 +26,12 @@
         <com.kankan.kankanews.ui.view.MyTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="我要参与" />
+            android:layout_margin="3dip"
+            android:background="@drawable/revelations_post_button_shape"
+            android:gravity="center"
+            android:text="我要参与"
+            android:textColor="@color/white"
+            android:textSize="20dip" />
     </LinearLayout>
 
     <LinearLayout

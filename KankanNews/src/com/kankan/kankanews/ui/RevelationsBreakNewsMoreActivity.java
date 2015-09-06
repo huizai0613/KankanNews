@@ -195,6 +195,7 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 		switch (id) {
 		case R.id.revelations_retry_view:
 			refreshNetDate();
+			break;
 		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -63,6 +64,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 
 	private RevelationsBreaksListNewsHolder newsHolder;
 	private LoadedFinishHolder finishHolder;
+	private LinearLayout goRevelationsBut;
 	private boolean isLoadEnd = false;
 
 	@Override
@@ -98,6 +100,8 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		retryView = this.findViewById(R.id.activity_retry_view);
 		activityListView = (PullToRefreshListView) this
 				.findViewById(R.id.activity_list_view);
+		goRevelationsBut = (LinearLayout) this
+				.findViewById(R.id.go_revelations_but);
 		initListView();
 	}
 
@@ -180,6 +184,8 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 	protected void setListener() {
 		// TODO Auto-generated method stub
 		retryView.setOnClickListener(this);
+		goRevelationsBut.setOnClickListener(this);
+		setOnLeftClickLinester(this);
 	}
 
 	@Override
@@ -189,7 +195,21 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		switch (id) {
 		case R.id.revelations_retry_view:
 			refreshNetDate();
+			break;
+		case R.id.go_revelations_but:
+			goRevelations();
+			break;
+		case R.id.title_bar_left_img:
+			onBackPressed();
+			break;
 		}
+	}
+
+	private void goRevelations() {
+		// TODO Auto-generated method stub
+		Intent intent = new Intent(this, RevelationsActivity.class);
+		intent.putExtra("_AID_", this.aid);
+		this.startActivity(intent);
 	}
 
 	@Override

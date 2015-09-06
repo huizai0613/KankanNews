@@ -54,7 +54,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/id_pic_selected_ok"
             android:gravity="center"
-            android:text="0/4张"
+            android:text="0/9张"
             android:textColor="@android:color/white" />
         
         <Button 

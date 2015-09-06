@@ -1,6 +1,8 @@
 package com.kankan.kankanews.ui;
 
+import java.io.File;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,13 +13,23 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.Selection;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.AlignmentSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,10 +40,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.picsel.PicPreviewActivity;
 import com.kankan.kankanews.picsel.PicSelectedMainActivity;
+import com.kankan.kankanews.ui.view.popup.ModifyAvatarDialog;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.ImageLoader;
 import com.kankan.kankanews.utils.ImageLoader.Type;
@@ -39,10 +53,8 @@ import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 
-public class RevelationsActivity extends BaseFragment implements
+public class RevelationsActivity extends BaseActivity implements
 		OnClickListener {
-
-	private View inflate;
 
 	private EditText contentText;
 	private TextView contentNumText;
@@ -56,39 +68,54 @@ public class RevelationsActivity extends BaseFragment implements
 	private List<String> imagesSelected = new LinkedList<String>();
 	private List<String> imagesSelectedUrl = new LinkedList<String>();
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreateView(inflater, container, savedInstanceState);
-		inflate = inflater.inflate(R.layout.activity_revelations, null);
+	public static final String IMAGE_PATH = "My_weixin";
+	public static final File FILE_SDCARD = Environment
+			.getExternalStorageDirectory();
+	public static final File FILE_LOCAL = new File(FILE_SDCARD, IMAGE_PATH);
+	public static final File FILE_PIC_SCREENSHOT = new File(FILE_LOCAL,
+			"images/screenshots");
 
-		initview();
-		initLister();
-		initData();
-		return inflate;
+	// @Override
+	// public View onCreateView(Bundle savedInstanceState) {
+	// // TODO Auto-generated method stub
+	// super.onCreateView(savedInstanceState);
+	// inflate = inflater.inflate(R.layout.activity_revelations, null);
+	//
+	// initview();
+	// initLister();
+	// initData();
+	// return inflate;
+	//
+	// }
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		this.setContentView(R.layout.activity_revelations);
 
 	}
 
-	public void initview() {
-		contentText = (EditText) inflate
+	@Override
+	protected void initView() {
+		contentText = (EditText) this
 				.findViewById(R.id.revelations_post_content);
-		contentNumText = (TextView) inflate
+		contentNumText = (TextView) this
 				.findViewById(R.id.revelations_post_content_num);
-		telText = (EditText) inflate.findViewById(R.id.revelations_post_tel);
-		postBut = (Button) inflate.findViewById(R.id.revelations_post_button);
-		imageOne = (ImageView) inflate.findViewById(R.id.revelations_image_one);
-		imageTwo = (ImageView) inflate.findViewById(R.id.revelations_image_two);
-		imageThree = (ImageView) inflate
+		telText = (EditText) this.findViewById(R.id.revelations_post_tel);
+		postBut = (Button) this.findViewById(R.id.revelations_post_button);
+		imageOne = (ImageView) this.findViewById(R.id.revelations_image_one);
+		imageTwo = (ImageView) this.findViewById(R.id.revelations_image_two);
+		imageThree = (ImageView) this
 				.findViewById(R.id.revelations_image_three);
-		imageFour = (ImageView) inflate
-				.findViewById(R.id.revelations_image_four);
+		imageFour = (ImageView) this.findViewById(R.id.revelations_image_four);
 		imageViews = new ImageView[] { imageOne, imageTwo, imageThree,
 				imageFour };
-		initTitleBar(inflate, "我要报料");
+		initTitleLeftBar("我要报料", R.drawable.new_ic_back);
 	}
 
-	private void initLister() {
+	@Override
+	protected void setListener() {
 		postBut.setOnClickListener(this);
 		imageOne.setOnClickListener(this);
 		imageTwo.setOnClickListener(this);
@@ -96,11 +123,7 @@ public class RevelationsActivity extends BaseFragment implements
 		imageFour.setOnClickListener(this);
 		contentText.addTextChangedListener(new MaxLengthWatcher(300,
 				contentText));
-
-	}
-
-	private void initData() {
-
+		setOnLeftClickLinester(this);
 	}
 
 	class MaxLengthWatcher implements TextWatcher {
@@ -157,6 +180,9 @@ public class RevelationsActivity extends BaseFragment implements
 		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch (id) {
+		case R.id.title_bar_left_img:
+			onBackPressed();
+			break;
 		case R.id.revelations_image_one:
 			if (imagesSelected.size() == 0) {
 				goSelect();
@@ -188,16 +214,16 @@ public class RevelationsActivity extends BaseFragment implements
 		case R.id.revelations_post_button:
 			if (contentText.getText().length() == 0) {
 				contentText.requestFocus();
-				ToastUtils.Errortoast(getActivity(), "报料内容不得为空");
+				ToastUtils.Errortoast(this, "报料内容不得为空");
 				break;
 			}
 			if (telText.getText().length() == 0
 					|| !isPhoneNum(telText.getText().toString())) {
 				telText.requestFocus();
-				ToastUtils.Errortoast(getActivity(), "请填写正确的电话号码");
+				ToastUtils.Errortoast(this, "请填写正确的电话号码");
 				break;
 			}
-			if (CommonUtils.isNetworkAvailable(mActivity)) {
+			if (CommonUtils.isNetworkAvailable(this)) {
 				new PostTask().execute("");
 			}
 			postBut.setText("正在提交");
@@ -217,16 +243,74 @@ public class RevelationsActivity extends BaseFragment implements
 
 	private void goSelect() {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(this.getActivity(),
-				PicSelectedMainActivity.class);
-		intent.putExtra("IMAGE_SELECTED_LIST", (Serializable) imagesSelected);
-		this.startActivityForResult(intent,
-				AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
+		ModifyAvatarDialog modifyAvatarDialog = new ModifyAvatarDialog(this) {
+			// 选择本地相册
+			@Override
+			public void doGoToImg() {
+				this.dismiss();
+				Intent intent = new Intent(RevelationsActivity.this,
+						PicSelectedMainActivity.class);
+				intent.putExtra("IMAGE_SELECTED_LIST",
+						(Serializable) imagesSelected);
+				startActivityForResult(intent,
+						AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
+			}
+
+			// 选择相机拍照
+			@Override
+			public void doGoToPhone() {
+				this.dismiss();
+				String status = Environment.getExternalStorageState();
+				if (status.equals(Environment.MEDIA_MOUNTED)) {
+					try {
+						String localTempImageFileName = "";
+						localTempImageFileName = String.valueOf((new Date())
+								.getTime()) + ".png";
+						File filePath = FILE_PIC_SCREENSHOT;
+						if (!filePath.exists()) {
+							filePath.mkdirs();
+						}
+						Intent intent = new Intent(
+								android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+						// RevelationsActivity.this.mApplication.getCacheDir()
+						// File f = new File(
+						// CommonUtils
+						// .getImageCachePath(getApplicationContext()),
+						// localTempImageFileName);
+						File f = new File(filePath, localTempImageFileName);
+						// localTempImgDir和localTempImageFileName是自己定义的名字
+						Uri u = Uri.fromFile(f);
+						intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
+						intent.putExtra(MediaStore.EXTRA_OUTPUT, u);
+						intent.setDataAndType(u, "image/*");
+						startActivityForResult(
+								intent,
+								AndroidConfig.REVELATIONS_FRAGMENT_PHOTO_REQUEST_NO);
+					} catch (ActivityNotFoundException e) {
+						//
+						Log.e("ActivityNotFoundException",
+								e.getLocalizedMessage());
+					}
+				}
+			}
+		};
+		AlignmentSpan span = new AlignmentSpan.Standard(
+				Layout.Alignment.ALIGN_CENTER);
+		AbsoluteSizeSpan span_size = new AbsoluteSizeSpan(25, true);
+		SpannableStringBuilder spannable = new SpannableStringBuilder();
+		String dTitle = "请选择图片";
+		spannable.append(dTitle);
+		spannable.setSpan(span, 0, dTitle.length(),
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		spannable.setSpan(span_size, 0, dTitle.length(),
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		modifyAvatarDialog.setTitle(spannable);
+		modifyAvatarDialog.show();
 	}
 
 	private void foPreview() {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(this.getActivity(), PicPreviewActivity.class);
+		Intent intent = new Intent(this, PicPreviewActivity.class);
 		intent.putExtra("IMAGE_SELECTED_LIST", (Serializable) imagesSelected);
 		this.startActivityForResult(intent,
 				AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
@@ -246,6 +330,11 @@ public class RevelationsActivity extends BaseFragment implements
 			refreshImages();
 			break;
 		}
+		switch (requestCode) {
+		case AndroidConfig.REVELATIONS_FRAGMENT_PHOTO_REQUEST_NO:
+			break;
+		}
+
 	}
 
 	private void refreshImages() {
@@ -309,10 +398,10 @@ public class RevelationsActivity extends BaseFragment implements
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			if (result.get("ResultCode").equals(AndroidConfig.RESPONSE_CODE_OK)) {
-				ToastUtils.Infotoast(getActivity(), "上传成功");
+				ToastUtils.Infotoast(RevelationsActivity.this, "上传成功");
 				cleanRevelation();
 			} else {
-				ToastUtils.Errortoast(getActivity(), "内容上传失败请重新上传");
+				ToastUtils.Errortoast(RevelationsActivity.this, "内容上传失败请重新上传");
 				postBut.setText("提交");
 				postBut.setEnabled(true);
 				postBut.setBackgroundColor(Color.parseColor("#FF0000"));
@@ -342,46 +431,22 @@ public class RevelationsActivity extends BaseFragment implements
 	}
 
 	private void sendImagesError(String msg) {
-		ToastUtils.Errortoast(getActivity(), msg);
+		ToastUtils.Errortoast(this, msg);
 	}
 
 	@Override
-	protected void onSuccessObject(JSONObject jsonObject) {
-		ToastUtils.Infotoast(getActivity(), jsonObject.toString());
+	protected void onSuccess(JSONObject jsonObject) {
+		ToastUtils.Infotoast(this, jsonObject.toString());
 	}
 
 	@Override
 	protected void onFailure(VolleyError error) {
 		// TODO Auto-generated method stub
-		ToastUtils.Errortoast(getActivity(), "内容上传失败请重新上传");
+		ToastUtils.Errortoast(this, "内容上传失败请重新上传");
 	}
 
 	@Override
-	protected boolean initLocalDate() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected void saveLocalDate() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void refreshNetDate() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void loadMoreNetDate() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	protected void onSuccessArray(JSONArray jsonObject) {
+	protected void initData() {
 		// TODO Auto-generated method stub
 
 	}

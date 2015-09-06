@@ -69,6 +69,8 @@ public class AndroidConfig {
 	public static final int REVELATIONS_FRAGMENT_REQUEST_NO = 4001;
 	public static final int REVELATIONS_FRAGMENT_RESULT_OK = 4002;
 	public static final int REVELATIONS_FRAGMENT_RESULT_CANCEL = 4003;
+	
+	public static final int REVELATIONS_FRAGMENT_PHOTO_REQUEST_NO = 5001;
 
 	// 页面统计-ID
 	// 首页-最新
@@ -156,7 +158,7 @@ public class AndroidConfig {
 
 	// ------------------------------------------------------------------报料------------------------------------------------------------------------
 	// 最大图片可选
-	public static final int MAX_PIC_SELECTED = 4;
+	public static final int MAX_PIC_SELECTED = 9;
 	// 报料列表数据
 	public static final String REVELATIONS_HOME_DATA = "/v5/newsbreak/breakinfo/index";
 	// 报料活动数据
