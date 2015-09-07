@@ -95,6 +95,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 	private LoadedFinishHolder finishHolder;
 
 	private Set<Integer> isShowSetTextView = new HashSet<Integer>();
+	private Set<String> hasEllipsizSetTextView = new HashSet<String>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -478,8 +479,13 @@ public class New_RevelationsFragment extends BaseFragment implements
 					newsHolder.newsText.setMaxLines(100);
 					newsHolder.allNewsTextBut.setVisibility(View.VISIBLE);
 					newsHolder.allNewsTextBut.setText("收起");
-				} else
+				} else {
 					newsHolder.newsText.setMaxLines(3);
+					if (hasEllipsizSetTextView.contains(news.getId()))
+						newsHolder.allNewsTextBut.setVisibility(View.VISIBLE);
+					else
+						newsHolder.allNewsTextBut.setVisibility(View.GONE);
+				}
 				newsHolder.newsText.setText(StringUtils.deleteLastNewLine(news
 						.getNewstext()));
 				FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
@@ -494,14 +500,25 @@ public class New_RevelationsFragment extends BaseFragment implements
 							public void ellipsizeStateChanged(
 									boolean ellipsized,
 									EllipsizingTextView textView) {
+								if (hasEllipsizSetTextView
+										.contains(revelationsHomeList
+												.getBreaknews().get(position)
+												.getId()))
+									return;
 								LinearLayout parent = (LinearLayout) (textView
 										.getParent());
 								MyTextView allBut = (MyTextView) parent
 										.findViewById(R.id.revelations_breaknews_alltext_but);
 								if (!ellipsized && textView.getMaxLines() == 3)
 									allBut.setVisibility(View.GONE);
-								else
+								else {
+									hasEllipsizSetTextView
+											.add(revelationsHomeList
+													.getBreaknews()
+													.get(position).getId());
 									allBut.setVisibility(View.VISIBLE);
+									allBut.setText("全文");
+								}
 								revelationsListAdapter.notifyDataSetChanged();
 							}
 						});

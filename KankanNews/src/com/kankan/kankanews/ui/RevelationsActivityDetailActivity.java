@@ -329,7 +329,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 				ViewGroup parent) {
 			int itemViewType = getItemViewType(position);
 
-			if (convertView == null) {
+//			if (convertView == null) {
 				if (itemViewType == 0) {
 					convertView = inflate.inflate(
 							R.layout.item_revelations_activity_list_activity,
@@ -380,16 +380,16 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 							.findViewById(R.id.list_has_loaded_item_textview);
 					convertView.setTag(finishHolder);
 				}
-			} else {
-				if (itemViewType == 0) {
-					topHolder = (ActivityListTopHolder) convertView.getTag();
-				} else if (itemViewType == 1) {
-					newsHolder = (RevelationsBreaksListNewsHolder) convertView
-							.getTag();
-				} else if (itemViewType == 2) {
-					finishHolder = (LoadedFinishHolder) convertView.getTag();
-				}
-			}
+//			} else {
+//				if (itemViewType == 0) {
+//					topHolder = (ActivityListTopHolder) convertView.getTag();
+//				} else if (itemViewType == 1) {
+//					newsHolder = (RevelationsBreaksListNewsHolder) convertView
+//							.getTag();
+//				} else if (itemViewType == 2) {
+//					finishHolder = (LoadedFinishHolder) convertView.getTag();
+//				}
+//			}
 
 			if (itemViewType == 0) {
 				com.kankan.kankanews.bean.RevelationsActivity activity = revelationsActivityList
