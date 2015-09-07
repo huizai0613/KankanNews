@@ -76,6 +76,7 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 	private String titlePic;
 	private String sharedPic;
 	private String titlelist;
+	private String intro;
 
 	private boolean isHide = false;
 	private ViewPager vp;
@@ -174,6 +175,7 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 		titlePic = intent.getStringExtra("titlePic");
 		sharedPic = intent.getStringExtra("sharedPic");
 		titlelist = intent.getStringExtra("titlelist");
+		intro = intent.getStringExtra("intro");
 		// 存储数据
 		new_news = new New_News();
 		new_news.setId(mid);
@@ -183,6 +185,7 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 		new_news.setTitlepic(titlePic);
 		new_news.setSharedPic(sharedPic);
 		new_news.setTitlelist(titlelist);
+		new_news.setIntro(intro);
 
 		// 提交点击
 		NetUtils.getInstance(mContext).addNewNewsClickData("tjid=" + mid);
@@ -353,64 +356,64 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 				@Override
 				public void onPhotoTap(View view, float x, float y) {
 					DebugLog.e("卧槽  点进来了");
-//					Animation top_in = AnimationUtils.loadAnimation(
-//							New_Activity_Content_PicSet.this, R.anim.top_in);
-//					top_in.setAnimationListener(new AnimationListener() {
-//						@Override
-//						public void onAnimationStart(Animation animation) {
-//							titleBarView.setVisibility(View.VISIBLE);
-//							rLayout_bottom.setVisibility(View.VISIBLE);
-//							vp_content.setVisibility(View.VISIBLE);
-//
-//						}
-//
-//						@Override
-//						public void onAnimationRepeat(Animation animation) {
-//						}
-//
-//						@Override
-//						public void onAnimationEnd(Animation animation) {
-//
-//						}
-//					});
-//					Animation top_out = AnimationUtils.loadAnimation(
-//							New_Activity_Content_PicSet.this, R.anim.top_out);
-//					top_out.setAnimationListener(new AnimationListener() {
-//						@Override
-//						public void onAnimationStart(Animation animation) {
-//
-//						}
-//
-//						@Override
-//						public void onAnimationRepeat(Animation animation) {
-//						}
-//
-//						@Override
-//						public void onAnimationEnd(Animation animation) {
-//							titleBarView.setVisibility(View.GONE);
-//							rLayout_bottom.setVisibility(View.GONE);
-//							vp_content.setVisibility(View.GONE);
-//						}
-//					});
-//					Animation bottom_in = AnimationUtils.loadAnimation(
-//							New_Activity_Content_PicSet.this, R.anim.bottom_in);
-//					Animation bottom_out = AnimationUtils
-//							.loadAnimation(New_Activity_Content_PicSet.this,
-//									R.anim.bottom_out);
+					// Animation top_in = AnimationUtils.loadAnimation(
+					// New_Activity_Content_PicSet.this, R.anim.top_in);
+					// top_in.setAnimationListener(new AnimationListener() {
+					// @Override
+					// public void onAnimationStart(Animation animation) {
+					// titleBarView.setVisibility(View.VISIBLE);
+					// rLayout_bottom.setVisibility(View.VISIBLE);
+					// vp_content.setVisibility(View.VISIBLE);
+					//
+					// }
+					//
+					// @Override
+					// public void onAnimationRepeat(Animation animation) {
+					// }
+					//
+					// @Override
+					// public void onAnimationEnd(Animation animation) {
+					//
+					// }
+					// });
+					// Animation top_out = AnimationUtils.loadAnimation(
+					// New_Activity_Content_PicSet.this, R.anim.top_out);
+					// top_out.setAnimationListener(new AnimationListener() {
+					// @Override
+					// public void onAnimationStart(Animation animation) {
+					//
+					// }
+					//
+					// @Override
+					// public void onAnimationRepeat(Animation animation) {
+					// }
+					//
+					// @Override
+					// public void onAnimationEnd(Animation animation) {
+					// titleBarView.setVisibility(View.GONE);
+					// rLayout_bottom.setVisibility(View.GONE);
+					// vp_content.setVisibility(View.GONE);
+					// }
+					// });
+					// Animation bottom_in = AnimationUtils.loadAnimation(
+					// New_Activity_Content_PicSet.this, R.anim.bottom_in);
+					// Animation bottom_out = AnimationUtils
+					// .loadAnimation(New_Activity_Content_PicSet.this,
+					// R.anim.bottom_out);
 					isHide = !isHide;
 					if (isHide) {
-//						titleBarView.startAnimation(top_out);
-//						rLayout_bottom.startAnimation(bottom_out);
-						 titleBarView.setVisibility(View.GONE);
-						 rLayout_bottom.setVisibility(View.GONE);
-						 vp_content.setVisibility(View.GONE);
+						// titleBarView.startAnimation(top_out);
+						// rLayout_bottom.startAnimation(bottom_out);
+						titleBarView.setVisibility(View.GONE);
+						rLayout_bottom.setVisibility(View.GONE);
+						vp_content.setVisibility(View.GONE);
 					} else {
-//						titleBarView.startAnimation(top_in);
-//						rLayout_bottom.startAnimation(bottom_in);
+						// titleBarView.startAnimation(top_in);
+						// rLayout_bottom.startAnimation(bottom_in);
 
-						 titleBarView.setVisibility(View.VISIBLE);
-						 rLayout_bottom.setVisibility(View.VISIBLE);
-						 vp_content.setVisibility(View.VISIBLE);
+						titleBarView.setVisibility(View.VISIBLE);
+						rLayout_bottom.setVisibility(View.VISIBLE);
+						vp_content.setVisibility(View.VISIBLE);
 					}
 				}
 			});

@@ -23,7 +23,8 @@ public class StringUtils {
 		return join(Arrays.asList(elements), separator);
 	}
 
-	public static String join(Iterable<? extends Object> elements, CharSequence separator) {
+	public static String join(Iterable<? extends Object> elements,
+			CharSequence separator) {
 		StringBuilder builder = new StringBuilder();
 
 		if (elements != null) {
@@ -31,7 +32,8 @@ public class StringUtils {
 			if (iter.hasNext()) {
 				builder.append(String.valueOf(iter.next()));
 				while (iter.hasNext()) {
-					builder.append(separator).append(String.valueOf(iter.next()));
+					builder.append(separator).append(
+							String.valueOf(iter.next()));
 				}
 			}
 		}
@@ -71,7 +73,15 @@ public class StringUtils {
 		int minutes = (totalSeconds / 60) % 60;
 		int hours = totalSeconds / 3600;
 
-		return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes, seconds) : String.format("%02d:%02d", minutes, seconds);
+		return hours > 0 ? String.format("%02d:%02d:%02d", hours, minutes,
+				seconds) : String.format("%02d:%02d", minutes, seconds);
+	}
+
+	public static String deleteLastNewLine(String str) {
+		while (str.endsWith("\n")) {
+			str = str.substring(0, str.length() - 2);
+		}
+		return str;
 	}
 
 }

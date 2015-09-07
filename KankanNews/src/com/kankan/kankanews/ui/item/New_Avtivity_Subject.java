@@ -88,6 +88,7 @@ public class New_Avtivity_Subject extends BaseActivity implements
 	private String titlepic;
 	private String sharedPic;
 	private String titleurl;
+	private String intro;
 	private MyTextView titleText;
 
 	private LinkedList<Subject_Item> subjectData = new LinkedList<Subject_Item>();
@@ -185,12 +186,14 @@ public class New_Avtivity_Subject extends BaseActivity implements
 		titlepic = intent.getStringExtra("titlepic");
 		sharedPic = intent.getStringExtra("sharedPic");
 		titleurl = intent.getStringExtra("titleurl");
+		intro = intent.getStringExtra("intro");
 
 		new_news = new New_News();
 
 		new_news.setTitlelist(title);
 		new_news.setSharedPic(sharedPic);
 		new_news.setTitleurl(titleurl);
+		new_news.setIntro(intro);
 
 		NetUtils.getInstance(mContext).getAnalyse(this, "topic",
 				new_news.getTitlelist(), new_news.getTitleurl());
@@ -655,7 +658,8 @@ public class New_Avtivity_Subject extends BaseActivity implements
 											item.getNewstime(),
 											item.getTitle(),
 											item.getTitlepic(),
-											item.getSharedPic());
+											item.getSharedPic(),
+											item.getIntro());
 								} else if (news_type % 10 == 5) {
 									// 专题
 									MyTextView textView = (MyTextView) v
@@ -670,7 +674,8 @@ public class New_Avtivity_Subject extends BaseActivity implements
 											item.getTitlepic(),
 											item.getTitleurl(),
 											item.getTitlepic(),
-											item.getSharedPic());
+											item.getSharedPic(),
+											item.getIntro());
 								} else if (news_type % 10 == 6) {// 直播
 
 								} else {
@@ -687,7 +692,8 @@ public class New_Avtivity_Subject extends BaseActivity implements
 											item.getNewstime(),
 											item.getTitle(),
 											item.getTitlepic(),
-											item.getSharedPic());
+											item.getSharedPic(),
+											item.getIntro());
 								}
 							}
 						});
@@ -744,7 +750,7 @@ public class New_Avtivity_Subject extends BaseActivity implements
 										item.getMid(), item.getType(),
 										item.getTitleurl(), item.getNewstime(),
 										item.getTitle(), item.getTitlepic(),
-										pics[1]);
+										pics[1], item.getIntro());
 							}
 						});
 

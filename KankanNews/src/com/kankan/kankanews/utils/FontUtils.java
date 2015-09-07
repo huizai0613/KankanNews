@@ -18,6 +18,8 @@ public class FontUtils {
 
 	public static boolean revelationsActivityFontSizeHasChanged = false;
 
+	public static boolean revelationsFragmentFontSizeHasChanged = false;
+
 	public static float DEFAULT_FONT_RADIX = 1;
 
 	public static String[] fontSizeShow = new String[] { "小", "中", "大", "特大" };
@@ -65,6 +67,8 @@ public class FontUtils {
 		revelationsBreaknewsFontSizeHasChanged = true;
 
 		revelationsActivityFontSizeHasChanged = true;
+
+		revelationsFragmentFontSizeHasChanged = true;
 
 	}
 
@@ -121,6 +125,15 @@ public class FontUtils {
 	public static void setRevelationsActivityFontSizeHasChanged(
 			boolean revelationsActivityFontSizeHasChanged) {
 		FontUtils.revelationsActivityFontSizeHasChanged = revelationsActivityFontSizeHasChanged;
+	}
+
+	public static boolean isRevelationsFragmentFontSizeHasChanged() {
+		return revelationsFragmentFontSizeHasChanged;
+	}
+
+	public static void setRevelationsFragmentFontSizeHasChanged(
+			boolean revelationsFragmentFontSizeHasChanged) {
+		FontUtils.revelationsFragmentFontSizeHasChanged = revelationsFragmentFontSizeHasChanged;
 	}
 
 }

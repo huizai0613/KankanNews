@@ -36,7 +36,8 @@
                 android:id="@+id/tab_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="12dip"
+                android:layout_margin="10dip"
+                android:scaleType="centerInside"
                 android:src="@drawable/tab_home_nomal" />
         </RelativeLayout>
 
@@ -55,7 +56,8 @@
                 android:id="@id/tab_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="12dip"
+                android:layout_margin="10dip"
+                android:scaleType="centerInside"
                 android:src="@drawable/tab_revelate_nomal" />
         </RelativeLayout>
 
@@ -74,7 +76,8 @@
                 android:id="@id/tab_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="12dip"
+                android:layout_margin="10dip"
+                android:scaleType="centerInside"
                 android:src="@drawable/tab_live_nomal" />
         </RelativeLayout>
     </LinearLayout>

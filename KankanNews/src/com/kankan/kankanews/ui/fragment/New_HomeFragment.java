@@ -69,7 +69,7 @@ public class New_HomeFragment extends BaseFragment implements
 
 	private View main_bg;
 
-	private int currentFragmentIndex;
+	private int currentFragmentIndex = 1;
 	private boolean isEnd;
 
 	public ArrayList<BaseFragment> fragments;
@@ -131,6 +131,7 @@ public class New_HomeFragment extends BaseFragment implements
 			if (currentFragmentIndex != 0)
 				((New_HomeItemFragment) fragments.get(currentFragmentIndex))
 						.changeFontSize();
+			FontUtils.setMainActivityFontSizeHasChanged(false);
 		}
 	}
 
@@ -161,8 +162,7 @@ public class New_HomeFragment extends BaseFragment implements
 			@Override
 			public void onClick(View v) {
 				New_HomeFragment.this.startActivity(new Intent(
-						New_HomeFragment.this.mActivity,
-						MeSetActivity.class));
+						New_HomeFragment.this.mActivity, MeSetActivity.class));
 				New_HomeFragment.this.mActivity.overridePendingTransition(
 						R.anim.in_from_right, R.anim.alpha_out);// R.anim.out_to_top
 			}
@@ -351,7 +351,7 @@ public class New_HomeFragment extends BaseFragment implements
 	@Override
 	public void onPageSelected(final int position) {
 
-		if (itemWidth == null) {
+		if (itemWidth == null || itemWidth[0] == 0) {
 			childCount = mRadioGroup_content.getChildCount();
 			itemWidth = new int[childCount];
 			for (int j = 0; j < childCount; j++) {
@@ -482,11 +482,11 @@ public class New_HomeFragment extends BaseFragment implements
 			boolean isNeedFreash = false;
 			main_bg.setVisibility(View.GONE);
 			int length = jsonObject.length();
-			if (homeCates != null) {
+			if (homeCates != null && homeCates.size() > 1) {
 				ArrayList<New_HomeCate> tmp = new ArrayList<New_HomeCate>();
-				for (int i = 0; i < homeCates.size(); i++) {
-					String newTitle = jsonObject.optJSONObject(i).optString(
-							"title");
+				for (int i = 1; i < homeCates.size(); i++) {
+					String newTitle = jsonObject.optJSONObject(i - 1)
+							.optString("title");
 					if (!newTitle.equals(homeCates.get(i).getTitle())) {
 						isNeedFreash = true;
 						break;

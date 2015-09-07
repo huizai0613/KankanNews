@@ -124,6 +124,10 @@ public class ShareUtil {
 
 		String sharedUrl = handleUrl(shareObj.getTitleurl());
 
+		String sharedIntro = (shareObj.getIntro() == null || shareObj
+				.getIntro().trim().equals("")) ? shareObj.getTitlelist()
+				: shareObj.getIntro();
+
 		// 视频分享
 		UMVideo video = new UMVideo(shareObj.getTitleurl());
 		video.setMediaUrl(shareObj.getTitleurl());
@@ -134,8 +138,10 @@ public class ShareUtil {
 
 		// 微信
 		WeiXinShareContent weixinContent = new WeiXinShareContent();
-		weixinContent.setShareContent(shareObj.getTitle() == null ? shareObj
-				.getTitlelist() : shareObj.getTitle());
+		// weixinContent.setShareContent(shareObj.getTitle() == null ? shareObj
+		// .getTitlelist() : shareObj.getTitle());
+		weixinContent.setShareContent(sharedIntro == null ? shareObj.getTitle()
+				: sharedIntro);
 		weixinContent.setTitle(shareObj.getTitlelist());
 		weixinContent.setTargetUrl(sharedUrl);
 		weixinContent.setShareMedia(titlePic);
@@ -143,7 +149,7 @@ public class ShareUtil {
 
 		// 设置朋友圈分享的内容
 		CircleShareContent circleMedia = new CircleShareContent();
-		circleMedia.setShareContent(shareObj.getTitlelist());
+		circleMedia.setShareContent(sharedIntro);
 		circleMedia.setTitle(shareObj.getTitlelist());
 		circleMedia.setShareImage(titlePic);
 		// circleMedia.setShareMedia(uMusic);
@@ -164,7 +170,7 @@ public class ShareUtil {
 
 		// 设置qq分享内容
 		QQShareContent qqShareContent = new QQShareContent();
-		qqShareContent.setShareContent(shareObj.getTitleurl());
+		qqShareContent.setShareContent(sharedIntro);
 		qqShareContent.setTitle(shareObj.getTitlelist());
 		qqShareContent.setShareImage(titlePic);
 		// qqShareContent.setShareMusic(uMusic);
@@ -205,8 +211,8 @@ public class ShareUtil {
 		// sinaContent.setShareImage(new UMImage(activity,
 		// "http://static.statickksmg.com/image/2015/05/07/ad7b6608ed69b909356b605db8924891.jpg"));
 		// TODO
-		sinaContent.setShareContent(shareObj.getTitlelist() + "-看看新闻 "
-				+ sharedUrl + " （分享自@看看新闻网） ");
+		sinaContent.setShareContent(sharedIntro + "-看看新闻 " + sharedUrl
+				+ " （分享自@看看新闻网） ");
 		mController.setShareMedia(sinaContent);
 	}
 

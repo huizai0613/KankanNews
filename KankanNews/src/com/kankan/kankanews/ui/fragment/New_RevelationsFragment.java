@@ -2,7 +2,9 @@ package com.kankan.kankanews.ui.fragment;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,15 +48,22 @@ import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.PhotoViewActivity;
 import com.kankan.kankanews.ui.RevelationsActivityDetailActivity;
 import com.kankan.kankanews.ui.RevelationsBreakNewsMoreActivity;
+import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
+import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
+import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
 import com.kankan.kankanews.ui.item.New_Activity_My_FanKui;
+import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
 import com.kankan.kankanews.ui.view.BorderTextView;
+import com.kankan.kankanews.ui.view.EllipsizingTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.NestingGridView;
+import com.kankan.kankanews.ui.view.EllipsizingTextView.EllipsizeListener;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.PixelUtil;
+import com.kankan.kankanews.utils.StringUtils;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
@@ -84,6 +93,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 	private BreaknewsAboutReportHolder aboutReportHolder;
 
 	private LoadedFinishHolder finishHolder;
+
+	private Set<Integer> isShowSetTextView = new HashSet<Integer>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -241,7 +252,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 
 	private class LoadedFinishHolder {
 		MyTextView loadedTextView;
-		RelativeLayout loadMoreItem;
+		LinearLayout loadMoreItem;
 	}
 
 	private class BreaknewsAboutReportHolder {
@@ -262,11 +273,12 @@ public class New_RevelationsFragment extends BaseFragment implements
 		LinearLayout keyboardIconContent;
 		LinearLayout aboutReportContent;
 		MyTextView phoneNumText;
-		MyTextView newsText;
+		EllipsizingTextView newsText;
 		MyTextView allNewsTextBut;
 		NestingGridView newsImageGridView;
 		ListView aboutReportListView;
 		ImageView aboutReportIcon;
+		ImageView oneNewsImageView;
 	}
 
 	private class RevelationsListAdapter extends BaseAdapter {
@@ -307,7 +319,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			int itemViewType = getItemViewType(position);
 
 			if (convertView == null) {
@@ -369,18 +382,21 @@ public class New_RevelationsFragment extends BaseFragment implements
 							.findViewById(R.id.revelations_breaknews_keyboard_icon_content);
 					newsHolder.phoneNumText = (MyTextView) convertView
 							.findViewById(R.id.revelations_breaknews_phonenum);
-					newsHolder.newsText = (MyTextView) convertView
+					newsHolder.newsText = (EllipsizingTextView) convertView
 							.findViewById(R.id.revelations_breaknews_newstext);
 					newsHolder.allNewsTextBut = (MyTextView) convertView
 							.findViewById(R.id.revelations_breaknews_alltext_but);
 					newsHolder.newsImageGridView = (NestingGridView) convertView
 							.findViewById(R.id.revelations_breaknews_image_grid);
+					newsHolder.oneNewsImageView = (ImageView) convertView
+							.findViewById(R.id.revelations_breaknews_image_one_view);
 					newsHolder.aboutReportListView = (ListView) convertView
 							.findViewById(R.id.revelations_breaknews_about_report_news_list);
 					newsHolder.aboutReportIcon = (ImageView) convertView
 							.findViewById(R.id.revelations_breaknews_about_report_icon);
 					newsHolder.aboutReportContent = (LinearLayout) convertView
 							.findViewById(R.id.revelations_breaknews_about_report_content);
+					newsHolder.allNewsTextBut.setVisibility(View.GONE);
 					convertView.setTag(newsHolder);
 				} else if (itemViewType == 2) {
 					convertView = inflate.inflate(mActivity,
@@ -389,7 +405,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 					finishHolder.loadedTextView = (MyTextView) convertView
 							.findViewById(R.id.list_has_loaded_item_textview);
 					finishHolder.loadedTextView.setVisibility(View.GONE);
-					finishHolder.loadMoreItem = (RelativeLayout) convertView
+					finishHolder.loadMoreItem = (LinearLayout) convertView
 							.findViewById(R.id.list_load_more_item);
 					finishHolder.loadMoreItem.setVisibility(View.VISIBLE);
 					finishHolder.loadMoreItem
@@ -458,38 +474,35 @@ public class New_RevelationsFragment extends BaseFragment implements
 						+ " "
 						+ TimeUtil.timeStrToString(news.getNewstime(),
 								"yyyy-MM-dd"));
-				newsHolder.newsText.setText(news.getNewstext());
+				if (isShowSetTextView.contains(position)) {
+					newsHolder.newsText.setMaxLines(100);
+					newsHolder.allNewsTextBut.setVisibility(View.VISIBLE);
+					newsHolder.allNewsTextBut.setText("收起");
+				} else
+					newsHolder.newsText.setMaxLines(3);
+				newsHolder.newsText.setText(StringUtils.deleteLastNewLine(news
+						.getNewstext()));
+				FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
+						newsHolder.newsText, R.string.news_content_text_size,
+						spUtil.getFontSizeRadix());
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
 				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);
 				newsHolder.newsText
-						.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+						.addEllipsizeListener(new EllipsizeListener() {
 
 							@Override
-							public void onLayoutChange(View v, int left,
-									int top, int right, int bottom,
-									int oldLeft, int oldTop, int oldRight,
-									int oldBottom) {
-								// TODO Auto-generated method stub
-								MyTextView textVi = (MyTextView) v;
-								// LinearLayout parent =
-								// (LinearLayout)(v.getParent());
-								// MyTextView allBut = (MyTextView)
-								// parent.findViewById(R.id.revelations_breaknews_alltext_but);
-								// Log.e("v",
-								// textVi.getLayout() + " "
-								// + textVi.getText());
-								textVi.removeOnLayoutChangeListener(this);
-								boolean isOver = isOverFlowed(textVi);
-								MyTextView allBut = (MyTextView) textVi
-										.getTag();
-								if (isOver || textVi.getLineCount() > 3) {
-									allBut.setVisibility(View.VISIBLE);
-									if (textVi.getLineCount() > 3)
-										allBut.setText("收起");
-									else
-										allBut.setText("全文");
-								} else
+							public void ellipsizeStateChanged(
+									boolean ellipsized,
+									EllipsizingTextView textView) {
+								LinearLayout parent = (LinearLayout) (textView
+										.getParent());
+								MyTextView allBut = (MyTextView) parent
+										.findViewById(R.id.revelations_breaknews_alltext_but);
+								if (!ellipsized && textView.getMaxLines() == 3)
 									allBut.setVisibility(View.GONE);
+								else
+									allBut.setVisibility(View.VISIBLE);
+								revelationsListAdapter.notifyDataSetChanged();
 							}
 						});
 				newsHolder.allNewsTextBut
@@ -498,16 +511,20 @@ public class New_RevelationsFragment extends BaseFragment implements
 							@Override
 							public void onClick(View v) {
 								// TODO Auto-generated method stub
-								boolean isOver = isOverFlowed((MyTextView) v
-										.getTag());
-								if (isOver) {
+								LinearLayout parent = (LinearLayout) (v
+										.getParent());
+								EllipsizingTextView textView = (EllipsizingTextView) parent
+										.findViewById(R.id.revelations_breaknews_newstext);
+								if (textView.getMaxLines() == 3) {
+									textView.setMaxLines(100);
 									((MyTextView) v).setText("收起");
-									((MyTextView) v.getTag()).setMaxLines(100);
-									v.postInvalidate();
+									((MyTextView) v).postInvalidate();
+									isShowSetTextView.add(position);
 								} else {
+									textView.setMaxLines(3);
 									((MyTextView) v).setText("全文");
-									((MyTextView) v.getTag()).setMaxLines(3);
-									v.postInvalidate();
+									((MyTextView) v).postInvalidate();
+									isShowSetTextView.remove(position);
 								}
 								revelationsListAdapter.notifyDataSetChanged();
 							}
@@ -532,17 +549,52 @@ public class New_RevelationsFragment extends BaseFragment implements
 					view.setTextColor(Color.parseColor(keyboard.getColor()));
 					newsHolder.keyboardIconContent.addView(view);
 				}
+				newsHolder.oneNewsImageView.setVisibility(View.GONE);
 				if (news.getImagegroup() == null
 						|| news.getImagegroup().trim().equals(""))
 					newsHolder.newsImageGridView.setVisibility(View.GONE);
 				else {
 					newsHolder.newsImageGridView.setVisibility(View.VISIBLE);
-					String[] imagegroup = news.getImagegroup().split("\\|");
-					ImageGroupGridAdapter gridAdapter = new ImageGroupGridAdapter();
-					gridAdapter.setImageGroup(imagegroup);
-					newsHolder.newsImageGridView.setSelector(new ColorDrawable(
-							Color.TRANSPARENT));
-					newsHolder.newsImageGridView.setAdapter(gridAdapter);
+					final String[] imageGroup = news.getImagegroup().split(
+							"\\|");
+					if (imageGroup.length == 1) {
+						newsHolder.oneNewsImageView.setVisibility(View.VISIBLE);
+						newsHolder.newsImageGridView.setVisibility(View.GONE);
+						ImgUtils.imageLoader.displayImage(
+								CommonUtils.doWebpUrl(imageGroup[0]),
+								newsHolder.oneNewsImageView,
+								ImgUtils.homeImageOptions);
+						newsHolder.oneNewsImageView
+								.setOnClickListener(new OnClickListener() {
+
+									@Override
+									public void onClick(View v) {
+										// TODO Auto-generated method stub
+										Intent intent = new Intent(mActivity,
+												PhotoViewActivity.class);
+										intent.putExtra("_IMAGE_GROUP_",
+												imageGroup);
+										intent.putExtra("_PHOTO_CUR_NUM_", 0);
+										startActivity(intent);
+									}
+								});
+
+					} else {
+						int width = New_RevelationsFragment.this.mActivity.mScreenWidth
+								- PixelUtil.dp2px(60);
+						ViewGroup.LayoutParams params = newsHolder.newsImageGridView
+								.getLayoutParams();
+						int num = (int) Math
+								.ceil(((float) (imageGroup.length)) / 3);
+						params.height = (int) (width / 3 * 0.75 * num);
+						newsHolder.newsImageGridView.setLayoutParams(params);
+						ImageGroupGridAdapter gridAdapter = new ImageGroupGridAdapter();
+						gridAdapter.setImageGroup(imageGroup);
+						newsHolder.newsImageGridView
+								.setSelector(new ColorDrawable(
+										Color.TRANSPARENT));
+						newsHolder.newsImageGridView.setAdapter(gridAdapter);
+					}
 				}
 				if (news.getRelatednews().size() == 0) {
 					newsHolder.aboutReportContent.setVisibility(View.GONE);
@@ -677,6 +729,150 @@ public class New_RevelationsFragment extends BaseFragment implements
 		return view.getLayout().getEllipsisCount(view.getLineCount() - 1) > 0;
 	}
 
+	// private class ImageGroupGridAdapter extends BaseAdapter {
+	// private String[] imageGroup;
+	//
+	// public void setImageGroup(String[] imageGroup) {
+	// this.imageGroup = imageGroup;
+	// }
+	//
+	// @Override
+	// public int getCount() {
+	// // TODO Auto-generated method stub
+	// if (imageGroup.length == 4)
+	// return 5;
+	// return imageGroup.length;
+	// }
+	//
+	// @Override
+	// public Object getItem(int position) {
+	// // TODO Auto-generated method stub
+	// if (imageGroup.length == 4)
+	// return null;
+	// return imageGroup[position];
+	// }
+	//
+	// @Override
+	// public long getItemId(int position) {
+	// // TODO Auto-generated method stub
+	// return position;
+	// }
+	//
+	// @Override
+	// public View getView(final int position, View convertView,
+	// ViewGroup parent) {
+	// // TODO Auto-generated method stub
+	// ImageView imageView = null;
+	// // if (convertView == null) {
+	// convertView = inflate.inflate(mActivity,
+	// R.layout.item_revelations_breaksnews_image_grid_item, null);
+	// imageView = (ImageView) convertView
+	// .findViewById(R.id.breaknews_image_item);
+	// RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)
+	// imageView
+	// .getLayoutParams();
+	// params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+	// params.height = (int) (parent.getWidth() / 3 * 0.75);
+	// imageView.setLayoutParams(params);
+	// convertView.setTag(imageView);
+	// // } else {
+	// // imageView = (ImageView) convertView.getTag();
+	// // }
+	// imageView.setVisibility(View.VISIBLE);
+	// if (imageGroup.length == 4 && position == 2) {
+	// // imageView.setVisibility(View.GONE);
+	// imageView.setBackground(null);
+	// imageView.setOnClickListener(new OnClickListener() {
+	// @Override
+	// public void onClick(View v) {
+	// }
+	// });
+	// } else if (imageGroup.length == 4 && position > 2) {
+	// ImgUtils.imageLoader.displayImage(
+	// CommonUtils.doWebpUrl(imageGroup[position - 1]),
+	// imageView, ImgUtils.homeImageOptions);
+	// imageView.setOnClickListener(new OnClickListener() {
+	// @Override
+	// public void onClick(View v) {
+	// Intent intent = new Intent(
+	// New_RevelationsFragment.this.mActivity,
+	// PhotoViewActivity.class);
+	// intent.putExtra("_IMAGE_GROUP_", imageGroup);
+	// intent.putExtra("_PHOTO_CUR_NUM_", position - 1);
+	// startActivity(intent);
+	// }
+	// });
+	// } else {
+	// ImgUtils.imageLoader.displayImage(
+	// CommonUtils.doWebpUrl(imageGroup[position]), imageView,
+	// ImgUtils.homeImageOptions);
+	// imageView.setOnClickListener(new OnClickListener() {
+	// @Override
+	// public void onClick(View v) {
+	// Intent intent = new Intent(
+	// New_RevelationsFragment.this.mActivity,
+	// PhotoViewActivity.class);
+	// intent.putExtra("_IMAGE_GROUP_", imageGroup);
+	// intent.putExtra("_PHOTO_CUR_NUM_", position);
+	// startActivity(intent);
+	// }
+	// });
+	// }
+	// return convertView;
+	// }
+	// }
+
+	// private class AboutReportNewsListAdapter extends BaseAdapter {
+	// private List<RevelationsNew> revelationsNew;
+	//
+	// public AboutReportNewsListAdapter(List<RevelationsNew> revelationsNew) {
+	// this.revelationsNew = revelationsNew;
+	// }
+	//
+	// @Override
+	// public int getCount() {
+	// // TODO Auto-generated method stub
+	// return revelationsNew.size();
+	// }
+	//
+	// @Override
+	// public Object getItem(int position) {
+	// // TODO Auto-generated method stub
+	// return revelationsNew.get(position);
+	// }
+	//
+	// @Override
+	// public long getItemId(int position) {
+	// // TODO Auto-generated method stub
+	// return position;
+	// }
+	//
+	// @Override
+	// public View getView(int position, View convertView, ViewGroup parent) {
+	// // TODO Auto-generated method stub
+	// if (convertView == null) {
+	// convertView = inflate.inflate(mActivity,
+	// R.layout.item_revelations_breaknews_about_report, null);
+	// aboutReportHolder = new BreaknewsAboutReportHolder();
+	// aboutReportHolder.newsTitilePic = (ImageView) convertView
+	// .findViewById(R.id.about_report_news_titlepic);
+	// aboutReportHolder.newsTitile = (MyTextView) convertView
+	// .findViewById(R.id.about_report_news_title);
+	// convertView.setTag(aboutReportHolder);
+	// } else {
+	// aboutReportHolder = (BreaknewsAboutReportHolder) convertView
+	// .getTag();
+	// }
+	// ImgUtils.imageLoader.displayImage(CommonUtils
+	// .doWebpUrl(revelationsNew.get(position).getTitlepic()),
+	// aboutReportHolder.newsTitilePic, ImgUtils.homeImageOptions);
+	// aboutReportHolder.newsTitile.setText(revelationsNew.get(position)
+	// .getTitle());
+	//
+	// return convertView;
+	// }
+	// }
+
 	private class ImageGroupGridAdapter extends BaseAdapter {
 		private String[] imageGroup;
 
@@ -711,19 +907,21 @@ public class New_RevelationsFragment extends BaseFragment implements
 				ViewGroup parent) {
 			// TODO Auto-generated method stub
 			ImageView imageView = null;
-			if (convertView == null) {
-				convertView = inflate.inflate(mActivity,
-						R.layout.item_revelations_breaksnews_image_grid_item,
-						null);
-				imageView = (ImageView) convertView
-						.findViewById(R.id.breaknews_image_item);
-				imageView.setLayoutParams(new RelativeLayout.LayoutParams(
-						RelativeLayout.LayoutParams.MATCH_PARENT, (int) (parent
-								.getWidth() / 3 * 0.75)));
-				convertView.setTag(imageView);
-			} else {
-				imageView = (ImageView) convertView.getTag();
-			}
+			// if (convertView == null) {
+			convertView = inflate.inflate(mActivity,
+					R.layout.item_revelations_breaksnews_image_grid_item, null);
+			imageView = (ImageView) convertView
+					.findViewById(R.id.breaknews_image_item);
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView
+					.getLayoutParams();
+			params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+			params.height = (int) (parent.getWidth() / 3 * 0.75);
+			imageView.setLayoutParams(params);
+			convertView.setTag(imageView);
+			// } else {
+			// imageView = (ImageView) convertView.getTag();
+			// }
+
 			imageView.setVisibility(View.VISIBLE);
 			if (imageGroup.length == 4 && position == 2) {
 				// imageView.setVisibility(View.GONE);
@@ -794,7 +992,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			// TODO Auto-generated method stub
 			if (convertView == null) {
 				convertView = inflate.inflate(mActivity,
@@ -815,8 +1014,73 @@ public class New_RevelationsFragment extends BaseFragment implements
 			aboutReportHolder.newsTitile.setText(revelationsNew.get(position)
 					.getTitle());
 
+			FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
+					aboutReportHolder.newsTitile,
+					R.string.home_news_title_text_size,
+					spUtil.getFontSizeRadix());
+			convertView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+					openNews(revelationsNew.get(position));
+				}
+			});
 			return convertView;
 		}
 	}
 
+	private void openNews(RevelationsNew news) {
+		//
+		final int news_type = Integer.valueOf(news.getType());
+		if (news_type % 10 == 1) {
+			mActivity.startAnimActivityByParameter(
+					New_Activity_Content_Video.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					news.getTitle(), news.getTitlepic(), news.getTitlepic(),
+					news.getIntro());
+		} else if (news_type % 10 == 2) {
+			final String[] pics = news.getTitlepic().split("::::::");
+			mActivity.startAnimActivityByParameter(
+					New_Activity_Content_PicSet.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					news.getTitle(), news.getTitlepic(), pics[1],
+					news.getIntro());
+		} else if (news_type % 10 == 5) {
+			// 专题
+			mActivity.startSubjectActivityByParameter(
+					New_Avtivity_Subject.class, news.getZtid(),
+					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
+					news.getTitlepic(), news.getTitlepic(), news.getIntro());
+		}
+		// else if (news.getZtype().equals("1")) {
+		// this.startSubjectActivityByParameter(New_Avtivity_Subject.class,
+		// news.getZtid(), news.getTitle(), news.getTitlepic(),
+		// news.getTitleurl(), news.getTitlepic(), news.getTitlepic());
+		// }
+		else {
+			mActivity.startAnimActivityByParameter(
+					New_Activity_Content_Web.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					news.getTitle(), news.getTitlepic(), news.getTitlepic(),
+					news.getIntro());
+		}
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		if (FontUtils.isRevelationsFragmentFontSizeHasChanged()) {
+			changeFontSize();
+			FontUtils.setRevelationsFragmentFontSizeHasChanged(false);
+		}
+	}
+
+	public void changeFontSize() {
+		// TODO Auto-generated method stub
+		int first = revelationsListView.getFirstVisiblePosition();
+		revelationsListView.setAdapter(revelationsListAdapter);
+		revelationsListView.setSelection(first);
+	}
 }

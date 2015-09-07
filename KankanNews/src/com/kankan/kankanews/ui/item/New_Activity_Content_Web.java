@@ -82,6 +82,7 @@ public class New_Activity_Content_Web extends BaseActivity implements
 	private String sharedPic;
 	private String titlelist;
 	private String title;
+	private String intro;
 
 	private View xCustomView;
 	private View nightView;
@@ -218,6 +219,7 @@ public class New_Activity_Content_Web extends BaseActivity implements
 		sharedPic = intent.getStringExtra("sharedPic");
 		newstime = intent.getStringExtra("newstime");
 		title = intent.getStringExtra("title");
+		intro = intent.getStringExtra("intro");
 
 		titlelist = intent.getStringExtra("titlelist");
 		// 存储数据
@@ -229,6 +231,7 @@ public class New_Activity_Content_Web extends BaseActivity implements
 		new_news.setTitlepic(titlePic);
 		new_news.setSharedPic(sharedPic);
 		new_news.setTitlelist(titlelist);
+		new_news.setIntro(intro);
 		new_news.setLooktime(Long.toString(TimeUtil.now()));
 
 		// 提交点击

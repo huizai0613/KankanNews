@@ -48,7 +48,7 @@ public class New_News_Home extends BaseBean<New_News_Home> {
 		title = jsonObj.optString("title");
 		titleurl = jsonObj.optString("titleurl");
 		titlepic = jsonObj.optString("titlepic");
-		sharedPic = jsonObj.optString("titlepic");
+		sharedPic = jsonObj.optString("sharepic");
 		type = jsonObj.optString("type");
 
 		sourceid = jsonObj.optString("sourceid");
@@ -185,6 +185,5 @@ public class New_News_Home extends BaseBean<New_News_Home> {
 	public void setSharedPic(String sharedPic) {
 		this.sharedPic = sharedPic;
 	}
-	
-	
+
 }

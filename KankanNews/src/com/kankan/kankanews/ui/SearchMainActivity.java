@@ -618,7 +618,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 								news.getMId(), news.getType(),
 								news.getTitleUrl(), news.getNewsTime(),
 								news.getTitle(), news.getTitlePic(),
-								news.getSharedPic());
+								news.getSharedPic(), null);
 					}
 				});
 			}

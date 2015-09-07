@@ -170,7 +170,7 @@ public class SplashActivity extends BaseActivity {
 			hasCallAds = true;
 			if (CommonUtils.isNetworkAvailableNoToast(this)) {
 				Map<String, String> params = new HashMap<String, String>();
-				params.put("aid", AndroidConfig.ADVERT_ID);
+				params.put("aid", AndroidConfig.ADVERT_ID_DEBUG);
 				params.put("ts", new Date().getTime() + "");
 				params.put("fmt", "json");
 				params.put("ver", "1");

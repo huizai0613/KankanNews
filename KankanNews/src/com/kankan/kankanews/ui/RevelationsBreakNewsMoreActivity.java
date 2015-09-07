@@ -1,7 +1,9 @@
 package com.kankan.kankanews.ui;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONObject;
 
@@ -43,6 +45,8 @@ import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
 import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
 import com.kankan.kankanews.ui.view.BorderTextView;
+import com.kankan.kankanews.ui.view.EllipsizingTextView;
+import com.kankan.kankanews.ui.view.EllipsizingTextView.EllipsizeListener;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.NestingGridView;
 import com.kankan.kankanews.utils.CommonUtils;
@@ -50,6 +54,7 @@ import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.PixelUtil;
+import com.kankan.kankanews.utils.StringUtils;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
@@ -71,6 +76,8 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 	private RevelationsBreaksListNewsHolder newsHolder;
 	private LoadedFinishHolder finishHolder;
 	private boolean isLoadEnd = false;
+
+	private Set<Integer> isShowSetTextView = new HashSet<Integer>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -249,11 +256,12 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 		LinearLayout keyboardIconContent;
 		LinearLayout aboutReportContent;
 		MyTextView phoneNumText;
-		MyTextView newsText;
+		EllipsizingTextView newsText;
 		MyTextView allNewsTextBut;
 		NestingGridView newsImageGridView;
 		ListView aboutReportListView;
 		ImageView aboutReportIcon;
+		ImageView oneNewsImageView;
 	}
 
 	private class LoadedFinishHolder {
@@ -298,49 +306,52 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			int itemViewType = getItemViewType(position);
 
-			if (convertView == null) {
-				if (itemViewType == 0) {
-					convertView = inflate.inflate(
-							R.layout.item_revelations_list_break, null);
-					newsHolder = new RevelationsBreaksListNewsHolder();
-					newsHolder.moreContent = (RelativeLayout) convertView
-							.findViewById(R.id.revelations_breaknews_more_content);
-					newsHolder.keyboardIconContent = (LinearLayout) convertView
-							.findViewById(R.id.revelations_breaknews_keyboard_icon_content);
-					newsHolder.phoneNumText = (MyTextView) convertView
-							.findViewById(R.id.revelations_breaknews_phonenum);
-					newsHolder.newsText = (MyTextView) convertView
-							.findViewById(R.id.revelations_breaknews_newstext);
-					newsHolder.allNewsTextBut = (MyTextView) convertView
-							.findViewById(R.id.revelations_breaknews_alltext_but);
-					newsHolder.newsImageGridView = (NestingGridView) convertView
-							.findViewById(R.id.revelations_breaknews_image_grid);
-					newsHolder.aboutReportListView = (ListView) convertView
-							.findViewById(R.id.revelations_breaknews_about_report_news_list);
-					newsHolder.aboutReportIcon = (ImageView) convertView
-							.findViewById(R.id.revelations_breaknews_about_report_icon);
-					newsHolder.aboutReportContent = (LinearLayout) convertView
-							.findViewById(R.id.revelations_breaknews_about_report_content);
-					convertView.setTag(newsHolder);
-				} else if (itemViewType == 1) {
-					convertView = inflate.inflate(R.layout.item_list_foot_text,
-							null);
-					finishHolder = new LoadedFinishHolder();
-					finishHolder.loadedTextView = (MyTextView) convertView
-							.findViewById(R.id.list_has_loaded_item_textview);
-					convertView.setTag(finishHolder);
-				}
-			} else {
-				if (itemViewType == 0) {
-					newsHolder = (RevelationsBreaksListNewsHolder) convertView
-							.getTag();
-				} else if (itemViewType == 1) {
-					finishHolder = (LoadedFinishHolder) convertView.getTag();
-				}
+			// if (convertView == null) {
+			if (itemViewType == 0) {
+				convertView = inflate.inflate(
+						R.layout.item_revelations_list_break, null);
+				newsHolder = new RevelationsBreaksListNewsHolder();
+				newsHolder.moreContent = (RelativeLayout) convertView
+						.findViewById(R.id.revelations_breaknews_more_content);
+				newsHolder.keyboardIconContent = (LinearLayout) convertView
+						.findViewById(R.id.revelations_breaknews_keyboard_icon_content);
+				newsHolder.phoneNumText = (MyTextView) convertView
+						.findViewById(R.id.revelations_breaknews_phonenum);
+				newsHolder.newsText = (EllipsizingTextView) convertView
+						.findViewById(R.id.revelations_breaknews_newstext);
+				newsHolder.allNewsTextBut = (MyTextView) convertView
+						.findViewById(R.id.revelations_breaknews_alltext_but);
+				newsHolder.newsImageGridView = (NestingGridView) convertView
+						.findViewById(R.id.revelations_breaknews_image_grid);
+				newsHolder.oneNewsImageView = (ImageView) convertView
+						.findViewById(R.id.revelations_breaknews_image_one_view);
+				newsHolder.aboutReportListView = (ListView) convertView
+						.findViewById(R.id.revelations_breaknews_about_report_news_list);
+				newsHolder.aboutReportIcon = (ImageView) convertView
+						.findViewById(R.id.revelations_breaknews_about_report_icon);
+				newsHolder.aboutReportContent = (LinearLayout) convertView
+						.findViewById(R.id.revelations_breaknews_about_report_content);
+				convertView.setTag(newsHolder);
+			} else if (itemViewType == 1) {
+				convertView = inflate.inflate(R.layout.item_list_foot_text,
+						null);
+				finishHolder = new LoadedFinishHolder();
+				finishHolder.loadedTextView = (MyTextView) convertView
+						.findViewById(R.id.list_has_loaded_item_textview);
+				convertView.setTag(finishHolder);
 			}
+			// } else {
+			// if (itemViewType == 0) {
+			// newsHolder = (RevelationsBreaksListNewsHolder) convertView
+			// .getTag();
+			// } else if (itemViewType == 1) {
+			// finishHolder = (LoadedFinishHolder) convertView.getTag();
+			// }
+			// }
 			if (itemViewType == 0) {
 				int breakLocation = position;
 				newsHolder.moreContent.setVisibility(View.GONE);
@@ -351,7 +362,15 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 						+ " "
 						+ TimeUtil.timeStrToString(news.getNewstime(),
 								"yyyy-MM-dd"));
-				newsHolder.newsText.setText(news.getNewstext());
+				newsHolder.allNewsTextBut.setVisibility(View.GONE);
+				if (isShowSetTextView.contains(position)) {
+					newsHolder.newsText.setMaxLines(100);
+					newsHolder.allNewsTextBut.setVisibility(View.VISIBLE);
+					newsHolder.allNewsTextBut.setText("收起");
+				} else
+					newsHolder.newsText.setMaxLines(3);
+				newsHolder.newsText.setText(StringUtils.deleteLastNewLine(news
+						.getNewstext()));
 				FontUtils.setTextViewFontSize(
 						RevelationsBreakNewsMoreActivity.this,
 						newsHolder.newsText, R.string.news_content_text_size,
@@ -359,52 +378,44 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
 				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);
 				newsHolder.newsText
-						.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+						.addEllipsizeListener(new EllipsizeListener() {
 
 							@Override
-							public void onLayoutChange(View v, int left,
-									int top, int right, int bottom,
-									int oldLeft, int oldTop, int oldRight,
-									int oldBottom) {
-								// TODO Auto-generated method stub
-								MyTextView textVi = (MyTextView) v;
-								// LinearLayout parent =
-								// (LinearLayout)(v.getParent());
-								// MyTextView allBut = (MyTextView)
-								// parent.findViewById(R.id.revelations_breaknews_alltext_but);
-								// Log.e("v",
-								// textVi.getLayout() + " "
-								// + textVi.getText());
-								textVi.removeOnLayoutChangeListener(this);
-								boolean isOver = isOverFlowed(textVi);
-								MyTextView allBut = (MyTextView) textVi
-										.getTag();
-								if (isOver || textVi.getLineCount() > 3) {
-									allBut.setVisibility(View.VISIBLE);
-									if (textVi.getLineCount() > 3)
-										allBut.setText("收起");
-									else
-										allBut.setText("全文");
-								} else
+							public void ellipsizeStateChanged(
+									boolean ellipsized,
+									EllipsizingTextView textView) {
+								LinearLayout parent = (LinearLayout) (textView
+										.getParent());
+								MyTextView allBut = (MyTextView) parent
+										.findViewById(R.id.revelations_breaknews_alltext_but);
+								if (!ellipsized && textView.getMaxLines() == 3)
 									allBut.setVisibility(View.GONE);
+								else
+									allBut.setVisibility(View.VISIBLE);
 							}
 						});
 				newsHolder.allNewsTextBut
 						.setOnClickListener(new OnClickListener() {
-
 							@Override
 							public void onClick(View v) {
-								// TODO Auto-generated method stub
-								boolean isOver = isOverFlowed((MyTextView) v
-										.getTag());
-								if (isOver) {
+								LinearLayout parent = (LinearLayout) (v
+										.getParent());
+								EllipsizingTextView textView = (EllipsizingTextView) parent
+										.findViewById(R.id.revelations_breaknews_newstext);
+								if (textView.getMaxLines() == 3) {
+									textView.setMaxLines(100);
 									((MyTextView) v).setText("收起");
-									((MyTextView) v.getTag()).setMaxLines(100);
-									v.postInvalidate();
+									Log.e("textView",
+											((MyTextView) v).getText() + "");
+									((MyTextView) v).postInvalidate();
+									isShowSetTextView.add(position);
 								} else {
+									textView.setMaxLines(3);
 									((MyTextView) v).setText("全文");
-									((MyTextView) v.getTag()).setMaxLines(3);
-									v.postInvalidate();
+									Log.e("textView",
+											((MyTextView) v).getText() + "");
+									((MyTextView) v).postInvalidate();
+									isShowSetTextView.remove(position);
 								}
 								breaknewsListAdapter.notifyDataSetChanged();
 							}
@@ -429,17 +440,53 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 					view.setTextColor(Color.parseColor(keyboard.getColor()));
 					newsHolder.keyboardIconContent.addView(view);
 				}
+				newsHolder.oneNewsImageView.setVisibility(View.GONE);
 				if (news.getImagegroup() == null
 						|| news.getImagegroup().trim().equals(""))
 					newsHolder.newsImageGridView.setVisibility(View.GONE);
 				else {
 					newsHolder.newsImageGridView.setVisibility(View.VISIBLE);
-					String[] imagegroup = news.getImagegroup().split("\\|");
-					ImageGroupGridAdapter gridAdapter = new ImageGroupGridAdapter();
-					gridAdapter.setImageGroup(imagegroup);
-					newsHolder.newsImageGridView.setSelector(new ColorDrawable(
-							Color.TRANSPARENT));
-					newsHolder.newsImageGridView.setAdapter(gridAdapter);
+					final String[] imageGroup = news.getImagegroup().split(
+							"\\|");
+					if (imageGroup.length == 1) {
+						newsHolder.oneNewsImageView.setVisibility(View.VISIBLE);
+						newsHolder.newsImageGridView.setVisibility(View.GONE);
+						ImgUtils.imageLoader.displayImage(
+								CommonUtils.doWebpUrl(imageGroup[0]),
+								newsHolder.oneNewsImageView,
+								ImgUtils.homeImageOptions);
+						newsHolder.oneNewsImageView
+								.setOnClickListener(new OnClickListener() {
+
+									@Override
+									public void onClick(View v) {
+										// TODO Auto-generated method stub
+										Intent intent = new Intent(
+												RevelationsBreakNewsMoreActivity.this,
+												PhotoViewActivity.class);
+										intent.putExtra("_IMAGE_GROUP_",
+												imageGroup);
+										intent.putExtra("_PHOTO_CUR_NUM_", 0);
+										startActivity(intent);
+									}
+								});
+
+					} else {
+						int width = RevelationsBreakNewsMoreActivity.this.mScreenWidth
+								- PixelUtil.dp2px(60);
+						ViewGroup.LayoutParams params = newsHolder.newsImageGridView
+								.getLayoutParams();
+						int num = (int) Math
+								.ceil(((float) (imageGroup.length)) / 3);
+						params.height = (int) (width / 3 * 0.75 * num);
+						newsHolder.newsImageGridView.setLayoutParams(params);
+						ImageGroupGridAdapter gridAdapter = new ImageGroupGridAdapter();
+						gridAdapter.setImageGroup(imageGroup);
+						newsHolder.newsImageGridView
+								.setSelector(new ColorDrawable(
+										Color.TRANSPARENT));
+						newsHolder.newsImageGridView.setAdapter(gridAdapter);
+					}
 				}
 				if (news.getRelatednews().size() == 0) {
 					newsHolder.aboutReportContent.setVisibility(View.GONE);
@@ -490,19 +537,20 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 				ViewGroup parent) {
 			// TODO Auto-generated method stub
 			ImageView imageView = null;
-			if (convertView == null) {
-				convertView = inflate.inflate(
-						R.layout.item_revelations_breaksnews_image_grid_item,
-						null);
-				imageView = (ImageView) convertView
-						.findViewById(R.id.breaknews_image_item);
-				imageView.setLayoutParams(new RelativeLayout.LayoutParams(
-						RelativeLayout.LayoutParams.MATCH_PARENT, (int) (parent
-								.getWidth() / 3 * 0.75)));
-				convertView.setTag(imageView);
-			} else {
-				imageView = (ImageView) convertView.getTag();
-			}
+			// if (convertView == null) {
+			convertView = inflate.inflate(
+					R.layout.item_revelations_breaksnews_image_grid_item, null);
+			imageView = (ImageView) convertView
+					.findViewById(R.id.breaknews_image_item);
+			RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageView
+					.getLayoutParams();
+			params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+			params.height = (int) (parent.getWidth() / 3 * 0.75);
+			imageView.setLayoutParams(params);
+			convertView.setTag(imageView);
+			// } else {
+			// imageView = (ImageView) convertView.getTag();
+			// }
 
 			imageView.setVisibility(View.VISIBLE);
 			if (imageGroup.length == 4 && position == 2) {
@@ -613,10 +661,6 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 		}
 	}
 
-	public boolean isOverFlowed(TextView view) {
-		return view.getLayout().getEllipsisCount(view.getLineCount() - 1) > 0;
-	}
-
 	private void openNews(RevelationsNew news) {
 		//
 		final int news_type = Integer.valueOf(news.getType());
@@ -624,18 +668,20 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 			this.startAnimActivityByParameter(New_Activity_Content_Video.class,
 					news.getMid(), news.getType(), news.getTitleurl(),
 					news.getNewstime(), news.getTitle(), news.getTitlepic(),
-					news.getTitlepic());
+					news.getTitlepic(), news.getIntro());
 		} else if (news_type % 10 == 2) {
 			final String[] pics = news.getTitlepic().split("::::::");
 			this.startAnimActivityByParameter(
 					New_Activity_Content_PicSet.class, news.getMid(),
 					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), pics[1]);
+					news.getTitle(), news.getTitlepic(), pics[1],
+					news.getIntro());
 		} else if (news_type % 10 == 5) {
 			// 专题
 			this.startSubjectActivityByParameter(New_Avtivity_Subject.class,
 					news.getZtid(), news.getTitle(), news.getTitlepic(),
-					news.getTitleurl(), news.getTitlepic(), news.getTitlepic());
+					news.getTitleurl(), news.getTitlepic(), news.getTitlepic(),
+					news.getIntro());
 		}
 		// else if (news.getZtype().equals("1")) {
 		// this.startSubjectActivityByParameter(New_Avtivity_Subject.class,
@@ -646,7 +692,7 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 			this.startAnimActivityByParameter(New_Activity_Content_Web.class,
 					news.getMid(), news.getType(), news.getTitleurl(),
 					news.getNewstime(), news.getTitle(), news.getTitlepic(),
-					news.getTitlepic());
+					news.getTitlepic(), news.getIntro());
 		}
 	}
 

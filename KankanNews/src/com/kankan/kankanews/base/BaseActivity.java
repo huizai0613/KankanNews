@@ -55,7 +55,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 		CanBeShared {
 
 	public DbUtils dbUtils;
-//	protected Loading_Dialog loading_dialog;
+	// protected Loading_Dialog loading_dialog;
 	public CrashApplication mApplication;
 	public SharePreferenceUtil spUtil;
 	public int mScreenWidth;
@@ -75,7 +75,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 	protected MyTextView titleBarRightText;
 	protected ImageView titleBarRightImg;
 	protected ImageView titleBarRightImgSecond;
-	 private GestureDetector gestureDetector;
+	private GestureDetector gestureDetector;
 	protected boolean isRightFinsh = true;
 	protected HashMap<String, SoftReference<Bitmap>> imageCache;
 
@@ -88,17 +88,17 @@ public abstract class BaseActivity extends FragmentActivity implements
 		this.isRightFinsh = isRightFinsh;
 	}
 
-	 @Override
-	 public boolean dispatchTouchEvent(MotionEvent ev) {
-	
-	 try {
-	 gestureDetector.onTouchEvent(ev);
-	 return super.dispatchTouchEvent(ev);
-	 } catch (IllegalArgumentException e) {
-	 return true;
-	 }
-	
-	 }
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+
+		try {
+			gestureDetector.onTouchEvent(ev);
+			return super.dispatchTouchEvent(ev);
+		} catch (IllegalArgumentException e) {
+			return true;
+		}
+
+	}
 
 	@Override
 	protected void onDestroy() {
@@ -129,7 +129,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 		mContext = this;
 		mApplication.addActivity(this);
 		netUtils = NetUtils.getInstance(this);
-//		loading_dialog = new Loading_Dialog(mContext, R.style.MyDialogStyle);
+		// loading_dialog = new Loading_Dialog(mContext, R.style.MyDialogStyle);
 
 		dbUtils = mApplication.getDbUtils();
 
@@ -284,7 +284,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 	public void startAnimActivityByParameter(Class<?> cla, String mid,
 			String type, String titleurl, String newstime, String titlelist,
-			String titlePic, String sharedPic) {
+			String titlePic, String sharedPic, String intro) {
 		Intent intent = new Intent(this, cla);
 		intent.setAction("com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY");
 		intent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -295,6 +295,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 		intent.putExtra("titlelist", titlelist);
 		intent.putExtra("titlePic", titlePic);
 		intent.putExtra("sharedPic", sharedPic);
+		intent.putExtra("intro", intro);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_out);
 	}
@@ -326,7 +327,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 	public void startSubjectActivityByParameter(Class<?> cla, String ztid,
 			String title, String titlepic, String titleurl, String titlePic,
-			String sharedPic) {
+			String sharedPic,String intro) {
 		Intent intent = new Intent(this, cla);
 		intent.putExtra("ztid", ztid);
 		intent.putExtra("title", title);
@@ -334,6 +335,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 		intent.putExtra("titleurl", titleurl);
 		intent.putExtra("titlePic", titlePic);
 		intent.putExtra("sharedPic", sharedPic);
+		intent.putExtra("intro", intro);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.alpha_out);
 	}

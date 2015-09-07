@@ -59,7 +59,7 @@ public class RevelationsActivity extends BaseActivity implements
 	private EditText contentText;
 	private TextView contentNumText;
 	private EditText telText;
-	private Button postBut;
+	private TextView postBut;
 	private ImageView imageOne;
 	private ImageView imageTwo;
 	private ImageView imageThree;
@@ -103,7 +103,7 @@ public class RevelationsActivity extends BaseActivity implements
 		contentNumText = (TextView) this
 				.findViewById(R.id.revelations_post_content_num);
 		telText = (EditText) this.findViewById(R.id.revelations_post_tel);
-		postBut = (Button) this.findViewById(R.id.revelations_post_button);
+		postBut = (TextView) this.findViewById(R.id.revelations_post_button);
 		imageOne = (ImageView) this.findViewById(R.id.revelations_image_one);
 		imageTwo = (ImageView) this.findViewById(R.id.revelations_image_two);
 		imageThree = (ImageView) this

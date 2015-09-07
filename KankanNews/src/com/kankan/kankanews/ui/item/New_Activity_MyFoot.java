@@ -239,27 +239,28 @@ public class New_Activity_MyFoot extends BaseActivity implements
 					new_news.getId(), new_news.getType(),
 					new_news.getTitleurl(), new_news.getNewstime(),
 					new_news.getTitle(), new_news.getTitlepic(),
-					new_news.getSharedPic());
+					new_news.getSharedPic(), new_news.getIntro());
 			break;
 		case 2:// 图集
 			startAnimActivityByParameter(New_Activity_Content_PicSet.class,
 					new_news.getId(), new_news.getType(),
 					new_news.getTitleurl(), new_news.getNewstime(),
 					new_news.getTitle(), new_news.getTitlepic(),
-					new_news.getSharedPic());
+					new_news.getSharedPic(), new_news.getIntro());
 			break;
 		case 5:// 专题
 			startSubjectActivityByParameter(New_Avtivity_Subject.class,
 					new_news.getZtid(), new_news.getTitle(),
 					new_news.getTitlepic(), new_news.getTitleurl(),
-					new_news.getTitlepic(), new_news.getSharedPic());
+					new_news.getTitlepic(), new_news.getSharedPic(),
+					new_news.getIntro());
 			break;
 		default:// 图文
 			startAnimActivityByParameter(New_Activity_Content_Web.class,
 					new_news.getId(), new_news.getType(),
 					new_news.getTitleurl(), new_news.getNewstime(),
 					new_news.getTitlelist(), new_news.getTitlepic(),
-					new_news.getSharedPic());
+					new_news.getSharedPic(), new_news.getIntro());
 			break;
 		}
 	}

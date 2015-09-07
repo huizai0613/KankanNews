@@ -1052,19 +1052,21 @@ public class New_HomeItemFragment extends BaseFragment implements
 			mActivity.startAnimActivityByParameter(
 					New_Activity_Content_Video.class, news.getMid(),
 					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), news.getSharedPic());
+					news.getTitle(), news.getTitlepic(), news.getSharedPic(),
+					news.getIntro());
 		} else if (news_type % 10 == 2) {
 			final String[] pics = news.getTitlepic().split("::::::");
 			mActivity.startAnimActivityByParameter(
 					New_Activity_Content_PicSet.class, news.getMid(),
 					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), pics[1]);
+					news.getTitle(), news.getTitlepic(), pics[1],
+					news.getIntro());
 		} else if (news_type % 10 == 5) {
 			// 专题
 			mActivity.startSubjectActivityByParameter(
 					New_Avtivity_Subject.class, news.getZtid(),
 					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
-					news.getTitlepic(), news.getSharedPic());
+					news.getTitlepic(), news.getSharedPic(), news.getIntro());
 		} else if (news_type % 10 == 6) {
 			// 直播
 			New_LivePlayFragment fragment = (New_LivePlayFragment) mActivity.fragments
@@ -1077,12 +1079,13 @@ public class New_HomeItemFragment extends BaseFragment implements
 			mActivity.startSubjectActivityByParameter(
 					New_Avtivity_Subject.class, news.getZtid(),
 					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
-					news.getTitlepic(), news.getSharedPic());
+					news.getTitlepic(), news.getSharedPic(), news.getIntro());
 		} else {
 			mActivity.startAnimActivityByParameter(
 					New_Activity_Content_Web.class, news.getMid(),
 					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), news.getSharedPic());
+					news.getTitle(), news.getTitlepic(), news.getSharedPic(),
+					news.getIntro());
 		}
 	}
 

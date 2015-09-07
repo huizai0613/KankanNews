@@ -31,6 +31,7 @@ import com.kankan.kankanews.bean.Content_News;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.bean.New_Colums_Info;
 import com.kankan.kankanews.bean.New_Colums_Second;
+import com.kankan.kankanews.bean.New_HomeCate;
 import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_News_Home;
@@ -146,6 +147,7 @@ public class CrashApplication extends Application {
 					arg0.dropTable(Content_News.class);
 					arg0.dropTable(Advert.class);
 					arg0.dropTable(RevelationsHomeList.class);
+					arg0.dropTable(New_HomeCate.class);
 					arg0.createTableIfNotExist(New_News_Home.class);
 					arg0.createTableIfNotExist(New_News_Top.class);
 					arg0.createTableIfNotExist(New_News.class);
@@ -157,6 +159,7 @@ public class CrashApplication extends Application {
 					arg0.createTableIfNotExist(Content_News.class);
 					arg0.createTableIfNotExist(Advert.class);
 					arg0.createTableIfNotExist(RevelationsHomeList.class);
+					arg0.createTableIfNotExist(New_HomeCate.class);
 				} catch (DbException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

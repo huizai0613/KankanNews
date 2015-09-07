@@ -6,4 +6,5 @@ public interface CanSharedObject {
 	String getTitleurl();
 	String getTitlepic();
 	String getSharedPic();
+	String getIntro();
 }

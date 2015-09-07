@@ -7,8 +7,8 @@ import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.lidroid.xutils.db.annotation.Id;
 
-public class New_Colums_Info extends BaseBean<New_Colums_Info>implements
-CanSharedObject {
+public class New_Colums_Info extends BaseBean<New_Colums_Info> implements
+		CanSharedObject {
 	@Id
 	private int id;
 	private String mid;
@@ -40,7 +40,7 @@ CanSharedObject {
 		mid = jsonObj.optString("id");
 		title = jsonObj.optString("title");
 		titlepic = jsonObj.optString("titlepic");
-		sharedPic = jsonObj.optString("titlepic");
+		sharedPic = jsonObj.optString("sharepic");
 		titleurl = jsonObj.optString("titleurl");
 		videoscale = jsonObj.optString("videoscale");
 		videoUrl = jsonObj.optString("videourl");

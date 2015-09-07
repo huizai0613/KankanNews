@@ -132,7 +132,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
 								news.getTitle(), news.getTitlepic(),
-								news.getSharedPic());
+								news.getSharedPic(), news.getIntro());
 						break;
 					// 图集
 					case 2:
@@ -141,7 +141,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
 								news.getTitle(), news.getTitlepic(),
-								news.getSharedPic());
+								news.getSharedPic(), news.getIntro());
 						break;
 					case 6:
 						New_LivePlayFragment f = (New_LivePlayFragment) fragment.mActivity.fragments
@@ -156,7 +156,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								New_Activity_Content_Web.class, news.getMid(),
 								news.getType(), news.getTitleurl(),
 								news.getNewstime(), news.getTitle(),
-								news.getTitlepic(), news.getSharedPic());
+								news.getTitlepic(), news.getSharedPic(),
+								news.getIntro());
 						break;
 					}
 				}
@@ -194,7 +195,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
 								news.getTitle(), news.getTitlepic(),
-								news.getSharedPic());
+								news.getSharedPic(), news.getIntro());
 						break;
 					// 图集
 					case 2:
@@ -203,7 +204,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								news.getMid(), news.getType(),
 								news.getTitleurl(), news.getNewstime(),
 								news.getTitle(), news.getTitlepic(),
-								news.getSharedPic());
+								news.getSharedPic(), news.getIntro());
 						break;
 					case 6:
 						New_LivePlayFragment f = (New_LivePlayFragment) fragment.mActivity.fragments
@@ -218,7 +219,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								New_Activity_Content_Web.class, news.getMid(),
 								news.getType(), news.getTitleurl(),
 								news.getNewstime(), news.getTitle(),
-								news.getTitlepic(), news.getSharedPic());
+								news.getTitlepic(), news.getSharedPic(),
+								news.getIntro());
 						break;
 					}
 				}

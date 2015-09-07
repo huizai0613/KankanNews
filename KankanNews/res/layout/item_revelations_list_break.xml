@@ -9,7 +9,7 @@
     <RelativeLayout
         android:id="@+id/revelations_breaknews_more_content"
         android:layout_width="match_parent"
-        android:layout_height="40dip"
+        android:layout_height="36dip"
         android:gravity="center_vertical" >
 
         <LinearLayout
@@ -21,27 +21,27 @@
             android:orientation="horizontal" >
 
             <ImageView
-                android:layout_width="30dip"
-                android:layout_height="30dip"
+                android:layout_width="24dip"
+                android:layout_height="24dip"
                 android:layout_marginRight="@dimen/news_bask_space"
                 android:src="@drawable/ic_horn" />
 
             <com.kankan.kankanews.ui.view.MyTextView
                 android:layout_width="wrap_content"
-                android:layout_height="30dip"
+                android:layout_height="24dip"
                 android:gravity="center_vertical"
                 android:text="网友报料"
-                android:textSize="20dip" />
+                android:textSize="18dip" />
         </LinearLayout>
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:layout_width="wrap_content"
-            android:layout_height="30dip"
+            android:layout_height="24dip"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:text="更多 >"
-            android:textSize="20dip" />
+            android:textSize="18dip" />
 
         <View
             android:layout_width="match_parent"
@@ -95,16 +95,15 @@
                 android:textColor="@color/mid_gray"
                 android:textSize="12dip" />
 
-            <com.kankan.kankanews.ui.view.MyTextView
+            <com.kankan.kankanews.ui.view.EllipsizingTextView
                 android:id="@+id/revelations_breaknews_newstext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="5dip"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
                 android:lineSpacingExtra="4.5dip"
-                android:maxLines="3"
+                android:paddingLeft="3dip"
+                android:paddingRight="5dip"
                 android:textColor="@color/deep_gray"
                 android:textSize="18dip" />
 
@@ -119,17 +118,30 @@
                 android:textSize="16dip"
                 android:visibility="visible" />
 
-            <com.kankan.kankanews.ui.view.NestingGridView
-                android:id="@+id/revelations_breaknews_image_grid"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/news_bask_space"
-                android:horizontalSpacing="10dip"
-                android:numColumns="3"
-                android:padding="0dip"
-                android:scrollbars="none"
-                android:verticalSpacing="10dip" >
-            </com.kankan.kankanews.ui.view.NestingGridView>
+                android:layout_height="wrap_content" >
+
+                <com.kankan.kankanews.ui.view.NestingGridView
+                    android:id="@+id/revelations_breaknews_image_grid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/news_bask_space"
+                    android:horizontalSpacing="10dip"
+                    android:numColumns="3"
+                    android:padding="0dip"
+                    android:scrollbars="none"
+                    android:verticalSpacing="10dip" >
+                </com.kankan.kankanews.ui.view.NestingGridView>
+
+                <ImageView
+                    android:id="@+id/revelations_breaknews_image_one_view"
+                    android:layout_width="120dip"
+                    android:layout_height="90dip"
+                    android:layout_marginBottom="@dimen/news_bask_space"
+                    android:scaleType="centerCrop" >
+                </ImageView>
+            </FrameLayout>
         </LinearLayout>
     </LinearLayout>
 

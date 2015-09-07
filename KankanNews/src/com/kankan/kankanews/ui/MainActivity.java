@@ -388,9 +388,9 @@ public class MainActivity extends BaseVideoActivity {
 					RelativeLayout.LayoutParams imgParams = new RelativeLayout.LayoutParams(
 							RelativeLayout.LayoutParams.MATCH_PARENT,
 							RelativeLayout.LayoutParams.MATCH_PARENT);
-					imgParams.setMargins(PixelUtil.dp2px(12),
-							PixelUtil.dp2px(12), PixelUtil.dp2px(12),
-							PixelUtil.dp2px(12));
+					imgParams.setMargins(PixelUtil.dp2px(10),
+							PixelUtil.dp2px(10), PixelUtil.dp2px(10),
+							PixelUtil.dp2px(10));
 					tab_img.setLayoutParams(imgParams);
 					float realHeight = getResources().getDimension(
 							R.dimen.base_action_bar_height);

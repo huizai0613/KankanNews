@@ -50,7 +50,7 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 		title = jsonObj.optString("title");
 		titleurl = jsonObj.optString("titleurl");
 		titlepic = jsonObj.optString("titlepic");
-		sharedPic = jsonObj.optString("titlepic");
+		sharedPic = jsonObj.optString("sharepic");
 		type = jsonObj.optString("type");
 		sourceid = jsonObj.optString("sourceid");
 		newstime = jsonObj.optString("newstime");

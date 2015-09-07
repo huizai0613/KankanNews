@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
     <include
         layout="@layout/base_title_bar"
@@ -13,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/base_action_bar_height"
+        android:layout_marginTop="@dimen/base_action_bar_height"
         android:scrollbars="none" >
 
         <LinearLayout
@@ -158,20 +158,24 @@
                 android:phoneNumber="true"
                 android:singleLine="true"
                 android:textSize="18dp" />
-
-            <Button
-                android:id="@+id/revelations_post_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/revelations_post_button_shape"
-                android:padding="10dp"
-                android:text="提交"
-                android:textColor="#FFFFFF"
-                android:textSize="22dp" />
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dip"
+        android:layout_alignParentBottom="true" >
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/revelations_post_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3dip"
+            android:background="@drawable/revelations_post_button_shape"
+            android:gravity="center"
+            android:text="下一步"
+            android:textColor="@color/white"
+            android:textSize="20dip" />
+    </LinearLayout>
+
+</RelativeLayout>

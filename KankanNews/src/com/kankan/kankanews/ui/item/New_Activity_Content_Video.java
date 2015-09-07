@@ -1483,7 +1483,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 								mNew_Recommend.getNewstime(),
 								mNew_Recommend.getTitle(),
 								mNew_Recommend.getTitlepic(),
-								mNew_Recommend.getSharedPic());
+								mNew_Recommend.getSharedPic(),
+								mNew_Recommend.getTitle());
 					} else if (news_type % 10 == 5) {
 						// 专题
 						mContext.startSubjectActivityByParameter(
@@ -1493,7 +1494,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 								mNew_Recommend.getTitlepic(),
 								mNew_Recommend.getTitleurl(),
 								mNew_Recommend.getTitlepic(),
-								mNew_Recommend.getSharedPic());
+								mNew_Recommend.getSharedPic(),
+								mNew_Recommend.getTitle());
 					} else if (news_type % 10 == 6) {// 直播
 						New_LivePlayFragment fragment = (New_LivePlayFragment) ((MainActivity) mContext).fragments
 								.get(1);
@@ -1512,7 +1514,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 								mNew_Recommend.getNewstime(),
 								mNew_Recommend.getTitle(),
 								mNew_Recommend.getTitlepic(),
-								mNew_Recommend.getSharedPic());
+								mNew_Recommend.getSharedPic(),
+								mNew_Recommend.getTitle());
 					}
 				}
 			});
