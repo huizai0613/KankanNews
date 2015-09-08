@@ -1,10 +1,12 @@
 package com.kankan.kankanews.utils;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,6 +22,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -29,9 +32,13 @@ import org.apache.http.util.EntityUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.content.Context;
 
+import com.kankan.kankanews.bean.KanKanValidateInfo;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankanews.kankanxinwen.R;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
@@ -176,7 +183,7 @@ public class ImgUtils {
 	}
 
 	public static Map<String, String> sendRevelationsContent(String tel,
-			String content, String imgUrls) {
+			String content, String imgUrls, String aId) {
 		Map<String, String> result = new HashMap<String, String>();
 		HttpPost httpPost = new HttpPost(AndroidConfig.REVELATIONS_CONTENT_POST);
 		// 设置HTTP POST请求参数必须用NameValuePair对象
@@ -184,6 +191,84 @@ public class ImgUtils {
 		params.add(new BasicNameValuePair("phonenum", tel));
 		params.add(new BasicNameValuePair("newstext", content));
 		params.add(new BasicNameValuePair("imagegroup", imgUrls));
+		if (aId != null && !aId.trim().equals(""))
+			params.add(new BasicNameValuePair("aid", aId));
+		HttpResponse httpResponse = null;
+		try {
+			// 设置httpPost请求参数
+			httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			httpResponse = new DefaultHttpClient().execute(httpPost);
+
+			result.put("ResponseCode", httpResponse.getStatusLine()
+					.getStatusCode() + "");
+			result.put("ResponseContent",
+					EntityUtils.toString(httpResponse.getEntity()));
+			return result;
+		} catch (ClientProtocolException e) {
+			Log.e("IMG_UTILS", e.getLocalizedMessage(), e);
+		} catch (IOException e) {
+			Log.e("IMG_UTILS", e.getLocalizedMessage(), e);
+		}
+		result.put("ResponseCode", "ERROR");
+		result.put("ResponseContent", "ERROR");
+		return result;
+	}
+
+	public static Map<String, String> sendRevelationsValidateMessage(
+			Context context, String tel) {
+		TelephonyManager telephonyManager = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		String operatorName = telephonyManager.getNetworkOperatorName().trim()
+				.equals("") ? "null" : telephonyManager
+				.getNetworkOperatorName();
+		KanKanValidateInfo info = new KanKanValidateInfo();
+		info.setDeviceName(android.os.Build.MODEL);
+		info.setDeviceVersion(android.os.Build.VERSION.RELEASE);
+		info.setServiceProvider(operatorName);
+		info.setTelephone(tel);
+		String data = JsonUtils.toString(info);
+		RsaUtils s = new RsaUtils();
+		try {
+			data = new String(Base64.encode(s.encrypt(data.getBytes())));
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Map<String, String> result = new HashMap<String, String>();
+		HttpPost httpPost = new HttpPost(
+				AndroidConfig.REVELATIONS_VALIDATE_MESSAGE);
+		// 设置HTTP POST请求参数必须用NameValuePair对象
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("data", data));
+		HttpResponse httpResponse = null;
+		try {
+			// 设置httpPost请求参数
+			httpPost.setEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+			httpResponse = new DefaultHttpClient().execute(httpPost);
+
+			result.put("ResponseCode", httpResponse.getStatusLine()
+					.getStatusCode() + "");
+			result.put("ResponseContent",
+					EntityUtils.toString(httpResponse.getEntity()));
+			return result;
+		} catch (ClientProtocolException e) {
+			Log.e("IMG_UTILS", e.getLocalizedMessage(), e);
+		} catch (IOException e) {
+			Log.e("IMG_UTILS", e.getLocalizedMessage(), e);
+		}
+		result.put("ResponseCode", "ERROR");
+		result.put("ResponseContent", "ERROR");
+		return result;
+	}
+
+	public static Map<String, String> validateRevelationsValidateMessage(
+			String telephone, String validateCode) {
+		Map<String, String> result = new HashMap<String, String>();
+		HttpPost httpPost = new HttpPost(AndroidConfig.REVELATIONS_VALIDATE);
+		// 设置HTTP POST请求参数必须用NameValuePair对象
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("telephone", telephone));
+		params.add(new BasicNameValuePair("validateCode", validateCode));
 		HttpResponse httpResponse = null;
 		try {
 			// 设置httpPost请求参数
@@ -282,4 +367,18 @@ public class ImgUtils {
 		return bit;
 	}
 
+	public static boolean saveImage(Bitmap photo, String spath) {
+		try {
+			BufferedOutputStream bos = new BufferedOutputStream(
+					new FileOutputStream(spath, false));
+			photo.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+			bos.flush();
+			bos.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+
+	}
 }

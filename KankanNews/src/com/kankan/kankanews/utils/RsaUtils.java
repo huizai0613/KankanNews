@@ -26,6 +26,15 @@ public class RsaUtils {
 		// return new String(encryptedData);
 	}
 
+	public byte[] encrypt(byte[] data) throws Exception {
+		PublicKey publicKey = getpublicksy();
+		Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+		cipher.init(Cipher.ENCRYPT_MODE, publicKey);
+		return cipher.doFinal(data);
+		// System.out.println(encryptedData.length);
+		// return new String(encryptedData);
+	}
+
 	public static void main(String[] args) throws Exception {
 		RsaUtils s = new RsaUtils();
 		String str = new String(Base64.encode(s.encrypt(s.getpublicksy(),

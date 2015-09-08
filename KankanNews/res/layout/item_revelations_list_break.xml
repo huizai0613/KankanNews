@@ -122,7 +122,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
 
-                <com.kankan.kankanews.ui.view.NestingGridView
+                <GridView
                     android:id="@+id/revelations_breaknews_image_grid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
                     android:padding="0dip"
                     android:scrollbars="none"
                     android:verticalSpacing="10dip" >
-                </com.kankan.kankanews.ui.view.NestingGridView>
+                </GridView>
 
                 <ImageView
                     android:id="@+id/revelations_breaknews_image_one_view"

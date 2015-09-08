@@ -24,6 +24,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -64,7 +65,7 @@ import com.umeng.message.PushAgent;
 import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.update.UmengUpdateAgent;
 
-public class MainActivity extends BaseVideoActivity {
+public class MainActivity extends BaseVideoActivity implements OnClickListener {
 	public WindowManager wm;
 
 	private long lastTime;
@@ -76,6 +77,8 @@ public class MainActivity extends BaseVideoActivity {
 	public RelativeLayout curTouchTab;
 
 	public RelativeLayout lastAddFrament;
+
+	private ImageView screenGuide;
 
 	public ShareUtil shareUtil;
 
@@ -221,6 +224,7 @@ public class MainActivity extends BaseVideoActivity {
 		tabArray.add(tabRevelate);
 		tabArray.add(tabLive);
 
+		screenGuide = (ImageView) findViewById(R.id.full_screen_guide);
 		nightView = findViewById(R.id.night_view);
 
 		// 初始化fragments
@@ -243,6 +247,7 @@ public class MainActivity extends BaseVideoActivity {
 	@Override
 	protected void setListener() {
 		// TODO Auto-generated method stub
+		screenGuide.setOnClickListener(this);
 	}
 
 	@Override
@@ -264,6 +269,22 @@ public class MainActivity extends BaseVideoActivity {
 		} else if (id == R.id.tab_revelate && curTouchTab == tabRevelate) {
 			Intent intent = new Intent(this, RevelationsActivity.class);
 			this.startActivity(intent);
+		}
+		if (id == R.id.tab_home) {
+			if (spUtil.getFirstGetColumns()) {
+				screenGuide
+						.setBackgroundResource(R.drawable.screen_guide_columns);
+				screenGuide.setVisibility(View.VISIBLE);
+				screenGuide.setTag("COLUMNS");
+			}
+		}
+		if (id == R.id.tab_revelate) {
+			if (spUtil.getFirstGetRevalations()) {
+				screenGuide
+						.setBackgroundResource(R.drawable.screen_guide_revelations);
+				screenGuide.setVisibility(View.VISIBLE);
+				screenGuide.setTag("REVALATIONS");
+			}
 		}
 		changeTab(id);
 		changeFragment(id);
@@ -397,7 +418,7 @@ public class MainActivity extends BaseVideoActivity {
 					ViewGroup.LayoutParams params = tabView.getLayoutParams();
 					params.height = (int) realHeight;
 					tabView.setLayoutParams(params);
-					tabView.setBackgroundResource(R.drawable.tab_home_middle_item_border);
+					tabView.setBackgroundResource(R.drawable.tab_home_left_right_item_border);
 				} else {
 					tabView.setBackgroundResource(R.drawable.tab_home_left_right_item_border);
 				}
@@ -525,5 +546,23 @@ public class MainActivity extends BaseVideoActivity {
 	public void netChanged() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.full_screen_guide:
+			screenGuide.setVisibility(View.GONE);
+			String tag = (String) screenGuide.getTag();
+			if (tag.equals("COLUMNS"))
+				spUtil.setFirstGetColumns(false);
+			else
+				spUtil.setFirstGetRevalations(false);
+			break;
+
+		default:
+			break;
+		}
 	}
 }

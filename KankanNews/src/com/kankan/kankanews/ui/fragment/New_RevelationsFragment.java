@@ -26,6 +26,7 @@ import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ImageView.ScaleType;
@@ -56,7 +57,6 @@ import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
-import com.kankan.kankanews.ui.view.NestingGridView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView.EllipsizeListener;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.FontUtils;
@@ -276,7 +276,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 		MyTextView phoneNumText;
 		EllipsizingTextView newsText;
 		MyTextView allNewsTextBut;
-		NestingGridView newsImageGridView;
+		GridView newsImageGridView;
 		ListView aboutReportListView;
 		ImageView aboutReportIcon;
 		ImageView oneNewsImageView;
@@ -324,114 +324,112 @@ public class New_RevelationsFragment extends BaseFragment implements
 				ViewGroup parent) {
 			int itemViewType = getItemViewType(position);
 
-			if (convertView == null) {
-				if (itemViewType == 0) {
-					convertView = inflate.inflate(mActivity,
-							R.layout.item_revelations_list_activity, null);
-					topHolder = new RevelationsListTopHolder();
-					topHolder.activityViewPager = (android.support.v4.view.ViewPager) convertView
-							.findViewById(R.id.revelations_activity_viewpager);
-					topHolder.activityPointContent = (LinearLayout) convertView
-							.findViewById(R.id.revelations_activity_point_content);
-					topHolder.activityTitle = (MyTextView) convertView
-							.findViewById(R.id.revelations_activity_title);
-					topHolder.activityViewPager
-							.setOnPageChangeListener(new ActivityPageChangeListener());
-					topHolder.activityViewPager
-							.setLayoutParams(new RelativeLayout.LayoutParams(
-									RelativeLayout.LayoutParams.MATCH_PARENT,
-									(int) (mActivity.mScreenWidth * 111 / 310)));
-					topHolder.activityViewPager
-							.setAdapter(new ActivityViewPageAdapter());
-					if (topHolder.activityPointViews == null)
-						topHolder.activityPointViews = new ArrayList<View>();
+			// if (convertView == null) {
+			if (itemViewType == 0) {
+				convertView = inflate.inflate(mActivity,
+						R.layout.item_revelations_list_activity, null);
+				topHolder = new RevelationsListTopHolder();
+				topHolder.activityViewPager = (android.support.v4.view.ViewPager) convertView
+						.findViewById(R.id.revelations_activity_viewpager);
+				topHolder.activityPointContent = (LinearLayout) convertView
+						.findViewById(R.id.revelations_activity_point_content);
+				topHolder.activityTitle = (MyTextView) convertView
+						.findViewById(R.id.revelations_activity_title);
+				topHolder.activityViewPager
+						.setOnPageChangeListener(new ActivityPageChangeListener());
+				topHolder.activityViewPager
+						.setLayoutParams(new RelativeLayout.LayoutParams(
+								RelativeLayout.LayoutParams.MATCH_PARENT,
+								(int) (mActivity.mScreenWidth * 111 / 310)));
+				topHolder.activityViewPager
+						.setAdapter(new ActivityViewPageAdapter());
+				if (topHolder.activityPointViews == null)
+					topHolder.activityPointViews = new ArrayList<View>();
 
-					android.widget.LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-							PixelUtil.dp2px(6), PixelUtil.dp2px(6));
-					for (int i = 0; i < revelationsHomeList.getActivity()
-							.size(); i++) {
-						View point = new View(mActivity);
-						layoutParams.rightMargin = PixelUtil.dp2px(2);
-						point.setLayoutParams(layoutParams);
-						point.setBackgroundResource(R.drawable.point_gray);
-						topHolder.activityPointViews.add(point);
-					}
-					int size = topHolder.activityPointViews.size();
-					if (size > 1) {
-						for (View v : topHolder.activityPointViews) {
-							if (v.getParent() != null)
-								((LinearLayout) v.getParent()).removeView(v);
-							topHolder.activityPointContent.addView(v);
-							v.setBackgroundResource(R.drawable.point_gray);
-						}
-						topHolder.activityPointViews.get(0)
-								.setBackgroundResource(R.drawable.point_red);
-						topHolder.activityViewPager.setCurrentItem(0);
-						topHolder.activityPointContent
-								.setVisibility(View.VISIBLE);
-					} else {
-						topHolder.activityPointContent.setVisibility(View.GONE);
-					}
-					convertView.setTag(topHolder);
-				} else if (itemViewType == 1) {
-					convertView = inflate.inflate(mActivity,
-							R.layout.item_revelations_list_break, null);
-					newsHolder = new RevelationsBreaksListNewsHolder();
-					newsHolder.moreContent = (RelativeLayout) convertView
-							.findViewById(R.id.revelations_breaknews_more_content);
-					newsHolder.keyboardIconContent = (LinearLayout) convertView
-							.findViewById(R.id.revelations_breaknews_keyboard_icon_content);
-					newsHolder.phoneNumText = (MyTextView) convertView
-							.findViewById(R.id.revelations_breaknews_phonenum);
-					newsHolder.newsText = (EllipsizingTextView) convertView
-							.findViewById(R.id.revelations_breaknews_newstext);
-					newsHolder.allNewsTextBut = (MyTextView) convertView
-							.findViewById(R.id.revelations_breaknews_alltext_but);
-					newsHolder.newsImageGridView = (NestingGridView) convertView
-							.findViewById(R.id.revelations_breaknews_image_grid);
-					newsHolder.oneNewsImageView = (ImageView) convertView
-							.findViewById(R.id.revelations_breaknews_image_one_view);
-					newsHolder.aboutReportListView = (ListView) convertView
-							.findViewById(R.id.revelations_breaknews_about_report_news_list);
-					newsHolder.aboutReportIcon = (ImageView) convertView
-							.findViewById(R.id.revelations_breaknews_about_report_icon);
-					newsHolder.aboutReportContent = (LinearLayout) convertView
-							.findViewById(R.id.revelations_breaknews_about_report_content);
-					newsHolder.allNewsTextBut.setVisibility(View.GONE);
-					convertView.setTag(newsHolder);
-				} else if (itemViewType == 2) {
-					convertView = inflate.inflate(mActivity,
-							R.layout.item_list_foot_text, null);
-					finishHolder = new LoadedFinishHolder();
-					finishHolder.loadedTextView = (MyTextView) convertView
-							.findViewById(R.id.list_has_loaded_item_textview);
-					finishHolder.loadedTextView.setVisibility(View.GONE);
-					finishHolder.loadMoreItem = (LinearLayout) convertView
-							.findViewById(R.id.list_load_more_item);
-					finishHolder.loadMoreItem.setVisibility(View.VISIBLE);
-					finishHolder.loadMoreItem
-							.setOnClickListener(new OnClickListener() {
-								@Override
-								public void onClick(View v) {
-									// TODO Auto-generated method stub
-									Intent intent = new Intent(
-											New_RevelationsFragment.this.mActivity,
-											RevelationsBreakNewsMoreActivity.class);
-									startActivity(intent);
-								}
-							});
-					convertView.setTag(finishHolder);
+				android.widget.LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+						PixelUtil.dp2px(6), PixelUtil.dp2px(6));
+				for (int i = 0; i < revelationsHomeList.getActivity().size(); i++) {
+					View point = new View(mActivity);
+					layoutParams.rightMargin = PixelUtil.dp2px(2);
+					point.setLayoutParams(layoutParams);
+					point.setBackgroundResource(R.drawable.point_gray);
+					topHolder.activityPointViews.add(point);
 				}
-			} else {
-				if (itemViewType == 0) {
-					topHolder = (RevelationsListTopHolder) convertView.getTag();
-				} else if (itemViewType == 1) {
-					newsHolder = (RevelationsBreaksListNewsHolder) convertView
-							.getTag();
-				} else if (itemViewType == 2) {
-					finishHolder = (LoadedFinishHolder) convertView.getTag();
+				int size = topHolder.activityPointViews.size();
+				if (size > 1) {
+					for (View v : topHolder.activityPointViews) {
+						if (v.getParent() != null)
+							((LinearLayout) v.getParent()).removeView(v);
+						topHolder.activityPointContent.addView(v);
+						v.setBackgroundResource(R.drawable.point_gray);
+					}
+					topHolder.activityPointViews.get(0).setBackgroundResource(
+							R.drawable.point_red);
+					topHolder.activityViewPager.setCurrentItem(0);
+					topHolder.activityPointContent.setVisibility(View.VISIBLE);
+				} else {
+					topHolder.activityPointContent.setVisibility(View.GONE);
 				}
+				convertView.setTag(topHolder);
+			} else if (itemViewType == 1) {
+				convertView = inflate.inflate(mActivity,
+						R.layout.item_revelations_list_break, null);
+				newsHolder = new RevelationsBreaksListNewsHolder();
+				newsHolder.moreContent = (RelativeLayout) convertView
+						.findViewById(R.id.revelations_breaknews_more_content);
+				newsHolder.keyboardIconContent = (LinearLayout) convertView
+						.findViewById(R.id.revelations_breaknews_keyboard_icon_content);
+				newsHolder.phoneNumText = (MyTextView) convertView
+						.findViewById(R.id.revelations_breaknews_phonenum);
+				newsHolder.newsText = (EllipsizingTextView) convertView
+						.findViewById(R.id.revelations_breaknews_newstext);
+				newsHolder.allNewsTextBut = (MyTextView) convertView
+						.findViewById(R.id.revelations_breaknews_alltext_but);
+				newsHolder.newsImageGridView = (GridView) convertView
+						.findViewById(R.id.revelations_breaknews_image_grid);
+				newsHolder.oneNewsImageView = (ImageView) convertView
+						.findViewById(R.id.revelations_breaknews_image_one_view);
+				newsHolder.aboutReportListView = (ListView) convertView
+						.findViewById(R.id.revelations_breaknews_about_report_news_list);
+				newsHolder.aboutReportIcon = (ImageView) convertView
+						.findViewById(R.id.revelations_breaknews_about_report_icon);
+				newsHolder.aboutReportContent = (LinearLayout) convertView
+						.findViewById(R.id.revelations_breaknews_about_report_content);
+				newsHolder.allNewsTextBut.setVisibility(View.GONE);
+				convertView.setTag(newsHolder);
+			} else if (itemViewType == 2) {
+				convertView = inflate.inflate(mActivity,
+						R.layout.item_list_foot_text, null);
+				finishHolder = new LoadedFinishHolder();
+				finishHolder.loadedTextView = (MyTextView) convertView
+						.findViewById(R.id.list_has_loaded_item_textview);
+				finishHolder.loadedTextView.setVisibility(View.GONE);
+				finishHolder.loadMoreItem = (LinearLayout) convertView
+						.findViewById(R.id.list_load_more_item);
+				finishHolder.loadMoreItem.setVisibility(View.VISIBLE);
+				finishHolder.loadMoreItem
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								// TODO Auto-generated method stub
+								Intent intent = new Intent(
+										New_RevelationsFragment.this.mActivity,
+										RevelationsBreakNewsMoreActivity.class);
+								startActivity(intent);
+							}
+						});
+				convertView.setTag(finishHolder);
 			}
+			// } else {
+			// if (itemViewType == 0) {
+			// topHolder = (RevelationsListTopHolder) convertView.getTag();
+			// } else if (itemViewType == 1) {
+			// newsHolder = (RevelationsBreaksListNewsHolder) convertView
+			// .getTag();
+			// } else if (itemViewType == 2) {
+			// finishHolder = (LoadedFinishHolder) convertView.getTag();
+			// }
+			// }
 
 			if (itemViewType == 0) {
 				topHolder.activityTitle.setText(revelationsHomeList
@@ -441,7 +439,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 						R.string.home_news_title_text_size,
 						spUtil.getFontSizeRadix());
 			} else if (itemViewType == 1) {
-				int breakLocation = position
+				final int breakLocation = position
 						- (revelationsHomeList.getActivity().size() > 0 ? 1 : 0);
 				if (breakLocation == 0) {
 					newsHolder.moreContent.setVisibility(View.VISIBLE);
@@ -475,6 +473,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 						+ " "
 						+ TimeUtil.timeStrToString(news.getNewstime(),
 								"yyyy-MM-dd"));
+				newsHolder.allNewsTextBut.setVisibility(View.GONE);
 				if (isShowSetTextView.contains(position)) {
 					newsHolder.newsText.setMaxLines(100);
 					newsHolder.allNewsTextBut.setVisibility(View.VISIBLE);
@@ -489,7 +488,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 				newsHolder.newsText.setText(StringUtils.deleteLastNewLine(news
 						.getNewstext()));
 				FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
-						newsHolder.newsText, R.string.news_content_text_size,
+						newsHolder.newsText,
+						R.string.home_news_title_text_size,
 						spUtil.getFontSizeRadix());
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
 				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);
@@ -502,8 +502,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 									EllipsizingTextView textView) {
 								if (hasEllipsizSetTextView
 										.contains(revelationsHomeList
-												.getBreaknews().get(position)
-												.getId()))
+												.getBreaknews()
+												.get(breakLocation).getId()))
 									return;
 								LinearLayout parent = (LinearLayout) (textView
 										.getParent());
@@ -515,7 +515,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 									hasEllipsizSetTextView
 											.add(revelationsHomeList
 													.getBreaknews()
-													.get(position).getId());
+													.get(breakLocation).getId());
 									allBut.setVisibility(View.VISIBLE);
 									allBut.setText("全文");
 								}
@@ -562,7 +562,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 					int px3 = PixelUtil.dp2px(3);
 					view.setPadding(px3, px3, px3, px3);
 					view.setText(keyboard.getText());
-					view.setTextSize(PixelUtil.dp2px(6));
+					FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
+							view, R.string.border_text_view_text_size, 1);
 					view.setTextColor(Color.parseColor(keyboard.getColor()));
 					newsHolder.keyboardIconContent.addView(view);
 				}
@@ -1033,7 +1034,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 
 			FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
 					aboutReportHolder.newsTitile,
-					R.string.home_news_title_text_size,
+					R.string.revelations_aboutreport_news_text_size,
 					spUtil.getFontSizeRadix());
 			convertView.setOnClickListener(new OnClickListener() {
 

@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -48,7 +49,6 @@ import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView.EllipsizeListener;
 import com.kankan.kankanews.ui.view.MyTextView;
-import com.kankan.kankanews.ui.view.NestingGridView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
@@ -258,7 +258,7 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 		MyTextView phoneNumText;
 		EllipsizingTextView newsText;
 		MyTextView allNewsTextBut;
-		NestingGridView newsImageGridView;
+		GridView newsImageGridView;
 		ListView aboutReportListView;
 		ImageView aboutReportIcon;
 		ImageView oneNewsImageView;
@@ -325,7 +325,7 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 						.findViewById(R.id.revelations_breaknews_newstext);
 				newsHolder.allNewsTextBut = (MyTextView) convertView
 						.findViewById(R.id.revelations_breaknews_alltext_but);
-				newsHolder.newsImageGridView = (NestingGridView) convertView
+				newsHolder.newsImageGridView = (GridView) convertView
 						.findViewById(R.id.revelations_breaknews_image_grid);
 				newsHolder.oneNewsImageView = (ImageView) convertView
 						.findViewById(R.id.revelations_breaknews_image_one_view);
@@ -373,7 +373,8 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 						.getNewstext()));
 				FontUtils.setTextViewFontSize(
 						RevelationsBreakNewsMoreActivity.this,
-						newsHolder.newsText, R.string.news_content_text_size,
+						newsHolder.newsText,
+						R.string.home_news_title_text_size,
 						spUtil.getFontSizeRadix());
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
 				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);
@@ -436,7 +437,9 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 					int px3 = PixelUtil.dp2px(3);
 					view.setPadding(px3, px3, px3, px3);
 					view.setText(keyboard.getText());
-					view.setTextSize(PixelUtil.dp2px(6));
+					FontUtils.setTextViewFontSize(
+							RevelationsBreakNewsMoreActivity.this, view,
+							R.string.border_text_view_text_size, 1);
 					view.setTextColor(Color.parseColor(keyboard.getColor()));
 					newsHolder.keyboardIconContent.addView(view);
 				}
@@ -647,7 +650,7 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 			FontUtils.setTextViewFontSize(
 					RevelationsBreakNewsMoreActivity.this,
 					aboutReportHolder.newsTitile,
-					R.string.home_news_title_text_size,
+					R.string.revelations_aboutreport_news_text_size,
 					spUtil.getFontSizeRadix());
 			convertView.setOnClickListener(new OnClickListener() {
 

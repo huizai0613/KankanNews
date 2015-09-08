@@ -55,6 +55,12 @@ public class SharePreferenceUtil {
 
 	private String IS_DAY_MODE = "is_day_mode";
 
+	private String USER_TELEPHONE = "user_telephone";
+
+	private String FIRST_GET_COLUMNS = "first_get_columns";
+
+	private String FIRST_GET_REVELATIONS = "first_get_revelations";
+
 	// 应用版本号
 	public void setVersion(String version) {
 		editor.putString(SHARE_KEY_VERSION, version);
@@ -275,5 +281,36 @@ public class SharePreferenceUtil {
 	/** 是否为日间模式 */
 	public boolean getIsDayMode() {
 		return mSharedPreferences.getBoolean(IS_DAY_MODE, true);
+	}
+
+	/** 是否为日间模式 */
+	public void saveUserTelephone(String userTelephone) {
+		editor.putString(USER_TELEPHONE, userTelephone);
+		editor.commit();
+	}
+
+	/** 是否为日间模式 */
+	public String getUserTelephone() {
+		return mSharedPreferences.getString(USER_TELEPHONE, null);
+	}
+
+	/** 是否第一次进入首页看到栏目 */
+	public void setFirstGetColumns(boolean get) {
+		editor.putBoolean(FIRST_GET_COLUMNS, get);
+		editor.commit();
+	}
+
+	public boolean getFirstGetColumns() {
+		return mSharedPreferences.getBoolean(FIRST_GET_COLUMNS, true);
+	}
+
+	/** 是否第一次进入报料 */
+	public void setFirstGetRevalations(boolean get) {
+		editor.putBoolean(FIRST_GET_REVELATIONS, get);
+		editor.commit();
+	}
+
+	public boolean getFirstGetRevalations() {
+		return mSharedPreferences.getBoolean(FIRST_GET_REVELATIONS, true);
 	}
 }

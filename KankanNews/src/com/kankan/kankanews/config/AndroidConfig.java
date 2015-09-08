@@ -69,7 +69,7 @@ public class AndroidConfig {
 	public static final int REVELATIONS_FRAGMENT_REQUEST_NO = 4001;
 	public static final int REVELATIONS_FRAGMENT_RESULT_OK = 4002;
 	public static final int REVELATIONS_FRAGMENT_RESULT_CANCEL = 4003;
-	
+
 	public static final int REVELATIONS_FRAGMENT_PHOTO_REQUEST_NO = 5001;
 
 	// 页面统计-ID
@@ -172,6 +172,10 @@ public class AndroidConfig {
 
 	// 报料信息上传接口
 	public static final String REVELATIONS_CONTENT_POST = "http://api.app.kankanews.com/kankan/v5/newsbreak/message/1";
+	// 报料手机号发送验证码接口
+	public static final String REVELATIONS_VALIDATE_MESSAGE = "http://sso.kankanews.com/register/sendValidateMessage.do";
+	// 报料手机号验证接口
+	public static final String REVELATIONS_VALIDATE = "http://sso.kankanews.com/register/validateMessageCode.do";
 
 	public static final long MAX_SEL_IMG_LENGTH = 20971520;
 

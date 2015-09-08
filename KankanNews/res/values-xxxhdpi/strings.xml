@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- xxxhdpi -->
     <string name="home_news_title_text_size">17</string>
     <string name="home_cates_text_size">18</string>
     <string name="home_cates_text_size_selected">20</string>
@@ -8,5 +9,7 @@
     <string name="news_title_text_size">23</string>
     <string name="colums_info_title_text_size">18</string>
     <string name="colums_info_detail_text_size">15</string>
+    <string name="revelations_aboutreport_news_text_size">15</string>
+    <string name="border_text_view_text_size">12</string>
 
 </resources>

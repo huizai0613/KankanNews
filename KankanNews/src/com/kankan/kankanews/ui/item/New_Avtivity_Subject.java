@@ -191,7 +191,10 @@ public class New_Avtivity_Subject extends BaseActivity implements
 		new_news = new New_News();
 
 		new_news.setTitlelist(title);
-		new_news.setSharedPic(sharedPic);
+		if (sharedPic == null || sharedPic.trim().equals(""))
+			new_news.setSharedPic(titlepic);
+		else
+			new_news.setSharedPic(sharedPic);
 		new_news.setTitleurl(titleurl);
 		new_news.setIntro(intro);
 

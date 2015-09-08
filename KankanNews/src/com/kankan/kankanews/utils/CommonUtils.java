@@ -80,8 +80,8 @@ public class CommonUtils {
 		ToastUtils.ErrorToastNoNet(context);
 		return false;
 	}
-	
-	/** 检查是否有网络  */
+
+	/** 检查是否有网络 */
 	public static boolean isNetworkAvailableNoToast(Context context) {
 		NetworkInfo info = getNetworkInfo(context);
 		if (info != null) {
@@ -90,7 +90,7 @@ public class CommonUtils {
 		}
 		return false;
 	}
-	
+
 	/** 检查是否是WIFI */
 	public static boolean isWifi(Context context) {
 		NetworkInfo info = getNetworkInfo(context);
@@ -409,6 +409,14 @@ public class CommonUtils {
 	public static File getImageCachePath(Context context) {
 		return getOwnCacheDirectory(context, "kankanxinwen/cache/image");
 
+	}
+
+	/**
+	 * 获取拍照图片缓存
+	 * 
+	 */
+	public static File getCameraImageCachePath(Context context) {
+		return getOwnCacheDirectory(context, "kankanxinwen/camera");
 	}
 
 	/**
