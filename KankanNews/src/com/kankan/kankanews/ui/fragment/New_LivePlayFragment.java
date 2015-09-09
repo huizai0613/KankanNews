@@ -500,7 +500,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 						isSelectPlay = false;
 						liveVideoView.stopPlayback();
 						liveVideoView.setVideoPath(news.getStreamurl());
-
+						nowLiveNew = news;
 						NetUtils.getInstance(this.mActivity).getAnalyse(
 								this.mActivity, "live", news.getTitle(),
 								news.getTitleurl());
@@ -1005,7 +1005,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 		switch (id) {
 		case R.id.live_share_but:
-			Log.e("live_share_but", liveVideoView.getLayoutParams().height + "");
 			if (nowLiveNew == null) {
 				ToastUtils.Errortoast(mActivity, "抱歉,获取不到当前直播信息，请点击播放重新尝试");
 				return;
