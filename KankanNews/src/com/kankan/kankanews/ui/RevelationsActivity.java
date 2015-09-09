@@ -238,10 +238,10 @@ public class RevelationsActivity extends BaseActivity implements
 				} else {
 					if (CommonUtils.isNetworkAvailable(this)) {
 						new PostTask().execute("");
+						postBut.setText("正在提交");
+						postBut.setEnabled(false);
+						postBut.setBackgroundColor(Color.parseColor("#BEBEBE"));
 					}
-					postBut.setText("正在提交");
-					postBut.setEnabled(false);
-					postBut.setBackgroundColor(Color.parseColor("#BEBEBE"));
 				}
 
 				break;
@@ -259,10 +259,10 @@ public class RevelationsActivity extends BaseActivity implements
 				}
 				if (CommonUtils.isNetworkAvailable(this)) {
 					new PostTask().execute("");
+					postBut.setText("正在提交");
+					postBut.setEnabled(false);
+					postBut.setBackgroundColor(Color.parseColor("#BEBEBE"));
 				}
-				postBut.setText("正在提交");
-				postBut.setEnabled(false);
-				postBut.setBackgroundColor(Color.parseColor("#BEBEBE"));
 			}
 		}
 	}
