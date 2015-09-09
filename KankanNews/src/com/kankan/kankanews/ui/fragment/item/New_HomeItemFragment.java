@@ -1069,8 +1069,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					news.getTitlepic(), news.getSharedPic(), news.getIntro());
 		} else if (news_type % 10 == 6) {
 			// 直播
-			New_LivePlayFragment fragment = (New_LivePlayFragment) mActivity.fragments
-					.get(1);
+			New_LivePlayFragment fragment = mActivity.getLiveFragment();
 			fragment.setSelectPlay(true);
 			fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
 			mActivity.touchTab(mActivity.tabLive);

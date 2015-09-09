@@ -144,8 +144,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								news.getSharedPic(), news.getIntro());
 						break;
 					case 6:
-						New_LivePlayFragment f = (New_LivePlayFragment) fragment.mActivity.fragments
-								.get(1);
+						New_LivePlayFragment f = fragment.mActivity
+								.getLiveFragment();
 						f.setSelectPlay(true);
 						f.setSelectPlayID(Integer.parseInt(news.getZtid()));
 						fragment.mActivity.touchTab(fragment.mActivity.tabLive);
@@ -207,8 +207,8 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								news.getSharedPic(), news.getIntro());
 						break;
 					case 6:
-						New_LivePlayFragment f = (New_LivePlayFragment) fragment.mActivity.fragments
-								.get(1);
+						New_LivePlayFragment f = fragment.mActivity
+								.getLiveFragment();
 						f.setSelectPlay(true);
 						f.setSelectPlayID(Integer.parseInt(news.getZtid()));
 						fragment.mActivity.touchTab(fragment.mActivity.tabLive);

@@ -565,4 +565,8 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 			break;
 		}
 	}
+
+	public New_LivePlayFragment getLiveFragment() {
+		return (New_LivePlayFragment) this.fragments.get(tabLive);
+	}
 }

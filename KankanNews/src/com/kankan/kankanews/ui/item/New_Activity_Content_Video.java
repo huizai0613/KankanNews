@@ -1497,13 +1497,13 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 								mNew_Recommend.getSharedPic(),
 								mNew_Recommend.getTitle());
 					} else if (news_type % 10 == 6) {// 直播
-						New_LivePlayFragment fragment = (New_LivePlayFragment) ((MainActivity) mContext).fragments
-								.get(1);
-						fragment.setSelectPlay(true);
-						fragment.setSelectPlayID(Integer
-								.parseInt(mNew_Recommend.getZtid()));
-						((MainActivity) mContext)
-								.touchTab(((MainActivity) mContext).tabLive);
+//						New_LivePlayFragment fragment = (New_LivePlayFragment) ((MainActivity) mContext).fragments
+//								.get(1);
+//						fragment.setSelectPlay(true);
+//						fragment.setSelectPlayID(Integer
+//								.parseInt(mNew_Recommend.getZtid()));
+//						((MainActivity) mContext)
+//								.touchTab(((MainActivity) mContext).tabLive);
 
 					} else {
 						mContext.startAnimActivityByParameter(
