@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,7 +18,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -157,6 +157,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 			showData(true);
 			loadingView.setVisibility(View.GONE);
 			revelationsListView.showHeadLoadingView();
+			// revelationsListView.setmCurrentMode(Mode.PULL_FROM_START);
+			// revelationsListView.setRefreshing(false);
 		}
 		refreshNetDate();
 	}
@@ -690,8 +692,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 	protected void saveLocalDate() {
 		// TODO Auto-generated method stub
 		try {
-			SerializableObj obj = new SerializableObj("0",
-					revelationsHomeListJson, "RevelationsHomeList");
+			SerializableObj obj = new SerializableObj(UUID.randomUUID()
+					.toString(), revelationsHomeListJson, "RevelationsHomeList");
 			mActivity.dbUtils.delete(SerializableObj.class,
 					WhereBuilder.b("classType", "=", "RevelationsHomeList"));
 			mActivity.dbUtils.save(obj);

@@ -327,7 +327,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 	public void startSubjectActivityByParameter(Class<?> cla, String ztid,
 			String title, String titlepic, String titleurl, String titlePic,
-			String sharedPic,String intro) {
+			String sharedPic, String intro) {
 		Intent intent = new Intent(this, cla);
 		intent.putExtra("ztid", ztid);
 		intent.putExtra("title", title);
@@ -675,6 +675,16 @@ public abstract class BaseActivity extends FragmentActivity implements
 	}
 
 	public void copy2Clip() {
+
+	}
+
+	protected boolean initLocalDate() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	protected void saveLocalDate() {
+		// TODO Auto-generated method stub
 
 	}
 }

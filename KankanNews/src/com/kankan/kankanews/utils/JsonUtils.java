@@ -12,16 +12,6 @@ public class JsonUtils {
 	}
 
 	public static <T> T toObject(String json, Class<T> classOfT) {
-		// ObjectMapper mapper = new ObjectMapper();
-		// // mapper.enableDefaultTyping();
-		// mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES,
-		// true);
-		// ObjectReader reader = mapper.reader(returnType);
-		// try {
-		// return reader.readValue(str);
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
 		return gson.fromJson(json, classOfT);
 	}
 

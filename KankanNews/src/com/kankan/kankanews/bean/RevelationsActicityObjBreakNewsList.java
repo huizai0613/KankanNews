@@ -3,7 +3,7 @@ package com.kankan.kankanews.bean;
 import java.io.Serializable;
 import java.util.List;
 
-public class RevelationsActicityList implements Serializable {
+public class RevelationsActicityObjBreakNewsList implements Serializable {
 	private String id;
 	private RevelationsActivity activity;
 	private List<RevelationsBreaknews> breaknews;

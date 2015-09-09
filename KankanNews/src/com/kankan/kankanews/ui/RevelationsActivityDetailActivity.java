@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.json.JSONObject;
 
@@ -35,9 +36,10 @@ import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.Keyboard;
-import com.kankan.kankanews.bean.RevelationsActicityList;
+import com.kankan.kankanews.bean.RevelationsActicityObjBreakNewsList;
 import com.kankan.kankanews.bean.RevelationsBreaknews;
 import com.kankan.kankanews.bean.RevelationsNew;
+import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
@@ -48,6 +50,7 @@ import com.kankan.kankanews.ui.view.EllipsizingTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView.EllipsizeListener;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
@@ -56,6 +59,9 @@ import com.kankan.kankanews.utils.StringUtils;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
+import com.lidroid.xutils.exception.DbException;
 
 public class RevelationsActivityDetailActivity extends BaseActivity implements
 		OnClickListener {
@@ -66,7 +72,8 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 
 	private PullToRefreshListView activityListView;
 
-	private RevelationsActicityList revelationsActivityList;
+	private RevelationsActicityObjBreakNewsList revelationsActivityList;
+	private String revelationsActivityListJson;
 	private ActivityListAdapter activityListAdapter;
 
 	private ActivityListTopHolder topHolder;
@@ -124,6 +131,12 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		this.aid = this.getIntent().getStringExtra("_AID_");
 		if (this.aid == null)
 			this.finish();
+		boolean flag = this.initLocalDate();
+		if (flag) {
+			showData(true);
+			loadingView.setVisibility(View.GONE);
+			activityListView.showHeadLoadingView();
+		}
 		refreshNetDate();
 	}
 
@@ -178,9 +191,9 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 					@Override
 					public void onResponse(JSONObject jsonObject) {
 						activityListView.onRefreshComplete();
-						RevelationsActicityList moreList = JsonUtils.toObject(
+						RevelationsActicityObjBreakNewsList moreList = JsonUtils.toObject(
 								jsonObject.toString(),
-								RevelationsActicityList.class);
+								RevelationsActicityObjBreakNewsList.class);
 						if (moreList.getBreaknews().size() == 0) {
 							isLoadEnd = true;
 						} else {
@@ -228,14 +241,16 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 	@Override
 	protected void onSuccess(JSONObject jsonObject) {
 		// TODO Auto-generated method stub
+		revelationsActivityListJson = jsonObject.toString();
 		boolean needRefresh = (revelationsActivityList == null);
 		// ToastUtils.Infotoast(getActivity(), jsonObject.toString());
-		revelationsActivityList = JsonUtils.toObject(jsonObject.toString(),
-				RevelationsActicityList.class);
+		revelationsActivityList = JsonUtils.toObject(revelationsActivityListJson,
+				RevelationsActicityObjBreakNewsList.class);
 		if (revelationsActivityList != null) {
 			loadingView.setVisibility(View.GONE);
 			if (revelationsActivityList.getBreaknews().size() == 0)
 				isLoadEnd = true;
+			saveLocalDate();
 			showData(needRefresh);
 		}
 	}
@@ -465,15 +480,11 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 								if (textView.getMaxLines() == 3) {
 									textView.setMaxLines(100);
 									((MyTextView) v).setText("收起");
-									Log.e("textView",
-											((MyTextView) v).getText() + "");
 									((MyTextView) v).postInvalidate();
 									isShowSetTextView.add(position);
 								} else {
 									textView.setMaxLines(3);
 									((MyTextView) v).setText("全文");
-									Log.e("textView",
-											((MyTextView) v).getText() + "");
 									((MyTextView) v).postInvalidate();
 									isShowSetTextView.remove(position);
 								}
@@ -778,5 +789,43 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		int first = activityListView.getFirstVisiblePosition();
 		activityListView.setAdapter(activityListAdapter);
 		activityListView.setSelection(first);
+	}
+
+	@Override
+	protected boolean initLocalDate() {
+		try {
+			SerializableObj object = (SerializableObj) this.dbUtils
+					.findFirst(Selector.from(SerializableObj.class).where(
+							"classType", "=",
+							"RevelationsActivityDetailListID_" + aid));
+			if (object != null) {
+				revelationsActivityListJson = object.getJsonStr();
+				revelationsActivityList = JsonUtils.toObject(
+						revelationsActivityListJson,
+						RevelationsActicityObjBreakNewsList.class);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
+		return false;
+	}
+
+	@Override
+	protected void saveLocalDate() {
+		try {
+			SerializableObj obj = new SerializableObj(UUID.randomUUID()
+					.toString(), revelationsActivityListJson,
+					"RevelationsActivityDetailListID_" + aid);
+			this.dbUtils
+					.delete(SerializableObj.class, WhereBuilder.b("classType",
+							"=", "RevelationsActivityDetailListID_" + aid));
+			this.dbUtils.save(obj);
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
+
 	}
 }
