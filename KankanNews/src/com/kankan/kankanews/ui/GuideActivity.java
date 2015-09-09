@@ -74,7 +74,6 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 		try {
 			str = new String(Base64.encode(s.encrypt(s.getpublicksy(),
 					"{tel:2387289317}".getBytes())));
-			Log.e("str", str);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

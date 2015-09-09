@@ -117,8 +117,6 @@ public class NetUtils {
 	 */
 	public void getNewsContentDataPush(String news_id,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
-		Log.e("getNewsContentDataPush", AndroidConfig.New_NETHOST
-				+ AndroidConfig.NewContentPush + news_id);
 		mCustomRequest = new CustomRequest(Request.Method.POST,
 				AndroidConfig.New_NETHOST + AndroidConfig.NewContentPush
 						+ news_id, null, reponseListener, errorListener);
@@ -488,9 +486,6 @@ public class NetUtils {
 	 */
 	public void getRevelationsActivityList(String aid, String timestamp,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
-		Log.e("getRevelationsActivityList", AndroidConfig.New_NETHOST
-				+ AndroidConfig.REVELATIONS_ACTIVITY_DATA + "/aid/" + aid
-				+ "timestamp" + timestamp);
 		mCustomRequest = new CustomRequest(Request.Method.GET,
 				AndroidConfig.New_NETHOST
 						+ AndroidConfig.REVELATIONS_ACTIVITY_DATA + "/aid/"

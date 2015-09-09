@@ -395,7 +395,6 @@ public class SplashActivity extends BaseActivity {
 			}
 			return;
 		}
-		Log.e("jsonObject", jsonObject.toString());
 		if (advert == null)
 			advert = new Advert();
 		advert.parseJSON(jsonObject);
