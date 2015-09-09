@@ -1058,6 +1058,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		// this.verticalScreen();
 		// }
+		initNightView(false);
 		setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
 		if (contentVideoBg.getVisibility() == View.GONE)
 			contentVideoView.start();
