@@ -112,7 +112,8 @@ public class New_HomeFragment extends BaseFragment implements
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			refreshNetDate();
 		} else {
-			main_bg.setVisibility(View.VISIBLE);
+			if (!initLocaDate)
+				main_bg.setVisibility(View.VISIBLE);
 		}
 
 		DebugLog.e(Build.VERSION.SDK_INT + "");
