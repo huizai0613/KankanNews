@@ -36,7 +36,7 @@
                 android:layout_height="@dimen/separation_line_height"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="@dimen/news_bask_space"
+                android:layout_marginTop="@dimen/margin_base_space"
                 android:background="@color/gray_cc" />
 
             <TextView
@@ -50,7 +50,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/news_bask_space" >
+                android:layout_margin="@dimen/margin_base_space" >
 
                 <EditText
                     android:id="@+id/revelations_post_content"
@@ -93,7 +93,7 @@
                 android:id="@+id/revelations_post_image_grid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/news_bask_space"
+                android:layout_margin="@dimen/margin_base_space"
                 android:background="@drawable/revelations_post_content_edittext_shape"
                 android:horizontalSpacing="10dip"
                 android:numColumns="5"
@@ -120,7 +120,7 @@
                     android:id="@+id/revelations_binding_telephone_text_view"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/news_bask_space"
+                    android:layout_margin="@dimen/margin_base_space"
                     android:layout_weight="3"
                     android:background="@drawable/revelations_post_content_edittext_shape"
                     android:gravity="left|top"
@@ -134,7 +134,7 @@
                     android:id="@+id/revelations_binding_cancel_button"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/news_bask_space"
+                    android:layout_margin="@dimen/margin_base_space"
                     android:layout_weight="1"
                     android:background="@drawable/revelations_post_button_shape"
                     android:gravity="center"
@@ -175,14 +175,14 @@
                 android:layout_height="@dimen/separation_line_height"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="@dimen/news_bask_space"
+                android:layout_marginTop="@dimen/margin_base_space"
                 android:background="@color/gray_cc" />
 
             <EditText
                 android:id="@+id/revelations_post_tel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/news_bask_space"
+                android:layout_margin="@dimen/margin_base_space"
                 android:background="@drawable/revelations_post_content_edittext_shape"
                 android:gravity="left|top"
                 android:hint="请输入您的手机号，方便我们记者联系您"
@@ -202,7 +202,7 @@
                     android:id="@+id/revelations_validate_message_text_view"
                     android:layout_width="0dip"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/news_bask_space"
+                    android:layout_margin="@dimen/margin_base_space"
                     android:layout_weight="1"
                     android:background="@drawable/revelations_post_content_edittext_shape"
                     android:gravity="left|top"
@@ -217,7 +217,7 @@
                     android:id="@+id/revelations_post_validate_button"
                     android:layout_width="0dip"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/news_bask_space"
+                    android:layout_margin="@dimen/margin_base_space"
                     android:layout_weight="1"
                     android:background="@drawable/revelations_post_button_shape"
                     android:gravity="center"

@@ -20,6 +20,7 @@ import com.ant.liao.GifView;
 import com.ant.liao.GifView.GifImageType;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.New_News_Top;
+import com.kankan.kankanews.ui.fragment.LiveHomeFragment;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
@@ -144,10 +145,10 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								news.getSharedPic(), news.getIntro());
 						break;
 					case 6:
-						New_LivePlayFragment f = fragment.mActivity
+						LiveHomeFragment f = fragment.mActivity
 								.getLiveFragment();
-						f.setSelectPlay(true);
-						f.setSelectPlayID(Integer.parseInt(news.getZtid()));
+//						f.setSelectPlay(true);
+//						f.setSelectPlayID(Integer.parseInt(news.getZtid()));
 						fragment.mActivity.touchTab(fragment.mActivity.tabLive);
 						break;
 					// 其他
@@ -207,10 +208,10 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								news.getSharedPic(), news.getIntro());
 						break;
 					case 6:
-						New_LivePlayFragment f = fragment.mActivity
+						LiveHomeFragment f = fragment.mActivity
 								.getLiveFragment();
-						f.setSelectPlay(true);
-						f.setSelectPlayID(Integer.parseInt(news.getZtid()));
+//						f.setSelectPlay(true);
+//						f.setSelectPlayID(Integer.parseInt(news.getZtid()));
 						fragment.mActivity.touchTab(fragment.mActivity.tabLive);
 						break;
 					// 其他

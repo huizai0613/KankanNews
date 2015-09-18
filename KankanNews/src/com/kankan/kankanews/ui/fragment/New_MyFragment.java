@@ -77,7 +77,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
 
-		inflate = inflater.inflate(R.layout.new_fragment_my, null);
+		inflate = inflater.inflate(R.layout.fragment_me_set, null);
 		initview();
 		initLister();
 		initData();

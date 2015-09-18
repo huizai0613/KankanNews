@@ -55,6 +55,7 @@ import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.ui.MainActivity;
+import com.kankan.kankanews.ui.fragment.LiveHomeFragment;
 import com.kankan.kankanews.ui.fragment.New_HomeFragment;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
@@ -186,7 +187,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		inflate = inflater.inflate(R.layout.new_fragment_home_item, null);
+		inflate = inflater.inflate(R.layout.item_fragment_home, null);
 		instance = NetUtils.getInstance(mActivity);
 		listview = (PullToRefreshListView) inflate.findViewById(R.id.listview);
 		screnn_pb = (LinearLayout) inflate.findViewById(R.id.screnn_pb);
@@ -1069,9 +1070,9 @@ public class New_HomeItemFragment extends BaseFragment implements
 					news.getTitlepic(), news.getSharedPic(), news.getIntro());
 		} else if (news_type % 10 == 6) {
 			// 直播
-			New_LivePlayFragment fragment = mActivity.getLiveFragment();
-			fragment.setSelectPlay(true);
-			fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
+			LiveHomeFragment fragment = mActivity.getLiveFragment();
+//			fragment.setSelectPlay(true);
+//			fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
 			mActivity.touchTab(mActivity.tabLive);
 
 		} else if (news.getZtype().equals("1")) {

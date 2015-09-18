@@ -102,7 +102,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
-		inflate = inflater.inflate(R.layout.new_fragment_revelations, null);
+		inflate = inflater.inflate(R.layout.fragment_revelations_home, null);
 
 		initview();
 		initListener();

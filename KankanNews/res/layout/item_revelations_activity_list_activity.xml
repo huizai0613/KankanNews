@@ -18,8 +18,8 @@
         android:layout_below="@+id/activity_list_imageview"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/news_bask_space"
-        android:paddingRight="@dimen/news_bask_space" >
+        android:paddingLeft="@dimen/margin_base_space"
+        android:paddingRight="@dimen/margin_base_space" >
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/activity_list_title"

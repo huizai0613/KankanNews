@@ -19,9 +19,9 @@
         android:id="@+id/list_load_more_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/news_bask_space"
-        android:layout_marginRight="@dimen/news_bask_space"
-        android:layout_marginTop="@dimen/news_bask_space"
+        android:layout_marginLeft="@dimen/margin_base_space"
+        android:layout_marginRight="@dimen/margin_base_space"
+        android:layout_marginTop="@dimen/margin_base_space"
         android:background="@color/thin_gray"
         android:orientation="vertical"
         android:visibility="gone" >

@@ -118,7 +118,7 @@ public class NetUtils {
 	public void getNewsContentDataPush(String news_id,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
-				AndroidConfig.New_NETHOST + AndroidConfig.NewContentPush
+				AndroidConfig.KANKAN_HOST + AndroidConfig.NewContentPush
 						+ news_id, null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
@@ -271,7 +271,7 @@ public class NetUtils {
 	public void getNewHomeCateData(Listener<JSONArray> reponseListener,
 			ErrorListener errorListener) {
 		mCustomRequestArray = new CustomRequestArray(Request.Method.POST,
-				AndroidConfig.New_NETHOST + AndroidConfig.New_HomeCateData,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.New_HomeCateData,
 				null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequestArray);
 
@@ -283,7 +283,7 @@ public class NetUtils {
 	public void getNewHomeData(String lastnewstime, String chassid, String sp,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
-				AndroidConfig.New_NETHOST + AndroidConfig.New_HomeData
+				AndroidConfig.KANKAN_HOST + AndroidConfig.New_HomeData
 						+ chassid + "/sp/" + sp + "/timestamp/" + lastnewstime,
 				null, reponseListener, errorListener);
 
@@ -317,7 +317,7 @@ public class NetUtils {
 	public void getNewNewsContent(String mid, String type,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
-				AndroidConfig.New_NETHOST + AndroidConfig.New_NewsContent + mid
+				AndroidConfig.KANKAN_HOST + AndroidConfig.New_NewsContent + mid
 						+ "/mtype/" + (Integer.valueOf(type) % 10), null,
 				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
@@ -329,10 +329,20 @@ public class NetUtils {
 	public void getNewLivePlayData(Listener<JSONArray> reponseListener,
 			ErrorListener errorListener) {
 		mCustomRequestArray = new CustomRequestArray(Request.Method.POST,
-				AndroidConfig.New_NETHOST + AndroidConfig.New_LivePlay, null,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.New_LivePlay, null,
 				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequestArray);
+	}
 
+	/**
+	 * 获取直播数据
+	 */
+	public void getLiveList(Listener<JSONObject> reponseListener,
+			ErrorListener errorListener) { 
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.LIVE_LIST_URL, null,
+				reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
 	}
 
 	/**
@@ -359,22 +369,6 @@ public class NetUtils {
 	}
 
 	/**
-	 * 提交报料内容
-	 */
-	public void postRevelationContent(String tel, String content,
-			String imageUrls, Listener<JSONObject> reponseListener,
-			ErrorListener errorListener) {
-		Map<String, String> params = new HashMap<String, String>();
-		params.put("phonenum", tel);
-		params.put("newstext", content);
-		params.put("imagegroup", imageUrls);
-		mCustomRequest = new CustomRequest(Request.Method.POST,
-				AndroidConfig.REVELATIONS_CONTENT_POST, params,
-				reponseListener, errorListener);
-		mRequestQueue.add(mCustomRequest);
-	}
-
-	/**
 	 * 获取栏目节目列表
 	 * 
 	 * @param programName
@@ -398,7 +392,7 @@ public class NetUtils {
 		datestamp = TextUtils.isEmpty(datestamp) ? "" : "/day/" + datestamp;
 		newstime = TextUtils.isEmpty(newstime) ? "" : "/timestamp/" + newstime;
 		mCustomRequestArray = new CustomRequestArray(Request.Method.GET,
-				AndroidConfig.New_NETHOST + AndroidConfig.New_Colums_Info
+				AndroidConfig.KANKAN_HOST + AndroidConfig.New_Colums_Info
 						+ classid + datestamp + newstime, null,
 				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequestArray);
@@ -410,7 +404,7 @@ public class NetUtils {
 	public void getSubjectData(String ztid,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
-				AndroidConfig.New_NETHOST + AndroidConfig.New_Subject + ztid,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.New_Subject + ztid,
 				null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
@@ -450,7 +444,7 @@ public class NetUtils {
 			e.printStackTrace();
 		}
 		mCustomRequestArray = new CustomRequestArray(Request.Method.GET,
-				AndroidConfig.New_NETHOST + AndroidConfig.SEARCH_GET + "?w="
+				AndroidConfig.KANKAN_HOST + AndroidConfig.SEARCH_GET + "?w="
 						+ searchContent + "&p=" + pageNum, null,
 				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequestArray);
@@ -463,7 +457,7 @@ public class NetUtils {
 	public void getSearchHotWord(Listener<JSONArray> reponseListener,
 			ErrorListener errorListener) {
 		mCustomRequestArray = new CustomRequestArray(Request.Method.GET,
-				AndroidConfig.New_NETHOST + AndroidConfig.SEARCH_HOT_WORD,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.SEARCH_HOT_WORD,
 				null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequestArray);
 
@@ -476,7 +470,7 @@ public class NetUtils {
 			ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(
 				Request.Method.GET,
-				AndroidConfig.New_NETHOST + AndroidConfig.REVELATIONS_HOME_DATA,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.REVELATIONS_HOME_DATA,
 				null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
@@ -487,7 +481,7 @@ public class NetUtils {
 	public void getRevelationsActivityList(String aid, String timestamp,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.GET,
-				AndroidConfig.New_NETHOST
+				AndroidConfig.KANKAN_HOST
 						+ AndroidConfig.REVELATIONS_ACTIVITY_DATA + "/aid/"
 						+ aid + "/timestamp/" + timestamp, null,
 				reponseListener, errorListener);
@@ -500,9 +494,25 @@ public class NetUtils {
 	public void getRevelationsBreaknewsMore(String timestamp,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.GET,
-				AndroidConfig.New_NETHOST
+				AndroidConfig.KANKAN_HOST
 						+ AndroidConfig.REVELATIONS_BREAKNEWS_MORE_DATA
 						+ timestamp, null, reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
+	}
+
+	/**
+	 * 提交报料内容
+	 */
+	public void postRevelationContent(String tel, String content,
+			String imageUrls, Listener<JSONObject> reponseListener,
+			ErrorListener errorListener) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("phonenum", tel);
+		params.put("newstext", content);
+		params.put("imagegroup", imageUrls);
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.REVELATIONS_CONTENT_POST, params,
+				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
 

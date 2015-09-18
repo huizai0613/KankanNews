@@ -54,7 +54,7 @@ public class New_ColumsFragment extends BaseFragment {
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
-		inflate = inflater.inflate(R.layout.new_fragment_colums, null);
+		inflate = inflater.inflate(R.layout.fragment_colums, null);
 
 //		initTitleBar(inflate, "栏目");
 

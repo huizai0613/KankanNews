@@ -59,7 +59,7 @@ public class MeSetActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.new_fragment_my);
+		setContentView(R.layout.fragment_me_set);
 
 	}
 

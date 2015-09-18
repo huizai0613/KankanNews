@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/f6_gray"
-    android:paddingLeft="@dimen/news_bask_space"
-    android:paddingRight="@dimen/news_bask_space" >
+    android:paddingLeft="@dimen/margin_base_space"
+    android:paddingRight="@dimen/margin_base_space" >
 
     <RelativeLayout
         android:id="@+id/revelations_breaknews_more_content"
@@ -23,7 +23,7 @@
             <ImageView
                 android:layout_width="24dip"
                 android:layout_height="24dip"
-                android:layout_marginRight="@dimen/news_bask_space"
+                android:layout_marginRight="@dimen/margin_base_space"
                 android:src="@drawable/ic_horn" />
 
             <com.kankan.kankanews.ui.view.MyTextView
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/revelations_breaknews_more_content"
-        android:layout_marginTop="@dimen/news_bask_space"
+        android:layout_marginTop="@dimen/margin_base_space"
         android:orientation="horizontal" >
 
         <LinearLayout
@@ -83,7 +83,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/news_bask_space"
+            android:layout_marginLeft="@dimen/margin_base_space"
             android:gravity="center_horizontal"
             android:orientation="vertical" >
 
@@ -126,7 +126,7 @@
                     android:id="@+id/revelations_breaknews_image_grid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/news_bask_space"
+                    android:layout_marginBottom="@dimen/margin_base_space"
                     android:horizontalSpacing="10dip"
                     android:numColumns="3"
                     android:padding="0dip"
@@ -138,7 +138,7 @@
                     android:id="@+id/revelations_breaknews_image_one_view"
                     android:layout_width="120dip"
                     android:layout_height="90dip"
-                    android:layout_marginBottom="@dimen/news_bask_space"
+                    android:layout_marginBottom="@dimen/margin_base_space"
                     android:scaleType="centerCrop" >
                 </ImageView>
             </FrameLayout>
@@ -152,7 +152,7 @@
         android:layout_below="@+id/revelations_breaknews_content"
         android:layout_marginLeft="50dip"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/news_bask_space" >
+        android:paddingLeft="@dimen/margin_base_space" >
 
         <View
             android:id="@+id/revelations_breaknews_about_report_separation_line"
@@ -165,8 +165,8 @@
             android:id="@+id/revelations_breaknews_about_report_news_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/news_bask_space"
-            android:layout_marginTop="@dimen/news_bask_space"
+            android:layout_marginBottom="@dimen/margin_base_space"
+            android:layout_marginTop="@dimen/margin_base_space"
             android:divider="@android:color/transparent"
             android:dividerHeight="10dip"
             android:scrollbars="none" >

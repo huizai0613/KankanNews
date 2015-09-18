@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/new_item_bg_selector"
-    android:paddingTop="@dimen/news_bask_space" >
+    android:paddingTop="@dimen/margin_base_space" >
 
     <RelativeLayout
         android:id="@+id/title_root_view"
@@ -16,7 +16,7 @@
             android:layout_height="60dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="@dimen/news_bask_space"
+            android:layout_marginLeft="@dimen/margin_base_space"
             android:scaleType="fitXY"
             android:src="@drawable/default_news_display" />
 
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="@dimen/news_bask_space"
+            android:layout_marginRight="@dimen/margin_base_space"
             android:layout_toRightOf="@+id/home_news_titlepic"
             android:gravity="center"
             android:orientation="vertical" >

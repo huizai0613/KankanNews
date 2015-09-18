@@ -17,7 +17,7 @@
         android:layout_below="@id/viewpager"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingLeft="@dimen/news_bask_space" >
+        android:paddingLeft="@dimen/margin_base_space" >
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/new_title"

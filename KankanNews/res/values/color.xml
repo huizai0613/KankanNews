@@ -54,7 +54,7 @@
     <color name="deep_gray">#363636</color>
 
     <!-- 更深灰色 比深灰色还黑 -->
-    <color name="deeper_gray">#222222</color>
+    <color name="deeper_gray">#333333</color>
 
     <!-- 红色 -->
     <color name="red">#FF0000</color>

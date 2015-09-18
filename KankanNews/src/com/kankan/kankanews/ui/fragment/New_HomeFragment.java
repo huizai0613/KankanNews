@@ -80,7 +80,7 @@ public class New_HomeFragment extends BaseFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		inflate = inflater.inflate(R.layout.new_fragment_home, null);
+		inflate = inflater.inflate(R.layout.fragment_home, null);
 		mColumnHorizontalScrollView = (HorizontalScrollView) inflate
 				.findViewById(R.id.mColumnHorizontalScrollView);
 		mRadioGroup_content = (LinearLayout) inflate

@@ -1,4 +1,4 @@
 <!-- values-xhdpi -->
 <resources>
-    <dimen name="news_bask_space">12.5dp</dimen>
+    <dimen name="margin_base_space">12.5dp</dimen>
 </resources>

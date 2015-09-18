@@ -121,7 +121,7 @@ public class AndroidConfig {
 	// play title 视频标题
 
 	// ------------------------------------------------------------------看看新闻------------------------------------------------------------------------
-	public static final String New_NETHOST = "http://api.app.kankanews.com/kankan";
+	public static final String KANKAN_HOST = "http://api.app.kankanews.com/kankan";
 
 	// 首页条目数据
 	public static final String New_HomeCateData = "/v5/info/item_timeline";
@@ -137,6 +137,9 @@ public class AndroidConfig {
 
 	// 直播数据
 	public static final String New_LivePlay = "/v5/live/timeline/";
+
+	// 直播数据
+	public static final String LIVE_LIST_URL = "/v5/liveAPP/stream/live";
 
 	// 栏目列表
 	public static final String New_Colums = "http://api.app.kankanews.com/index.php/kankan/v5/channel/timeline";
