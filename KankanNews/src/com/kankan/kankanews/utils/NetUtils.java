@@ -1,7 +1,15 @@
 package com.kankan.kankanews.utils;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -338,7 +346,7 @@ public class NetUtils {
 	 * 获取直播数据
 	 */
 	public void getLiveList(Listener<JSONObject> reponseListener,
-			ErrorListener errorListener) { 
+			ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
 				AndroidConfig.KANKAN_HOST + AndroidConfig.LIVE_LIST_URL, null,
 				reponseListener, errorListener);
@@ -574,5 +582,33 @@ public class NetUtils {
 						+ "");
 			}
 		}
+	}
+
+	public static Map<String, String> getTokenUploadVideo(String fileName,
+			String fileSize) {
+		Map<String, String> result = new HashMap<String, String>();
+		BufferedReader responseReader = null;
+		HttpURLConnection conn = null;
+		try {
+			String path = "http://localhost:8080/upload/getToken.do?name="
+					+ fileName + "&size=" + fileSize;
+			URL url = new URL(path);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setConnectTimeout(5 * 1000);
+			conn.setRequestMethod("GET");
+			responseReader = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			StringBuffer responseContent = new StringBuffer();
+			while (responseReader.ready()) {
+				responseContent.append(responseReader.readLine());
+			}
+		} catch (Exception e) {
+		} finally {
+			try {
+				conn.getInputStream().close();
+			} catch (IOException e) {
+			}
+		}
+		return result;
 	}
 }

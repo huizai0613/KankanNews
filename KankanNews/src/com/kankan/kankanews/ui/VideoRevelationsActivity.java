@@ -55,16 +55,14 @@ import com.kankan.kankanews.picsel.PicPreviewActivity;
 import com.kankan.kankanews.picsel.PicSelectedMainActivity;
 import com.kankan.kankanews.ui.view.popup.ModifyAvatarDialog;
 import com.kankan.kankanews.utils.CommonUtils;
-import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImageLoader;
-import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.ImageLoader.Type;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 
-public class RevelationsActivity extends BaseActivity implements
+public class VideoRevelationsActivity extends BaseActivity implements
 		OnClickListener {
 	private String aid;
 	private LayoutInflater inflate;
@@ -95,12 +93,7 @@ public class RevelationsActivity extends BaseActivity implements
 	private static int _STATUS_INPUT_CONTENT_ = 8001;
 	private static int _STATUS_POST_ = 8002;
 
-	private static int _REVELATIONS_VIDEO_ = 6001;
-	private static int _REVELATIONS_IMAGE_ = 6002;
-
 	private int status = _STATUS_INPUT_CONTENT_;
-
-	private int revelationsType = _REVELATIONS_VIDEO_;
 
 	private TimeCount timeCount = new TimeCount(60000, 1000);
 
@@ -231,10 +224,6 @@ public class RevelationsActivity extends BaseActivity implements
 			break;
 		case R.id.revelations_post_button:
 			if (this.status == _STATUS_INPUT_CONTENT_) {
-				if (revelationsType == _REVELATIONS_VIDEO_) {
-					new PostVideoTask().execute("");
-					break;
-				}
 				if (contentText.getText().length() == 0) {
 					contentText.requestFocus();
 					ToastUtils.Errortoast(this, "报料内容不得为空");
@@ -293,7 +282,7 @@ public class RevelationsActivity extends BaseActivity implements
 			@Override
 			public void doGoToImg() {
 				this.dismiss();
-				Intent intent = new Intent(RevelationsActivity.this,
+				Intent intent = new Intent(VideoRevelationsActivity.this,
 						PicSelectedMainActivity.class);
 				intent.putExtra("IMAGE_SELECTED_LIST",
 						(Serializable) imagesSelected);
@@ -503,113 +492,16 @@ public class RevelationsActivity extends BaseActivity implements
 			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			if (result.get("ResultCode").equals(AndroidConfig.RESPONSE_CODE_OK)) {
-				ToastUtils.Infotoast(RevelationsActivity.this, "上传成功");
+				ToastUtils.Infotoast(VideoRevelationsActivity.this, "上传成功");
 				cleanRevelation();
-				RevelationsActivity.this.AnimFinsh();
+				VideoRevelationsActivity.this.AnimFinsh();
 			} else {
-				ToastUtils.Errortoast(RevelationsActivity.this,
+				ToastUtils.Errortoast(VideoRevelationsActivity.this,
 						result.get("ResultText"));
 				postBut.setText("提交");
 				postBut.setEnabled(true);
 				postBut.setBackgroundColor(Color.parseColor("#FF0000"));
 			}
-		}
-	}
-
-	private class PostVideoTask extends
-			AsyncTask<String, Void, Map<String, String>> {
-
-		// Map<String, String> ResultCode ResultText
-		@Override
-		protected Map<String, String> doInBackground(String... params) {
-			// TODO Auto-generated method stub
-			Map<String, String> taskResult = new HashMap<String, String>();
-//			String tel;
-//			if (spUtil.getUserTelephone() == null
-//					|| spUtil.getUserTelephone().equals("")) {
-//				tel = telText.getText().toString();
-//
-//				String validateCode = validateTextView.getText().toString();
-//				Map<String, String> valiResponse = ImgUtils
-//						.validateRevelationsValidateMessage(tel, validateCode);
-//				if (valiResponse.get("ResponseCode").equals(
-//						AndroidConfig.RESPONSE_CODE_OK)) {
-//					ResultInfo info = JsonUtils.toObject(
-//							valiResponse.get("ResponseContent"),
-//							ResultInfo.class);
-//					if (info.getResultCode() == 0) {
-//						taskResult.put("ResultCode", "ERROR");
-//						taskResult.put("ResultText", info.getMsg());
-//						return taskResult;
-//					} else {
-//						spUtil.saveUserTelephone(tel);
-//					}
-//				} else {
-//					taskResult.put("ResultCode", "ERROR");
-//					taskResult.put("ResultText", "验证码验证失败");
-//					return taskResult;
-//				}
-//			} else {
-//				tel = spUtil.getUserTelephone();
-//			}
-
-			// gettoken
-			// upload get
-			// uoload post
-
-			File video = new File(
-					"/storage/emulated/0/DCIM/Camera/VID_20150921_104104.mp4");
-//			DebugLog.e(video.length() + "");
-			NetUtils.getTokenUploadVideo(video.getName(), video.length() + "");
-			// imagesSelectedUrl.clear();
-			// for (int i = 0; i < imagesSelected.size(); i++) {
-			// if (i < imagesSelectedUrl.size())
-			// continue;
-			// Map<String, String> response = ImgUtils
-			// .sendImage(imagesSelected.get(i));
-			// if (response.get("ResponseCode").equals(
-			// AndroidConfig.RESPONSE_CODE_OK)) {
-			// imagesSelectedUrl.add(response.get("ResponseContent"));
-			// } else {
-			// taskResult.put("ResultCode", "ERROR");
-			// taskResult.put("ResultText", "上传图片失败请重新上传");
-			// return taskResult;
-			// }
-			// }
-			//
-			// String content = contentText.getText().toString();
-			// StringBuffer imageUrls = new StringBuffer();
-			// for (int i = 0; i < imagesSelectedUrl.size(); i++) {
-			// imageUrls.append(imagesSelectedUrl.get(i));
-			// if (i != imagesSelectedUrl.size() - 1)
-			// imageUrls.append("|");
-			// }
-			// // instance.postRevelationContent(tel, content,
-			// // imageUrls.toString(), this.mListenerObject, mErrorListener);
-			// Map<String, String> result = ImgUtils.sendRevelationsContent(tel,
-			// content, imageUrls.toString(), aid);
-			// taskResult.put("ResultCode", result.get("ResponseCode"));
-			// taskResult.put("ResultText", result.get("ResponseContent"));
-			return taskResult;
-		}
-
-		@Override
-		protected void onPostExecute(Map<String, String> result) {
-			// TODO Auto-generated method stub
-			super.onPostExecute(result);
-			// if
-			// (result.get("ResultCode").equals(AndroidConfig.RESPONSE_CODE_OK))
-			// {
-			// ToastUtils.Infotoast(RevelationsActivity.this, "上传成功");
-			// cleanRevelation();
-			// RevelationsActivity.this.AnimFinsh();
-			// } else {
-			// ToastUtils.Errortoast(RevelationsActivity.this,
-			// result.get("ResultText"));
-			// postBut.setText("提交");
-			// postBut.setEnabled(true);
-			// postBut.setBackgroundColor(Color.parseColor("#FF0000"));
-			// }
 		}
 	}
 
@@ -623,7 +515,7 @@ public class RevelationsActivity extends BaseActivity implements
 			Map<String, String> taskResult = new HashMap<String, String>();
 			String tel = telText.getText().toString();
 			Map<String, String> result = ImgUtils
-					.sendRevelationsValidateMessage(RevelationsActivity.this,
+					.sendRevelationsValidateMessage(VideoRevelationsActivity.this,
 							tel);
 			taskResult.put("ResultCode", result.get("ResponseCode"));
 			taskResult.put("ResultText", result.get("ResponseContent"));
@@ -638,19 +530,19 @@ public class RevelationsActivity extends BaseActivity implements
 				ResultInfo info = JsonUtils.toObject(result.get("ResultText"),
 						ResultInfo.class);
 				if (info.getResultCode() == 1) {
-					ToastUtils.Infotoast(RevelationsActivity.this, "发送成功");
+					ToastUtils.Infotoast(VideoRevelationsActivity.this, "发送成功");
 					// 成功 倒计时
 					timeCount.start();
 				} else {
 					postValidateBut.setClickable(true);
 					postValidateBut.setText("重新验证");
-					ToastUtils.Infotoast(RevelationsActivity.this,
+					ToastUtils.Infotoast(VideoRevelationsActivity.this,
 							info.getMsg());
 				}
 			} else {
 				postValidateBut.setClickable(true);
 				postValidateBut.setText("重新验证");
-				ToastUtils.Errortoast(RevelationsActivity.this, "获取验证码失败请重新尝试");
+				ToastUtils.Errortoast(VideoRevelationsActivity.this, "获取验证码失败请重新尝试");
 			}
 		}
 
