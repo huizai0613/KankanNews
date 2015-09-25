@@ -171,7 +171,7 @@ public class AndroidConfig {
 	// 报料图片上传接口
 	public static final String REVELATIONS_IMAGE_POST = "http://api.app.kankanews.com/kankan/v5/newsbreak/pic/1";
 	// 报料视频上传获取token接口
-	public static final String REVELATIONS_GET_TOKEN = "http://api.app.kankanews.com/kankan/v5/newsbreak/pic/1";
+	public static final String REVELATIONS_GET_VIDEO_UPLOAD_TOKEN = "http://localhost:8080/upload/getToken.do";
 
 	public static final String RESPONSE_CODE_OK = "200";
 

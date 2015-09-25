@@ -48,7 +48,7 @@ import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.ui.fragment.LiveHomeFragment;
 import com.kankan.kankanews.ui.fragment.New_ColumsFragment;
-import com.kankan.kankanews.ui.fragment.New_HomeFragment; 
+import com.kankan.kankanews.ui.fragment.New_HomeFragment;
 import com.kankan.kankanews.ui.fragment.New_MyFragment;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
@@ -79,6 +79,9 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 	public RelativeLayout lastAddFrament;
 
 	private ImageView screenGuide;
+
+	private ImageView goPhotoRevelationsImg;
+	private ImageView goVideoRevelationsImg;
 
 	public ShareUtil shareUtil;
 
@@ -127,8 +130,8 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 			New_LivePlay mlive = (New_LivePlay) serializableExtra;
 			LiveHomeFragment fragment = (LiveHomeFragment) fragments
 					.get(tabLive);
-//			fragment.setSelectPlay(true);
-//			fragment.setSelectPlayID(Integer.parseInt(mlive.getZid()));
+			// fragment.setSelectPlay(true);
+			// fragment.setSelectPlayID(Integer.parseInt(mlive.getZid()));
 			if (curTouchTab == tabLive) {
 				refreshLive();
 			} else {
@@ -168,8 +171,8 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 			New_LivePlay mlive = (New_LivePlay) serializableExtra;
 			LiveHomeFragment fragment = (LiveHomeFragment) fragments
 					.get(tabLive);
-//			fragment.setSelectPlay(true);
-//			fragment.setSelectPlayID(Integer.parseInt(mlive.getZid()));
+			// fragment.setSelectPlay(true);
+			// fragment.setSelectPlayID(Integer.parseInt(mlive.getZid()));
 			touchTab(tabLive);
 		} else {
 			Bundle bun = intent.getExtras();
@@ -178,9 +181,9 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 					// 直播分享
 					LiveHomeFragment fragment = (LiveHomeFragment) fragments
 							.get(tabLive);
-//					fragment.setSelectPlay(true);
-//					fragment.setSelectPlayID(Integer.parseInt(bun
-//							.getString("LIVE_ID")));
+					// fragment.setSelectPlay(true);
+					// fragment.setSelectPlayID(Integer.parseInt(bun
+					// .getString("LIVE_ID")));
 					touchTab(tabLive);
 				} else {
 					touchTab(tabHome); // 正常启动
@@ -225,6 +228,10 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 		tabArray.add(tabLive);
 
 		screenGuide = (ImageView) findViewById(R.id.full_screen_guide);
+
+		goPhotoRevelationsImg = (ImageView) findViewById(R.id.go_photo_revelations_img);
+		goVideoRevelationsImg = (ImageView) findViewById(R.id.go_video_revelations_img);
+
 		nightView = findViewById(R.id.night_view);
 
 		// 初始化fragments
@@ -306,20 +313,14 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 	}
 
 	private void changeFragment(int id) {
-		LiveHomeFragment fragment = (LiveHomeFragment) fragments
-				.get(tabLive);
+		LiveHomeFragment fragment = (LiveHomeFragment) fragments.get(tabLive);
 		if (curTouchTab != tabLive) {
-//			if (fragment.getVideoView() != null) {
-//				fragment.getVideoView().stopPlayback();
-//			}
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//			fragment.isFirst = false;
 		} else {
 			if (fragment.isResumed()) {
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 			}
 		}
-
 		FragmentTransaction beginTransaction = fragmentManager
 				.beginTransaction();
 		int size = tabArray.size();
@@ -338,7 +339,6 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 			}
 		}
 		if (addFragments != null) {
-			// boolean contains = fragments.get(curTab).isAdded();
 			boolean contains = addFragments
 					.contains(fragments.get(curTouchTab));
 			if (contains) {
@@ -389,17 +389,9 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 					params.height = (int) realHeight;
 					tabView.setLayoutParams(params);
 					tabView.setBackgroundResource(R.drawable.tab_home_middle_item_border_selected);
-					// final TranslateAnimation anim = new TranslateAnimation(
-					// tabView.getX(), tabView.getX() + 10,
-					// tabView.getY(), tabView.getY());
-					// anim.setInterpolator(new CycleInterpolator(2f));
-					// anim.setDuration( 300 );
-					// tabView.setAnimation(anim);
-					// TranslateAnimation shakeAnim = (TranslateAnimation)
-					// AnimationUtils
-					// .loadAnimation(this, R.anim.shake_y);
-					// shakeAnim.setRepeatCount(Integer.MAX_VALUE);
-					// tabView.startAnimation(shakeAnim);
+					goPhotoRevelationsImg.setVisibility(View.VISIBLE);
+					goVideoRevelationsImg.setVisibility(View.VISIBLE);
+//					goPhotoRevelationsImg.setAnimation(new )
 				} else {
 					tabView.setBackgroundResource(R.drawable.tab_home_left_right_item_border_selected);
 				}
@@ -433,12 +425,12 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 	@Override
 	public void onBackPressed() {
 		if (curTouchTab == tabLive) {
-//			if (((LivePlayFragment) fragments.get(tabLive)).isFullstate()) {
-//				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//				((LivePlayFragment) fragments.get(tabLive)).orientationHandler
-//						.sendEmptyMessageDelayed(0, 1000);
-//				return;
-//			}
+			// if (((LivePlayFragment) fragments.get(tabLive)).isFullstate()) {
+			// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			// ((LivePlayFragment) fragments.get(tabLive)).orientationHandler
+			// .sendEmptyMessageDelayed(0, 1000);
+			// return;
+			// }
 		}
 
 		mApplication.shutDown();
@@ -506,8 +498,7 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 
 	// 刷新直播
 	private void refreshLive() {
-		LiveHomeFragment fragment = (LiveHomeFragment) fragments
-				.get(tabLive);
+		LiveHomeFragment fragment = (LiveHomeFragment) fragments.get(tabLive);
 		fragment.refresh();
 	}
 
@@ -515,9 +506,8 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 	public void shareReBack() {
 		// TODO Auto-generated method stub
 		super.shareReBack();
-		LiveHomeFragment fragment = (LiveHomeFragment) fragments
-				.get(tabLive);
-//		fragment.isFirst = false;
+		LiveHomeFragment fragment = (LiveHomeFragment) fragments.get(tabLive);
+		// fragment.isFirst = false;
 		if (this.curTouchTab == tabLive)
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 	}

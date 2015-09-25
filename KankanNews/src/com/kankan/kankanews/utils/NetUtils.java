@@ -590,8 +590,8 @@ public class NetUtils {
 		BufferedReader responseReader = null;
 		HttpURLConnection conn = null;
 		try {
-			String path = "http://localhost:8080/upload/getToken.do?name="
-					+ fileName + "&size=" + fileSize;
+			String path = AndroidConfig.REVELATIONS_GET_VIDEO_UPLOAD_TOKEN
+					+ "?name=" + fileName + "&size=" + fileSize;
 			URL url = new URL(path);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setConnectTimeout(5 * 1000);

@@ -817,6 +817,5 @@ public class RevelationsActivity extends BaseActivity implements
 			postView.setVisibility(View.GONE);
 			postBut.setText("下一步");
 		}
-
 	}
 }
