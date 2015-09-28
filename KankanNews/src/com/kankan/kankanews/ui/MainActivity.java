@@ -391,7 +391,7 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 					tabView.setBackgroundResource(R.drawable.tab_home_middle_item_border_selected);
 					goPhotoRevelationsImg.setVisibility(View.VISIBLE);
 					goVideoRevelationsImg.setVisibility(View.VISIBLE);
-//					goPhotoRevelationsImg.setAnimation(new )
+					// goPhotoRevelationsImg.setAnimation(new )
 				} else {
 					tabView.setBackgroundResource(R.drawable.tab_home_left_right_item_border_selected);
 				}
@@ -425,6 +425,12 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 	@Override
 	public void onBackPressed() {
 		if (curTouchTab == tabLive) {
+			LiveHomeFragment liveHome = (LiveHomeFragment) fragments
+					.get(tabLive);
+			if (liveHome.isPlayStat()) {
+				liveHome.closePlay();
+				return;
+			}
 			// if (((LivePlayFragment) fragments.get(tabLive)).isFullstate()) {
 			// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			// ((LivePlayFragment) fragments.get(tabLive)).orientationHandler

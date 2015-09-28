@@ -11,6 +11,8 @@ import tv.danmaku.ijk.media.player.IMediaPlayer.OnCompletionListener;
 import tv.danmaku.ijk.media.player.IMediaPlayer.OnErrorListener;
 import tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener;
 import tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener;
+import tv.danmaku.ijk.media.widget.VideoView;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -23,6 +25,9 @@ import android.view.ViewGroup;
 
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseFragment;
+import com.kankan.kankanews.bean.LiveLiveObj;
+import com.kankan.kankanews.bean.interfaz.CanBePlay;
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankanews.kankanxinwen.R;
 
 public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
@@ -32,6 +37,9 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 	private ViewPager mLiveHomeViewPager;
 	private FragmentStatePagerAdapter mLiveHomeViewPagerAdapter;
 	private List<BaseFragment> fragments;
+	private View videoRootView;
+	private VideoView liveVideoView;
+	private boolean isPlayStat;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,33 +47,41 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		// TODO Auto-generated method stub
 		super.onCreateView(inflater, container, savedInstanceState);
 		initView();
-		initDate();
+		initData();
 		initLinsenter();
 		return inflate;
 	}
 
 	private void initLinsenter() {
+		liveVideoView.setOnPreparedListener(this);
+		liveVideoView.setOnInfoListener(this);
+		liveVideoView.setOnErrorListener(this);
 	}
 
 	private void initView() {
 		inflate = inflater.inflate(R.layout.fragment_live_home, null);
 		mLiveHomeViewPager = (ViewPager) inflate
 				.findViewById(R.id.live_home_view_pager);
-		mLiveHomeViewPager.setOffscreenPageLimit(0);
+		videoRootView = inflate.findViewById(R.id.video_root_view);
+		liveVideoView = (VideoView) inflate.findViewById(R.id.live_video_view);
 		initViewPager();
 	}
 
 	private void initViewPager() {
+		mLiveHomeViewPager.setOffscreenPageLimit(0);
 		fragments = new ArrayList<BaseFragment>();
-		fragments.add(new LiveLiveListFragment());
-		fragments.add(new LiveLiveListFragment());
+		LiveLiveListFragment live = new LiveLiveListFragment();
+		LiveChannelListFragment channel = new LiveChannelListFragment();
+		live.setHomeFragment(this);
+		channel.setHomeFragment(this);
+		fragments.add(live);
+		fragments.add(channel);
 
 		mLiveHomeViewPagerAdapter = new FragmentStatePagerAdapter(
 				mActivity.getSupportFragmentManager()) {
 
 			@Override
 			public int getCount() {
-				// TODO Auto-generated method stub
 				return 2;
 			}
 
@@ -76,7 +92,6 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 
 			@Override
 			public int getItemPosition(Object object) {
-				// TODO Auto-generated method stub
 				return POSITION_NONE;
 			}
 
@@ -103,96 +118,109 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 
 	}
 
-	private void initDate() {
+	public void playLive(CanBePlay playTarget) {
+		this.mActivity
+				.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		videoRootView.setVisibility(View.VISIBLE);
+		liveVideoView.stopPlayback();
+		liveVideoView.setVideoPath(playTarget.getStreamurl());
+		this.setPlayStat(true);
+	}
+
+	public void closePlay() {
+		this.mActivity
+				.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		liveVideoView.stopPlayback();
+		videoRootView.setVisibility(View.GONE);
+	}
+
+	private void initData() {
+		liveVideoView.setUserAgent("KKApp");
 	}
 
 	@Override
 	protected boolean initLocalDate() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	protected void saveLocalDate() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected void refreshNetDate() {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	protected void loadMoreNetDate() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected void onSuccessObject(JSONObject jsonObject) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected void onSuccessArray(JSONArray jsonObject) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onPrepared(IMediaPlayer mp) {
-		// TODO Auto-generated method stub
-
+		DebugLog.e("卧槽准备好了");
 	}
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean onError(IMediaPlayer mp, int what, int extra) {
-		// TODO Auto-generated method stub
+		DebugLog.e("卧槽有消息" + extra);
 		return false;
 	}
 
 	@Override
 	public void onCompletion(IMediaPlayer mp) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-		// TODO Auto-generated method stub
+		DebugLog.e("卧槽有消息" + extra);
 		return false;
 	}
 
 	@Override
 	protected void onFailure(VolleyError error) {
-		// TODO Auto-generated method stub
+		DebugLog.e(error.getLocalizedMessage());
 
 	}
 
 	@Override
 	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onPageSelected(int arg0) {
-		// TODO Auto-generated method stub
 
+	}
+
+	public boolean isPlayStat() {
+		return isPlayStat;
+	}
+
+	public void setPlayStat(boolean isPlayStat) {
+		this.isPlayStat = isPlayStat;
 	}
 
 }

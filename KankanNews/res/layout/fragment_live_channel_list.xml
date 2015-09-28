@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_no_alpha" >
+
+    <com.iss.view.pulltorefresh.PullToRefreshListView
+        android:id="@+id/live_channel_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="#00000000"
+        android:divider="@null"
+        android:scrollbars="none"
+        android:scrollingCache="false" >
+    </com.iss.view.pulltorefresh.PullToRefreshListView>
+
+</RelativeLayout>

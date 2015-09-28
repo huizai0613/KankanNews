@@ -16,4 +16,21 @@
         android:layout_marginBottom="@dimen/base_action_bar_height"
         android:layout_marginTop="@dimen/base_action_bar_height" />
 
+    <RelativeLayout
+        android:id="@+id/video_root_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ff000000"
+        android:visibility="gone" >
+
+        <tv.danmaku.ijk.media.widget.VideoView
+            android:id="@+id/live_video_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:visibility="visible" />
+    </RelativeLayout>
+
 </RelativeLayout>

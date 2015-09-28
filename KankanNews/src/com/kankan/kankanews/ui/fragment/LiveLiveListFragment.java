@@ -1,12 +1,16 @@
 package com.kankan.kankanews.ui.fragment;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,25 +20,37 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.iss.view.pulltorefresh.PullToRefreshBase;
+import com.iss.view.pulltorefresh.PullToRefreshBase.OnRefreshListener;
 import com.iss.view.pulltorefresh.PullToRefreshPinnedSectionListView;
 import com.kankan.kankanews.base.BaseFragment;
+import com.kankan.kankanews.bean.Keyboard;
 import com.kankan.kankanews.bean.LiveLiveList;
 import com.kankan.kankanews.bean.LiveLiveObj;
+import com.kankan.kankanews.ui.RevelationsBreakNewsMoreActivity;
+import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.PinnedSectionListView;
 import com.kankan.kankanews.ui.view.PinnedSectionListView.PinnedSectionListAdapter;
 import com.kankan.kankanews.utils.DebugLog;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.PixelUtil;
 import com.kankanews.kankanxinwen.R;
 
 public class LiveLiveListFragment extends BaseFragment {
 	private View inflate;
+	private LiveHomeFragment homeFragment;
 	private PullToRefreshPinnedSectionListView mLiveListView;
 	private LiveListViewAdapter mLiveListViewAdapter;
 	private LiveLiveList mLiveLiveList;
+
+	private Set<String> showIntroSet = new HashSet<String>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +77,14 @@ public class LiveLiveListFragment extends BaseFragment {
 		inflate = inflater.inflate(R.layout.fragment_live_live_list, null);
 		mLiveListView = (PullToRefreshPinnedSectionListView) inflate
 				.findViewById(R.id.live_list_view);
+		((PinnedSectionListView) mLiveListView.getRefreshableView())
+				.setShadowVisible(true);
+		mLiveListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				refreshNetDate();
+			}
+		});
 	}
 
 	private void initDate() {
@@ -88,11 +112,11 @@ public class LiveLiveListFragment extends BaseFragment {
 
 	@Override
 	protected void onSuccessObject(JSONObject jsonObject) {
+		mLiveListView.onRefreshComplete();
+		showIntroSet = new HashSet<String>();
 		mLiveLiveList = (LiveLiveList) JsonUtils.toObject(
 				jsonObject.toString(), LiveLiveList.class);
 		mLiveListViewAdapter = new LiveListViewAdapter(this.mActivity);
-		((PinnedSectionListView) mLiveListView.getRefreshableView())
-				.setShadowVisible(true);
 		mLiveListView.setAdapter(mLiveListViewAdapter);
 
 	}
@@ -157,9 +181,6 @@ public class LiveLiveListFragment extends BaseFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// LinearLayout layout = (LinearLayout) super.getView(position,
-			// convertView,
-			// parent);
 			Item item = getItem(position);
 			ViewGroup layout = null;
 			if (item.type == Item.SECTION) {
@@ -173,51 +194,113 @@ public class LiveLiveListFragment extends BaseFragment {
 				if ("直播预告".equals(item.liveType)) {
 					imageView.setBackgroundResource(R.drawable.live_preview);
 				}
+				layout.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+
+					}
+				});
 			} else {
-				LiveLiveObj liveObj = item.liveObj;
+				final LiveLiveObj liveObj = item.liveObj;
 				layout = (LinearLayout) inflate.inflate(mActivity,
 						R.layout.item_live_fragment_list_view, null);
+				View separation = layout
+						.findViewById(R.id.live_live_list_separation);
+				View separationLine = layout
+						.findViewById(R.id.live_live_list_separation_line);
+				if (position == mLiveLiveList.getLive().size()) {
+					separation.setVisibility(View.VISIBLE);
+					separationLine.setVisibility(View.GONE);
+				} else {
+					separation.setVisibility(View.GONE);
+					separationLine.setVisibility(View.VISIBLE);
+				}
+				View introBut = layout
+						.findViewById(R.id.live_live_list_intro_but);
 				ImageView titlePic = (ImageView) layout
 						.findViewById(R.id.live_live_list_titlepic);
 				ImgUtils.imageLoader.displayImage(liveObj.getTitlepic(),
 						titlePic, ImgUtils.homeImageOptions);
 				ImageView liveType = (ImageView) layout
 						.findViewById(R.id.live_live_list_livetype);
-				if ("正在直播".equals(liveObj.getType())) {
-					liveType.setBackgroundResource(R.drawable.ic_live);
-				}
-				if ("直播预告".equals(liveObj.getType())) {
-					liveType.setBackgroundResource(R.drawable.ic_next);
-				}
 				MyTextView title = (MyTextView) layout
 						.findViewById(R.id.live_live_list_livetitle);
 				title.setText(liveObj.getTitle());
+				MyTextView intro = (MyTextView) layout
+						.findViewById(R.id.live_live_list_intro);
+				intro.setText(liveObj.getIntro());
+				// TODO 初始化详情
+				LinearLayout keyboardIconContent = (LinearLayout) layout
+						.findViewById(R.id.live_live_list_keyboard_content);
+				List<Keyboard> keyboardList = liveObj.getKeyboard();
+				keyboardIconContent.removeAllViews();
+				for (Keyboard keyboard : keyboardList) {
+					TextView view = new BorderTextView(
+							LiveLiveListFragment.this.mActivity,
+							keyboard.getColor());
+					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+							LinearLayout.LayoutParams.MATCH_PARENT,
+							LinearLayout.LayoutParams.WRAP_CONTENT);
+					view.setLayoutParams(params);
+					view.setGravity(Gravity.CENTER);
+					int px3 = PixelUtil.dp2px(3);
+					view.setPadding(px3, px3, px3, px3);
+					view.setText(keyboard.getText());
+					FontUtils.setTextViewFontSize(
+							LiveLiveListFragment.this.mActivity, view,
+							R.string.border_text_view_text_size, 1);
+					view.setTextColor(Color.parseColor(keyboard.getColor()));
+					keyboardIconContent.addView(view);
+				}
+				ImageView arrowshow = (ImageView) layout
+						.findViewById(R.id.live_live_list_arrowshow);
+				if (showIntroSet.contains(liveObj.getId())) {
+					intro.setVisibility(View.VISIBLE);
+					arrowshow.setImageResource(R.drawable.ic_arrowdown);
+				} else {
+					intro.setVisibility(View.GONE);
+					arrowshow.setImageResource(R.drawable.ic_arrowshow);
+				}
 				MyTextView time = (MyTextView) layout
 						.findViewById(R.id.live_live_list_livetime);
 				time.setText(liveObj.getTime());
-			}
-			layout.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					// TODO Auto-generated method stub
-
+				introBut.setTag(intro);
+				introBut.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						MyTextView intro = (MyTextView) v.getTag();
+						ImageView arrowshow = (ImageView) v
+								.findViewById(R.id.live_live_list_arrowshow);
+						if (showIntroSet.contains(liveObj.getId())) {
+							intro.setVisibility(View.GONE);
+							arrowshow.setImageResource(R.drawable.ic_arrowshow);
+							showIntroSet.remove(liveObj.getId());
+						} else {
+							intro.setVisibility(View.VISIBLE);
+							arrowshow.setImageResource(R.drawable.ic_arrowdown);
+							showIntroSet.add(liveObj.getId());
+						}
+						mLiveListViewAdapter.notifyDataSetChanged();
+					}
+				});
+				if ("正在直播".equals(liveObj.getType())) {
+					liveType.setBackgroundResource(R.drawable.ic_live);
+					layout.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							LiveLiveListFragment.this.getHomeFragment()
+									.playLive(liveObj);
+						}
+					});
+				} else if ("直播预告".equals(liveObj.getType())) {
+					liveType.setBackgroundResource(R.drawable.ic_next);
+					layout.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+						}
+					});
 				}
-			});
-			// layout.setLayoutParams(new ListView.LayoutParams(
-			// LayoutParams.MATCH_PARENT,
-			// ListView.LayoutParams.WRAP_CONTENT));
-			// TextView view = new
-			// TextView(LivePlayFragment.this.mActivity);
-			// layout.addView(view);
-			// view.setTextColor(Color.DKGRAY);
-			// view.setTag("" + position);
-			// Item item = getItem(position);
-			// if (item.type == Item.SECTION) {
-			// // view.setOnClickListener(PinnedSectionListActivity.this);
-			// // view.setBackgroundColor(parent.getResources().getColor(
-			// // COLORS[item.sectionPosition % COLORS.length]));
-			// }
+			}
 			return layout;
 		}
 
@@ -241,5 +324,13 @@ public class LiveLiveListFragment extends BaseFragment {
 	@Override
 	protected void onFailure(VolleyError error) {
 		DebugLog.e(error.getLocalizedMessage());
+	}
+
+	public LiveHomeFragment getHomeFragment() {
+		return homeFragment;
+	}
+
+	public void setHomeFragment(LiveHomeFragment homeFragment) {
+		this.homeFragment = homeFragment;
 	}
 }

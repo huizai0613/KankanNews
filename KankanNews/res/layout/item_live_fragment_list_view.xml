@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white_no_alpha"
-    android:orientation="vertical"
-    android:paddingLeft="@dimen/margin_base_space"
-    android:paddingRight="@dimen/margin_base_space" >
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_base_space"
-        android:layout_marginTop="@dimen/margin_base_space" >
+        android:layout_marginTop="@dimen/margin_base_space"
+        android:paddingLeft="@dimen/margin_base_space"
+        android:paddingRight="@dimen/margin_base_space" >
 
         <ImageView
             android:id="@+id/live_live_list_titlepic"
@@ -51,6 +51,7 @@
                 android:orientation="horizontal" >
 
                 <LinearLayout
+                    android:id="@+id/live_live_list_intro_but"
                     android:layout_width="0dip"
                     android:layout_height="20dip"
                     android:layout_weight="8"
@@ -85,36 +86,55 @@
                         android:textSize="12dip" />
 
                     <ImageView
+                        android:id="@+id/live_live_list_arrowshow"
                         android:layout_width="12dip"
                         android:layout_height="18dip"
                         android:layout_marginLeft="5dip"
                         android:paddingBottom="5dip"
                         android:paddingTop="5dip"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/ic_arrowshow" />
+                        android:scaleType="fitXY" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/live_live_list_keyboard_content"
                     android:layout_width="0dip"
                     android:layout_height="20dip"
                     android:layout_weight="2"
                     android:gravity="end|center_vertical" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="end|center_vertical"
-                        android:text="四个字字"
-                        android:textColor="@color/red"
-                        android:textSize="10dip" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 
-    <include
-        android:layout_marginLeft="@dimen/margin_base_space"
-        android:layout_marginRight="@dimen/margin_base_space"
-        layout="@layout/base_line" />
+    <com.kankan.kankanews.ui.view.MyTextView
+        android:id="@+id/live_live_list_intro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_base_space"
+        android:lineSpacingExtra="3.5dp"
+        android:paddingLeft="@dimen/margin_base_space"
+        android:paddingRight="@dimen/margin_base_space"
+        android:textColor="@color/mid_gray"
+        android:textSize="12dip" />
+
+    <View
+        android:id="@+id/live_live_list_separation"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/margin_base_space"
+        android:background="@color/bright_gray"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/live_live_list_separation_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_base_space"
+        android:paddingRight="@dimen/margin_base_space" >
+
+        <include
+            android:layout_marginLeft="@dimen/margin_base_space"
+            android:layout_marginRight="@dimen/margin_base_space"
+            layout="@layout/base_line" />
+    </RelativeLayout>
 
 </LinearLayout>

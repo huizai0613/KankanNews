@@ -141,6 +141,9 @@ public class AndroidConfig {
 	// 直播数据
 	public static final String LIVE_LIST_URL = "/v5/liveAPP/stream/live";
 
+	// 直播频道数据
+	public static final String LIVE_CHANNEL_URL = "/v5/liveAPP/stream/channel";
+
 	// 栏目列表
 	public static final String New_Colums = "http://api.app.kankanews.com/index.php/kankan/v5/channel/timeline";
 

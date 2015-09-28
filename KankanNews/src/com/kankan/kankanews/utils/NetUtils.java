@@ -354,6 +354,17 @@ public class NetUtils {
 	}
 
 	/**
+	 * 获取直播频道数据
+	 */
+	public void getChannelList(Listener<JSONObject> reponseListener,
+			ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.LIVE_CHANNEL_URL,
+				null, reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
+	}
+
+	/**
 	 * 获取栏目列表
 	 */
 	public void getNewColumsData(Listener<JSONArray> reponseListener,

@@ -2,7 +2,9 @@ package com.kankan.kankanews.bean;
 
 import java.util.List;
 
-public class LiveLiveObj {
+import com.kankan.kankanews.bean.interfaz.CanBePlay;
+
+public class LiveLiveObj implements CanBePlay {
 	private String id;
 	private String title;
 	private String titlepic;
