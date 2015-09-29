@@ -431,14 +431,7 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 				liveHome.closePlay();
 				return;
 			}
-			// if (((LivePlayFragment) fragments.get(tabLive)).isFullstate()) {
-			// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			// ((LivePlayFragment) fragments.get(tabLive)).orientationHandler
-			// .sendEmptyMessageDelayed(0, 1000);
-			// return;
-			// }
 		}
-
 		mApplication.shutDown();
 	}
 

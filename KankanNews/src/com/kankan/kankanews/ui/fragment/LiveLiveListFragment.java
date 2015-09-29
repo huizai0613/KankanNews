@@ -3,6 +3,7 @@ package com.kankan.kankanews.ui.fragment;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -31,24 +32,34 @@ import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.Keyboard;
 import com.kankan.kankanews.bean.LiveLiveList;
 import com.kankan.kankanews.bean.LiveLiveObj;
+import com.kankan.kankanews.bean.RevelationsActicityObjBreakNewsList;
+import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.RevelationsBreakNewsMoreActivity;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.PinnedSectionListView;
 import com.kankan.kankanews.ui.view.PinnedSectionListView.PinnedSectionListAdapter;
+import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankanews.kankanxinwen.R;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
+import com.lidroid.xutils.exception.DbException;
 
-public class LiveLiveListFragment extends BaseFragment {
+public class LiveLiveListFragment extends BaseFragment implements
+		OnClickListener {
 	private View inflate;
-	private LiveHomeFragment homeFragment;
+	private LiveHomeFragment mHomeFragment;
 	private PullToRefreshPinnedSectionListView mLiveListView;
 	private LiveListViewAdapter mLiveListViewAdapter;
 	private LiveLiveList mLiveLiveList;
+	private String mLiveLiveListJson;
+	private LinearLayout mRetryView;
+	private LinearLayout mLoadingView;
 
 	private Set<String> showIntroSet = new HashSet<String>();
 
@@ -63,6 +74,7 @@ public class LiveLiveListFragment extends BaseFragment {
 	}
 
 	private void initLinsenter() {
+		mRetryView.setOnClickListener(this);
 		mLiveListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -79,6 +91,9 @@ public class LiveLiveListFragment extends BaseFragment {
 				.findViewById(R.id.live_list_view);
 		((PinnedSectionListView) mLiveListView.getRefreshableView())
 				.setShadowVisible(true);
+		mRetryView = (LinearLayout) inflate.findViewById(R.id.live_live_retry);
+		mLoadingView = (LinearLayout) inflate
+				.findViewById(R.id.live_live_loading);
 		mLiveListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
@@ -87,23 +102,80 @@ public class LiveLiveListFragment extends BaseFragment {
 		});
 	}
 
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		switch (id) {
+		case R.id.live_live_retry:
+			refreshNetDate();
+			break;
+		default:
+			break;
+		}
+	}
+
 	private void initDate() {
+		boolean flag = initLocalDate();
+		if (flag) {
+			showData();
+			mRetryView.setVisibility(View.GONE);
+			mLoadingView.setVisibility(View.GONE);
+		} else {
+			mRetryView.setVisibility(View.GONE);
+			mLoadingView.setVisibility(View.VISIBLE);
+		}
 		refreshNetDate();
 	}
 
 	@Override
 	protected boolean initLocalDate() {
+		try {
+			SerializableObj object = (SerializableObj) this.mActivity.dbUtils
+					.findFirst(Selector.from(SerializableObj.class).where(
+							"classType", "=", "LiveLiveList"));
+			if (object != null) {
+				mLiveLiveListJson = object.getJsonStr();
+				mLiveLiveList = JsonUtils.toObject(mLiveLiveListJson,
+						LiveLiveList.class);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
 		return false;
 	}
 
 	@Override
 	protected void saveLocalDate() {
-
+		try {
+			SerializableObj obj = new SerializableObj(UUID.randomUUID()
+					.toString(), mLiveLiveListJson, "LiveLiveList");
+			this.mActivity.dbUtils.delete(SerializableObj.class,
+					WhereBuilder.b("classType", "=", "LiveLiveList"));
+			this.mActivity.dbUtils.save(obj);
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
 	}
 
 	@Override
 	protected void refreshNetDate() {
-		netUtils.getLiveList(this.mListenerObject, this.mErrorListener);
+		if (CommonUtils.isNetworkAvailable(mActivity)) {
+			netUtils.getLiveList(this.mListenerObject, this.mErrorListener);
+		} else {
+			mLiveListView.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					mLiveListView.onRefreshComplete();
+				}
+			}, 500);
+			if (mLiveLiveList == null) {
+				mRetryView.setVisibility(View.VISIBLE);
+				mLoadingView.setVisibility(View.GONE);
+			}
+		}
 	}
 
 	@Override
@@ -113,12 +185,23 @@ public class LiveLiveListFragment extends BaseFragment {
 	@Override
 	protected void onSuccessObject(JSONObject jsonObject) {
 		mLiveListView.onRefreshComplete();
+		mRetryView.setVisibility(View.GONE);
+		mLoadingView.setVisibility(View.GONE);
 		showIntroSet = new HashSet<String>();
-		mLiveLiveList = (LiveLiveList) JsonUtils.toObject(
-				jsonObject.toString(), LiveLiveList.class);
-		mLiveListViewAdapter = new LiveListViewAdapter(this.mActivity);
-		mLiveListView.setAdapter(mLiveListViewAdapter);
+		mLiveLiveListJson = jsonObject.toString();
+		mLiveLiveList = (LiveLiveList) JsonUtils.toObject(mLiveLiveListJson,
+				LiveLiveList.class);
+		saveLocalDate();
+		showData();
+	}
 
+	private void showData() {
+		if (mLiveListViewAdapter != null) {
+			mLiveListViewAdapter.notifyDataSetChanged();
+		} else {
+			mLiveListViewAdapter = new LiveListViewAdapter(this.mActivity);
+			mLiveListView.setAdapter(mLiveListViewAdapter);
+		}
 	}
 
 	@Override
@@ -323,14 +406,23 @@ public class LiveLiveListFragment extends BaseFragment {
 
 	@Override
 	protected void onFailure(VolleyError error) {
-		DebugLog.e(error.getLocalizedMessage());
+		mLiveListView.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				mLiveListView.onRefreshComplete();
+			}
+		}, 500);
+		if (mLiveLiveList == null) {
+			mRetryView.setVisibility(View.VISIBLE);
+			mLoadingView.setVisibility(View.GONE);
+		}
 	}
 
 	public LiveHomeFragment getHomeFragment() {
-		return homeFragment;
+		return mHomeFragment;
 	}
 
 	public void setHomeFragment(LiveHomeFragment homeFragment) {
-		this.homeFragment = homeFragment;
+		this.mHomeFragment = homeFragment;
 	}
 }

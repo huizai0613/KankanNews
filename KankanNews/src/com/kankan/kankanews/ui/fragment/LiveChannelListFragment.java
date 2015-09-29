@@ -1,6 +1,7 @@
 package com.kankan.kankanews.ui.fragment;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.android.volley.VolleyError;
@@ -24,31 +26,42 @@ import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.LiveChannelList;
 import com.kankan.kankanews.bean.LiveChannelObj;
+import com.kankan.kankanews.bean.LiveLiveList;
+import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankanews.kankanxinwen.R;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
+import com.lidroid.xutils.exception.DbException;
 
-public class LiveChannelListFragment extends BaseFragment {
+public class LiveChannelListFragment extends BaseFragment implements
+		OnClickListener {
 	private View inflate;
 	private LiveHomeFragment homeFragment;
 	private PullToRefreshListView mLiveChannelView;
 	private LiveChannelViewAdapter mLiveChannelViewAdapter;
 	private LiveChannelList mLiveChannelList;
+	private String mLiveChannelListJson;
+	private LinearLayout mRetryView;
+	private LinearLayout mLoadingView;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		initView();
-		initDate();
+		initData();
 		initLinsenter();
 		return inflate;
 	}
 
 	private void initLinsenter() {
+		mRetryView.setOnClickListener(this);
 		mLiveChannelView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -62,10 +75,23 @@ public class LiveChannelListFragment extends BaseFragment {
 		inflate = inflater.inflate(R.layout.fragment_live_channel_list, null);
 		mLiveChannelView = (PullToRefreshListView) inflate
 				.findViewById(R.id.live_channel_view);
+		mRetryView = (LinearLayout) inflate
+				.findViewById(R.id.live_channel_retry);
+		mLoadingView = (LinearLayout) inflate
+				.findViewById(R.id.live_channel_loading);
 		initListView();
 	}
 
-	private void initDate() {
+	private void initData() {
+		boolean flag = initLocalDate();
+		if (flag) {
+			showData();
+			mRetryView.setVisibility(View.GONE);
+			mLoadingView.setVisibility(View.GONE);
+		} else {
+			mRetryView.setVisibility(View.GONE);
+			mLoadingView.setVisibility(View.VISIBLE);
+		}
 		refreshNetDate();
 	}
 
@@ -94,19 +120,76 @@ public class LiveChannelListFragment extends BaseFragment {
 				});
 	}
 
+	private void showData() {
+		if (mLiveChannelViewAdapter != null) {
+			mLiveChannelViewAdapter.notifyDataSetChanged();
+		} else {
+			mLiveChannelViewAdapter = new LiveChannelViewAdapter();
+			mLiveChannelView.setAdapter(mLiveChannelViewAdapter);
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		switch (id) {
+		case R.id.live_channel_retry:
+			refreshNetDate();
+			break;
+		default:
+			break;
+		}
+	}
+
 	@Override
 	protected boolean initLocalDate() {
+		try {
+			SerializableObj object = (SerializableObj) this.mActivity.dbUtils
+					.findFirst(Selector.from(SerializableObj.class).where(
+							"classType", "=", "LiveChannelList"));
+			if (object != null) {
+				mLiveChannelListJson = object.getJsonStr();
+				mLiveChannelList = JsonUtils.toObject(mLiveChannelListJson,
+						LiveChannelList.class);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
 		return false;
 	}
 
 	@Override
 	protected void saveLocalDate() {
-
+		try {
+			SerializableObj obj = new SerializableObj(UUID.randomUUID()
+					.toString(), mLiveChannelListJson, "LiveChannelList");
+			this.mActivity.dbUtils.delete(SerializableObj.class,
+					WhereBuilder.b("classType", "=", "LiveChannelList"));
+			this.mActivity.dbUtils.save(obj);
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
 	}
 
 	@Override
 	protected void refreshNetDate() {
-		netUtils.getChannelList(this.mListenerObject, this.mErrorListener);
+		if (CommonUtils.isNetworkAvailable(mActivity)) {
+			netUtils.getChannelList(this.mListenerObject, this.mErrorListener);
+		} else {
+			mLiveChannelView.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					mLiveChannelView.onRefreshComplete();
+				}
+			}, 500);
+			if (mLiveChannelList == null) {
+				mRetryView.setVisibility(View.VISIBLE);
+				mLoadingView.setVisibility(View.GONE);
+			}
+		}
 	}
 
 	@Override
@@ -116,10 +199,13 @@ public class LiveChannelListFragment extends BaseFragment {
 	@Override
 	protected void onSuccessObject(JSONObject jsonObject) {
 		mLiveChannelView.onRefreshComplete();
+		mRetryView.setVisibility(View.GONE);
+		mLoadingView.setVisibility(View.GONE);
+		mLiveChannelListJson = jsonObject.toString();
 		mLiveChannelList = (LiveChannelList) JsonUtils.toObject(
-				jsonObject.toString(), LiveChannelList.class);
-		mLiveChannelViewAdapter = new LiveChannelViewAdapter();
-		mLiveChannelView.setAdapter(mLiveChannelViewAdapter);
+				mLiveChannelListJson, LiveChannelList.class);
+		saveLocalDate();
+		showData();
 	}
 
 	@Override
@@ -128,7 +214,16 @@ public class LiveChannelListFragment extends BaseFragment {
 
 	@Override
 	protected void onFailure(VolleyError error) {
-		DebugLog.e(error.getLocalizedMessage());
+		mLiveChannelView.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				mLiveChannelView.onRefreshComplete();
+			}
+		}, 500);
+		if (mLiveChannelList == null) {
+			mRetryView.setVisibility(View.VISIBLE);
+			mLoadingView.setVisibility(View.GONE);
+		}
 	}
 
 	public class LiveChannelViewAdapter extends BaseAdapter {

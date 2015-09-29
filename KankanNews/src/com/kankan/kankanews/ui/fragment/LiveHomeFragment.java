@@ -18,15 +18,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseFragment;
-import com.kankan.kankanews.bean.LiveLiveObj;
 import com.kankan.kankanews.bean.interfaz.CanBePlay;
+import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankanews.kankanxinwen.R;
 
@@ -37,8 +41,10 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 	private ViewPager mLiveHomeViewPager;
 	private FragmentStatePagerAdapter mLiveHomeViewPagerAdapter;
 	private List<BaseFragment> fragments;
-	private View videoRootView;
-	private VideoView liveVideoView;
+	private View mVideoRootView;
+	private VideoView mLiveVideoView;
+	private ImageView mLiveVideoImage;
+	private LinearLayout mLiveBufferingIndicator;
 	private boolean isPlayStat;
 
 	@Override
@@ -53,17 +59,21 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 	}
 
 	private void initLinsenter() {
-		liveVideoView.setOnPreparedListener(this);
-		liveVideoView.setOnInfoListener(this);
-		liveVideoView.setOnErrorListener(this);
+		mLiveVideoView.setOnPreparedListener(this);
+		mLiveVideoView.setOnInfoListener(this);
+		mLiveVideoView.setOnErrorListener(this);
 	}
 
 	private void initView() {
 		inflate = inflater.inflate(R.layout.fragment_live_home, null);
 		mLiveHomeViewPager = (ViewPager) inflate
 				.findViewById(R.id.live_home_view_pager);
-		videoRootView = inflate.findViewById(R.id.video_root_view);
-		liveVideoView = (VideoView) inflate.findViewById(R.id.live_video_view);
+		mVideoRootView = inflate.findViewById(R.id.video_root_view);
+		mLiveVideoView = (VideoView) inflate.findViewById(R.id.live_video_view);
+		mLiveVideoImage = (ImageView) inflate
+				.findViewById(R.id.live_video_image);
+		mLiveBufferingIndicator = (LinearLayout) inflate
+				.findViewById(R.id.live_buffering_indicator);
 		initViewPager();
 	}
 
@@ -110,32 +120,55 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 			}
 
 		};
-
 		mLiveHomeViewPager.setDrawingCacheEnabled(false);
 		mLiveHomeViewPager.setOnPageChangeListener(this);
 		mLiveHomeViewPager.setAdapter(mLiveHomeViewPagerAdapter);
 		mLiveHomeViewPager.setCurrentItem(0, false);
-
 	}
 
-	public void playLive(CanBePlay playTarget) {
+	public void playLive(final CanBePlay playTarget) {
 		this.mActivity
 				.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		videoRootView.setVisibility(View.VISIBLE);
-		liveVideoView.stopPlayback();
-		liveVideoView.setVideoPath(playTarget.getStreamurl());
+		mActivity.bottomBarVisible(View.GONE);
+		WindowManager.LayoutParams attrs = mActivity.getWindow()
+				.getAttributes();
+		attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+		mActivity.getWindow().setAttributes(attrs);
+		mActivity.getWindow().addFlags(
+				WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+		mVideoRootView.setVisibility(View.VISIBLE);
+		// liveVideoView.stopPlayback();
+		mLiveVideoView.requestFocus();
+		mLiveVideoView.setmRootViewHeight((int) (this.mActivity.mScreenWidth));
+		mLiveVideoImage.setVisibility(View.VISIBLE);
+		mLiveBufferingIndicator.setVisibility(View.VISIBLE);
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				mLiveVideoView.setVideoPath(playTarget.getStreamurl());
+			}
+		}, 500);
 		this.setPlayStat(true);
 	}
 
 	public void closePlay() {
 		this.mActivity
 				.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		liveVideoView.stopPlayback();
-		videoRootView.setVisibility(View.GONE);
+		mActivity.bottomBarVisible(View.VISIBLE);
+		WindowManager.LayoutParams attrs = mActivity.getWindow()
+				.getAttributes();
+		attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		mActivity.getWindow().setAttributes(attrs);
+		// 取消全屏设置
+		mActivity.getWindow().clearFlags(
+				WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+		mLiveVideoView.stopPlayback();
+		mVideoRootView.setVisibility(View.GONE);
+		this.setPlayStat(false);
 	}
 
 	private void initData() {
-		liveVideoView.setUserAgent("KKApp");
+		mLiveVideoView.setUserAgent("KKApp");
 	}
 
 	@Override
@@ -169,7 +202,15 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 
 	@Override
 	public void onPrepared(IMediaPlayer mp) {
-		DebugLog.e("卧槽准备好了");
+		mLiveVideoView.start();
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				mLiveVideoImage.setVisibility(View.GONE);
+				mLiveBufferingIndicator.setVisibility(View.GONE);
+			}
+		}, 1000);
+
 	}
 
 	@Override
@@ -179,7 +220,7 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 
 	@Override
 	public boolean onError(IMediaPlayer mp, int what, int extra) {
-		DebugLog.e("卧槽有消息" + extra);
+		DebugLog.e("卧槽onError有消息" + extra);
 		return false;
 	}
 
@@ -190,8 +231,17 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 
 	@Override
 	public boolean onInfo(IMediaPlayer mp, int what, int extra) {
-		DebugLog.e("卧槽有消息" + extra);
-		return false;
+		switch (what) {
+		case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
+			mLiveVideoView.pause();
+			mLiveBufferingIndicator.setVisibility(View.VISIBLE);
+			break;
+		case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
+			mLiveVideoView.start();
+			mLiveBufferingIndicator.setVisibility(View.GONE);
+			break;
+		}
+		return true;
 	}
 
 	@Override

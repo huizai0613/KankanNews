@@ -14,4 +14,37 @@
         android:scrollingCache="false" >
     </com.iss.view.pulltorefresh.PullToRefreshListView>
 
+    <LinearLayout
+        android:id="@+id/live_channel_retry"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/retry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/live_channel_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:visibility="visible" >
+
+        <ProgressBar
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@drawable/iamge_progress"
+            android:indeterminateOnly="true"
+            android:visibility="visible" />
+    </LinearLayout>
+
 </RelativeLayout>
