@@ -210,7 +210,6 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 				mLiveBufferingIndicator.setVisibility(View.GONE);
 			}
 		}, 1000);
-
 	}
 
 	@Override

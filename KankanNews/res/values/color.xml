@@ -26,6 +26,12 @@
     <!-- 很淡很淡灰色颜色  头部标题栏 -->
     <color name="dove_gray">#FBFBFB</color>
 
+    <!-- 很淡很淡灰色颜色  头部标题栏 -->
+    <color name="dove_gray">#FBFBFB</color>
+
+    <!-- 很淡很淡灰色颜色  头部标题栏 -->
+    <color name="f_8_gray">#F8F8F8</color>
+
     <!-- 报料活动与列表间隙 -->
     <color name="six_e_gray">#EEEEEE</color>
 
