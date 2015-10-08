@@ -75,6 +75,21 @@ public class LiveChannelListFragment extends BaseFragment implements
 		return inflate;
 	}
 
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		mLiveChannelView.showHeadLoadingView();
+		refreshNetDate();
+	}
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		this.closeVideoPlay();
+	}
+
 	private void initLinsenter() {
 		mRetryView.setOnClickListener(this);
 		mLiveChannelView.setOnItemClickListener(new OnItemClickListener() {
@@ -191,6 +206,7 @@ public class LiveChannelListFragment extends BaseFragment implements
 
 	@Override
 	protected void refreshNetDate() {
+		DebugLog.e("refreshNetDate");
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			netUtils.getChannelList(this.mListenerObject, this.mErrorListener);
 		} else {
@@ -348,7 +364,6 @@ public class LiveChannelListFragment extends BaseFragment implements
 					mTvHolder.separationLine.setVisibility(View.VISIBLE);
 				}
 				convertView.setOnClickListener(new OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						LiveChannelListFragment.this.getHomeFragment()
@@ -376,71 +391,43 @@ public class LiveChannelListFragment extends BaseFragment implements
 					mFmHolder.titlePic.clearAnimation();
 				}
 				convertView.setOnClickListener(new OnClickListener() {
-
 					@Override
 					public void onClick(View v) {
 						if (channel.getId().equals(mCurFMPlayId)) {
 							mCurFMPlayId = "NULL";
 						} else {
 							mCurFMPlayId = channel.getId();
-							// if (mAudioPlayer == null) {
-
-							// mAudioPlayer = MediaPlayer.create(
-							// LiveChannelListFragment.this.mActivity,
-							// Uri.parse(channel.getStreamurl()));
-							mAudioPlayer = new IjkMediaPlayer();
-							mAudioPlayer
-									.setAvOption(AvFormatOption_HttpDetectRangeSupport.Disable);
-							mAudioPlayer
-									.setOverlayFormat(AvFourCC.SDL_FCC_RV32);
-
-							mAudioPlayer.setAvCodecOption("skip_loop_filter",
-									"48");
-							mAudioPlayer.setFrameDrop(12);
-							mAudioPlayer.setAvFormatOption("user_agent",
-									"kankanews");
-
-							try {
-								mAudioPlayer.setDataSource(channel
-										.getStreamurl());
-								// mAudioPlayer
-								// .setDataSource("http://live-cdn.kksmg.com/channels/tvie/audio_xjqy/flv:fm");
-							} catch (Exception e) {
-								// TODO Auto-generated catch block
-								DebugLog.e(e.getLocalizedMessage());
-							}
-							// mAudioPlayer = MediaPlayer
-							// .create(LiveChannelListFragment.this.mActivity,
-							// Uri.parse("http://live-cdn.kksmg.com/channels/tvie/audio_xjqy/flv:fm"));
-							// } else {
-							// mAudioPlayer.reset();
-							// // mAudioPlayer.release();
-							// try {
-							// mAudioPlayer
-							// .setDataSource(
-							// LiveChannelListFragment.this.mActivity,
-							// Uri.parse(channel
-							// .getStreamurl()));
-							// } catch (Exception e) {
-							// // TODO Auto-generated catch block
-							// e.printStackTrace();
-							// }
-							// }
-							mAudioPlayer.prepareAsync();
-							mAudioPlayer.start();
+							videoPlay(channel.getStreamurl());
 						}
 						mLiveChannelViewAdapter.notifyDataSetChanged();
-
-						// mFmHolder.rootView
-						// .setBackgroundColor(R.color.bright_gray);
-						// channel.setStreamurl("http://rs.ajmide.com/c_2728/2728.m3u8");
-						// LiveChannelListFragment.this.getHomeFragment()
-						// .playLive(channel);
 					}
 				});
 			}
-
 			return convertView;
+		}
+	}
+
+	public void videoPlay(String url) {
+		closeVideoPlay();
+		mAudioPlayer = new IjkMediaPlayer();
+		mAudioPlayer.setAvOption(AvFormatOption_HttpDetectRangeSupport.Disable);
+		mAudioPlayer.setOverlayFormat(AvFourCC.SDL_FCC_RV32);
+		mAudioPlayer.setAvCodecOption("skip_loop_filter", "48");
+		mAudioPlayer.setFrameDrop(12);
+		mAudioPlayer.setAvFormatOption("user_agent", "kankanews");
+		try {
+			mAudioPlayer.setDataSource(url);
+		} catch (Exception e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
+		mAudioPlayer.prepareAsync();
+		mAudioPlayer.start();
+	}
+
+	public void closeVideoPlay() {
+		if (mAudioPlayer != null) {
+			mAudioPlayer.stop();
+			mAudioPlayer.release();
 		}
 	}
 
