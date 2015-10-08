@@ -25,10 +25,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
@@ -39,6 +42,7 @@ import android.widget.RelativeLayout.LayoutParams;
 
 import com.android.volley.VolleyError;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.kankan.kankanews.animation.RotateAndTranslateAnimation;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.base.BaseVideoActivity;
@@ -52,6 +56,8 @@ import com.kankan.kankanews.ui.fragment.New_HomeFragment;
 import com.kankan.kankanews.ui.fragment.New_MyFragment;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.ui.view.popup.RevelationsChoiceBoard;
+import com.kankan.kankanews.ui.view.popup.SecondColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.Options;
@@ -79,9 +85,6 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 	public RelativeLayout lastAddFrament;
 
 	private ImageView screenGuide;
-
-	private ImageView goPhotoRevelationsImg;
-	private ImageView goVideoRevelationsImg;
 
 	public ShareUtil shareUtil;
 
@@ -229,9 +232,6 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 
 		screenGuide = (ImageView) findViewById(R.id.full_screen_guide);
 
-		goPhotoRevelationsImg = (ImageView) findViewById(R.id.go_photo_revelations_img);
-		goVideoRevelationsImg = (ImageView) findViewById(R.id.go_video_revelations_img);
-
 		nightView = findViewById(R.id.night_view);
 
 		// 初始化fragments
@@ -274,8 +274,12 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 		} else if (id == R.id.tab_live && curTouchTab == tabLive) {
 			refreshLive();
 		} else if (id == R.id.tab_revelate && curTouchTab == tabRevelate) {
-			Intent intent = new Intent(this, RevelationsActivity.class);
-			this.startActivity(intent);
+			// Intent intent = new Intent(this, RevelationsActivity.class);
+			// this.startActivity(intent);
+			RevelationsChoiceBoard board = new RevelationsChoiceBoard(
+					MainActivity.this);
+			board.showAtLocation(curTouchTab, Gravity.BOTTOM, 0, 0);
+			board.doAnim();
 		}
 		if (id == R.id.tab_home) {
 			if (spUtil.getFirstGetColumns()) {
@@ -389,9 +393,7 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 					params.height = (int) realHeight;
 					tabView.setLayoutParams(params);
 					tabView.setBackgroundResource(R.drawable.tab_home_middle_item_border_selected);
-					goPhotoRevelationsImg.setVisibility(View.VISIBLE);
-					goVideoRevelationsImg.setVisibility(View.VISIBLE);
-					// goPhotoRevelationsImg.setAnimation(new )
+
 				} else {
 					tabView.setBackgroundResource(R.drawable.tab_home_left_right_item_border_selected);
 				}
@@ -465,7 +467,6 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 				String reason = intent.getStringExtra(SYSTEM_REASON);
 				if (TextUtils.equals(reason, SYSTEM_HOME_KEY)) {
 					// 表示按了home键,程序到了后台
-
 				}
 			}
 		}
@@ -549,7 +550,6 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 			else
 				spUtil.setFirstGetRevalations(false);
 			break;
-
 		default:
 			break;
 		}

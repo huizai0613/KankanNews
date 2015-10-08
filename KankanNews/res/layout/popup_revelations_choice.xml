@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <View
+        android:id="@+id/choice_back_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/A05_alpha_black" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dip"
+        android:layout_alignParentBottom="true" >
+
+        <ImageView
+            android:id="@+id/go_photo_revelations_img"
+            android:layout_width="@dimen/base_action_bar_height"
+            android:layout_height="@dimen/base_action_bar_height"
+            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/bottom_bar_real_height"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_go_photo_revelation" />
+
+        <ImageView
+            android:id="@+id/go_video_revelations_img"
+            android:layout_width="@dimen/base_action_bar_height"
+            android:layout_height="@dimen/base_action_bar_height"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_go_video_revelation"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</RelativeLayout>
