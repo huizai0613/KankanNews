@@ -77,6 +77,11 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		initViewPager();
 	}
 
+	@Override
+	public void refresh() {
+		initViewPager();
+	};
+
 	private void initViewPager() {
 		mLiveHomeViewPager.setOffscreenPageLimit(0);
 		fragments = new ArrayList<BaseFragment>();

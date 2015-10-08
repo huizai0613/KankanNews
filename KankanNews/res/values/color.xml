@@ -7,6 +7,8 @@
 
     <!-- 黑色颜色 -->
     <color name="black">#000000</color>
+    <color name="half_alpha_black">#50000000</color>
+    <color name="A05_alpha_black">#05000000</color>
 
     <!-- 白色 -->
     <color name="white">#FFFFFF</color>
