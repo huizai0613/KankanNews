@@ -274,8 +274,6 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 		} else if (id == R.id.tab_live && curTouchTab == tabLive) {
 			refreshLive();
 		} else if (id == R.id.tab_revelate && curTouchTab == tabRevelate) {
-			// Intent intent = new Intent(this, RevelationsActivity.class);
-			// this.startActivity(intent);
 			RevelationsChoiceBoard board = new RevelationsChoiceBoard(
 					MainActivity.this);
 			board.showAtLocation(curTouchTab, Gravity.BOTTOM, 0, 0);

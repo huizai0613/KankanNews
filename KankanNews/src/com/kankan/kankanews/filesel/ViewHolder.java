@@ -1,7 +1,10 @@
-package com.kankan.kankanews.picsel;
+package com.kankan.kankanews.filesel;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +15,13 @@ import android.widget.TextView;
 import com.kankan.kankanews.utils.ImageLoader;
 import com.kankan.kankanews.utils.ImageLoader.Type;
 
-public class ViewHolder
-{
+public class ViewHolder {
 	private final SparseArray<View> mViews;
 	private int mPosition;
 	private View mConvertView;
 
 	private ViewHolder(Context context, ViewGroup parent, int layoutId,
-			int position)
-	{
+			int position) {
 		this.mPosition = position;
 		this.mViews = new SparseArray<View>();
 		mConvertView = LayoutInflater.from(context).inflate(layoutId, parent,
@@ -40,22 +41,18 @@ public class ViewHolder
 	 * @return
 	 */
 	public static ViewHolder get(Context context, View convertView,
-			ViewGroup parent, int layoutId, int position)
-	{
+			ViewGroup parent, int layoutId, int position) {
 		ViewHolder holder = null;
-		if (convertView == null)
-		{
+		if (convertView == null) {
 			holder = new ViewHolder(context, parent, layoutId, position);
-		} else
-		{
+		} else {
 			holder = (ViewHolder) convertView.getTag();
 			holder.mPosition = position;
 		}
 		return holder;
 	}
 
-	public View getConvertView()
-	{
+	public View getConvertView() {
 		return mConvertView;
 	}
 
@@ -65,11 +62,9 @@ public class ViewHolder
 	 * @param viewId
 	 * @return
 	 */
-	public <T extends View> T getView(int viewId)
-	{
+	public <T extends View> T getView(int viewId) {
 		View view = mViews.get(viewId);
-		if (view == null)
-		{
+		if (view == null) {
 			view = mConvertView.findViewById(viewId);
 			mViews.put(viewId, view);
 		}
@@ -83,8 +78,7 @@ public class ViewHolder
 	 * @param text
 	 * @return
 	 */
-	public ViewHolder setText(int viewId, String text)
-	{
+	public ViewHolder setText(int viewId, String text) {
 		TextView view = getView(viewId);
 		view.setText(text);
 		return this;
@@ -97,8 +91,7 @@ public class ViewHolder
 	 * @param drawableId
 	 * @return
 	 */
-	public ViewHolder setImageResource(int viewId, int drawableId)
-	{
+	public ViewHolder setImageResource(int viewId, int drawableId) {
 		ImageView view = getView(viewId);
 		view.setImageResource(drawableId);
 
@@ -112,8 +105,7 @@ public class ViewHolder
 	 * @param drawableId
 	 * @return
 	 */
-	public ViewHolder setImageBitmap(int viewId, Bitmap bm)
-	{
+	public ViewHolder setImageBitmap(int viewId, Bitmap bm) {
 		ImageView view = getView(viewId);
 		view.setImageBitmap(bm);
 		return this;
@@ -126,15 +118,59 @@ public class ViewHolder
 	 * @param drawableId
 	 * @return
 	 */
-	public ViewHolder setImageByUrl(int viewId, String url)
-	{
-		ImageLoader.getInstance(3,Type.LIFO).loadImage(url, (ImageView) getView(viewId));
+	public ViewHolder setImageByUrl(int viewId, String url) {
+		ImageLoader.getInstance(3, Type.LIFO).loadImage(url,
+				(ImageView) getView(viewId));
 		return this;
 	}
 
-	public int getPosition()
-	{
+	/**
+	 * 为ImageView设置图片
+	 * 
+	 * @param viewId
+	 * @param drawableId
+	 * @return
+	 */
+	public ViewHolder setVideoImage(final int viewId, final String url) {
+		ImageView imageView = (ImageView) getView(viewId);
+		imageView.setImageBitmap(getVideoThumbnail(url, 96, 96,
+				MediaStore.Images.Thumbnails.MICRO_KIND));
+
+		return this;
+	}
+
+	public int getPosition() {
 		return mPosition;
+	}
+
+	public Bitmap getVideoThumbnail(String filePath) {
+		Bitmap bitmap = null;
+		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+		try {
+			retriever.setDataSource(filePath);
+			bitmap = retriever.getFrameAtTime();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				retriever.release();
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+			}
+		}
+		return bitmap;
+	}
+
+	private Bitmap getVideoThumbnail(String videoPath, int width, int height,
+			int kind) {
+		Bitmap bitmap = null;
+		// 获取视频的缩略图
+		bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);
+		bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
+				ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+		return bitmap;
 	}
 
 }
