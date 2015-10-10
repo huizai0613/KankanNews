@@ -1,4 +1,4 @@
-package com.kankan.kankanews.picsel;
+package com.kankan.kankanews.filesel;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -36,7 +36,7 @@ import android.widget.Toast;
 
 import com.kankan.kankanews.bean.ImageFloder;
 import com.kankan.kankanews.config.AndroidConfig;
-import com.kankan.kankanews.picsel.ListImageDirPopupWindow.OnImageDirSelected;
+import com.kankan.kankanews.filesel.ListImageDirPopupWindow.OnImageDirSelected;
 import com.kankanews.kankanxinwen.R;
 
 public class PicSelectedMainActivity extends Activity implements

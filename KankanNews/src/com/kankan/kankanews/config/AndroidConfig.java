@@ -71,6 +71,7 @@ public class AndroidConfig {
 	public static final int REVELATIONS_FRAGMENT_RESULT_CANCEL = 4003;
 
 	public static final int REVELATIONS_FRAGMENT_PHOTO_REQUEST_NO = 5001;
+	public static final int REVELATIONS_VIDEO_REQUEST_NO = 6001;
 
 	// 页面统计-ID
 	// 首页-最新

@@ -132,12 +132,17 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.kankan.kankanews.picsel.PicSelectedMainActivity"
+            android:name="com.kankan.kankanews.filesel.PicSelectedMainActivity"
             android:exported="false"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.kankan.kankanews.picsel.PicPreviewActivity"
+            android:name="com.kankan.kankanews.filesel.VideoSelectedMainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.kankan.kankanews.filesel.PicPreviewActivity"
             android:exported="false"
             android:screenOrientation="portrait" >
         </activity>

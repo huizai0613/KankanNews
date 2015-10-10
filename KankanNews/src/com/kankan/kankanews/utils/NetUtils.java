@@ -5,13 +5,17 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -618,6 +622,210 @@ public class NetUtils {
 			try {
 				conn.getInputStream().close();
 			} catch (IOException e) {
+			}
+		}
+		return result;
+	}
+
+	public static void main(String[] args) {
+		File video = new File("H://VID_20150921_104104副本.mp4");
+		// getTokenUploadVideo("VID_20150921_104104副本.mp4", video.length() +
+		// "");
+		// valiedateUploadVideo("A1365070858_22124265_NoOne",
+		// "VID_20150921_104104.mp4", video.length() + "");
+		// 22124265
+		double length = video.length();
+		System.out.println((double) (length / 1024 / 1024 / 5));
+		int times = (int) Math.ceil(length / 1024 / 1024 / 5);
+		long to = 0;
+		for (int i = 1; i <= times; i++) {
+			to = i * 1024 * 1024 * 5;
+			if (to > video.length())
+				to = video.length();
+			postVideo("H://VID_20150921_104104副本.mp4",
+					"B129351819_22124265_NoOne", (i - 1) * 1024 * 1024 * 5, to);
+		}
+		// postVideo("H://VID_20150921_104104副本.mp4",
+		// "B129351819_22124265_NoOne", to,
+		// video.length());
+		// postVideo("H://VID_20150921_104104副本.mp4",
+		// "A1936341607_22124265_NoOne", 0, 12124265);
+		// postVideo("H://VID_20150921_104104副本.mp4",
+		// "B129351819_22124265_NoOne", 0, video.length());
+	}
+
+	public static Map<String, String> getTokenUploadVideo2(String fileName,
+			String fileSize) {
+		Map<String, String> result = new HashMap<String, String>();
+		BufferedReader responseReader = null;
+		HttpURLConnection conn = null;
+		try {
+			String path = "http://i.kankanews.com:8080/getToken.do?name="
+					+ fileName + "&size=" + fileSize;
+			URL url = new URL(path);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setConnectTimeout(5 * 1000);
+			conn.setRequestMethod("GET");
+			InputStream inStream = conn.getInputStream();
+			responseReader = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			StringBuffer responseContent = new StringBuffer();
+			while (responseReader.ready()) {
+				responseContent.append(responseReader.readLine());
+			}
+			System.out.println(responseContent);
+			// byte[] data = StreamTool.readInputStream(inStream);
+			// String result = new String(data, "UTF-8");
+			// System.out.println(result);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+		} finally {
+			try {
+				conn.getInputStream().close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	public static Map<String, String> valiedateUploadVideo(String token,
+			String fileName, String fileSize) {
+		Map<String, String> result = new HashMap<String, String>();
+		BufferedReader responseReader = null;
+		HttpURLConnection conn = null;
+		try {
+			String path = "http://localhost:8080/upload/upload?name="
+					+ fileName + "&size=" + fileSize + "&token=" + token;
+			URL url = new URL(path);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setConnectTimeout(5 * 1000);
+			conn.setRequestMethod("GET");
+			InputStream inStream = conn.getInputStream();
+			responseReader = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			StringBuffer responseContent = new StringBuffer();
+			while (responseReader.ready()) {
+				responseContent.append(responseReader.readLine());
+			}
+			System.out.println(responseContent);
+			// byte[] data = StreamTool.readInputStream(inStream);
+			// String result = new String(data, "UTF-8");
+			// System.out.println(result);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+		} finally {
+			try {
+				conn.getInputStream().close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	public static Map<String, String> postVideo(String video, String token,
+			long from, long to) {
+		System.out.println("from " + from + " to " + to);
+		Map<String, String> result = new HashMap<String, String>();
+		HttpURLConnection conn = null;
+		DataOutputStream outStream = null;
+		// ByteArrayInputStream tarFile = null;
+		BufferedReader responseReader = null;
+		FileChannel channel = null;
+		try {
+			File srcFile = new File(video);
+			String uriAPI = "http://i.kankanews.com:8080/upload.do?token="
+					+ token + "&name=" + srcFile.getName();
+			String BOUNDARY = java.util.UUID.randomUUID().toString();
+			String PREFIX = "--", LINEND = "\r\n";
+			String MULTIPART_FROM_DATA = "multipart/form-data";
+			String CHARSET = "UTF-8";
+
+			URL uri = new URL(uriAPI);
+
+			// StringBuilder sb1 = new StringBuilder();
+			// sb1.append(PREFIX);
+			// sb1.append(BOUNDARY);
+			// sb1.append(LINEND);
+			// sb1.append("Content-Disposition: form-data; name=\"file\"; filename=\""
+			// + srcFile.getName() + "\"" + LINEND);
+			// sb1.append("Content-Type: multipart/form-data; charset=" +
+			// CHARSET
+			// + LINEND);
+			// sb1.append(LINEND);
+			//
+			// StringBuilder sb2 = new StringBuilder();
+			// sb2.append(LINEND);
+			// sb2.append(PREFIX);
+			// sb2.append(BOUNDARY);
+			// sb2.append(PREFIX);
+
+			conn = (HttpURLConnection) uri.openConnection();
+			conn.setReadTimeout(5000 * 1000);
+			conn.setDoInput(true);// 允许输入
+			conn.setDoOutput(true);// 允许输出
+			conn.setUseCaches(false);
+			conn.setRequestMethod("POST"); // Post方式
+			conn.setRequestProperty("connection", "keep-alive");
+
+			// ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
+			channel = new FileInputStream(srcFile).getChannel();
+
+			// long fileLength = fileOut.toByteArray().length;
+
+			// tarFile = new ByteArrayInputStream(fileOut.toByteArray());
+
+			// long contentLength = srcFile.length();
+			long contentLength = to - from;
+			// + sb1.toString().getBytes().length
+			// + sb2.toString().getBytes().length;
+
+			conn.setRequestProperty("Content-Length", contentLength + "");
+			conn.setRequestProperty("Charsert", "UTF-8");
+			conn.setRequestProperty("Content-Type", MULTIPART_FROM_DATA
+					+ ";boundary=" + BOUNDARY);
+			conn.setRequestProperty("content-range", "bytes " + from + "-" + to
+					+ "/" + srcFile.length());
+
+			outStream = new DataOutputStream(conn.getOutputStream());
+			// outStream.write(sb1.toString().getBytes());
+			// byte[] buffer = new byte[8192];
+			// int len = 0;
+			// while ((len = tarFile.read(buffer)) != -1) {
+			// outStream.write(buffer, 0, len);
+			// }
+			channel.transferTo(from, to - from, Channels.newChannel(outStream));
+			// outStream.write(sb2.toString().getBytes());
+
+			responseReader = new BufferedReader(new InputStreamReader(
+					conn.getInputStream()));
+			StringBuffer responseContent = new StringBuffer();
+			while (responseReader.ready()) {
+				responseContent.append(responseReader.readLine());
+			}
+			System.out.println(responseContent);
+			result.put("ResponseCode", conn.getResponseCode() + "");
+			result.put("ResponseContent", responseContent.toString());
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			// Log.e("IMG_UTILS", e.getLocalizedMessage(), e);
+			result.put("ResponseCode", "ERROR");
+			result.put("ResponseContent", "ERROR");
+		} finally {
+			try {
+				// tarFile.close();
+				outStream.close();
+				channel.close();
+				conn.getInputStream().close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				// TODO Auto-generated catch block
+				// Log.e("IMG_UTILS", e.getLocalizedMessage(), e);
 			}
 		}
 		return result;

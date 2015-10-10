@@ -1,4 +1,4 @@
-package com.kankan.kankanews.picsel;
+package com.kankan.kankanews.filesel;
 
 import java.util.List;
 

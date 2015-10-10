@@ -10,14 +10,15 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -38,7 +39,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -48,19 +48,22 @@ import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
-import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.ResultInfo;
+import com.kankan.kankanews.bean.VideoUpload;
 import com.kankan.kankanews.config.AndroidConfig;
-import com.kankan.kankanews.picsel.PicPreviewActivity;
-import com.kankan.kankanews.picsel.PicSelectedMainActivity;
+import com.kankan.kankanews.filesel.PicPreviewActivity;
+import com.kankan.kankanews.filesel.PicSelectedMainActivity;
+import com.kankan.kankanews.filesel.VideoSelectedGridAdapter;
+import com.kankan.kankanews.filesel.VideoSelectedMainActivity;
 import com.kankan.kankanews.ui.view.popup.ModifyAvatarDialog;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
+import com.kankan.kankanews.utils.FileUtils;
 import com.kankan.kankanews.utils.ImageLoader;
-import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.ImageLoader.Type;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 
@@ -74,39 +77,38 @@ public class RevelationsActivity extends BaseActivity implements
 	private EditText telText;
 	private TextView postBut;
 	private TextView postValidateBut;
+	private TextView postFileTitle;
 	private TextView telBindingCancelBut;
 	private TextView validateTextView;
 	private TextView telBindingView;
 	private TextView telBindingNameView;
 	private GridView imageGridView;
+	private RelativeLayout videoLayout;
+	private ImageView postVideoImageView;
 	private ScrollView inputContentView;
 	private ScrollView postView;
 	private ImageGroupGridAdapter gridAdapter;
 	private List<String> imagesSelected = new LinkedList<String>();
 	private List<String> imagesSelectedUrl = new LinkedList<String>();
 
-	public static final String IMAGE_PATH = "My_weixin";
-	public static final File FILE_SDCARD = Environment
-			.getExternalStorageDirectory();
-	public static final File FILE_LOCAL = new File(FILE_SDCARD, IMAGE_PATH);
-	public static final File FILE_PIC_SCREENSHOT = new File(FILE_LOCAL,
-			"images/screenshots");
+	private VideoUpload videoSelected;
 
 	private static int _STATUS_INPUT_CONTENT_ = 8001;
 	private static int _STATUS_POST_ = 8002;
 
-	private static int _REVELATIONS_VIDEO_ = 6001;
-	private static int _REVELATIONS_IMAGE_ = 6002;
+	public static int _REVELATIONS_VIDEO_ = 6001;
+	public static int _REVELATIONS_PHOTO_ = 6002;
 
 	private int status = _STATUS_INPUT_CONTENT_;
 
-	private int revelationsType = _REVELATIONS_VIDEO_;
+	private int revelationsType;
 
 	private TimeCount timeCount = new TimeCount(60000, 1000);
 
+	private PostVideoTask videoTask;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_revelations);
 
@@ -121,6 +123,8 @@ public class RevelationsActivity extends BaseActivity implements
 				.findViewById(R.id.revelations_post_content_num);
 		telText = (EditText) this.findViewById(R.id.revelations_post_tel);
 		postBut = (TextView) this.findViewById(R.id.revelations_post_button);
+		postFileTitle = (TextView) this
+				.findViewById(R.id.revelations_post_file_title);
 		postValidateBut = (TextView) this
 				.findViewById(R.id.revelations_post_validate_button);
 		inputContentView = (ScrollView) this
@@ -128,6 +132,10 @@ public class RevelationsActivity extends BaseActivity implements
 		postView = (ScrollView) this.findViewById(R.id.post_scroll_view);
 		imageGridView = (GridView) this
 				.findViewById(R.id.revelations_post_image_grid);
+		postVideoImageView = (ImageView) this
+				.findViewById(R.id.post_video_item);
+		videoLayout = (RelativeLayout) this
+				.findViewById(R.id.revelations_post_video_layout);
 		validateTextView = (TextView) this
 				.findViewById(R.id.revelations_validate_message_text_view);
 		telBindingView = (TextView) this
@@ -136,76 +144,56 @@ public class RevelationsActivity extends BaseActivity implements
 				.findViewById(R.id.revelations_binding_telephone_name_text_view);
 		telBindingCancelBut = (TextView) this
 				.findViewById(R.id.revelations_binding_cancel_button);
-		gridAdapter = new ImageGroupGridAdapter();
-		imageGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
-		imageGridView.setAdapter(gridAdapter);
 		initTitleLeftBar("我要报料", R.drawable.new_ic_back);
+	}
+
+	@Override
+	protected void initData() {
+		this.aid = this.getIntent().getStringExtra("_AID_");
+		this.revelationsType = this.getIntent().getIntExtra(
+				"_REVELATIONS_TYPE_", _REVELATIONS_PHOTO_);
+		if (revelationsType == _REVELATIONS_VIDEO_) {
+			postFileTitle.setText("视频(选填、最多上传1段)");
+			videoLayout.setVisibility(View.VISIBLE);
+		} else {
+			postFileTitle.setText("照片(选填、最多上传9张)");
+			imageGridView.setVisibility(View.VISIBLE);
+			gridAdapter = new ImageGroupGridAdapter();
+			imageGridView.setSelector(new ColorDrawable(Color.TRANSPARENT));
+			imageGridView.setAdapter(gridAdapter);
+		}
+		if (spUtil.getUserTelephone() == null
+				|| spUtil.getUserTelephone().equals("")) {
+			telBindingView.setVisibility(View.GONE);
+			telBindingNameView.setVisibility(View.GONE);
+			telBindingCancelBut.setVisibility(View.GONE);
+		} else {
+			telBindingView.setText(spUtil.getUserTelephone());
+			telBindingView.setVisibility(View.VISIBLE);
+			telBindingNameView.setVisibility(View.VISIBLE);
+			telBindingCancelBut.setVisibility(View.VISIBLE);
+			postBut.setText("提交");
+		}
 	}
 
 	@Override
 	protected void setListener() {
 		postBut.setOnClickListener(this);
 		postValidateBut.setOnClickListener(this);
+		postVideoImageView.setOnClickListener(this);
 		telBindingCancelBut.setOnClickListener(this);
 		contentText.addTextChangedListener(new MaxLengthWatcher(300,
 				contentText));
 		setOnLeftClickLinester(this);
 	}
 
-	class MaxLengthWatcher implements TextWatcher {
-
-		private int maxLen = 0;
-		private EditText editText = null;
-
-		public MaxLengthWatcher(int maxLen, EditText editText) {
-			this.maxLen = maxLen;
-			this.editText = editText;
-		}
-
-		public void afterTextChanged(Editable arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-				int arg3) {
-			// TODO Auto-generated method stub
-
-		}
-
-		public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-				int arg3) {
-			// TODO Auto-generated method stub
-			Editable editable = editText.getText();
-			int len = editable.length();
-
-			if (len > maxLen) {
-				int selEndIndex = Selection.getSelectionEnd(editable);
-				String str = editable.toString();
-				// 截取新字符串
-				String newStr = str.substring(0, maxLen);
-				editText.setText(newStr);
-				editable = editText.getText();
-
-				// 新字符串的长度
-				int newLen = editable.length();
-				// 旧光标位置超过字符串长度
-				if (selEndIndex > newLen) {
-					selEndIndex = editable.length();
-				}
-				// 设置新光标所在的位置
-				Selection.setSelection(editable, selEndIndex);
-			}
-			contentNumText.setText(editable.length() + "/300字");
-		}
-
-	}
-
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch (id) {
+		case R.id.post_video_item:
+			goSelectVideo();
+			break;
 		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;
@@ -279,15 +267,24 @@ public class RevelationsActivity extends BaseActivity implements
 	}
 
 	private boolean isPhoneNum(String phoneNum) {
-		// TODO Auto-generated method stub
 		Pattern pattern = Pattern
 				.compile("(\\d{11})|^((\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})|(\\d{4}|\\d{3})-(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1})|(\\d{7,8})-(\\d{4}|\\d{3}|\\d{2}|\\d{1}))");
 		Matcher matcher = pattern.matcher(phoneNum);
 		return matcher.matches();
 	}
 
-	private void goSelect() {
-		// TODO Auto-generated method stub
+	private void goSelectVideo() {
+		Intent intent = new Intent(Intent.ACTION_PICK);
+		intent.setType("video/*");
+		try {
+			startActivityForResult(Intent.createChooser(intent, "请选择一个要上传的视频"),
+					AndroidConfig.REVELATIONS_VIDEO_REQUEST_NO);
+		} catch (android.content.ActivityNotFoundException ex) {
+			ToastUtils.Infotoast(this, "请安装文件管理器");
+		}
+	}
+
+	private void goPicSelect() {
 		ModifyAvatarDialog modifyAvatarDialog = new ModifyAvatarDialog(this) {
 			// 选择本地相册
 			@Override
@@ -308,26 +305,9 @@ public class RevelationsActivity extends BaseActivity implements
 				String status = Environment.getExternalStorageState();
 				if (status.equals(Environment.MEDIA_MOUNTED)) {
 					try {
-						// String localTempImageFileName = "";
-						// localTempImageFileName = String.valueOf((new Date())
-						// .getTime()) + ".png";
-						// File filePath = FILE_PIC_SCREENSHOT;
-						// if (!filePath.exists()) {
-						// filePath.mkdirs();
-						// }
 						Intent intent = new Intent(
 								android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-						// RevelationsActivity.this.mApplication.getCacheDir()
-						// File f = new File(
-						// CommonUtils
-						// .getImageCachePath(getApplicationContext()),
-						// localTempImageFileName);
-						// File f = new File(filePath, localTempImageFileName);
-						// localTempImgDir和localTempImageFileName是自己定义的名字
-						// Uri u = Uri.fromFile(f);
 						intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
-						// intent.putExtra(MediaStore.EXTRA_OUTPUT, u);
-						// intent.setDataAndType(u, "image/*");
 						startActivityForResult(
 								intent,
 								AndroidConfig.REVELATIONS_FRAGMENT_PHOTO_REQUEST_NO);
@@ -353,8 +333,7 @@ public class RevelationsActivity extends BaseActivity implements
 		modifyAvatarDialog.show();
 	}
 
-	private void foPreview() {
-		// TODO Auto-generated method stub
+	private void foPicPreview() {
 		Intent intent = new Intent(this, PicPreviewActivity.class);
 		intent.putExtra("IMAGE_SELECTED_LIST", (Serializable) imagesSelected);
 		this.startActivityForResult(intent,
@@ -363,8 +342,51 @@ public class RevelationsActivity extends BaseActivity implements
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == AndroidConfig.REVELATIONS_VIDEO_REQUEST_NO) {
+			if (data != null) {
+				Uri selectedImage = data.getData();
+				VideoUpload video = new VideoUpload();
+				if (selectedImage.getScheme().equals("content")) {
+					String[] filePathColumn = { MediaStore.Video.Media._ID,
+							MediaStore.Video.Media.MIME_TYPE,
+							MediaStore.Video.Media.TITLE,
+							MediaStore.Video.Media.DATA };
+					Cursor mCursor = getContentResolver().query(selectedImage,
+							filePathColumn, null, null, null);
+					if (mCursor.moveToFirst()) {
+						video.setId(mCursor.getString(mCursor
+								.getColumnIndex(MediaStore.Video.Media._ID)));
+						video.setMimeType(mCursor.getString(mCursor
+								.getColumnIndex(MediaStore.Video.Media.MIME_TYPE)));
+						video.setName(mCursor.getString(mCursor
+								.getColumnIndex(MediaStore.Video.Media.TITLE)));
+						video.setPath(mCursor.getString(mCursor
+								.getColumnIndex(MediaStore.Video.Media.DATA)));
+						if (!FileUtils.isVideo(video.getPath())) {
+							ToastUtils.Infotoast(this, "请选择一个视频文件");
+							return;
+						}
+					}
+					mCursor.close();
+				} else if (selectedImage.getScheme().equals("file")) {
+					File file = new File(selectedImage.getPath());
+					if (file.exists() && (FileUtils.isVideo(file.getPath()))) {
+						video.setName(file.getName());
+						video.setPath(file.getPath());
+					} else {
+						ToastUtils.Infotoast(this, "请选择一个视频文件");
+						return;
+					}
+				}
+				postVideoImageView.setImageBitmap(getVideoThumbnail(video
+						.getPath()));
+				videoSelected = video;
+				videoTask = new PostVideoTask();
+				videoTask.execute("");
+			}
+			return;
+		}
 		switch (resultCode) {
 		case AndroidConfig.REVELATIONS_FRAGMENT_RESULT_OK:
 			imagesSelected.clear();
@@ -379,12 +401,10 @@ public class RevelationsActivity extends BaseActivity implements
 		case AndroidConfig.REVELATIONS_FRAGMENT_PHOTO_REQUEST_NO:
 			Uri uri = data.getData();
 			if (uri == null) {
-				// use bundle to get data
 				Bundle bundle = data.getExtras();
 				if (bundle != null) {
 					Bitmap photo = (Bitmap) bundle.get("data"); // get bitmap
 					Log.e("URI", photo.toString());
-					// spath :生成图片取个名字和路径包含类型
 					String localTempImageFileName = "";
 					localTempImageFileName = String.valueOf((new Date())
 							.getTime()) + ".png";
@@ -404,7 +424,6 @@ public class RevelationsActivity extends BaseActivity implements
 				}
 			} else {
 				ToastUtils.Errortoast(this, "保存图片失败请重试");
-				// to do find the path of pic by uri
 			}
 			break;
 		}
@@ -412,30 +431,12 @@ public class RevelationsActivity extends BaseActivity implements
 	}
 
 	private void refreshImages() {
-		// TODO Auto-generated method stub
-		// for (int i = 0; i < imageViews.length; i++) {
-		// if (i < imagesSelected.size()) {
-		// ImageLoader.getInstance(3, Type.LIFO).loadImage(
-		// imagesSelected.get(i), imageViews[i]);
-		// imageViews[i].setVisibility(View.VISIBLE);
-		// } else if (i == imagesSelected.size()) {
-		// imageViews[i].setImageResource(R.drawable.revelations_add_pic);
-		// imageViews[i].setVisibility(View.VISIBLE);
-		// } else {
-		// imageViews[i].setVisibility(View.INVISIBLE);
-		// }
-		// }
-		// imageGridView.setAdapter(new ImageGroupGridAdapter());
 		gridAdapter.notifyDataSetChanged();
-		// imageGridView.postInvalidate();
 	}
 
 	private class PostTask extends AsyncTask<String, Void, Map<String, String>> {
-
-		// Map<String, String> ResultCode ResultText
 		@Override
 		protected Map<String, String> doInBackground(String... params) {
-			// TODO Auto-generated method stub
 			Map<String, String> taskResult = new HashMap<String, String>();
 			String tel;
 			if (spUtil.getUserTelephone() == null
@@ -489,8 +490,6 @@ public class RevelationsActivity extends BaseActivity implements
 				if (i != imagesSelectedUrl.size() - 1)
 					imageUrls.append("|");
 			}
-			// instance.postRevelationContent(tel, content,
-			// imageUrls.toString(), this.mListenerObject, mErrorListener);
 			Map<String, String> result = ImgUtils.sendRevelationsContent(tel,
 					content, imageUrls.toString(), aid);
 			taskResult.put("ResultCode", result.get("ResponseCode"));
@@ -500,7 +499,6 @@ public class RevelationsActivity extends BaseActivity implements
 
 		@Override
 		protected void onPostExecute(Map<String, String> result) {
-			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			if (result.get("ResultCode").equals(AndroidConfig.RESPONSE_CODE_OK)) {
 				ToastUtils.Infotoast(RevelationsActivity.this, "上传成功");
@@ -518,108 +516,25 @@ public class RevelationsActivity extends BaseActivity implements
 
 	private class PostVideoTask extends
 			AsyncTask<String, Void, Map<String, String>> {
-
-		// Map<String, String> ResultCode ResultText
 		@Override
 		protected Map<String, String> doInBackground(String... params) {
-			// TODO Auto-generated method stub
 			Map<String, String> taskResult = new HashMap<String, String>();
-//			String tel;
-//			if (spUtil.getUserTelephone() == null
-//					|| spUtil.getUserTelephone().equals("")) {
-//				tel = telText.getText().toString();
-//
-//				String validateCode = validateTextView.getText().toString();
-//				Map<String, String> valiResponse = ImgUtils
-//						.validateRevelationsValidateMessage(tel, validateCode);
-//				if (valiResponse.get("ResponseCode").equals(
-//						AndroidConfig.RESPONSE_CODE_OK)) {
-//					ResultInfo info = JsonUtils.toObject(
-//							valiResponse.get("ResponseContent"),
-//							ResultInfo.class);
-//					if (info.getResultCode() == 0) {
-//						taskResult.put("ResultCode", "ERROR");
-//						taskResult.put("ResultText", info.getMsg());
-//						return taskResult;
-//					} else {
-//						spUtil.saveUserTelephone(tel);
-//					}
-//				} else {
-//					taskResult.put("ResultCode", "ERROR");
-//					taskResult.put("ResultText", "验证码验证失败");
-//					return taskResult;
-//				}
-//			} else {
-//				tel = spUtil.getUserTelephone();
-//			}
 
-			// gettoken
-			// upload get
-			// uoload post
-
-			File video = new File(
-					"/storage/emulated/0/DCIM/Camera/VID_20150921_104104.mp4");
-//			DebugLog.e(video.length() + "");
+			File video = new File(videoSelected.getPath());
 			NetUtils.getTokenUploadVideo(video.getName(), video.length() + "");
-			// imagesSelectedUrl.clear();
-			// for (int i = 0; i < imagesSelected.size(); i++) {
-			// if (i < imagesSelectedUrl.size())
-			// continue;
-			// Map<String, String> response = ImgUtils
-			// .sendImage(imagesSelected.get(i));
-			// if (response.get("ResponseCode").equals(
-			// AndroidConfig.RESPONSE_CODE_OK)) {
-			// imagesSelectedUrl.add(response.get("ResponseContent"));
-			// } else {
-			// taskResult.put("ResultCode", "ERROR");
-			// taskResult.put("ResultText", "上传图片失败请重新上传");
-			// return taskResult;
-			// }
-			// }
-			//
-			// String content = contentText.getText().toString();
-			// StringBuffer imageUrls = new StringBuffer();
-			// for (int i = 0; i < imagesSelectedUrl.size(); i++) {
-			// imageUrls.append(imagesSelectedUrl.get(i));
-			// if (i != imagesSelectedUrl.size() - 1)
-			// imageUrls.append("|");
-			// }
-			// // instance.postRevelationContent(tel, content,
-			// // imageUrls.toString(), this.mListenerObject, mErrorListener);
-			// Map<String, String> result = ImgUtils.sendRevelationsContent(tel,
-			// content, imageUrls.toString(), aid);
-			// taskResult.put("ResultCode", result.get("ResponseCode"));
-			// taskResult.put("ResultText", result.get("ResponseContent"));
 			return taskResult;
 		}
 
 		@Override
 		protected void onPostExecute(Map<String, String> result) {
-			// TODO Auto-generated method stub
 			super.onPostExecute(result);
-			// if
-			// (result.get("ResultCode").equals(AndroidConfig.RESPONSE_CODE_OK))
-			// {
-			// ToastUtils.Infotoast(RevelationsActivity.this, "上传成功");
-			// cleanRevelation();
-			// RevelationsActivity.this.AnimFinsh();
-			// } else {
-			// ToastUtils.Errortoast(RevelationsActivity.this,
-			// result.get("ResultText"));
-			// postBut.setText("提交");
-			// postBut.setEnabled(true);
-			// postBut.setBackgroundColor(Color.parseColor("#FF0000"));
-			// }
 		}
 	}
 
 	private class PostValidateMessageTask extends
 			AsyncTask<String, Void, Map<String, String>> {
-
-		// Map<String, String> ResultCode ResultText
 		@Override
 		protected Map<String, String> doInBackground(String... params) {
-			// TODO Auto-generated method stub
 			Map<String, String> taskResult = new HashMap<String, String>();
 			String tel = telText.getText().toString();
 			Map<String, String> result = ImgUtils
@@ -632,7 +547,6 @@ public class RevelationsActivity extends BaseActivity implements
 
 		@Override
 		protected void onPostExecute(Map<String, String> result) {
-			// TODO Auto-generated method stub
 			super.onPostExecute(result);
 			if (result.get("ResultCode").equals(AndroidConfig.RESPONSE_CODE_OK)) {
 				ResultInfo info = JsonUtils.toObject(result.get("ResultText"),
@@ -657,16 +571,10 @@ public class RevelationsActivity extends BaseActivity implements
 	}
 
 	private void cleanRevelation() {
-		// TODO Auto-generated method stub
 		telText.setText("");
 		contentText.setText("");
 		imagesSelected.clear();
 		imagesSelectedUrl.clear();
-		// imageOne.setImageResource(R.drawable.revelations_add_pic);
-		// imageOne.setVisibility(View.VISIBLE);
-		// imageTwo.setVisibility(View.INVISIBLE);
-		// imageThree.setVisibility(View.INVISIBLE);
-		// imageFour.setVisibility(View.INVISIBLE);
 		postBut.setText("提交");
 		postBut.setEnabled(true);
 		postBut.setBackgroundColor(Color.parseColor("#FF0000"));
@@ -687,33 +595,13 @@ public class RevelationsActivity extends BaseActivity implements
 
 	@Override
 	protected void onFailure(VolleyError error) {
-		// TODO Auto-generated method stub
 		ToastUtils.Errortoast(this, "内容上传失败请重新上传");
-	}
-
-	@Override
-	protected void initData() {
-		// TODO Auto-generated method stub
-		this.aid = this.getIntent().getStringExtra("_AID_");
-		if (spUtil.getUserTelephone() == null
-				|| spUtil.getUserTelephone().equals("")) {
-			telBindingView.setVisibility(View.GONE);
-			telBindingNameView.setVisibility(View.GONE);
-			telBindingCancelBut.setVisibility(View.GONE);
-		} else {
-			telBindingView.setText(spUtil.getUserTelephone());
-			telBindingView.setVisibility(View.VISIBLE);
-			telBindingNameView.setVisibility(View.VISIBLE);
-			telBindingCancelBut.setVisibility(View.VISIBLE);
-			postBut.setText("提交");
-		}
 	}
 
 	private class ImageGroupGridAdapter extends BaseAdapter {
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			if (imagesSelected.size() == 0)
 				return 1;
 			if (imagesSelected.size() == 9)
@@ -723,47 +611,30 @@ public class RevelationsActivity extends BaseActivity implements
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
-			// if (imageGroup.length == 4)
 			return null;
-			// return imageGroup[position];
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return position;
 		}
 
 		@Override
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
-			// TODO Auto-generated method stub
 			ImageView imageView = null;
-			// if (convertView == null) {
 			convertView = inflate.inflate(
 					R.layout.item_revelations_post_image_grid_item, null);
 			imageView = (ImageView) convertView
 					.findViewById(R.id.post_image_item);
-			// RelativeLayout.LayoutParams params =
-			// (RelativeLayout.LayoutParams) imageView
-			// .getLayoutParams();
-			// params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-			// params.height = (int) (parent.getWidth() / 3 * 0.75);
-			// imageView.setLayoutParams(params);
-			// convertView.setTag(imageView);
-			// } else {
-			// imageView = (ImageView) convertView.getTag();
-			// }
 			imageView.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
 					if (imagesSelected.size() == position) {
-						goSelect();
+						goPicSelect();
 					} else {
-						foPreview();
+						foPicPreview();
 					}
 				}
 			});
@@ -771,20 +642,14 @@ public class RevelationsActivity extends BaseActivity implements
 				imageView.setImageResource(R.drawable.revelations_add_pic);
 
 			} else if (imagesSelected.size() == 9)
-				// for (String image : imagesSelected) {
-				// imageView.setImageResource(image);
 				ImageLoader.getInstance(3, Type.LIFO).loadImage(
 						imagesSelected.get(position), imageView);
-			// }
 			else {
-				// for (String image : imagesSelected) {
-				// imageView.setImageResource(image);
 				if (position == imagesSelected.size())
 					imageView.setImageResource(R.drawable.revelations_add_pic);
 				else
 					ImageLoader.getInstance(3, Type.LIFO).loadImage(
 							imagesSelected.get(position), imageView);
-				// }
 			}
 			return convertView;
 		}
@@ -817,5 +682,69 @@ public class RevelationsActivity extends BaseActivity implements
 			postView.setVisibility(View.GONE);
 			postBut.setText("下一步");
 		}
+	}
+
+	class MaxLengthWatcher implements TextWatcher {
+
+		private int maxLen = 0;
+		private EditText editText = null;
+
+		public MaxLengthWatcher(int maxLen, EditText editText) {
+			this.maxLen = maxLen;
+			this.editText = editText;
+		}
+
+		public void afterTextChanged(Editable arg0) {
+		}
+
+		public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+				int arg3) {
+		}
+
+		public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+				int arg3) {
+			Editable editable = editText.getText();
+			int len = editable.length();
+
+			if (len > maxLen) {
+				int selEndIndex = Selection.getSelectionEnd(editable);
+				String str = editable.toString();
+				// 截取新字符串
+				String newStr = str.substring(0, maxLen);
+				editText.setText(newStr);
+				editable = editText.getText();
+
+				// 新字符串的长度
+				int newLen = editable.length();
+				// 旧光标位置超过字符串长度
+				if (selEndIndex > newLen) {
+					selEndIndex = editable.length();
+				}
+				// 设置新光标所在的位置
+				Selection.setSelection(editable, selEndIndex);
+			}
+			contentNumText.setText(editable.length() + "/300字");
+		}
+
+	}
+
+	public Bitmap getVideoThumbnail(String filePath) {
+		Bitmap bitmap = null;
+		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+		try {
+			retriever.setDataSource(filePath);
+			bitmap = retriever.getFrameAtTime();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				retriever.release();
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+			}
+		}
+		return bitmap;
 	}
 }

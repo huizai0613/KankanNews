@@ -45,7 +45,7 @@ import com.lidroid.xutils.DbUtils;
 import com.lidroid.xutils.DbUtils.DbUpgradeListener;
 import com.lidroid.xutils.exception.DbException;
 import com.lidroid.xutils.http.HttpHandler;
-import com.nostra13.universalimageloader.cache.disc.impl.BaseDiscCache;
+import com.nostra13.universalimageloader.cache.disc.impl.BaseDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -200,7 +200,7 @@ public class CrashApplication extends Application {
 		ImageLoader.getInstance().init(config);
 	}
 
-	class MyUnlimitedDiscCache extends BaseDiscCache {
+	class MyUnlimitedDiscCache extends BaseDiskCache {
 
 		public MyUnlimitedDiscCache(File cacheDir) {
 			this(cacheDir, new MyFileNameGenerator());

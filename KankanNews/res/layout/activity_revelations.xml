@@ -82,11 +82,11 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/revelations_post_file_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="18dp"
                 android:layout_marginTop="8dp"
-                android:text="照片(选填、最多上传9张)"
                 android:textSize="16dp" />
 
             <com.kankan.kankanews.ui.view.NestingGridView
@@ -99,8 +99,27 @@
                 android:numColumns="5"
                 android:padding="10dip"
                 android:scrollbars="none"
-                android:verticalSpacing="10dip" >
+                android:verticalSpacing="10dip"
+                android:visibility="gone" >
             </com.kankan.kankanews.ui.view.NestingGridView>
+
+            <RelativeLayout
+                android:id="@+id/revelations_post_video_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_base_space"
+                android:background="@drawable/revelations_post_content_edittext_shape"
+                android:padding="10dip"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:id="@+id/post_video_item"
+                    android:layout_width="60dip"
+                    android:layout_height="60dip"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/revelations_add_pic" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/revelations_binding_telephone_name_text_view"
