@@ -8,7 +8,7 @@ import com.kankan.kankanews.base.BaseBean;
 import com.kankan.kankanews.base.Error;
 import com.kankan.kankanews.exception.NetRequestException;
 
-public class Video implements Serializable {
+public class VideoUpload implements Serializable {
 
 	private String id;
 	private String name;

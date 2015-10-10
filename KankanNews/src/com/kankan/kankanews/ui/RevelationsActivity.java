@@ -14,9 +14,11 @@ import org.json.JSONObject;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,6 +49,7 @@ import android.widget.TextView;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.ResultInfo;
+import com.kankan.kankanews.bean.VideoUpload;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.filesel.PicPreviewActivity;
 import com.kankan.kankanews.filesel.PicSelectedMainActivity;
@@ -54,6 +57,8 @@ import com.kankan.kankanews.filesel.VideoSelectedGridAdapter;
 import com.kankan.kankanews.filesel.VideoSelectedMainActivity;
 import com.kankan.kankanews.ui.view.popup.ModifyAvatarDialog;
 import com.kankan.kankanews.utils.CommonUtils;
+import com.kankan.kankanews.utils.DebugLog;
+import com.kankan.kankanews.utils.FileUtils;
 import com.kankan.kankanews.utils.ImageLoader;
 import com.kankan.kankanews.utils.ImageLoader.Type;
 import com.kankan.kankanews.utils.ImgUtils;
@@ -86,6 +91,8 @@ public class RevelationsActivity extends BaseActivity implements
 	private List<String> imagesSelected = new LinkedList<String>();
 	private List<String> imagesSelectedUrl = new LinkedList<String>();
 
+	private VideoUpload videoSelected;
+
 	private static int _STATUS_INPUT_CONTENT_ = 8001;
 	private static int _STATUS_POST_ = 8002;
 
@@ -97,6 +104,8 @@ public class RevelationsActivity extends BaseActivity implements
 	private int revelationsType;
 
 	private TimeCount timeCount = new TimeCount(60000, 1000);
+
+	private PostVideoTask videoTask;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -265,9 +274,14 @@ public class RevelationsActivity extends BaseActivity implements
 	}
 
 	private void goSelectVideo() {
-		Intent intent = new Intent(this, VideoSelectedMainActivity.class);
-		this.startActivityForResult(intent,
-				AndroidConfig.REVELATIONS_FRAGMENT_REQUEST_NO);
+		Intent intent = new Intent(Intent.ACTION_PICK);
+		intent.setType("video/*");
+		try {
+			startActivityForResult(Intent.createChooser(intent, "请选择一个要上传的视频"),
+					AndroidConfig.REVELATIONS_VIDEO_REQUEST_NO);
+		} catch (android.content.ActivityNotFoundException ex) {
+			ToastUtils.Infotoast(this, "请安装文件管理器");
+		}
 	}
 
 	private void goPicSelect() {
@@ -329,6 +343,50 @@ public class RevelationsActivity extends BaseActivity implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == AndroidConfig.REVELATIONS_VIDEO_REQUEST_NO) {
+			if (data != null) {
+				Uri selectedImage = data.getData();
+				VideoUpload video = new VideoUpload();
+				if (selectedImage.getScheme().equals("content")) {
+					String[] filePathColumn = { MediaStore.Video.Media._ID,
+							MediaStore.Video.Media.MIME_TYPE,
+							MediaStore.Video.Media.TITLE,
+							MediaStore.Video.Media.DATA };
+					Cursor mCursor = getContentResolver().query(selectedImage,
+							filePathColumn, null, null, null);
+					if (mCursor.moveToFirst()) {
+						video.setId(mCursor.getString(mCursor
+								.getColumnIndex(MediaStore.Video.Media._ID)));
+						video.setMimeType(mCursor.getString(mCursor
+								.getColumnIndex(MediaStore.Video.Media.MIME_TYPE)));
+						video.setName(mCursor.getString(mCursor
+								.getColumnIndex(MediaStore.Video.Media.TITLE)));
+						video.setPath(mCursor.getString(mCursor
+								.getColumnIndex(MediaStore.Video.Media.DATA)));
+						if (!FileUtils.isVideo(video.getPath())) {
+							ToastUtils.Infotoast(this, "请选择一个视频文件");
+							return;
+						}
+					}
+					mCursor.close();
+				} else if (selectedImage.getScheme().equals("file")) {
+					File file = new File(selectedImage.getPath());
+					if (file.exists() && (FileUtils.isVideo(file.getPath()))) {
+						video.setName(file.getName());
+						video.setPath(file.getPath());
+					} else {
+						ToastUtils.Infotoast(this, "请选择一个视频文件");
+						return;
+					}
+				}
+				postVideoImageView.setImageBitmap(getVideoThumbnail(video
+						.getPath()));
+				videoSelected = video;
+				videoTask = new PostVideoTask();
+				videoTask.execute("");
+			}
+			return;
+		}
 		switch (resultCode) {
 		case AndroidConfig.REVELATIONS_FRAGMENT_RESULT_OK:
 			imagesSelected.clear();
@@ -462,8 +520,7 @@ public class RevelationsActivity extends BaseActivity implements
 		protected Map<String, String> doInBackground(String... params) {
 			Map<String, String> taskResult = new HashMap<String, String>();
 
-			File video = new File(
-					"/storage/emulated/0/DCIM/Camera/VID_20150921_104104.mp4");
+			File video = new File(videoSelected.getPath());
 			NetUtils.getTokenUploadVideo(video.getName(), video.length() + "");
 			return taskResult;
 		}
@@ -669,5 +726,25 @@ public class RevelationsActivity extends BaseActivity implements
 			contentNumText.setText(editable.length() + "/300字");
 		}
 
+	}
+
+	public Bitmap getVideoThumbnail(String filePath) {
+		Bitmap bitmap = null;
+		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+		try {
+			retriever.setDataSource(filePath);
+			bitmap = retriever.getFrameAtTime();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				retriever.release();
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+			}
+		}
+		return bitmap;
 	}
 }

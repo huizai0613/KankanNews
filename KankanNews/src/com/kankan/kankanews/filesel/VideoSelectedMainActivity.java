@@ -40,7 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kankan.kankanews.bean.ImageFloder;
-import com.kankan.kankanews.bean.Video;
+import com.kankan.kankanews.bean.VideoUpload;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.filesel.ListVideoDirPopupWindow.OnImageDirSelected;
 import com.kankan.kankanews.utils.DebugLog;
@@ -57,11 +57,11 @@ public class VideoSelectedMainActivity extends Activity implements
 	/**
 	 * 所有的图片
 	 */
-	private Map<String, List<Video>> mVideos = new HashMap<String, List<Video>>();
+	private Map<String, List<VideoUpload>> mVideos = new HashMap<String, List<VideoUpload>>();
 
-	private List<Video> allVideos = new ArrayList<Video>();
+	private List<VideoUpload> allVideos = new ArrayList<VideoUpload>();
 
-	private Video mSelectedVideo;
+	private VideoUpload mSelectedVideo;
 
 	private GridView mGirdView;
 	private VideoSelectedGridAdapter mAdapter;
@@ -177,7 +177,7 @@ public class VideoSelectedMainActivity extends Activity implements
 				Log.e("Cursor", mCursor.getColumnCount() + "");
 				while (mCursor.moveToNext()) {
 					// 获取视频编号
-					Video video = new Video();
+					VideoUpload video = new VideoUpload();
 					video.setId(mCursor.getString(mCursor
 							.getColumnIndex(MediaStore.Video.Media._ID)));
 					video.setMimeType(mCursor.getString(mCursor
@@ -186,7 +186,6 @@ public class VideoSelectedMainActivity extends Activity implements
 							.getColumnIndex(MediaStore.Video.Media.TITLE)));
 					video.setPath(mCursor.getString(mCursor
 							.getColumnIndex(MediaStore.Video.Media.DATA)));
-
 					String selection = MediaStore.Video.Thumbnails.VIDEO_ID
 							+ "=?";
 					String[] selectionArgs = new String[] { video.getId() };
@@ -233,7 +232,7 @@ public class VideoSelectedMainActivity extends Activity implements
 					if (mVideos.containsKey(dirPath)) {
 						mVideos.get(dirPath).add(video);
 					} else {
-						List<Video> videos = new ArrayList<Video>();
+						List<VideoUpload> videos = new ArrayList<VideoUpload>();
 						videos.add(video);
 						mVideos.put(dirPath, videos);
 					}
@@ -245,8 +244,8 @@ public class VideoSelectedMainActivity extends Activity implements
 
 				// Log.e("allImgs", allImgs.get(0));
 				// Log.e("allImgs", allImgs.get(10));
-				Collections.sort(allVideos, new Comparator<Video>() {
-					public int compare(Video arg0, Video arg1) {
+				Collections.sort(allVideos, new Comparator<VideoUpload>() {
+					public int compare(VideoUpload arg0, VideoUpload arg1) {
 						File file1 = new File(arg0.getPath());
 						File file2 = new File(arg1.getPath());
 						if (file1.lastModified() > file2.lastModified())
@@ -317,9 +316,9 @@ public class VideoSelectedMainActivity extends Activity implements
 	public void selected(ImageFloder floder) {
 		if (!"".equals(floder.getDir())) {
 			mVideoDir = new File(floder.getDir());
-			List<Video> videos = mVideos.get(floder.getDir());
-			Collections.sort(videos, new Comparator<Video>() {
-				public int compare(Video arg0, Video arg1) {
+			List<VideoUpload> videos = mVideos.get(floder.getDir());
+			Collections.sort(videos, new Comparator<VideoUpload>() {
+				public int compare(VideoUpload arg0, VideoUpload arg1) {
 					File file1 = new File(arg0.getPath());
 					File file2 = new File(arg1.getPath());
 					if (file1.lastModified() > file2.lastModified())
@@ -356,7 +355,7 @@ public class VideoSelectedMainActivity extends Activity implements
 		super.onBackPressed();
 	}
 
-	public class VideoSelectedGridAdapter extends CommonAdapter<Video> {
+	public class VideoSelectedGridAdapter extends CommonAdapter<VideoUpload> {
 
 		/**
 		 * 文件夹路径
@@ -365,7 +364,7 @@ public class VideoSelectedMainActivity extends Activity implements
 		private TextView selectedNum;
 		private VideoSelectedMainActivity selectedMainActivity;
 
-		public VideoSelectedGridAdapter(Context context, List<Video> mDatas,
+		public VideoSelectedGridAdapter(Context context, List<VideoUpload> mDatas,
 				int itemLayoutId, String dirPath,
 				VideoSelectedMainActivity selectedMainActivity) {
 			super(context, mDatas, itemLayoutId);
@@ -375,16 +374,17 @@ public class VideoSelectedMainActivity extends Activity implements
 		}
 
 		@Override
-		public void convert(final ViewHolder helper, final Video item) {
+		public void convert(final ViewHolder helper, final VideoUpload item) {
 			// 设置no_pic
 			helper.setImageResource(R.id.id_item_image, R.drawable.pictures_no);
 			// 设置no_selected
 			helper.setImageResource(R.id.id_item_select,
 					R.drawable.picture_unselected);
 			// 设置图片
-			helper.setVideoImage(R.id.id_item_image, item.getPath());
+//			helper.setVideoImage(R.id.id_item_image, item.getPath());
 
 			final ImageView mImageView = helper.getView(R.id.id_item_image);
+			helper.setVideoImage(mImageView, item.getPath());
 			final ImageView mSelect = helper.getView(R.id.id_item_select);
 
 			mImageView.setColorFilter(null);

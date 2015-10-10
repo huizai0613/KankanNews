@@ -10,16 +10,16 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kankan.kankanews.bean.Video;
+import com.kankan.kankanews.bean.VideoUpload;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankanews.kankanxinwen.R;
 
-public class VideoSelectedGridAdapter extends CommonAdapter<Video> {
+public class VideoSelectedGridAdapter extends CommonAdapter<VideoUpload> {
 
 	/**
 	 * 用户选择的图片，存储为图片的完整路径
 	 */
-	private Video mSelectedVideo;
+	private VideoUpload mSelectedVideo;
 
 	/**
 	 * 文件夹路径
@@ -28,7 +28,7 @@ public class VideoSelectedGridAdapter extends CommonAdapter<Video> {
 	private TextView selectedNum;
 	private VideoSelectedMainActivity selectedMainActivity;
 
-	public VideoSelectedGridAdapter(Context context, List<Video> mDatas,
+	public VideoSelectedGridAdapter(Context context, List<VideoUpload> mDatas,
 			int itemLayoutId, String dirPath,
 			VideoSelectedMainActivity selectedMainActivity) {
 		super(context, mDatas, itemLayoutId);
@@ -38,7 +38,7 @@ public class VideoSelectedGridAdapter extends CommonAdapter<Video> {
 	}
 
 	@Override
-	public void convert(final ViewHolder helper, final Video item) {
+	public void convert(final ViewHolder helper, final VideoUpload item) {
 		// 设置no_pic
 		helper.setImageResource(R.id.id_item_image, R.drawable.pictures_no);
 		// 设置no_selected

@@ -5,6 +5,7 @@ import java.util.List;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.kankan.kankanews.bean.ImageFloder;
@@ -27,8 +28,11 @@ public class ListVideoDirPopupWindow extends
 			@Override
 			public void convert(ViewHolder helper, ImageFloder item) {
 				helper.setText(R.id.id_dir_item_name, item.getName());
-				helper.setVideoImage(R.id.id_dir_item_image,
-						item.getFirstImagePath());
+				// helper.setVideoImage(R.id.id_dir_item_image,
+				// item.getFirstImagePath());
+				ImageView imageView = (ImageView) helper.getConvertView()
+						.findViewById(R.id.id_dir_item_image);
+				helper.setVideoImage(imageView, item.getFirstImagePath());
 				// helper.setImageByUrl(R.id.id_dir_item_image,
 				// item.getDir() + "/" + mDatas.get(0));
 				helper.setText(R.id.id_dir_item_count, item.getCount() + "张");

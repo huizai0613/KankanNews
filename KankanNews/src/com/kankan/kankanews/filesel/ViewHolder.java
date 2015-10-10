@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.kankan.kankanews.utils.ImageLoader;
+import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.ImageLoader.Type;
 
 public class ViewHolder {
@@ -131,11 +132,36 @@ public class ViewHolder {
 	 * @param drawableId
 	 * @return
 	 */
-	public ViewHolder setVideoImage(final int viewId, final String url) {
-		ImageView imageView = (ImageView) getView(viewId);
-		imageView.setImageBitmap(getVideoThumbnail(url, 96, 96,
-				MediaStore.Images.Thumbnails.MICRO_KIND));
-
+	public ViewHolder setVideoImage(final ImageView imageView, final String url) {
+		// new Thread(new Runnable() {
+		// @Override
+		// public void run() {
+		// imageView.setImageBitmap(getVideoThumbnail(url, 96, 96,
+		// MediaStore.Images.Thumbnails.MICRO_KIND));
+		// }
+		// }) {
+		// }.start();
+		// imageView.post(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// // TODO Auto-generated method stub
+		// if (imageView != null)
+		// imageView.setImageBitmap(getVideoThumbnail(url, 96, 96,
+		// MediaStore.Images.Thumbnails.MICRO_KIND));
+		// }
+		// });
+		// imageView.post(new Runnable() {
+		//
+		// @Override
+		// public void run() {
+		// // TODO Auto-generated method stub
+		// if (imageView != null)
+		// ImgUtils.imageLoader.displayImage("file://" + url,
+		// imageView);
+		// }
+		// });
+		ImgUtils.imageLoader.displayImage("file://" + url, imageView);
 		return this;
 	}
 
@@ -166,6 +192,7 @@ public class ViewHolder {
 	private Bitmap getVideoThumbnail(String videoPath, int width, int height,
 			int kind) {
 		Bitmap bitmap = null;
+
 		// 获取视频的缩略图
 		bitmap = ThumbnailUtils.createVideoThumbnail(videoPath, kind);
 		bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
