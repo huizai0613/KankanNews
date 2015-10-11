@@ -40,6 +40,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.Volley;
 import com.kankan.kankanews.base.IA.CrashApplication;
+import com.kankan.kankanews.bean.VideoUploadResult;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.net.CustomRequest;
 import com.kankan.kankanews.net.CustomRequestArray;
@@ -599,21 +600,22 @@ public class NetUtils {
 		}
 	}
 
-	public static Map<String, String> getTokenUploadVideo(String fileName,
-			String fileSize) {
-		Map<String, String> result = new HashMap<String, String>();
+	public static VideoUploadResult getTokenUploadVideo(String fileName,
+			String fileSize, String deviceId) {
 		BufferedReader responseReader = null;
 		HttpURLConnection conn = null;
+		StringBuffer responseContent = new StringBuffer();
 		try {
 			String path = AndroidConfig.REVELATIONS_GET_VIDEO_UPLOAD_TOKEN
-					+ "?name=" + fileName + "&size=" + fileSize;
+					+ "?name=" + fileName + "_" + deviceId + "&size="
+					+ fileSize;
+			DebugLog.e(path);
 			URL url = new URL(path);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setConnectTimeout(5 * 1000);
 			conn.setRequestMethod("GET");
 			responseReader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
-			StringBuffer responseContent = new StringBuffer();
 			while (responseReader.ready()) {
 				responseContent.append(responseReader.readLine());
 			}
@@ -624,7 +626,8 @@ public class NetUtils {
 			} catch (IOException e) {
 			}
 		}
-		return result;
+		return JsonUtils.toObject(responseContent.toString(),
+				VideoUploadResult.class);
 	}
 
 	public static void main(String[] args) {
@@ -654,11 +657,12 @@ public class NetUtils {
 		// "B129351819_22124265_NoOne", 0, video.length());
 	}
 
-	public static Map<String, String> getTokenUploadVideo2(String fileName,
+	public static VideoUploadResult getTokenUploadVideo2(String fileName,
 			String fileSize) {
 		Map<String, String> result = new HashMap<String, String>();
 		BufferedReader responseReader = null;
 		HttpURLConnection conn = null;
+		StringBuffer responseContent = new StringBuffer();
 		try {
 			String path = "http://i.kankanews.com:8080/getToken.do?name="
 					+ fileName + "&size=" + fileSize;
@@ -669,66 +673,56 @@ public class NetUtils {
 			InputStream inStream = conn.getInputStream();
 			responseReader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
-			StringBuffer responseContent = new StringBuffer();
 			while (responseReader.ready()) {
 				responseContent.append(responseReader.readLine());
 			}
-			System.out.println(responseContent);
-			// byte[] data = StreamTool.readInputStream(inStream);
-			// String result = new String(data, "UTF-8");
-			// System.out.println(result);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 		} finally {
 			try {
 				conn.getInputStream().close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return result;
+		return JsonUtils.toObject(responseContent.toString(),
+				VideoUploadResult.class);
 	}
 
-	public static Map<String, String> valiedateUploadVideo(String token,
-			String fileName, String fileSize) {
+	public static VideoUploadResult valiedateUploadVideo(String token,
+			String fileName, String fileSize, String deviceId) {
 		Map<String, String> result = new HashMap<String, String>();
 		BufferedReader responseReader = null;
 		HttpURLConnection conn = null;
+		StringBuffer responseContent = new StringBuffer();
 		try {
-			String path = "http://localhost:8080/upload/upload?name="
-					+ fileName + "&size=" + fileSize + "&token=" + token;
+			String path = AndroidConfig.REVELATIONS_VIDEO_UPLOAD + "?name="
+					+ fileName + "_" + deviceId + "&size=" + fileSize
+					+ "&token=" + token;
 			URL url = new URL(path);
+			DebugLog.e(path);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setConnectTimeout(5 * 1000);
 			conn.setRequestMethod("GET");
 			InputStream inStream = conn.getInputStream();
 			responseReader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
-			StringBuffer responseContent = new StringBuffer();
 			while (responseReader.ready()) {
 				responseContent.append(responseReader.readLine());
 			}
-			System.out.println(responseContent);
-			// byte[] data = StreamTool.readInputStream(inStream);
-			// String result = new String(data, "UTF-8");
-			// System.out.println(result);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 		} finally {
 			try {
 				conn.getInputStream().close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		return result;
+		return JsonUtils.toObject(responseContent.toString(),
+				VideoUploadResult.class);
 	}
 
 	public static Map<String, String> postVideo(String video, String token,
 			long from, long to) {
-		System.out.println("from " + from + " to " + to);
 		Map<String, String> result = new HashMap<String, String>();
 		HttpURLConnection conn = null;
 		DataOutputStream outStream = null;

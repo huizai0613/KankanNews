@@ -46,7 +46,6 @@ import com.kankan.kankanews.animation.RotateAndTranslateAnimation;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.base.BaseVideoActivity;
-import com.kankan.kankanews.base.download.MyRequestCallBack;
 import com.kankan.kankanews.bean.MyCollect;
 import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.config.AndroidConfig;

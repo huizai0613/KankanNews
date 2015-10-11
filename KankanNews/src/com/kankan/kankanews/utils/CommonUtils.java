@@ -16,8 +16,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -45,7 +43,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
-import android.util.Log;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -56,10 +54,8 @@ import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.utils.L;
 import com.umeng.analytics.MobclickAgent;
@@ -1338,5 +1334,12 @@ public class CommonUtils {
 			imgUrl += ".webp";
 		}
 		return imgUrl;
+	}
+
+	public static String getDeviceID(Context context) {
+		TelephonyManager tm = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
+		String DEVICE_ID = tm.getDeviceId();
+		return DEVICE_ID;
 	}
 }

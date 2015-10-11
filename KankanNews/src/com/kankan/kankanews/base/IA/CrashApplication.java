@@ -25,7 +25,6 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.kankan.kankanews.base.BaseActivity;
-import com.kankan.kankanews.base.download.MyRequestCallBack;
 import com.kankan.kankanews.bean.Advert;
 import com.kankan.kankanews.bean.Content_News;
 import com.kankan.kankanews.bean.New_Colums;
@@ -66,11 +65,11 @@ public class CrashApplication extends Application {
 
 	private static boolean isStart;
 
-	public TreeMap<String, MyRequestCallBack> mRequestCallBackPauses = new TreeMap<String, MyRequestCallBack>();
+//	public TreeMap<String, MyRequestCallBack> mRequestCallBackPauses = new TreeMap<String, MyRequestCallBack>();
 
 	public TreeMap<String, HttpHandler> mHttpHandlereds = new TreeMap<String, HttpHandler>();
 
-	public TreeMap<String, MyRequestCallBack> mRequestCallBackeds = new TreeMap<String, MyRequestCallBack>();
+//	public TreeMap<String, MyRequestCallBack> mRequestCallBackeds = new TreeMap<String, MyRequestCallBack>();
 
 	public LinkedList<BaseActivity> mBaseActivityList = new LinkedList<BaseActivity>();
 	public boolean isAattch = false;

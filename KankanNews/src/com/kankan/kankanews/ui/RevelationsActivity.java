@@ -50,11 +50,10 @@ import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.ResultInfo;
 import com.kankan.kankanews.bean.VideoUpload;
+import com.kankan.kankanews.bean.VideoUploadResult;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.filesel.PicPreviewActivity;
 import com.kankan.kankanews.filesel.PicSelectedMainActivity;
-import com.kankan.kankanews.filesel.VideoSelectedGridAdapter;
-import com.kankan.kankanews.filesel.VideoSelectedMainActivity;
 import com.kankan.kankanews.ui.view.popup.ModifyAvatarDialog;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
@@ -219,10 +218,6 @@ public class RevelationsActivity extends BaseActivity implements
 			break;
 		case R.id.revelations_post_button:
 			if (this.status == _STATUS_INPUT_CONTENT_) {
-				if (revelationsType == _REVELATIONS_VIDEO_) {
-					new PostVideoTask().execute("");
-					break;
-				}
 				if (contentText.getText().length() == 0) {
 					contentText.requestFocus();
 					ToastUtils.Errortoast(this, "报料内容不得为空");
@@ -521,7 +516,13 @@ public class RevelationsActivity extends BaseActivity implements
 			Map<String, String> taskResult = new HashMap<String, String>();
 
 			File video = new File(videoSelected.getPath());
-			NetUtils.getTokenUploadVideo(video.getName(), video.length() + "");
+			VideoUploadResult uploadResult = NetUtils.getTokenUploadVideo(
+					video.getName(), video.length() + "",
+					CommonUtils.getDeviceID(RevelationsActivity.this));
+			NetUtils.valiedateUploadVideo(uploadResult.getToken(),
+					video.getName(), video.length() + "",
+					CommonUtils.getDeviceID(RevelationsActivity.this));
+			DebugLog.e(uploadResult.getToken());
 			return taskResult;
 		}
 
