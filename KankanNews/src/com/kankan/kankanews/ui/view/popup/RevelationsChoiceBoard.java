@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import com.kankan.kankanews.animation.RotateAndTranslateAnimation;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.ui.RevelationsActivity;
+import com.kankan.kankanews.ui.SharedJumpActivity;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankanews.kankanxinwen.R;
 
@@ -75,7 +76,7 @@ public class RevelationsChoiceBoard extends PopupWindow implements
 			dismiss();
 			return;
 		}
-		Intent intent = new Intent(this.activity, RevelationsActivity.class);
+		 Intent intent = new Intent(this.activity, RevelationsActivity.class);
 		switch (v.getId()) {
 		case R.id.go_photo_revelations_img:
 			intent.putExtra("_REVELATIONS_TYPE_",

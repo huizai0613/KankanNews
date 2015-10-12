@@ -57,6 +57,7 @@ import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.popup.RevelationsChoiceBoard;
 import com.kankan.kankanews.ui.view.popup.SecondColumsBoard;
+import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.Options;
@@ -273,10 +274,12 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 		} else if (id == R.id.tab_live && curTouchTab == tabLive) {
 			refreshLive();
 		} else if (id == R.id.tab_revelate && curTouchTab == tabRevelate) {
-			RevelationsChoiceBoard board = new RevelationsChoiceBoard(
-					MainActivity.this);
-			board.showAtLocation(curTouchTab, Gravity.BOTTOM, 0, 0);
-			board.doAnim();
+			if (!ClickUtils.isFastDoubleClick()) {
+				RevelationsChoiceBoard board = new RevelationsChoiceBoard(
+						MainActivity.this);
+				board.showAtLocation(curTouchTab, Gravity.BOTTOM, 0, 0);
+				board.doAnim();
+			}
 		}
 		if (id == R.id.tab_home) {
 			if (spUtil.getFirstGetColumns()) {

@@ -1,16 +1,22 @@
 package com.kankan.kankanews.ui.fragment;
 
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +40,8 @@ import com.kankan.kankanews.bean.LiveLiveList;
 import com.kankan.kankanews.bean.LiveLiveObj;
 import com.kankan.kankanews.bean.RevelationsActicityObjBreakNewsList;
 import com.kankan.kankanews.bean.SerializableObj;
+import com.kankan.kankanews.dialog.InfoMsgHint;
+import com.kankan.kankanews.receiver.AlarmReceiver;
 import com.kankan.kankanews.ui.RevelationsBreakNewsMoreActivity;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
@@ -45,6 +53,8 @@ import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.PixelUtil;
+import com.kankan.kankanews.utils.TimeUtil;
+import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
@@ -61,7 +71,23 @@ public class LiveLiveListFragment extends BaseFragment implements
 	private LinearLayout mRetryView;
 	private LinearLayout mLoadingView;
 
+	private AlarmManager mAlarmManager;
+
 	private Set<String> showIntroSet = new HashSet<String>();
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		DebugLog.e("LiveLiveListFragment onPause");
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		DebugLog.e("LiveLiveListFragment onResume");
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,6 +112,8 @@ public class LiveLiveListFragment extends BaseFragment implements
 	}
 
 	private void initView() {
+		mAlarmManager = (AlarmManager) mActivity
+				.getSystemService(Context.ALARM_SERVICE);
 		inflate = inflater.inflate(R.layout.fragment_live_live_list, null);
 		mLiveListView = (PullToRefreshPinnedSectionListView) inflate
 				.findViewById(R.id.live_list_view);
@@ -285,6 +313,7 @@ public class LiveLiveListFragment extends BaseFragment implements
 				});
 			} else {
 				final LiveLiveObj liveObj = item.liveObj;
+				liveObj.setOrder(liveIsPreviewed(liveObj));
 				layout = (LinearLayout) inflate.inflate(mActivity,
 						R.layout.item_live_fragment_list_view, null);
 				View separation = layout
@@ -302,6 +331,8 @@ public class LiveLiveListFragment extends BaseFragment implements
 						.findViewById(R.id.live_live_list_intro_but);
 				ImageView titlePic = (ImageView) layout
 						.findViewById(R.id.live_live_list_titlepic);
+				ImageView yuyueBut = (ImageView) layout
+						.findViewById(R.id.live_live_list_yuyue);
 				ImgUtils.imageLoader.displayImage(liveObj.getTitlepic(),
 						titlePic, ImgUtils.homeImageOptions);
 				ImageView liveType = (ImageView) layout
@@ -315,26 +346,7 @@ public class LiveLiveListFragment extends BaseFragment implements
 				// TODO 初始化详情
 				LinearLayout keyboardIconContent = (LinearLayout) layout
 						.findViewById(R.id.live_live_list_keyboard_content);
-				List<Keyboard> keyboardList = liveObj.getKeyboard();
-				keyboardIconContent.removeAllViews();
-				for (Keyboard keyboard : keyboardList) {
-					TextView view = new BorderTextView(
-							LiveLiveListFragment.this.mActivity,
-							keyboard.getColor());
-					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-							LinearLayout.LayoutParams.MATCH_PARENT,
-							LinearLayout.LayoutParams.WRAP_CONTENT);
-					view.setLayoutParams(params);
-					view.setGravity(Gravity.CENTER);
-					int px3 = PixelUtil.dp2px(3);
-					view.setPadding(px3, px3, px3, px3);
-					view.setText(keyboard.getText());
-					FontUtils.setTextViewFontSize(
-							LiveLiveListFragment.this.mActivity, view,
-							R.string.border_text_view_text_size, 1);
-					view.setTextColor(Color.parseColor(keyboard.getColor()));
-					keyboardIconContent.addView(view);
-				}
+
 				ImageView arrowshow = (ImageView) layout
 						.findViewById(R.id.live_live_list_arrowshow);
 				if (showIntroSet.contains(liveObj.getId())) {
@@ -368,18 +380,82 @@ public class LiveLiveListFragment extends BaseFragment implements
 				});
 				if ("正在直播".equals(liveObj.getType())) {
 					liveType.setBackgroundResource(R.drawable.ic_live);
+					yuyueBut.setVisibility(View.GONE);
+					keyboardIconContent.setVisibility(View.VISIBLE);
+					List<Keyboard> keyboardList = liveObj.getKeyboard();
+					keyboardIconContent.removeAllViews();
+					for (Keyboard keyboard : keyboardList) {
+						TextView view = new BorderTextView(
+								LiveLiveListFragment.this.mActivity,
+								keyboard.getColor());
+						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+								LinearLayout.LayoutParams.MATCH_PARENT,
+								LinearLayout.LayoutParams.WRAP_CONTENT);
+						view.setLayoutParams(params);
+						view.setGravity(Gravity.CENTER);
+						int px3 = PixelUtil.dp2px(3);
+						view.setPadding(px3, px3, px3, px3);
+						view.setText(keyboard.getText());
+						FontUtils.setTextViewFontSize(
+								LiveLiveListFragment.this.mActivity, view,
+								R.string.border_text_view_text_size, 1);
+						view.setTextColor(Color.parseColor(keyboard.getColor()));
+						keyboardIconContent.addView(view);
+					}
 					layout.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							LiveLiveListFragment.this.getHomeFragment()
-									.playLive(liveObj);
+							if (CommonUtils
+									.isNetworkAvailable(LiveLiveListFragment.this.mActivity)) {
+								if (!CommonUtils
+										.isWifi(LiveLiveListFragment.this.mActivity)) {
+									final InfoMsgHint dialog = new InfoMsgHint(
+											LiveLiveListFragment.this.mActivity,
+											R.style.MyDialog1);
+									dialog.setContent(
+											"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
+											"", "继续播放", "取消");
+									dialog.setCancleListener(new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											dialog.dismiss();
+										}
+									});
+									dialog.setOKListener(new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											LiveLiveListFragment.this
+													.getHomeFragment()
+													.playLive(liveObj);
+											dialog.dismiss();
+										}
+									});
+									dialog.show();
+								} else {
+									LiveLiveListFragment.this.getHomeFragment()
+											.playLive(liveObj);
+								}
+							}
 						}
 					});
 				} else if ("直播预告".equals(liveObj.getType())) {
 					liveType.setBackgroundResource(R.drawable.ic_next);
+					yuyueBut.setVisibility(View.VISIBLE);
+					keyboardIconContent.setVisibility(View.VISIBLE);
+					if (liveObj.isOrder()) {
+						yuyueBut.setImageResource(R.drawable.ic_unyuyue);
+					} else {
+						yuyueBut.setImageResource(R.drawable.ic_yuyue);
+					}
 					layout.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
+						}
+					});
+					yuyueBut.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							livePreview(liveObj);
 						}
 					});
 				}
@@ -424,5 +500,72 @@ public class LiveLiveListFragment extends BaseFragment implements
 
 	public void setHomeFragment(LiveHomeFragment homeFragment) {
 		this.mHomeFragment = homeFragment;
+	}
+
+	public void livePreview(LiveLiveObj liveObj) {
+		String[] split = liveObj.getDatetime().split(":::");
+		long date2unix2 = TimeUtil.date2unix2(split[0]);
+		long currentTimeMillis = System.currentTimeMillis();
+		long date2unix22 = TimeUtil.date2unix2(TimeUtil
+				.getTime(currentTimeMillis));
+		long time = date2unix2 - date2unix22;
+		if (time > 0) {
+			if (!liveObj.isOrder()) {
+				// 预约
+				Calendar calendar = Calendar.getInstance();
+				calendar.setTimeInMillis(SystemClock.elapsedRealtime());
+				calendar.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+				calendar.add(Calendar.SECOND, (int) (time / 1000));
+				// calendar.add(Calendar.SECOND,
+				// 10);
+
+				Intent intent = new Intent(mActivity, AlarmReceiver.class);
+				intent.putExtra("LIVE", liveObj);
+				PendingIntent sender = PendingIntent.getBroadcast(mActivity,
+						Integer.parseInt(liveObj.getId()), intent, 0);
+				// 进行闹铃注册
+				mAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+						calendar.getTimeInMillis(), sender);
+				liveObj.setOrder(true);
+				ToastUtils.Infotoast(mActivity, "预约设置成功");
+				try {
+					mActivity.dbUtils.saveOrUpdate(liveObj);
+				} catch (DbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				// 取消预约
+				Intent intent = new Intent(mActivity, AlarmReceiver.class);
+				intent.putExtra("LIVE", liveObj);
+				PendingIntent broadcast = PendingIntent.getBroadcast(mActivity,
+						Integer.parseInt(liveObj.getId()), intent, 0);
+				mAlarmManager.cancel(broadcast);
+				ToastUtils.Infotoast(mActivity, "预约设置取消");
+				liveObj.setOrder(false);
+				try {
+					mActivity.dbUtils.deleteById(LiveLiveObj.class,
+							liveObj.getId());
+				} catch (DbException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			mLiveListViewAdapter.notifyDataSetChanged();
+		} else {
+			ToastUtils.Infotoast(mActivity, "节目已经开始,请刷新观看");
+		}
+	}
+
+	public boolean liveIsPreviewed(LiveLiveObj liveObj) {
+		try {
+			Object obj = mActivity.dbUtils.findById(LiveLiveObj.class,
+					liveObj.getId());
+			return obj != null;
+		} catch (DbException e) {
+			// TODO Auto-generated catch block
+			DebugLog.e(e.getLocalizedMessage());
+			return false;
+		}
 	}
 }

@@ -52,8 +52,10 @@ import com.kankan.kankanews.bean.ResultInfo;
 import com.kankan.kankanews.bean.VideoUpload;
 import com.kankan.kankanews.bean.VideoUploadResult;
 import com.kankan.kankanews.config.AndroidConfig;
+import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.filesel.PicPreviewActivity;
 import com.kankan.kankanews.filesel.PicSelectedMainActivity;
+import com.kankan.kankanews.ui.view.TasksCompletedView;
 import com.kankan.kankanews.ui.view.popup.ModifyAvatarDialog;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
@@ -84,8 +86,11 @@ public class RevelationsActivity extends BaseActivity implements
 	private GridView imageGridView;
 	private RelativeLayout videoLayout;
 	private ImageView postVideoImageView;
+	private TextView postVideoBut;
+	private ImageView postVideoClose;
 	private ScrollView inputContentView;
 	private ScrollView postView;
+	private TasksCompletedView postVideoProgressBar;
 	private ImageGroupGridAdapter gridAdapter;
 	private List<String> imagesSelected = new LinkedList<String>();
 	private List<String> imagesSelectedUrl = new LinkedList<String>();
@@ -105,6 +110,12 @@ public class RevelationsActivity extends BaseActivity implements
 	private TimeCount timeCount = new TimeCount(60000, 1000);
 
 	private PostVideoTask videoTask;
+
+	private boolean isUploading = false;
+
+	private String releaseName = null;
+
+	private static long _SLICE_MAX_LENGTH_ = 512 * 1024;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +144,10 @@ public class RevelationsActivity extends BaseActivity implements
 				.findViewById(R.id.revelations_post_image_grid);
 		postVideoImageView = (ImageView) this
 				.findViewById(R.id.post_video_item);
+		postVideoBut = (TextView) this.findViewById(R.id.post_video_but);
+		postVideoClose = (ImageView) this.findViewById(R.id.post_video_close);
+		postVideoProgressBar = (TasksCompletedView) this
+				.findViewById(R.id.post_video_progress_bar);
 		videoLayout = (RelativeLayout) this
 				.findViewById(R.id.revelations_post_video_layout);
 		validateTextView = (TextView) this
@@ -180,6 +195,8 @@ public class RevelationsActivity extends BaseActivity implements
 		postBut.setOnClickListener(this);
 		postValidateBut.setOnClickListener(this);
 		postVideoImageView.setOnClickListener(this);
+		postVideoBut.setOnClickListener(this);
+		postVideoClose.setOnClickListener(this);
 		telBindingCancelBut.setOnClickListener(this);
 		contentText.addTextChangedListener(new MaxLengthWatcher(300,
 				contentText));
@@ -191,7 +208,17 @@ public class RevelationsActivity extends BaseActivity implements
 		int id = v.getId();
 		switch (id) {
 		case R.id.post_video_item:
-			goSelectVideo();
+			if (videoSelected == null)
+				goSelectVideo();
+			break;
+		case R.id.post_video_but:
+			if (isUploading)
+				cancelUploadVideoDialog();
+			else
+				executeUploadVideo();
+			break;
+		case R.id.post_video_close:
+			cancelUploadVideoDialog();
 			break;
 		case R.id.title_bar_left_img:
 			onBackPressed();
@@ -218,6 +245,16 @@ public class RevelationsActivity extends BaseActivity implements
 			break;
 		case R.id.revelations_post_button:
 			if (this.status == _STATUS_INPUT_CONTENT_) {
+				if (this.revelationsType == this._REVELATIONS_VIDEO_) {
+					if (this.isUploading && videoSelected != null) {
+						ToastUtils.Errortoast(this, "请等待视频上传完毕");
+						break;
+					}
+					if (this.releaseName == null || this.releaseName.equals("")) {
+						ToastUtils.Errortoast(this, "视频报料必须上传视频材料");
+						break;
+					}
+				}
 				if (contentText.getText().length() == 0) {
 					contentText.requestFocus();
 					ToastUtils.Errortoast(this, "报料内容不得为空");
@@ -237,7 +274,6 @@ public class RevelationsActivity extends BaseActivity implements
 						postBut.setBackgroundColor(Color.parseColor("#BEBEBE"));
 					}
 				}
-
 				break;
 			} else if (this.status == _STATUS_POST_) {
 				if (validateTextView.getText().length() == 0) {
@@ -377,8 +413,7 @@ public class RevelationsActivity extends BaseActivity implements
 				postVideoImageView.setImageBitmap(getVideoThumbnail(video
 						.getPath()));
 				videoSelected = video;
-				videoTask = new PostVideoTask();
-				videoTask.execute("");
+				executeUploadVideo();
 			}
 			return;
 		}
@@ -486,7 +521,7 @@ public class RevelationsActivity extends BaseActivity implements
 					imageUrls.append("|");
 			}
 			Map<String, String> result = ImgUtils.sendRevelationsContent(tel,
-					content, imageUrls.toString(), aid);
+					content, imageUrls.toString(), releaseName, aid);
 			taskResult.put("ResultCode", result.get("ResponseCode"));
 			taskResult.put("ResultText", result.get("ResponseContent"));
 			return taskResult;
@@ -516,19 +551,87 @@ public class RevelationsActivity extends BaseActivity implements
 			Map<String, String> taskResult = new HashMap<String, String>();
 
 			File video = new File(videoSelected.getPath());
+			if (!CommonUtils
+					.isNetworkAvailableNoToast(RevelationsActivity.this)) {
+				taskResult.put("_RESULT_", "notNet");
+				return taskResult;
+			}
 			VideoUploadResult uploadResult = NetUtils.getTokenUploadVideo(
-					video.getName(), video.length() + "",
-					CommonUtils.getDeviceID(RevelationsActivity.this));
-			NetUtils.valiedateUploadVideo(uploadResult.getToken(),
-					video.getName(), video.length() + "",
-					CommonUtils.getDeviceID(RevelationsActivity.this));
-			DebugLog.e(uploadResult.getToken());
+					video, CommonUtils.getDeviceID(RevelationsActivity.this));
+			if (uploadResult.isSuccess()) {
+				VideoUploadResult uploadResultValidate = NetUtils
+						.valiedateUploadVideo(uploadResult.getToken(), video,
+								CommonUtils
+										.getDeviceID(RevelationsActivity.this));
+				if (uploadResultValidate.isSuccess()) {
+					long start = uploadResultValidate.getStart();
+					long needUploadLength = video.length() - start;
+
+					int times = (int) Math.ceil(needUploadLength
+							/ (double) _SLICE_MAX_LENGTH_);
+					long to = 0;
+					VideoUploadResult postResult = null;
+					for (int i = 1; i <= times; i++) {
+						if (this.isCancelled()) {
+							taskResult.put("_RESULT_", "cancel");
+							return taskResult;
+						}
+						if (!CommonUtils.isNetworkAvailable(mContext)) {
+							taskResult.put("_RESULT_", "notNet");
+							return taskResult;
+						}
+						if (!CommonUtils.isWifi(mContext)) {
+							taskResult.put("_RESULT_", "notWifi");
+							return taskResult;
+						}
+						to = i * _SLICE_MAX_LENGTH_ + start;
+						if (to > video.length())
+							to = video.length();
+						postResult = NetUtils.postVideo(video,
+								uploadResult.getToken(), start + (i - 1)
+										* _SLICE_MAX_LENGTH_, to);
+						if (!postResult.isSuccess()) {
+							taskResult.put("_RESULT_", "error");
+							return taskResult;
+						}
+						postVideoProgressBar.setProgress((int) Math
+								.floor((double) to / video.length() * 100));
+					}
+					releaseName = postResult.getReleaseName();
+				} else {
+					taskResult.put("_RESULT_", "error");
+					return taskResult;
+				}
+			} else {
+				taskResult.put("_RESULT_", "error");
+				return taskResult;
+			}
+			taskResult.put("_RESULT_", "success");
 			return taskResult;
 		}
 
 		@Override
 		protected void onPostExecute(Map<String, String> result) {
 			super.onPostExecute(result);
+			isUploading = false;
+			if ("success".equals(result.get("_RESULT_"))) {
+				ToastUtils.Infotoast(mContext, "上传成功");
+				postVideoBut.setVisibility(View.GONE);
+				postVideoProgressBar.setVisibility(View.GONE);
+				postVideoClose.setVisibility(View.VISIBLE);
+			} else if ("error".equals(result.get("_RESULT_"))) {
+				ToastUtils.Errortoast(mContext, "上传失败请重试");
+				postVideoBut.setText("重试");
+				postVideoClose.setVisibility(View.VISIBLE);
+			} else if ("notWifi".equals(result.get("_RESULT_"))) {
+				ToastUtils.Errortoast(mContext, "为了您的流量,请在WIFI环境下上传");
+				postVideoBut.setText("重试");
+				postVideoClose.setVisibility(View.VISIBLE);
+			} else if ("notNet".equals(result.get("_RESULT_"))) {
+				ToastUtils.Errortoast(mContext, "当前环境无网络链接");
+				postVideoBut.setText("重试");
+				postVideoClose.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
@@ -675,9 +778,30 @@ public class RevelationsActivity extends BaseActivity implements
 
 	@Override
 	public void onBackPressed() {
-		if (this.status == _STATUS_INPUT_CONTENT_)
-			AnimFinsh();
-		else if (this.status == _STATUS_POST_) {
+		if (this.status == _STATUS_INPUT_CONTENT_) {
+			if (this.isUploading) {
+				final InfoMsgHint dialog = new InfoMsgHint(this,
+						R.style.MyDialog1);
+				dialog.setContent("是否要终止上传", "", "确定", "取消");
+				dialog.setCancleListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
+				dialog.setOKListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						cancelUploadVideo();
+						dialog.dismiss();
+						AnimFinsh();
+					}
+				});
+				dialog.show();
+			} else {
+				AnimFinsh();
+			}
+		} else if (this.status == _STATUS_POST_) {
 			this.status = _STATUS_INPUT_CONTENT_;
 			inputContentView.setVisibility(View.VISIBLE);
 			postView.setVisibility(View.GONE);
@@ -748,4 +872,50 @@ public class RevelationsActivity extends BaseActivity implements
 		}
 		return bitmap;
 	}
+
+	private void cancelUploadVideoDialog() {
+		final InfoMsgHint dialog = new InfoMsgHint(this, R.style.MyDialog1);
+		dialog.setContent("是否要删除附件", "", "确定", "取消");
+		dialog.setCancleListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		dialog.setOKListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				cancelUploadVideo();
+				dialog.dismiss();
+			}
+		});
+		dialog.show();
+	}
+
+	private void cancelUploadVideo() {
+		this.releaseName = null;
+		this.videoSelected = null;
+		this.postVideoBut.setVisibility(View.GONE);
+		postVideoProgressBar.setVisibility(View.GONE);
+		postVideoClose.setVisibility(View.GONE);
+		this.isUploading = false;
+		if (this.videoTask != null) {
+			this.videoTask.cancel(true);
+			this.videoTask = null;
+		}
+		this.postVideoImageView
+				.setImageResource(R.drawable.revelations_add_pic);
+	}
+
+	private void executeUploadVideo() {
+		isUploading = true;
+		videoTask = new PostVideoTask();
+		videoTask.execute("");
+		postVideoBut.setText("取消");
+		postVideoBut.setVisibility(View.VISIBLE);
+		postVideoClose.setVisibility(View.GONE);
+		postVideoProgressBar.setVisibility(View.VISIBLE);
+		postVideoProgressBar.setProgress(0);
+	}
+
 }

@@ -1,10 +1,11 @@
 package com.kankan.kankanews.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.kankan.kankanews.bean.interfaz.CanBePlay;
 
-public class LiveLiveObj implements CanBePlay {
+public class LiveLiveObj implements CanBePlay, Serializable {
 	private String id;
 	private String title;
 	private String titlepic;
@@ -19,6 +20,7 @@ public class LiveLiveObj implements CanBePlay {
 	private String datetime;
 	private String type;
 	private String time;
+	private boolean isOrder = false;
 
 	public String getId() {
 		return id;
@@ -130,6 +132,14 @@ public class LiveLiveObj implements CanBePlay {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	public boolean isOrder() {
+		return isOrder;
+	}
+
+	public void setOrder(boolean isOrder) {
+		this.isOrder = isOrder;
 	}
 
 	/**

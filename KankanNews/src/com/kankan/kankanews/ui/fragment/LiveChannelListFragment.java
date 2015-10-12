@@ -12,6 +12,8 @@ import tv.danmaku.ijk.media.player.option.format.AvFormatOption_HttpDetectRangeS
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +35,7 @@ import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.LiveChannelList;
 import com.kankan.kankanews.bean.LiveChannelObj;
 import com.kankan.kankanews.bean.SerializableObj;
+import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
@@ -65,6 +68,19 @@ public class LiveChannelListFragment extends BaseFragment implements
 
 	private IjkMediaPlayer mAudioPlayer;
 
+	private static final int _CHANNEL_ADAPTER_NOTIFY_DATA_SET_CHANGED_ = 1000;
+
+	public Handler mLiveChannelHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case _CHANNEL_ADAPTER_NOTIFY_DATA_SET_CHANGED_:
+				if (mLiveChannelViewAdapter != null)
+					mLiveChannelViewAdapter.notifyDataSetChanged();
+				break;
+			}
+		};
+	};
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -79,7 +95,10 @@ public class LiveChannelListFragment extends BaseFragment implements
 	public void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		DebugLog.e("LiveChannelListFragment onResume");
 		mLiveChannelView.showHeadLoadingView();
+		mLiveChannelHandler
+				.sendEmptyMessage(_CHANNEL_ADAPTER_NOTIFY_DATA_SET_CHANGED_);
 		refreshNetDate();
 	}
 
@@ -87,7 +106,8 @@ public class LiveChannelListFragment extends BaseFragment implements
 	public void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		this.closeVideoPlay();
+		DebugLog.e("LiveChannelListFragment onPause");
+		this.cleanAudioPlay();
 	}
 
 	private void initLinsenter() {
@@ -366,8 +386,38 @@ public class LiveChannelListFragment extends BaseFragment implements
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						LiveChannelListFragment.this.getHomeFragment()
-								.playLive(channel);
+						cleanAudioPlay();
+						if (CommonUtils
+								.isNetworkAvailable(LiveChannelListFragment.this.mActivity)) {
+							if (!CommonUtils
+									.isWifi(LiveChannelListFragment.this.mActivity)) {
+								final InfoMsgHint dialog = new InfoMsgHint(
+										LiveChannelListFragment.this.mActivity,
+										R.style.MyDialog1);
+								dialog.setContent(
+										"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
+										"", "继续播放", "取消");
+								dialog.setCancleListener(new OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialog.dismiss();
+									}
+								});
+								dialog.setOKListener(new OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										LiveChannelListFragment.this
+												.getHomeFragment().playLive(
+														channel);
+										dialog.dismiss();
+									}
+								});
+								dialog.show();
+							} else {
+								LiveChannelListFragment.this.getHomeFragment()
+										.playLive(channel);
+							}
+						}
 					}
 				});
 			} else if (ItemType == _FM_) {
@@ -394,10 +444,37 @@ public class LiveChannelListFragment extends BaseFragment implements
 					@Override
 					public void onClick(View v) {
 						if (channel.getId().equals(mCurFMPlayId)) {
-							mCurFMPlayId = "NULL";
+							cleanAudioPlay();
 						} else {
 							mCurFMPlayId = channel.getId();
-							videoPlay(channel.getStreamurl());
+							if (CommonUtils
+									.isNetworkAvailable(LiveChannelListFragment.this.mActivity)) {
+								if (!CommonUtils
+										.isWifi(LiveChannelListFragment.this.mActivity)) {
+									final InfoMsgHint dialog = new InfoMsgHint(
+											LiveChannelListFragment.this.mActivity,
+											R.style.MyDialog1);
+									dialog.setContent(
+											"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
+											"", "继续播放", "取消");
+									dialog.setCancleListener(new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											dialog.dismiss();
+										}
+									});
+									dialog.setOKListener(new OnClickListener() {
+										@Override
+										public void onClick(View v) {
+											videoPlay(channel.getStreamurl());
+											dialog.dismiss();
+										}
+									});
+									dialog.show();
+								} else {
+									videoPlay(channel.getStreamurl());
+								}
+							}
 						}
 						mLiveChannelViewAdapter.notifyDataSetChanged();
 					}
@@ -426,7 +503,7 @@ public class LiveChannelListFragment extends BaseFragment implements
 
 	public void closeVideoPlay() {
 		if (mAudioPlayer != null) {
-			mAudioPlayer.stop();
+			// mAudioPlayer.stop();
 			mAudioPlayer.release();
 		}
 	}
@@ -437,5 +514,14 @@ public class LiveChannelListFragment extends BaseFragment implements
 
 	public void setHomeFragment(LiveHomeFragment homeFragment) {
 		this.homeFragment = homeFragment;
+	}
+
+	public void cleanAudioPlay() {
+		if (!"NULL".equals(mCurFMPlayId)) {
+			mCurFMPlayId = "NULL";
+			this.closeVideoPlay();
+			mLiveChannelHandler
+					.sendEmptyMessage(_CHANNEL_ADAPTER_NOTIFY_DATA_SET_CHANGED_);
+		}
 	}
 }

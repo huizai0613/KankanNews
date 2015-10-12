@@ -49,6 +49,10 @@ import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView.EllipsizeListener;
+import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
+import com.kankan.kankanews.ui.view.popup.RevelationsChoiceBoard;
+import com.kankan.kankanews.ui.view.popup.RevelationsChoiceBottomBoard;
+import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
@@ -233,9 +237,17 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 
 	private void goRevelations() {
 		// TODO Auto-generated method stub
-		Intent intent = new Intent(this, RevelationsActivity.class);
-		intent.putExtra("_AID_", this.aid);
-		this.startActivity(intent);
+		// Intent intent = new Intent(this, RevelationsActivity.class);
+		// intent.putExtra("_AID_", this.aid);
+		// this.startActivity(intent);
+
+		if (!ClickUtils.isFastDoubleClick()) {
+			RevelationsChoiceBottomBoard board = new RevelationsChoiceBottomBoard(
+					this, this.aid);
+			board.setAnimationStyle(R.style.popwin_anim_style);
+			board.showAtLocation(this.getWindow().getDecorView(),
+					Gravity.BOTTOM, 0, 0);
+		}
 	}
 
 	@Override
@@ -244,7 +256,8 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		revelationsActivityListJson = jsonObject.toString();
 		boolean needRefresh = (revelationsActivityList == null);
 		// ToastUtils.Infotoast(getActivity(), jsonObject.toString());
-		revelationsActivityList = JsonUtils.toObject(revelationsActivityListJson,
+		revelationsActivityList = JsonUtils.toObject(
+				revelationsActivityListJson,
 				RevelationsActicityObjBreakNewsList.class);
 		if (revelationsActivityList != null) {
 			loadingView.setVisibility(View.GONE);

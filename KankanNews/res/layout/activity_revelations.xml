@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tc="http://schemas.android.com/apk/res/com.kankanews.kankanxinwen"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
@@ -106,7 +107,7 @@
             <RelativeLayout
                 android:id="@+id/revelations_post_video_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="100dip"
                 android:layout_margin="@dimen/margin_base_space"
                 android:background="@drawable/revelations_post_content_edittext_shape"
                 android:padding="10dip"
@@ -114,11 +115,42 @@
 
                 <ImageView
                     android:id="@+id/post_video_item"
-                    android:layout_width="60dip"
-                    android:layout_height="60dip"
+                    android:layout_width="80dip"
+                    android:layout_height="80dip"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
                     android:src="@drawable/revelations_add_pic" />
+
+                <TextView
+                    android:id="@+id/post_video_but"
+                    android:layout_width="80dip"
+                    android:layout_height="80dip"
+                    android:background="@color/half_alpha_black"
+                    android:gravity="center"
+                    android:text="取消"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+
+                <com.kankan.kankanews.ui.view.TasksCompletedView
+                    android:id="@+id/post_video_progress_bar"
+                    android:layout_width="80dip"
+                    android:layout_height="80dip"
+                    android:layout_alignParentLeft="true"
+                    android:visibility="gone"
+                    tc:circleColor="@color/red"
+                    tc:radius="20dip"
+                    tc:ringColor="@color/red"
+                    tc:strokeWidth="10dip" />
+
+                <ImageView
+                    android:id="@+id/post_video_close"
+                    android:layout_width="20dip"
+                    android:layout_height="20dip"
+                    android:layout_marginLeft="-20dip"
+                    android:layout_toRightOf="@+id/post_video_item"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/close_red"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <TextView

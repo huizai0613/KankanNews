@@ -12,8 +12,9 @@ public class VideoUploadResult implements Serializable {
 
 	private String message;
 	private String token;
-	private boolean succeess;
+	private boolean success;
 	private long start;
+	private String releaseName;
 
 	public String getMessage() {
 		return message;
@@ -31,12 +32,12 @@ public class VideoUploadResult implements Serializable {
 		this.token = token;
 	}
 
-	public boolean isSucceess() {
-		return succeess;
+	public boolean isSuccess() {
+		return success;
 	}
 
-	public void setSucceess(boolean succeess) {
-		this.succeess = succeess;
+	public void setSuccess(boolean success) {
+		this.success = success;
 	}
 
 	public long getStart() {
@@ -45,6 +46,14 @@ public class VideoUploadResult implements Serializable {
 
 	public void setStart(long start) {
 		this.start = start;
+	}
+
+	public String getReleaseName() {
+		return releaseName;
+	}
+
+	public void setReleaseName(String releaseName) {
+		this.releaseName = releaseName;
 	}
 
 }

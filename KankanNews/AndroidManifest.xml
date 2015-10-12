@@ -82,6 +82,12 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.kankan.kankanews.ui.SharedJumpActivity"
+            android:exported="false"
+            android:hardwareAccelerated="false"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_My_About"
             android:exported="false"
             android:screenOrientation="portrait" >

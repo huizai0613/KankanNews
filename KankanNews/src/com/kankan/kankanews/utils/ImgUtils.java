@@ -158,8 +158,12 @@ public class ImgUtils {
 			responseReader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
 			StringBuffer responseContent = new StringBuffer();
-			while (responseReader.ready()) {
-				responseContent.append(responseReader.readLine());
+			String str;
+			// while (responseReader.ready()) {
+			// responseContent.append(responseReader.readLine());
+			// }
+			while ((str = responseReader.readLine()) != null) {
+				responseContent.append(str);
 			}
 			result.put("ResponseCode", conn.getResponseCode() + "");
 			result.put("ResponseContent", responseContent.toString());
@@ -183,14 +187,17 @@ public class ImgUtils {
 	}
 
 	public static Map<String, String> sendRevelationsContent(String tel,
-			String content, String imgUrls, String aId) {
+			String content, String imgUrls, String videoUrl, String aId) {
 		Map<String, String> result = new HashMap<String, String>();
 		HttpPost httpPost = new HttpPost(AndroidConfig.REVELATIONS_CONTENT_POST);
 		// 设置HTTP POST请求参数必须用NameValuePair对象
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("phonenum", tel));
 		params.add(new BasicNameValuePair("newstext", content));
-		params.add(new BasicNameValuePair("imagegroup", imgUrls));
+		if (videoUrl != null)
+			params.add(new BasicNameValuePair("filename", videoUrl));
+		else
+			params.add(new BasicNameValuePair("imagegroup", imgUrls));
 		if (aId != null && !aId.trim().equals(""))
 			params.add(new BasicNameValuePair("aid", aId));
 		HttpResponse httpResponse = null;

@@ -6,10 +6,7 @@ import java.io.File;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
 import android.app.Activity;
@@ -18,7 +15,6 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.view.Display;
 import android.view.WindowManager;
@@ -27,6 +23,7 @@ import android.widget.Toast;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.Advert;
 import com.kankan.kankanews.bean.Content_News;
+import com.kankan.kankanews.bean.LiveLiveObj;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.bean.New_Colums_Info;
 import com.kankan.kankanews.bean.New_Colums_Second;
@@ -65,11 +62,13 @@ public class CrashApplication extends Application {
 
 	private static boolean isStart;
 
-//	public TreeMap<String, MyRequestCallBack> mRequestCallBackPauses = new TreeMap<String, MyRequestCallBack>();
+	// public TreeMap<String, MyRequestCallBack> mRequestCallBackPauses = new
+	// TreeMap<String, MyRequestCallBack>();
 
 	public TreeMap<String, HttpHandler> mHttpHandlereds = new TreeMap<String, HttpHandler>();
 
-//	public TreeMap<String, MyRequestCallBack> mRequestCallBackeds = new TreeMap<String, MyRequestCallBack>();
+	// public TreeMap<String, MyRequestCallBack> mRequestCallBackeds = new
+	// TreeMap<String, MyRequestCallBack>();
 
 	public LinkedList<BaseActivity> mBaseActivityList = new LinkedList<BaseActivity>();
 	public boolean isAattch = false;
@@ -147,6 +146,7 @@ public class CrashApplication extends Application {
 					arg0.dropTable(Advert.class);
 					arg0.dropTable(RevelationsHomeList.class);
 					arg0.dropTable(New_HomeCate.class);
+					arg0.dropTable(LiveLiveObj.class);
 					arg0.createTableIfNotExist(New_News_Home.class);
 					arg0.createTableIfNotExist(New_News_Top.class);
 					arg0.createTableIfNotExist(New_News.class);
@@ -159,6 +159,7 @@ public class CrashApplication extends Application {
 					arg0.createTableIfNotExist(Advert.class);
 					arg0.createTableIfNotExist(RevelationsHomeList.class);
 					arg0.createTableIfNotExist(New_HomeCate.class);
+					arg0.createTableIfNotExist(LiveLiveObj.class);
 				} catch (DbException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

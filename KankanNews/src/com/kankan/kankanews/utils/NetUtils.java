@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -600,162 +601,94 @@ public class NetUtils {
 		}
 	}
 
-	public static VideoUploadResult getTokenUploadVideo(String fileName,
-			String fileSize, String deviceId) {
-		BufferedReader responseReader = null;
+	public static VideoUploadResult getTokenUploadVideo(File video,
+			String deviceId) {
+		// BufferedReader responseReader = null;
 		HttpURLConnection conn = null;
 		StringBuffer responseContent = new StringBuffer();
+		HttpGet httpGet = null;
+		HttpResponse httpResponse = null;
 		try {
 			String path = AndroidConfig.REVELATIONS_GET_VIDEO_UPLOAD_TOKEN
-					+ "?name=" + fileName + "_" + deviceId + "&size="
-					+ fileSize;
-			DebugLog.e(path);
-			URL url = new URL(path);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setConnectTimeout(5 * 1000);
-			conn.setRequestMethod("GET");
-			responseReader = new BufferedReader(new InputStreamReader(
-					conn.getInputStream()));
-			while (responseReader.ready()) {
-				responseContent.append(responseReader.readLine());
-			}
+					+ "?name=" + video.getName() + "_" + deviceId + "&size="
+					+ video.length();
+			httpGet = new HttpGet(path);
+			httpResponse = new DefaultHttpClient().execute(httpGet);
+			// DebugLog.e(path);
+			// URL url = new URL(path);
+			// conn = (HttpURLConnection) url.openConnection();
+			// conn.setConnectTimeout(5 * 1000);
+			// conn.setRequestMethod("GET");
+			// responseReader = new BufferedReader(new InputStreamReader(
+			// conn.getInputStream()));
+			// while (responseReader.ready()) {
+			// responseContent.append(responseReader.readLine());
+			// }
+			responseContent.append(EntityUtils.toString(httpResponse
+					.getEntity()));
 		} catch (Exception e) {
+			DebugLog.e(e.getLocalizedMessage());
+			VideoUploadResult result = new VideoUploadResult();
+			result.setSuccess(false);
+			return result;
 		} finally {
-			try {
-				conn.getInputStream().close();
-			} catch (IOException e) {
-			}
-		}
-		return JsonUtils.toObject(responseContent.toString(),
-				VideoUploadResult.class);
-	}
-
-	public static void main(String[] args) {
-		File video = new File("H://VID_20150921_104104副本.mp4");
-		// getTokenUploadVideo("VID_20150921_104104副本.mp4", video.length() +
-		// "");
-		// valiedateUploadVideo("A1365070858_22124265_NoOne",
-		// "VID_20150921_104104.mp4", video.length() + "");
-		// 22124265
-		double length = video.length();
-		System.out.println((double) (length / 1024 / 1024 / 5));
-		int times = (int) Math.ceil(length / 1024 / 1024 / 5);
-		long to = 0;
-		for (int i = 1; i <= times; i++) {
-			to = i * 1024 * 1024 * 5;
-			if (to > video.length())
-				to = video.length();
-			postVideo("H://VID_20150921_104104副本.mp4",
-					"B129351819_22124265_NoOne", (i - 1) * 1024 * 1024 * 5, to);
-		}
-		// postVideo("H://VID_20150921_104104副本.mp4",
-		// "B129351819_22124265_NoOne", to,
-		// video.length());
-		// postVideo("H://VID_20150921_104104副本.mp4",
-		// "A1936341607_22124265_NoOne", 0, 12124265);
-		// postVideo("H://VID_20150921_104104副本.mp4",
-		// "B129351819_22124265_NoOne", 0, video.length());
-	}
-
-	public static VideoUploadResult getTokenUploadVideo2(String fileName,
-			String fileSize) {
-		Map<String, String> result = new HashMap<String, String>();
-		BufferedReader responseReader = null;
-		HttpURLConnection conn = null;
-		StringBuffer responseContent = new StringBuffer();
-		try {
-			String path = "http://i.kankanews.com:8080/getToken.do?name="
-					+ fileName + "&size=" + fileSize;
-			URL url = new URL(path);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setConnectTimeout(5 * 1000);
-			conn.setRequestMethod("GET");
-			InputStream inStream = conn.getInputStream();
-			responseReader = new BufferedReader(new InputStreamReader(
-					conn.getInputStream()));
-			while (responseReader.ready()) {
-				responseContent.append(responseReader.readLine());
-			}
-		} catch (Exception e) {
-		} finally {
-			try {
-				conn.getInputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		return JsonUtils.toObject(responseContent.toString(),
 				VideoUploadResult.class);
 	}
 
 	public static VideoUploadResult valiedateUploadVideo(String token,
-			String fileName, String fileSize, String deviceId) {
-		Map<String, String> result = new HashMap<String, String>();
+			File video, String deviceId) {
+		HttpGet httpGet = null;
+		HttpResponse httpResponse = null;
 		BufferedReader responseReader = null;
-		HttpURLConnection conn = null;
+		// HttpURLConnection conn = null;
 		StringBuffer responseContent = new StringBuffer();
 		try {
 			String path = AndroidConfig.REVELATIONS_VIDEO_UPLOAD + "?name="
-					+ fileName + "_" + deviceId + "&size=" + fileSize
-					+ "&token=" + token;
-			URL url = new URL(path);
-			DebugLog.e(path);
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setConnectTimeout(5 * 1000);
-			conn.setRequestMethod("GET");
-			InputStream inStream = conn.getInputStream();
-			responseReader = new BufferedReader(new InputStreamReader(
-					conn.getInputStream()));
-			while (responseReader.ready()) {
-				responseContent.append(responseReader.readLine());
-			}
+					+ video.getName() + "_" + deviceId + "&size="
+					+ video.length() + "&token=" + token;
+			// URL url = new URL(path);
+			httpGet = new HttpGet(path);
+			httpResponse = new DefaultHttpClient().execute(httpGet);
+			// conn = (HttpURLConnection) url.openConnection();
+			// conn.setConnectTimeout(5 * 1000);
+			// conn.setRequestMethod("GET");
+			// InputStream inStream = conn.getInputStream();
+			// responseReader = new BufferedReader(new InputStreamReader(
+			// conn.getInputStream()));
+			// while (responseReader.ready()) {
+			// responseContent.append(responseReader.readLine());
+			// }
+			responseContent.append(EntityUtils.toString(httpResponse
+					.getEntity()));
 		} catch (Exception e) {
+			DebugLog.e(e.getLocalizedMessage());
+			VideoUploadResult result = new VideoUploadResult();
+			result.setSuccess(false);
+			return result;
 		} finally {
-			try {
-				conn.getInputStream().close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 		return JsonUtils.toObject(responseContent.toString(),
 				VideoUploadResult.class);
 	}
 
-	public static Map<String, String> postVideo(String video, String token,
+	public static VideoUploadResult postVideo(File video, String token,
 			long from, long to) {
-		Map<String, String> result = new HashMap<String, String>();
 		HttpURLConnection conn = null;
 		DataOutputStream outStream = null;
-		// ByteArrayInputStream tarFile = null;
+		StringBuffer responseContent = null;
 		BufferedReader responseReader = null;
 		FileChannel channel = null;
 		try {
-			File srcFile = new File(video);
 			String uriAPI = "http://i.kankanews.com:8080/upload.do?token="
-					+ token + "&name=" + srcFile.getName();
+					+ token + "&name=" + video.getName();
 			String BOUNDARY = java.util.UUID.randomUUID().toString();
 			String PREFIX = "--", LINEND = "\r\n";
 			String MULTIPART_FROM_DATA = "multipart/form-data";
 			String CHARSET = "UTF-8";
 
 			URL uri = new URL(uriAPI);
-
-			// StringBuilder sb1 = new StringBuilder();
-			// sb1.append(PREFIX);
-			// sb1.append(BOUNDARY);
-			// sb1.append(LINEND);
-			// sb1.append("Content-Disposition: form-data; name=\"file\"; filename=\""
-			// + srcFile.getName() + "\"" + LINEND);
-			// sb1.append("Content-Type: multipart/form-data; charset=" +
-			// CHARSET
-			// + LINEND);
-			// sb1.append(LINEND);
-			//
-			// StringBuilder sb2 = new StringBuilder();
-			// sb2.append(LINEND);
-			// sb2.append(PREFIX);
-			// sb2.append(BOUNDARY);
-			// sb2.append(PREFIX);
 
 			conn = (HttpURLConnection) uri.openConnection();
 			conn.setReadTimeout(5000 * 1000);
@@ -765,63 +698,44 @@ public class NetUtils {
 			conn.setRequestMethod("POST"); // Post方式
 			conn.setRequestProperty("connection", "keep-alive");
 
-			// ByteArrayOutputStream fileOut = new ByteArrayOutputStream();
-			channel = new FileInputStream(srcFile).getChannel();
-
-			// long fileLength = fileOut.toByteArray().length;
-
-			// tarFile = new ByteArrayInputStream(fileOut.toByteArray());
-
-			// long contentLength = srcFile.length();
+			channel = new FileInputStream(video).getChannel();
 			long contentLength = to - from;
-			// + sb1.toString().getBytes().length
-			// + sb2.toString().getBytes().length;
 
 			conn.setRequestProperty("Content-Length", contentLength + "");
 			conn.setRequestProperty("Charsert", "UTF-8");
 			conn.setRequestProperty("Content-Type", MULTIPART_FROM_DATA
 					+ ";boundary=" + BOUNDARY);
 			conn.setRequestProperty("content-range", "bytes " + from + "-" + to
-					+ "/" + srcFile.length());
+					+ "/" + video.length());
 
 			outStream = new DataOutputStream(conn.getOutputStream());
-			// outStream.write(sb1.toString().getBytes());
-			// byte[] buffer = new byte[8192];
-			// int len = 0;
-			// while ((len = tarFile.read(buffer)) != -1) {
-			// outStream.write(buffer, 0, len);
-			// }
 			channel.transferTo(from, to - from, Channels.newChannel(outStream));
-			// outStream.write(sb2.toString().getBytes());
 
 			responseReader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
-			StringBuffer responseContent = new StringBuffer();
-			while (responseReader.ready()) {
-				responseContent.append(responseReader.readLine());
+			responseContent = new StringBuffer();
+			// while (responseReader.ready()) {
+			// responseContent.append(responseReader.readLine());
+			// }
+			String str;
+			while ((str = responseReader.readLine()) != null) {
+				responseContent.append(str);
 			}
-			System.out.println(responseContent);
-			result.put("ResponseCode", conn.getResponseCode() + "");
-			result.put("ResponseContent", responseContent.toString());
-
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			// Log.e("IMG_UTILS", e.getLocalizedMessage(), e);
-			result.put("ResponseCode", "ERROR");
-			result.put("ResponseContent", "ERROR");
+			DebugLog.e(e.getLocalizedMessage());
+			VideoUploadResult result = new VideoUploadResult();
+			result.setSuccess(false);
+			return result;
 		} finally {
 			try {
-				// tarFile.close();
 				outStream.close();
 				channel.close();
 				conn.getInputStream().close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-				// TODO Auto-generated catch block
-				// Log.e("IMG_UTILS", e.getLocalizedMessage(), e);
 			}
 		}
-		return result;
+		return JsonUtils.toObject(responseContent.toString(),
+				VideoUploadResult.class);
 	}
 }

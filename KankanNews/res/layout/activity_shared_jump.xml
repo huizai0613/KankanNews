@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tc="http://schemas.android.com/apk/res/com.kankanews.kankanxinwen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.kankan.kankanews.ui.view.TasksCompletedView
+        android:id="@+id/post_video_progress_bar"
+        android:layout_width="70dip"
+        android:layout_height="70dip"
+        android:layout_centerInParent="true"
+        tc:circleColor="@color/blue"
+        tc:radius="25dip"
+        tc:ringColor="@color/blue"
+        tc:strokeWidth="10dip" />
+
+</RelativeLayout>
