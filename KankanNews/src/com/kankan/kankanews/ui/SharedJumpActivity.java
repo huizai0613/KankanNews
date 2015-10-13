@@ -10,6 +10,7 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.New_News_Home;
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
@@ -19,10 +20,8 @@ import com.kankan.kankanews.ui.view.TasksCompletedView;
 import com.kankanews.kankanxinwen.R;
 
 public class SharedJumpActivity extends BaseActivity {
-	private TasksCompletedView post_video_progress_bar;
-
-	private int mTotalProgress = 100;
-	private int mCurrentProgress = 0;
+	private CanSharedObject mShareObj;
+	private String mType;
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -39,10 +38,6 @@ public class SharedJumpActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.setContentView(R.layout.activity_shared_jump);
-		post_video_progress_bar = (TasksCompletedView) this
-				.findViewById(R.id.post_video_progress_bar);
-//		post_video_progress_bar.setProgress(80);
-		new Thread(new ProgressRunable()).start();
 	}
 
 	@Override
@@ -58,6 +53,10 @@ public class SharedJumpActivity extends BaseActivity {
 
 	@Override
 	protected void initData() {
+		mShareObj = (CanSharedObject) this.getIntent().getSerializableExtra(
+				"_SHARED_OBJ_");
+		mType = this.getIntent().getStringExtra("_SHARED_TYPE_");
+
 	}
 
 	@Override
@@ -85,20 +84,4 @@ public class SharedJumpActivity extends BaseActivity {
 
 	}
 
-	class ProgressRunable implements Runnable {
-
-		@Override
-		public void run() {
-			while (mCurrentProgress < mTotalProgress) {
-				mCurrentProgress += 1;
-				post_video_progress_bar.setProgress(mCurrentProgress);
-				try {
-					Thread.sleep(100);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-	}
 }

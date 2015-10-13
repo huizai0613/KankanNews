@@ -1,10 +1,12 @@
 package com.kankan.kankanews.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.kankan.kankanews.bean.interfaz.CanBePlay;
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 
-public class LiveChannelObj implements CanBePlay {
+public class LiveChannelObj implements CanBePlay, CanSharedObject, Serializable {
 	private String id;
 	private String classid;
 	private String title;
@@ -119,10 +121,6 @@ public class LiveChannelObj implements CanBePlay {
 		this.trailer_etime = trailer_etime;
 	}
 
-	public String getSharepic() {
-		return sharepic;
-	}
-
 	public void setSharepic(String sharepic) {
 		this.sharepic = sharepic;
 	}
@@ -157,6 +155,18 @@ public class LiveChannelObj implements CanBePlay {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	@Override
+	public String getTitlelist() {
+		// TODO Auto-generated method stub
+		return title;
+	}
+
+	@Override
+	public String getSharedPic() {
+		// TODO Auto-generated method stub
+		return sharepic;
 	}
 
 }

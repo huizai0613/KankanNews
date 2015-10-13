@@ -427,6 +427,9 @@ public class LiveLiveListFragment extends BaseFragment implements
 											LiveLiveListFragment.this
 													.getHomeFragment()
 													.playLive(liveObj);
+											LiveLiveListFragment.this
+													.getHomeFragment()
+													.setSharedObj(liveObj);
 											dialog.dismiss();
 										}
 									});
@@ -434,6 +437,8 @@ public class LiveLiveListFragment extends BaseFragment implements
 								} else {
 									LiveLiveListFragment.this.getHomeFragment()
 											.playLive(liveObj);
+									LiveLiveListFragment.this.getHomeFragment()
+											.setSharedObj(liveObj);
 								}
 							}
 						}

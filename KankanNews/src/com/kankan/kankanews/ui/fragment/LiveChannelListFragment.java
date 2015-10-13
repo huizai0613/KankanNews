@@ -409,6 +409,9 @@ public class LiveChannelListFragment extends BaseFragment implements
 										LiveChannelListFragment.this
 												.getHomeFragment().playLive(
 														channel);
+										LiveChannelListFragment.this
+												.getHomeFragment()
+												.setSharedObj(channel);
 										dialog.dismiss();
 									}
 								});
@@ -416,6 +419,8 @@ public class LiveChannelListFragment extends BaseFragment implements
 							} else {
 								LiveChannelListFragment.this.getHomeFragment()
 										.playLive(channel);
+								LiveChannelListFragment.this.getHomeFragment()
+										.setSharedObj(channel);
 							}
 						}
 					}

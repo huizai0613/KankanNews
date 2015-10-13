@@ -4,8 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.kankan.kankanews.bean.interfaz.CanBePlay;
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 
-public class LiveLiveObj implements CanBePlay, Serializable {
+public class LiveLiveObj implements CanBePlay, Serializable, CanSharedObject {
 	private String id;
 	private String title;
 	private String titlepic;
@@ -68,10 +69,6 @@ public class LiveLiveObj implements CanBePlay, Serializable {
 
 	public void setIsgood(String isgood) {
 		this.isgood = isgood;
-	}
-
-	public String getSharepic() {
-		return sharepic;
 	}
 
 	public void setSharepic(String sharepic) {
@@ -140,6 +137,16 @@ public class LiveLiveObj implements CanBePlay, Serializable {
 
 	public void setOrder(boolean isOrder) {
 		this.isOrder = isOrder;
+	}
+
+	@Override
+	public String getTitlelist() {
+		return title;
+	}
+
+	@Override
+	public String getSharedPic() {
+		return sharepic;
 	}
 
 	/**

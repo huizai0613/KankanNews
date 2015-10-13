@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <View
-        android:id="@+id/colums_back_view"
+        android:id="@+id/share_back_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/night_mask" />

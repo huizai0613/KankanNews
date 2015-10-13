@@ -36,6 +36,7 @@ import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.interfaz.CanBePlay;
 import com.kankan.kankanews.bean.interfaz.CanBeShared;
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
 import com.kankan.kankanews.ui.view.popup.CustomShareBoardRight;
@@ -69,6 +70,8 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 	private static final int _CLOSE_AUDIO_PLAY_ = 4000;
 
 	private boolean mIsShowContent = false;
+
+	private CanSharedObject mSharedObj;
 
 	public Handler mLiveHandler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -319,12 +322,12 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 			break;
 		case R.id.live_video_share_but:
 			// nowLiveNew.setSharedPic(null);
-//			ShareUtil shareUtil = new ShareUtil(null, this.mActivity);
-//			this.mActivity
-//					.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			ShareUtil shareUtil = new ShareUtil(this.mSharedObj, this.mActivity);
+			// this.mActivity
+			// .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			// 一键分享
 			CustomShareBoardRight shareBoard = new CustomShareBoardRight(
-					(BaseActivity) this.mActivity, null, this);
+					(BaseActivity) this.mActivity, shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(this.getActivity().getWindow()
 					.getDecorView(), Gravity.RIGHT, 0, 0);
@@ -431,4 +434,13 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		// TODO Auto-generated method stub
 
 	}
+
+	public CanSharedObject getSharedObj() {
+		return mSharedObj;
+	}
+
+	public void setSharedObj(CanSharedObject mSharedObj) {
+		this.mSharedObj = mSharedObj;
+	}
+
 }

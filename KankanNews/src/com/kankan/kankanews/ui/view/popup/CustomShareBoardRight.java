@@ -4,7 +4,10 @@
 
 package com.kankan.kankanews.ui.view.popup;
 
+import java.io.Serializable;
+
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +16,11 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
 
 import com.kankan.kankanews.base.BaseActivity;
-import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.bean.interfaz.CanBeShared;
+import com.kankan.kankanews.config.AndroidConfig;
+import com.kankan.kankanews.filesel.PicSelectedMainActivity;
+import com.kankan.kankanews.ui.RevelationsActivity;
+import com.kankan.kankanews.ui.SharedJumpActivity;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankanews.kankanxinwen.R;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -46,6 +52,7 @@ public class CustomShareBoardRight extends PopupWindow implements
 		rootView.findViewById(R.id.wechat_circle_box).setOnClickListener(this);
 		rootView.findViewById(R.id.qq_box).setOnClickListener(this);
 		rootView.findViewById(R.id.sina_box).setOnClickListener(this);
+		rootView.findViewById(R.id.share_back_view).setOnClickListener(this);
 		setContentView(rootView);
 		setWidth(LayoutParams.MATCH_PARENT);
 		setHeight(LayoutParams.WRAP_CONTENT);
@@ -57,24 +64,31 @@ public class CustomShareBoardRight extends PopupWindow implements
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
-		switch (id) {
-		case R.id.wechat_box:
-			shareUtil.directShare(SHARE_MEDIA.WEIXIN);
-			break;
-		case R.id.wechat_circle_box:
-			shareUtil.directShare(SHARE_MEDIA.WEIXIN_CIRCLE);
-			break;
-		case R.id.qq_box:
-			shareUtil.directShare(SHARE_MEDIA.QQ);
-			break;
-		case R.id.sina_box:
-			shareUtil.directShare(SHARE_MEDIA.SINA);
-			break;
-		case R.id.colums_back_view:
-		default:
-			mActivity.shareReBack();
-			break;
+		if (v.getId() == R.id.share_back_view) {
+			dismiss();
+			return;
 		}
+//		Intent intent = new Intent(this.mActivity, SharedJumpActivity.class);
+//		intent.putExtra("_SHARED_OBJ_", (Serializable) shareObj);
+//		switch (id) {
+//		case R.id.wechat_box:
+//			shareUtil.directShare(SHARE_MEDIA.WEIXIN);
+//			intent.putExtra("_SHARED_TYPE_", "WEIXIN");
+//			break;
+//		case R.id.wechat_circle_box:
+//			shareUtil.directShare(SHARE_MEDIA.WEIXIN_CIRCLE);
+//			intent.putExtra("_SHARED_TYPE_", "WEIXIN");
+//			break;
+//		case R.id.qq_box:
+//			shareUtil.directShare(SHARE_MEDIA.QQ);
+//			intent.putExtra("_SHARED_TYPE_", "WEIXIN");
+//			break;
+//		case R.id.sina_box:
+//			shareUtil.directShare(SHARE_MEDIA.SINA);
+//			intent.putExtra("_SHARED_TYPE_", "WEIXIN");
+//			break;
+//		}
+//		this.mActivity.startActivity(intent);
 		dismiss();
 	}
 }
