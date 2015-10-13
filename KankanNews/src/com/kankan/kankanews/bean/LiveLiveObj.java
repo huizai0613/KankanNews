@@ -71,7 +71,7 @@ public class LiveLiveObj implements CanBePlay, Serializable, CanSharedObject {
 		this.isgood = isgood;
 	}
 
-	public void setSharepic(String sharepic) {
+	public void setSharedPic(String sharepic) {
 		this.sharepic = sharepic;
 	}
 

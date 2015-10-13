@@ -18,6 +18,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -354,8 +355,9 @@ public class NetUtils {
 	public void getLiveList(Listener<JSONObject> reponseListener,
 			ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
-				AndroidConfig.KANKAN_HOST + AndroidConfig.LIVE_LIST_URL, null,
-				reponseListener, errorListener);
+				AndroidConfig.KANKAN_HOST + AndroidConfig.LIVE_LIST_URL + "?r="
+						+ UUIDUtils.getUUID(8), null, reponseListener,
+				errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
 
@@ -365,8 +367,9 @@ public class NetUtils {
 	public void getChannelList(Listener<JSONObject> reponseListener,
 			ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
-				AndroidConfig.KANKAN_HOST + AndroidConfig.LIVE_CHANNEL_URL,
-				null, reponseListener, errorListener);
+				AndroidConfig.KANKAN_HOST + AndroidConfig.LIVE_CHANNEL_URL
+						+ "?r=" + UUIDUtils.getUUID(8), null, reponseListener,
+				errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
 

@@ -32,16 +32,31 @@
             android:layout_toRightOf="@+id/live_channel_list_fm_titlepic"
             android:orientation="vertical" >
 
-            <com.kankan.kankanews.ui.view.MyTextView
-                android:id="@+id/live_channel_list_fm_livetitle"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="55dip"
-                android:ellipsize="end"
-                android:lineSpacingExtra="4.5dp"
-                android:maxLines="2"
-                android:minLines="2"
-                android:textSize="18dip"
-                android:textStyle="bold" />
+                android:layout_gravity="center_vertical" >
+
+                <com.kankan.kankanews.ui.view.MyTextView
+                    android:id="@+id/live_channel_list_fm_livetitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginRight="55dip"
+                    android:ellipsize="end"
+                    android:lineSpacingExtra="4.5dp"
+                    android:maxLines="2"
+                    android:minLines="2"
+                    android:textSize="18dip"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/live_channel_list_fm_liveplay"
+                    android:layout_width="50dip"
+                    android:layout_height="50dip"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_live_radio_play_button" />
+            </RelativeLayout>
 
             <com.kankan.kankanews.ui.view.MyTextView
                 android:id="@+id/live_channel_list_fm_next_info"

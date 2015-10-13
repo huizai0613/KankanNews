@@ -121,7 +121,7 @@ public class LiveChannelObj implements CanBePlay, CanSharedObject, Serializable 
 		this.trailer_etime = trailer_etime;
 	}
 
-	public void setSharepic(String sharepic) {
+	public void setSharedPic(String sharepic) {
 		this.sharepic = sharepic;
 	}
 

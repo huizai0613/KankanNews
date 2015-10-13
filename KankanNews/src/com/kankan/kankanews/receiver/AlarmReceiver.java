@@ -3,6 +3,7 @@ package com.kankan.kankanews.receiver;
 import java.io.Serializable;
 
 import com.kankan.kankanews.base.IA.CrashApplication;
+import com.kankan.kankanews.bean.LiveLiveObj;
 import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankanews.kankanxinwen.R;
@@ -30,14 +31,16 @@ public class AlarmReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 
-		New_LivePlay serializableExtra = (New_LivePlay) intent
+		LiveLiveObj serializableExtra = (LiveLiveObj) intent
 				.getSerializableExtra("LIVE");
 
 		serializableExtra.setOrder(false);
 
 		try {
+			// ((CrashApplication) CrashApplication.getInstance()).getDbUtils()
+			// .saveOrUpdate(serializableExtra);
 			((CrashApplication) CrashApplication.getInstance()).getDbUtils()
-					.saveOrUpdate(serializableExtra);
+			.deleteById(LiveLiveObj.class, serializableExtra.getId());
 		} catch (DbException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -40,6 +40,7 @@ import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
 import com.kankan.kankanews.ui.view.popup.CustomShareBoardRight;
+import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.ToastUtils;
@@ -62,12 +63,14 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 	private TextView mLiveContentTitle;
 	private LinearLayout mLiveBufferingIndicator;
 	private boolean isPlayStat;
-	private ImageView mLiveHomeSelect;
+	private ImageView mLiveHomeSelectLive;
+	private ImageView mLiveHomeSelectChannel;
 
 	private static final int _HIDE_VIDEO_CONTROLLER_ = 1;
 
 	private static final int _HIDE_TIME_OUT_ = 3000;
 	private static final int _CLOSE_AUDIO_PLAY_ = 4000;
+	private static final int _NET_CHANGE_ = 5000;
 
 	private boolean mIsShowContent = false;
 
@@ -82,6 +85,9 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 				break;
 			case _CLOSE_AUDIO_PLAY_:
 				((LiveChannelListFragment) fragments.get(1)).cleanAudioPlay();
+				break;
+			case _NET_CHANGE_:
+				ToastUtils.Errortoast(mActivity, "网络环境发生变化,当前无WIFI环境");
 				break;
 			}
 		};
@@ -137,8 +143,10 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		mLiveVideoView = (VideoView) inflate.findViewById(R.id.live_video_view);
 		mLiveVideoImage = (ImageView) inflate
 				.findViewById(R.id.live_video_image);
-		mLiveHomeSelect = (ImageView) inflate
-				.findViewById(R.id.live_home_select);
+		mLiveHomeSelectLive = (ImageView) inflate
+				.findViewById(R.id.live_home_select_live);
+		mLiveHomeSelectChannel = (ImageView) inflate
+				.findViewById(R.id.live_home_select_channel);
 		mLiveBufferingIndicator = (LinearLayout) inflate
 				.findViewById(R.id.live_buffering_indicator);
 		mLiveContentTitle = (TextView) inflate
@@ -157,7 +165,8 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		mLiveVideoView.setOnPreparedListener(this);
 		mLiveVideoView.setOnInfoListener(this);
 		mLiveVideoView.setOnErrorListener(this);
-		mLiveHomeSelect.setOnClickListener(this);
+		mLiveHomeSelectLive.setOnClickListener(this);
+		mLiveHomeSelectChannel.setOnClickListener(this);
 		mVideoRootView.setOnClickListener(this);
 		mLiveReturnListBut.setOnClickListener(this);
 		mLiveVideoPlayBut.setOnClickListener(this);
@@ -166,7 +175,11 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 
 	@Override
 	public void refresh() {
-		initViewPager();
+		if (mLiveHomeViewPager != null) {
+			int positions = mLiveHomeViewPager.getCurrentItem();
+			fragments.get(positions).refresh();
+		}
+		// initViewPager();
 	};
 
 	private void initViewPager() {
@@ -259,6 +272,7 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 				WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 		mLiveVideoView.stopPlayback();
 		mVideoRootView.setVisibility(View.GONE);
+		fragments.get(mLiveHomeViewPager.getCurrentItem()).refresh();
 		this.setPlayStat(false);
 	}
 
@@ -322,12 +336,12 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 			break;
 		case R.id.live_video_share_but:
 			// nowLiveNew.setSharedPic(null);
-			ShareUtil shareUtil = new ShareUtil(this.mSharedObj, this.mActivity);
 			// this.mActivity
 			// .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			// 一键分享
+			this.mSharedObj.setSharedPic(null);
 			CustomShareBoardRight shareBoard = new CustomShareBoardRight(
-					(BaseActivity) this.mActivity, shareUtil, this);
+					(BaseActivity) this.mActivity, this.mSharedObj);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(this.getActivity().getWindow()
 					.getDecorView(), Gravity.RIGHT, 0, 0);
@@ -335,8 +349,11 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		case R.id.return_list_but:
 			this.closePlay();
 			break;
-		case R.id.live_home_select:
-
+		case R.id.live_home_select_live:
+			this.mLiveHomeViewPager.setCurrentItem(0);
+			break;
+		case R.id.live_home_select_channel:
+			this.mLiveHomeViewPager.setCurrentItem(1);
 			break;
 		case R.id.video_root_view:
 			if (mIsShowContent) {
@@ -397,9 +414,12 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 
 	@Override
 	public void onPageSelected(int position) {
+		fragments.get(position).refresh();
 		if (position == 0) {
-			this.mLiveHomeSelect
-					.setImageResource(R.drawable.ic_live_select_live);
+			this.mLiveHomeSelectLive
+					.setImageResource(R.drawable.ic_live_select_live_live);
+			this.mLiveHomeSelectChannel
+					.setImageResource(R.drawable.ic_live_select_live_channel);
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -409,9 +429,12 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 			}) {
 			}.start();
 		}
-		if (position == 1)
-			this.mLiveHomeSelect
-					.setImageResource(R.drawable.ic_live_select_channel);
+		if (position == 1) {
+			this.mLiveHomeSelectLive
+					.setImageResource(R.drawable.ic_live_select_channel_live);
+			this.mLiveHomeSelectChannel
+					.setImageResource(R.drawable.ic_live_select_channel_channel);
+		}
 	}
 
 	public boolean isPlayStat() {
@@ -443,4 +466,14 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		this.mSharedObj = mSharedObj;
 	}
 
+	public void netChange() {
+		if (this.isPlayStat) {
+			if (!CommonUtils.isWifi(this.mActivity)) {
+				DebugLog.e("卧槽");
+				this.closePlay();
+				mLiveHandler.sendEmptyMessage(_CLOSE_AUDIO_PLAY_);
+				mLiveHandler.sendEmptyMessage(_NET_CHANGE_);
+			}
+		}
+	}
 }

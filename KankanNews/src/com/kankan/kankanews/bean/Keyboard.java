@@ -1,6 +1,8 @@
 package com.kankan.kankanews.bean;
 
-public class Keyboard {
+import java.io.Serializable;
+
+public class Keyboard implements Serializable {
 	private String text;
 	private String color;
 

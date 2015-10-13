@@ -90,6 +90,7 @@ public class RevelationsActivity extends BaseActivity implements
 	private ImageView postVideoClose;
 	private ScrollView inputContentView;
 	private ScrollView postView;
+	private View notClickView;
 	private TasksCompletedView postVideoProgressBar;
 	private ImageGroupGridAdapter gridAdapter;
 	private List<String> imagesSelected = new LinkedList<String>();
@@ -158,6 +159,8 @@ public class RevelationsActivity extends BaseActivity implements
 				.findViewById(R.id.revelations_binding_telephone_name_text_view);
 		telBindingCancelBut = (TextView) this
 				.findViewById(R.id.revelations_binding_cancel_button);
+		notClickView = this.findViewById(R.id.not_click_view);
+
 		initTitleLeftBar("我要报料", R.drawable.new_ic_back);
 	}
 
@@ -198,6 +201,7 @@ public class RevelationsActivity extends BaseActivity implements
 		postVideoBut.setOnClickListener(this);
 		postVideoClose.setOnClickListener(this);
 		telBindingCancelBut.setOnClickListener(this);
+		notClickView.setOnClickListener(this);
 		contentText.addTextChangedListener(new MaxLengthWatcher(300,
 				contentText));
 		setOnLeftClickLinester(this);
@@ -207,6 +211,8 @@ public class RevelationsActivity extends BaseActivity implements
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
+		case R.id.not_click_view:
+			return;
 		case R.id.post_video_item:
 			if (videoSelected == null)
 				goSelectVideo();
@@ -214,8 +220,13 @@ public class RevelationsActivity extends BaseActivity implements
 		case R.id.post_video_but:
 			if (isUploading)
 				cancelUploadVideoDialog();
-			else
+			else {
+				if (!CommonUtils.isWifi(mContext)) {
+					ToastUtils.Infotoast(mContext, "为了节约您的流量,请在WIFI环境下上传视频");
+					return;
+				}
 				executeUploadVideo();
+			}
 			break;
 		case R.id.post_video_close:
 			cancelUploadVideoDialog();
@@ -271,6 +282,7 @@ public class RevelationsActivity extends BaseActivity implements
 						new PostTask().execute("");
 						postBut.setText("正在提交");
 						postBut.setEnabled(false);
+						notClickView.setVisibility(View.VISIBLE);
 						postBut.setBackgroundColor(Color.parseColor("#BEBEBE"));
 					}
 				}
@@ -291,6 +303,7 @@ public class RevelationsActivity extends BaseActivity implements
 					new PostTask().execute("");
 					postBut.setText("正在提交");
 					postBut.setEnabled(false);
+					notClickView.setVisibility(View.VISIBLE);
 					postBut.setBackgroundColor(Color.parseColor("#BEBEBE"));
 				}
 			}
@@ -413,6 +426,13 @@ public class RevelationsActivity extends BaseActivity implements
 				postVideoImageView.setImageBitmap(getVideoThumbnail(video
 						.getPath()));
 				videoSelected = video;
+				if (!CommonUtils.isWifi(mContext)) {
+					ToastUtils.Infotoast(mContext, "为了节约您的流量,请在WIFI环境下上传视频");
+					postVideoBut.setText("重试");
+					postVideoBut.setVisibility(View.VISIBLE);
+					postVideoClose.setVisibility(View.VISIBLE);
+					return;
+				}
 				executeUploadVideo();
 			}
 			return;
@@ -452,6 +472,24 @@ public class RevelationsActivity extends BaseActivity implements
 					ToastUtils.Errortoast(this, "保存图片失败请重试");
 					return;
 				}
+			} else if (uri.getScheme().equals("content")) {
+				String[] filePathColumn = { MediaStore.Images.Media._ID,
+						MediaStore.Images.Media.MIME_TYPE,
+						MediaStore.Images.Media.TITLE,
+						MediaStore.Images.Media.DATA };
+				Cursor mCursor = getContentResolver().query(uri,
+						filePathColumn, null, null, null);
+				if (mCursor.moveToFirst()) {
+					DebugLog.e(mCursor.getString(mCursor
+							.getColumnIndex(MediaStore.Images.Media._ID)));
+					String path = mCursor.getString(mCursor
+							.getColumnIndex(MediaStore.Images.Media.DATA));
+					imagesSelected.add(path);
+					gridAdapter.notifyDataSetChanged();
+				} else {
+					ToastUtils.Errortoast(this, "保存图片失败请重试");
+				}
+				mCursor.close();
 			} else {
 				ToastUtils.Errortoast(this, "保存图片失败请重试");
 			}
@@ -537,6 +575,7 @@ public class RevelationsActivity extends BaseActivity implements
 			} else {
 				ToastUtils.Errortoast(RevelationsActivity.this,
 						result.get("ResultText"));
+				notClickView.setVisibility(View.GONE);
 				postBut.setText("提交");
 				postBut.setEnabled(true);
 				postBut.setBackgroundColor(Color.parseColor("#FF0000"));
@@ -911,6 +950,7 @@ public class RevelationsActivity extends BaseActivity implements
 		isUploading = true;
 		videoTask = new PostVideoTask();
 		videoTask.execute("");
+		ToastUtils.Infotoast(RevelationsActivity.this, "开始上传文件,请稍后...");
 		postVideoBut.setText("取消");
 		postVideoBut.setVisibility(View.VISIBLE);
 		postVideoClose.setVisibility(View.GONE);

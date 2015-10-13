@@ -130,7 +130,7 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 		super.onNewIntent(intent);
 		Serializable serializableExtra = intent.getSerializableExtra("LIVE");
 		if (serializableExtra != null) {
-			New_LivePlay mlive = (New_LivePlay) serializableExtra;
+			// LiveLiveObj mlive = (LiveLiveObj) serializableExtra;
 			LiveHomeFragment fragment = (LiveHomeFragment) fragments
 					.get(tabLive);
 			// fragment.setSelectPlay(true);
@@ -171,9 +171,9 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 		Intent intent = getIntent();
 		Serializable serializableExtra = intent.getSerializableExtra("LIVE");
 		if (serializableExtra != null) {
-			New_LivePlay mlive = (New_LivePlay) serializableExtra;
-			LiveHomeFragment fragment = (LiveHomeFragment) fragments
-					.get(tabLive);
+			// New_LivePlay mlive = (New_LivePlay) serializableExtra;
+			// LiveHomeFragment fragment = (LiveHomeFragment) fragments
+			// .get(tabLive);
 			// fragment.setSelectPlay(true);
 			// fragment.setSelectPlayID(Integer.parseInt(mlive.getZid()));
 			touchTab(tabLive);
@@ -182,8 +182,8 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 			if (bun != null) {
 				if (bun.containsKey("LIVE_ID")) {
 					// 直播分享
-					LiveHomeFragment fragment = (LiveHomeFragment) fragments
-							.get(tabLive);
+					// LiveHomeFragment fragment = (LiveHomeFragment) fragments
+					// .get(tabLive);
 					// fragment.setSelectPlay(true);
 					// fragment.setSelectPlayID(Integer.parseInt(bun
 					// .getString("LIVE_ID")));
@@ -271,8 +271,6 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 		int id = v.getId();
 		if (id == R.id.tab_home && curTouchTab == tabHome) {
 			refreshMianItem();
-		} else if (id == R.id.tab_live && curTouchTab == tabLive) {
-			refreshLive();
 		} else if (id == R.id.tab_revelate && curTouchTab == tabRevelate) {
 			if (!ClickUtils.isFastDoubleClick()) {
 				RevelationsChoiceBoard board = new RevelationsChoiceBoard(
@@ -280,6 +278,9 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 				board.showAtLocation(curTouchTab, Gravity.BOTTOM, 0, 0);
 				board.doAnim();
 			}
+		}
+		if (id == R.id.tab_live) {
+			refreshLive();
 		}
 		if (id == R.id.tab_home) {
 			if (spUtil.getFirstGetColumns()) {
@@ -318,13 +319,13 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 
 	private void changeFragment(int id) {
 		LiveHomeFragment fragment = (LiveHomeFragment) fragments.get(tabLive);
-		if (curTouchTab != tabLive) {
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		} else {
-			if (fragment.isResumed()) {
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-			}
-		}
+		// if (curTouchTab != tabLive) {
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		// } else {
+		// if (fragment.isResumed()) {
+		// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+		// }
+		// }
 		FragmentTransaction beginTransaction = fragmentManager
 				.beginTransaction();
 		int size = tabArray.size();
@@ -473,16 +474,6 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 	};
 
 	public void bottomBarVisible(int visibility) {
-		// RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-		// LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		// if (visibility == View.VISIBLE) {
-		// params.bottomMargin = PixelUtil.dp2px(this.getResources()
-		// .getDimension(R.dimen.base_action_bar_height));
-		// } else {
-		// params.bottomMargin = 0;
-		//
-		// }
-		// main_fragment_content.setLayoutParams(params);
 		menu_bottom_bar.setVisibility(visibility);
 
 	}
@@ -504,23 +495,20 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 
 	@Override
 	public void shareReBack() {
-		// TODO Auto-generated method stub
 		super.shareReBack();
 		LiveHomeFragment fragment = (LiveHomeFragment) fragments.get(tabLive);
 		// fragment.isFirst = false;
-		if (this.curTouchTab == tabLive)
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+		// if (this.curTouchTab == tabLive)
+		// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 	}
 
 	public void closeClick() {
-		// TODO Auto-generated method stub
 		tabHome.setClickable(false);
 		tabLive.setClickable(false);
 		tabRevelate.setClickable(false);
 	}
 
 	public void openClick() {
-		// TODO Auto-generated method stub
 		tabHome.setClickable(true);
 		tabLive.setClickable(true);
 		tabRevelate.setClickable(true);
@@ -528,14 +516,14 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 
 	@Override
 	public void finish() {
-		// TODO Auto-generated method stub
 		super.finishNoRemove();
 	}
 
 	@Override
 	public void netChanged() {
 		// TODO Auto-generated method stub
-
+		if (curTouchTab == tabLive)
+			((LiveHomeFragment) fragments.get(tabLive)).netChange();
 	}
 
 	@Override

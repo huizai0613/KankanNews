@@ -17,6 +17,7 @@ import android.widget.PopupWindow;
 
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.interfaz.CanBeShared;
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.filesel.PicSelectedMainActivity;
 import com.kankan.kankanews.ui.RevelationsActivity;
@@ -32,14 +33,11 @@ public class CustomShareBoardRight extends PopupWindow implements
 		OnClickListener {
 
 	private BaseActivity mActivity;
-	private ShareUtil shareUtil;
-	private CanBeShared shareObj;
+	private CanSharedObject shareObj;
 
-	public CustomShareBoardRight(BaseActivity activity, ShareUtil shareUtil,
-			CanBeShared shareObj) {
+	public CustomShareBoardRight(BaseActivity activity, CanSharedObject shareObj) {
 		super(activity);
 		this.mActivity = activity;
-		this.shareUtil = shareUtil;
 		this.shareObj = shareObj;
 		initView(activity);
 	}
@@ -68,27 +66,23 @@ public class CustomShareBoardRight extends PopupWindow implements
 			dismiss();
 			return;
 		}
-//		Intent intent = new Intent(this.mActivity, SharedJumpActivity.class);
-//		intent.putExtra("_SHARED_OBJ_", (Serializable) shareObj);
-//		switch (id) {
-//		case R.id.wechat_box:
-//			shareUtil.directShare(SHARE_MEDIA.WEIXIN);
-//			intent.putExtra("_SHARED_TYPE_", "WEIXIN");
-//			break;
-//		case R.id.wechat_circle_box:
-//			shareUtil.directShare(SHARE_MEDIA.WEIXIN_CIRCLE);
-//			intent.putExtra("_SHARED_TYPE_", "WEIXIN");
-//			break;
-//		case R.id.qq_box:
-//			shareUtil.directShare(SHARE_MEDIA.QQ);
-//			intent.putExtra("_SHARED_TYPE_", "WEIXIN");
-//			break;
-//		case R.id.sina_box:
-//			shareUtil.directShare(SHARE_MEDIA.SINA);
-//			intent.putExtra("_SHARED_TYPE_", "WEIXIN");
-//			break;
-//		}
-//		this.mActivity.startActivity(intent);
+		Intent intent = new Intent(this.mActivity, SharedJumpActivity.class);
+		intent.putExtra("_SHARED_OBJ_", (Serializable) shareObj);
+		switch (id) {
+		case R.id.wechat_box:
+			intent.putExtra("_SHARED_TYPE_", "WEIXIN");
+			break;
+		case R.id.wechat_circle_box:
+			intent.putExtra("_SHARED_TYPE_", "WEIXIN_CIRCLE");
+			break;
+		case R.id.qq_box:
+			intent.putExtra("_SHARED_TYPE_", "QQ");
+			break;
+		case R.id.sina_box:
+			intent.putExtra("_SHARED_TYPE_", "SINA");
+			break;
+		}
+		this.mActivity.startActivity(intent);
 		dismiss();
 	}
 }

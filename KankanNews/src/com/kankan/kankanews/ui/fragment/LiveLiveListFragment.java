@@ -67,7 +67,6 @@ public class LiveLiveListFragment extends BaseFragment implements
 	private PullToRefreshPinnedSectionListView mLiveListView;
 	private LiveListViewAdapter mLiveListViewAdapter;
 	private LiveLiveList mLiveLiveList;
-	private String mLiveLiveListJson;
 	private LinearLayout mRetryView;
 	private LinearLayout mLoadingView;
 
@@ -143,49 +142,54 @@ public class LiveLiveListFragment extends BaseFragment implements
 	}
 
 	private void initDate() {
-		boolean flag = initLocalDate();
-		if (flag) {
-			showData();
-			mRetryView.setVisibility(View.GONE);
-			mLoadingView.setVisibility(View.GONE);
-		} else {
-			mRetryView.setVisibility(View.GONE);
+		// boolean flag = initLocalDate();
+		// if (flag) {
+		// showData();
+		// mRetryView.setVisibility(View.GONE);
+		// mLoadingView.setVisibility(View.GONE);
+		// } else {
+		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			mLoadingView.setVisibility(View.VISIBLE);
+			mRetryView.setVisibility(View.GONE);
+			refresh();
+		} else {
+			mLoadingView.setVisibility(View.GONE);
+			mRetryView.setVisibility(View.VISIBLE);
 		}
-		refreshNetDate();
+		// }
 	}
 
 	@Override
 	protected boolean initLocalDate() {
-		try {
-			SerializableObj object = (SerializableObj) this.mActivity.dbUtils
-					.findFirst(Selector.from(SerializableObj.class).where(
-							"classType", "=", "LiveLiveList"));
-			if (object != null) {
-				mLiveLiveListJson = object.getJsonStr();
-				mLiveLiveList = JsonUtils.toObject(mLiveLiveListJson,
-						LiveLiveList.class);
-				return true;
-			} else {
-				return false;
-			}
-		} catch (DbException e) {
-			DebugLog.e(e.getLocalizedMessage());
-		}
+		// try {
+		// SerializableObj object = (SerializableObj) this.mActivity.dbUtils
+		// .findFirst(Selector.from(SerializableObj.class).where(
+		// "classType", "=", "LiveLiveList"));
+		// if (object != null) {
+		// mLiveLiveListJson = object.getJsonStr();
+		// mLiveLiveList = JsonUtils.toObject(mLiveLiveListJson,
+		// LiveLiveList.class);
+		// return true;
+		// } else {
+		// return false;
+		// }
+		// } catch (DbException e) {
+		// DebugLog.e(e.getLocalizedMessage());
+		// }
 		return false;
 	}
 
 	@Override
 	protected void saveLocalDate() {
-		try {
-			SerializableObj obj = new SerializableObj(UUID.randomUUID()
-					.toString(), mLiveLiveListJson, "LiveLiveList");
-			this.mActivity.dbUtils.delete(SerializableObj.class,
-					WhereBuilder.b("classType", "=", "LiveLiveList"));
-			this.mActivity.dbUtils.save(obj);
-		} catch (DbException e) {
-			DebugLog.e(e.getLocalizedMessage());
-		}
+		// try {
+		// SerializableObj obj = new SerializableObj(UUID.randomUUID()
+		// .toString(), mLiveLiveListJson, "LiveLiveList");
+		// this.mActivity.dbUtils.delete(SerializableObj.class,
+		// WhereBuilder.b("classType", "=", "LiveLiveList"));
+		// this.mActivity.dbUtils.save(obj);
+		// } catch (DbException e) {
+		// DebugLog.e(e.getLocalizedMessage());
+		// }
 	}
 
 	@Override
@@ -199,10 +203,11 @@ public class LiveLiveListFragment extends BaseFragment implements
 					mLiveListView.onRefreshComplete();
 				}
 			}, 500);
-			if (mLiveLiveList == null) {
-				mRetryView.setVisibility(View.VISIBLE);
-				mLoadingView.setVisibility(View.GONE);
-			}
+			mLiveLiveList = null;
+			showData();
+			mRetryView.setVisibility(View.VISIBLE);
+			mLoadingView.setVisibility(View.GONE);
+
 		}
 	}
 
@@ -216,20 +221,18 @@ public class LiveLiveListFragment extends BaseFragment implements
 		mRetryView.setVisibility(View.GONE);
 		mLoadingView.setVisibility(View.GONE);
 		showIntroSet = new HashSet<String>();
-		mLiveLiveListJson = jsonObject.toString();
-		mLiveLiveList = (LiveLiveList) JsonUtils.toObject(mLiveLiveListJson,
-				LiveLiveList.class);
-		saveLocalDate();
+		mLiveLiveList = (LiveLiveList) JsonUtils.toObject(
+				jsonObject.toString(), LiveLiveList.class);
 		showData();
 	}
 
 	private void showData() {
-		if (mLiveListViewAdapter != null) {
-			mLiveListViewAdapter.notifyDataSetChanged();
-		} else {
-			mLiveListViewAdapter = new LiveListViewAdapter(this.mActivity);
-			mLiveListView.setAdapter(mLiveListViewAdapter);
-		}
+		// if (mLiveListViewAdapter != null) {
+		// mLiveListViewAdapter.notifyDataSetChanged();
+		// } else {
+		mLiveListViewAdapter = new LiveListViewAdapter(this.mActivity);
+		mLiveListView.setAdapter(mLiveListViewAdapter);
+		// }
 	}
 
 	@Override
@@ -264,6 +267,8 @@ public class LiveLiveListFragment extends BaseFragment implements
 					android.R.id.text1);
 			boolean flagLive = false;
 			boolean flagPre = false;
+			if (mLiveLiveList == null)
+				return;
 			for (char i = 0; i < mLiveLiveList.getLive().size(); i++) {
 				if (!flagLive) {
 					Item section = new Item(Item.SECTION, mLiveLiveList
@@ -398,7 +403,7 @@ public class LiveLiveListFragment extends BaseFragment implements
 						view.setText(keyboard.getText());
 						FontUtils.setTextViewFontSize(
 								LiveLiveListFragment.this.mActivity, view,
-								R.string.border_text_view_text_size, 1);
+								R.string.live_border_text_view_text_size, 1);
 						view.setTextColor(Color.parseColor(keyboard.getColor()));
 						keyboardIconContent.addView(view);
 					}
@@ -493,10 +498,10 @@ public class LiveLiveListFragment extends BaseFragment implements
 				mLiveListView.onRefreshComplete();
 			}
 		}, 500);
-		if (mLiveLiveList == null) {
-			mRetryView.setVisibility(View.VISIBLE);
-			mLoadingView.setVisibility(View.GONE);
-		}
+		mLiveLiveList = null;
+		showData();
+		mRetryView.setVisibility(View.VISIBLE);
+		mLoadingView.setVisibility(View.GONE);
 	}
 
 	public LiveHomeFragment getHomeFragment() {
@@ -573,4 +578,13 @@ public class LiveLiveListFragment extends BaseFragment implements
 			return false;
 		}
 	}
+
+	@Override
+	public void refresh() {
+		// TODO Auto-generated method stub
+		super.refresh();
+		mLiveListView.setRefreshing();
+		this.refreshNetDate();
+	}
+
 }

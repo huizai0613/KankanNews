@@ -296,4 +296,10 @@
             android:textSize="20dip" />
     </LinearLayout>
 
+    <View
+        android:id="@+id/not_click_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </RelativeLayout>

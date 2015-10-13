@@ -54,7 +54,6 @@ public class LiveChannelListFragment extends BaseFragment implements
 	private PullToRefreshListView mLiveChannelView;
 	private LiveChannelViewAdapter mLiveChannelViewAdapter;
 	private LiveChannelList mLiveChannelList;
-	private String mLiveChannelListJson;
 	private LinearLayout mRetryView;
 	private LinearLayout mLoadingView;
 
@@ -93,9 +92,7 @@ public class LiveChannelListFragment extends BaseFragment implements
 
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
-		DebugLog.e("LiveChannelListFragment onResume");
 		mLiveChannelView.showHeadLoadingView();
 		mLiveChannelHandler
 				.sendEmptyMessage(_CHANNEL_ADAPTER_NOTIFY_DATA_SET_CHANGED_);
@@ -104,9 +101,7 @@ public class LiveChannelListFragment extends BaseFragment implements
 
 	@Override
 	public void onPause() {
-		// TODO Auto-generated method stub
 		super.onPause();
-		DebugLog.e("LiveChannelListFragment onPause");
 		this.cleanAudioPlay();
 	}
 
@@ -133,16 +128,23 @@ public class LiveChannelListFragment extends BaseFragment implements
 	}
 
 	private void initData() {
-		boolean flag = initLocalDate();
-		if (flag) {
-			showData();
-			mRetryView.setVisibility(View.GONE);
-			mLoadingView.setVisibility(View.GONE);
-		} else {
-			mRetryView.setVisibility(View.GONE);
+		// boolean flag = initLocalDate();
+		// if (flag) {
+		// showData();
+		// mRetryView.setVisibility(View.GONE);
+		// mLoadingView.setVisibility(View.GONE);
+		// } else {
+		// mRetryView.setVisibility(View.GONE);
+		// mLoadingView.setVisibility(View.VISIBLE);
+		// }
+		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			mLoadingView.setVisibility(View.VISIBLE);
+			mRetryView.setVisibility(View.GONE);
+			refresh();
+		} else {
+			mLoadingView.setVisibility(View.GONE);
+			mRetryView.setVisibility(View.VISIBLE);
 		}
-		refreshNetDate();
 	}
 
 	protected void initListView() {
@@ -171,12 +173,12 @@ public class LiveChannelListFragment extends BaseFragment implements
 	}
 
 	private void showData() {
-		if (mLiveChannelViewAdapter != null) {
-			mLiveChannelViewAdapter.notifyDataSetChanged();
-		} else {
-			mLiveChannelViewAdapter = new LiveChannelViewAdapter();
-			mLiveChannelView.setAdapter(mLiveChannelViewAdapter);
-		}
+		// if (mLiveChannelViewAdapter != null) {
+		// mLiveChannelViewAdapter.notifyDataSetChanged();
+		// } else {
+		mLiveChannelViewAdapter = new LiveChannelViewAdapter();
+		mLiveChannelView.setAdapter(mLiveChannelViewAdapter);
+		// }
 	}
 
 	@Override
@@ -193,40 +195,39 @@ public class LiveChannelListFragment extends BaseFragment implements
 
 	@Override
 	protected boolean initLocalDate() {
-		try {
-			SerializableObj object = (SerializableObj) this.mActivity.dbUtils
-					.findFirst(Selector.from(SerializableObj.class).where(
-							"classType", "=", "LiveChannelList"));
-			if (object != null) {
-				mLiveChannelListJson = object.getJsonStr();
-				mLiveChannelList = JsonUtils.toObject(mLiveChannelListJson,
-						LiveChannelList.class);
-				return true;
-			} else {
-				return false;
-			}
-		} catch (DbException e) {
-			DebugLog.e(e.getLocalizedMessage());
-		}
+		// try {
+		// SerializableObj object = (SerializableObj) this.mActivity.dbUtils
+		// .findFirst(Selector.from(SerializableObj.class).where(
+		// "classType", "=", "LiveChannelList"));
+		// if (object != null) {
+		// mLiveChannelListJson = object.getJsonStr();
+		// mLiveChannelList = JsonUtils.toObject(mLiveChannelListJson,
+		// LiveChannelList.class);
+		// return true;
+		// } else {
+		// return false;
+		// }
+		// } catch (DbException e) {
+		// DebugLog.e(e.getLocalizedMessage());
+		// }
 		return false;
 	}
 
 	@Override
 	protected void saveLocalDate() {
-		try {
-			SerializableObj obj = new SerializableObj(UUID.randomUUID()
-					.toString(), mLiveChannelListJson, "LiveChannelList");
-			this.mActivity.dbUtils.delete(SerializableObj.class,
-					WhereBuilder.b("classType", "=", "LiveChannelList"));
-			this.mActivity.dbUtils.save(obj);
-		} catch (DbException e) {
-			DebugLog.e(e.getLocalizedMessage());
-		}
+		// try {
+		// SerializableObj obj = new SerializableObj(UUID.randomUUID()
+		// .toString(), mLiveChannelListJson, "LiveChannelList");
+		// this.mActivity.dbUtils.delete(SerializableObj.class,
+		// WhereBuilder.b("classType", "=", "LiveChannelList"));
+		// this.mActivity.dbUtils.save(obj);
+		// } catch (DbException e) {
+		// DebugLog.e(e.getLocalizedMessage());
+		// }
 	}
 
 	@Override
 	protected void refreshNetDate() {
-		DebugLog.e("refreshNetDate");
 		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			netUtils.getChannelList(this.mListenerObject, this.mErrorListener);
 		} else {
@@ -236,10 +237,10 @@ public class LiveChannelListFragment extends BaseFragment implements
 					mLiveChannelView.onRefreshComplete();
 				}
 			}, 500);
-			if (mLiveChannelList == null) {
-				mRetryView.setVisibility(View.VISIBLE);
-				mLoadingView.setVisibility(View.GONE);
-			}
+			mLiveChannelList = null;
+			showData();
+			mRetryView.setVisibility(View.VISIBLE);
+			mLoadingView.setVisibility(View.GONE);
 		}
 	}
 
@@ -252,10 +253,8 @@ public class LiveChannelListFragment extends BaseFragment implements
 		mLiveChannelView.onRefreshComplete();
 		mRetryView.setVisibility(View.GONE);
 		mLoadingView.setVisibility(View.GONE);
-		mLiveChannelListJson = jsonObject.toString();
 		mLiveChannelList = (LiveChannelList) JsonUtils.toObject(
-				mLiveChannelListJson, LiveChannelList.class);
-		saveLocalDate();
+				jsonObject.toString(), LiveChannelList.class);
 		showData();
 	}
 
@@ -271,10 +270,11 @@ public class LiveChannelListFragment extends BaseFragment implements
 				mLiveChannelView.onRefreshComplete();
 			}
 		}, 500);
-		if (mLiveChannelList == null) {
-			mRetryView.setVisibility(View.VISIBLE);
-			mLoadingView.setVisibility(View.GONE);
-		}
+		mLiveChannelList = null;
+		showData();
+		mRetryView.setVisibility(View.VISIBLE);
+		mLoadingView.setVisibility(View.GONE);
+
 	}
 
 	private class TvHolder {
@@ -290,12 +290,15 @@ public class LiveChannelListFragment extends BaseFragment implements
 		public ImageView titlePic;
 		public MyTextView title;
 		public MyTextView nextInfo;
+		public ImageView radioPlay;
 	}
 
 	public class LiveChannelViewAdapter extends BaseAdapter {
 
 		@Override
 		public int getCount() {
+			if (mLiveChannelList == null)
+				return 0;
 			return mLiveChannelList.getTv().size()
 					+ mLiveChannelList.getFm().size();
 		}
@@ -360,6 +363,8 @@ public class LiveChannelListFragment extends BaseFragment implements
 							.findViewById(R.id.live_channel_list_fm_livetitle);
 					mFmHolder.nextInfo = (MyTextView) convertView
 							.findViewById(R.id.live_channel_list_fm_next_info);
+					mFmHolder.radioPlay = (ImageView) convertView
+							.findViewById(R.id.live_channel_list_fm_liveplay);
 					convertView.setTag(mFmHolder);
 				}
 			} else {
@@ -440,10 +445,14 @@ public class LiveChannelListFragment extends BaseFragment implements
 					LinearInterpolator lin = new LinearInterpolator();
 					operatingAnim.setInterpolator(lin);
 					mFmHolder.titlePic.startAnimation(operatingAnim);
+					mFmHolder.radioPlay
+							.setImageResource(R.drawable.ic_live_radio_pause_button);
 				} else {
 					mFmHolder.rootView.setBackgroundColor(getResources()
 							.getColor(R.color.white));
 					mFmHolder.titlePic.clearAnimation();
+					mFmHolder.radioPlay
+							.setImageResource(R.drawable.ic_live_radio_play_button);
 				}
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
@@ -451,7 +460,6 @@ public class LiveChannelListFragment extends BaseFragment implements
 						if (channel.getId().equals(mCurFMPlayId)) {
 							cleanAudioPlay();
 						} else {
-							mCurFMPlayId = channel.getId();
 							if (CommonUtils
 									.isNetworkAvailable(LiveChannelListFragment.this.mActivity)) {
 								if (!CommonUtils
@@ -471,12 +479,14 @@ public class LiveChannelListFragment extends BaseFragment implements
 									dialog.setOKListener(new OnClickListener() {
 										@Override
 										public void onClick(View v) {
+											mCurFMPlayId = channel.getId();
 											videoPlay(channel.getStreamurl());
 											dialog.dismiss();
 										}
 									});
 									dialog.show();
 								} else {
+									mCurFMPlayId = channel.getId();
 									videoPlay(channel.getStreamurl());
 								}
 							}
@@ -504,6 +514,7 @@ public class LiveChannelListFragment extends BaseFragment implements
 		}
 		mAudioPlayer.prepareAsync();
 		mAudioPlayer.start();
+		this.homeFragment.setPlayStat(true);
 	}
 
 	public void closeVideoPlay() {
@@ -524,9 +535,19 @@ public class LiveChannelListFragment extends BaseFragment implements
 	public void cleanAudioPlay() {
 		if (!"NULL".equals(mCurFMPlayId)) {
 			mCurFMPlayId = "NULL";
+			this.homeFragment.setPlayStat(false);
 			this.closeVideoPlay();
 			mLiveChannelHandler
 					.sendEmptyMessage(_CHANNEL_ADAPTER_NOTIFY_DATA_SET_CHANGED_);
 		}
 	}
+
+	@Override
+	public void refresh() {
+		super.refresh();
+		DebugLog.e("刷新了");
+		mLiveChannelView.showHeadLoadingView();
+		this.refreshNetDate();
+	}
+
 }

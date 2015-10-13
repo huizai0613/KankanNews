@@ -69,16 +69,6 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 		// 初始化应用的版本号
 		version = CommonUtils.getVersionName(this);
 
-		RsaUtils s = new RsaUtils();
-		String str;
-		try {
-			str = new String(Base64.encode(s.encrypt(s.getpublicksy(),
-					"{tel:2387289317}".getBytes())));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		// this.chage2Day();
 	}
 
 	private void initViews() {
@@ -88,7 +78,7 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 		// 初始化引导图片列表
 		views.add(inflater.inflate(R.layout.guide_one, null));
 		views.add(inflater.inflate(R.layout.guide_two, null));
-		views.add(inflater.inflate(R.layout.guide_three, null));
+//		views.add(inflater.inflate(R.layout.guide_three, null));
 		// views.add(inflater.inflate(R.layout.guide_four, null));
 		views.add(inflater.inflate(R.layout.guide_five, null));
 

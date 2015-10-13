@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import com.kankan.kankanews.photoview.PhotoViewAttacher.OnMatrixChangedListener;
 import com.kankan.kankanews.photoview.PhotoViewAttacher.OnPhotoTapListener;
 import com.kankan.kankanews.photoview.PhotoViewAttacher.OnViewTapListener;
+import com.kankan.kankanews.utils.DebugLog;
 
 public class PhotoView extends ImageView implements IPhotoView {
 
@@ -39,7 +40,7 @@ public class PhotoView extends ImageView implements IPhotoView {
 	public PhotoView(Context context, AttributeSet attr) {
 		this(context, attr, 0);
 	}
-	
+
 	public PhotoView(Context context, AttributeSet attr, int defStyle) {
 		super(context, attr, defStyle);
 		super.setScaleType(ScaleType.MATRIX);
@@ -86,12 +87,12 @@ public class PhotoView extends ImageView implements IPhotoView {
 		return mAttacher.getScaleType();
 	}
 
-    @Override
-    public void setAllowParentInterceptOnEdge(boolean allow) {
-        mAttacher.setAllowParentInterceptOnEdge(allow);
-    }
+	@Override
+	public void setAllowParentInterceptOnEdge(boolean allow) {
+		mAttacher.setAllowParentInterceptOnEdge(allow);
+	}
 
-    @Override
+	@Override
 	public void setMinScale(float minScale) {
 		mAttacher.setMinScale(minScale);
 	}
@@ -134,21 +135,25 @@ public class PhotoView extends ImageView implements IPhotoView {
 	@Override
 	public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
 		mAttacher.setOnMatrixChangeListener(listener);
+		DebugLog.e("setOnMatrixChangeListener");
 	}
 
 	@Override
 	public void setOnLongClickListener(OnLongClickListener l) {
 		mAttacher.setOnLongClickListener(l);
+		DebugLog.e("setOnLongClickListener");
 	}
 
 	@Override
 	public void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mAttacher.setOnPhotoTapListener(listener);
+		DebugLog.e("setOnPhotoTapListener");
 	}
 
 	@Override
 	public void setOnViewTapListener(OnViewTapListener listener) {
 		mAttacher.setOnViewTapListener(listener);
+		DebugLog.e("setOnViewTapListener");
 	}
 
 	@Override

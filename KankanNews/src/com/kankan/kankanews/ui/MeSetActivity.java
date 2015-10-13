@@ -166,6 +166,7 @@ public class MeSetActivity extends BaseActivity implements OnClickListener {
 		super.onResume();
 		// // 初始化缓存大小
 		initToggle();
+		initNightView(false);
 		float filelength = getFolderSize(CommonUtils.getImageCachePath(this))
 				/ 1024 / 1024
 				+ getFolderSize(CommonUtils.getVideoCachePath(this)) / 1024

@@ -1062,8 +1062,8 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
 		if (contentVideoBg.getVisibility() == View.GONE)
 			contentVideoView.start();
-		if (FontUtils.hasChangeFontSize())
-			changeFontSize();
+		// if (FontUtils.hasChangeFontSize())
+		changeFontSize();
 	}
 
 	// private Bitmap getCurrentFrame() {

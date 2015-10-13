@@ -120,6 +120,10 @@ public class TransitionLoadingActivity extends BaseActivity {
 					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
 					news.getTitlepic(), news.getSharedPic());
 		} else if (news_type % 10 == 6) {
+			Intent intent = getIntent();
+			intent.setClass(this, MainActivity.class);
+			intent.putExtra("LIVE", news.getZtid());
+			this.startActivity(intent);
 			// 直播
 			// New_LivePlayFragment fragment = (New_LivePlayFragment)
 			// this.fragments

@@ -179,6 +179,10 @@ public class New_Activity_Content_Web extends BaseActivity implements
 			if (webView.canGoBack()) {
 				webView.goBack();
 				showLeftBarTv();
+				int index = FontUtils
+						.getFontSetIndex(spUtil.getFontSizeRadix());
+				webView.loadUrl("javascript:KKSetFontSize('"
+						+ FontUtils.fontSizeWeb[index] + "',1)");
 				break;
 			}
 			webFinish();
@@ -299,6 +303,10 @@ public class New_Activity_Content_Web extends BaseActivity implements
 			if (webView.canGoBack()) {
 				webView.goBack();
 				showLeftBarTv();
+				int index = FontUtils
+						.getFontSetIndex(spUtil.getFontSizeRadix());
+				webView.loadUrl("javascript:KKSetFontSize('"
+						+ FontUtils.fontSizeWeb[index] + "',1)");
 				return true;
 			}
 			if (inCustomView()) {
@@ -417,6 +425,9 @@ public class New_Activity_Content_Web extends BaseActivity implements
 		if (webView.canGoBack()) {
 			webView.goBack();
 			showLeftBarTv();
+			int index = FontUtils.getFontSetIndex(spUtil.getFontSizeRadix());
+			webView.loadUrl("javascript:KKSetFontSize('"
+					+ FontUtils.fontSizeWeb[index] + "',1)");
 		} else {
 			webView.loadUrl("about:blank");
 			super.onBackPressed();

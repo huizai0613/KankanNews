@@ -2,32 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tc="http://schemas.android.com/apk/res/com.kankanews.kankanxinwen"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:gravity="center"
+    android:onClick="goReturn" >
 
-    <LinearLayout
-        android:id="@+id/loading_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:gravity="center" >
-
-        <ProgressBar
-            android:layout_width="40dip"
-            android:layout_height="40dip"
-            android:indeterminateBehavior="repeat"
-            android:indeterminateDrawable="@drawable/iamge_progress"
-            android:indeterminateOnly="true"
-            android:visibility="visible" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="60dip"
-            android:layout_alignParentRight="true"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:text="正在加载请稍候..."
-            android:textSize="16dip"
-            android:visibility="visible" />
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="60dip"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:text="点击返回看看新闻直播"
+        android:textColor="@color/dark_gray"
+        android:textSize="16dip"
+        android:visibility="visible" />
 
 </RelativeLayout>

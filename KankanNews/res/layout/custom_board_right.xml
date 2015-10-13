@@ -39,6 +39,7 @@
                 android:layout_marginTop="10dip"
                 android:clickable="false"
                 android:text="微博"
+                android:textColor="@color/white"
                 android:textSize="12dip" />
         </LinearLayout>
 
@@ -66,6 +67,7 @@
                 android:layout_marginTop="10dip"
                 android:clickable="false"
                 android:text="微信"
+                android:textColor="@color/white"
                 android:textSize="12dip" />
         </LinearLayout>
 
@@ -93,6 +95,7 @@
                 android:layout_marginTop="10dip"
                 android:clickable="false"
                 android:text="朋友圈"
+                android:textColor="@color/white"
                 android:textSize="12dip" />
         </LinearLayout>
 
@@ -120,6 +123,7 @@
                 android:layout_marginTop="10dip"
                 android:clickable="false"
                 android:text="QQ"
+                android:textColor="@color/white"
                 android:textSize="12dip" />
         </LinearLayout>
     </LinearLayout>
