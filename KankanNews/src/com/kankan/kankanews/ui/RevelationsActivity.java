@@ -626,6 +626,8 @@ public class RevelationsActivity extends BaseActivity implements
 						to = i * _SLICE_MAX_LENGTH_ + start;
 						if (to > video.length())
 							to = video.length();
+						postVideoProgressBar.setProgress((int) Math
+								.floor((double) to / video.length() * 100));
 						postResult = NetUtils.postVideo(video,
 								uploadResult.getToken(), start + (i - 1)
 										* _SLICE_MAX_LENGTH_, to);
@@ -633,9 +635,8 @@ public class RevelationsActivity extends BaseActivity implements
 							taskResult.put("_RESULT_", "error");
 							return taskResult;
 						}
-						postVideoProgressBar.setProgress((int) Math
-								.floor((double) to / video.length() * 100));
 					}
+					postVideoProgressBar.setProgress(100);
 					releaseName = postResult.getReleaseName();
 				} else {
 					taskResult.put("_RESULT_", "error");
