@@ -481,6 +481,8 @@ public class LiveChannelListFragment extends BaseFragment implements
 										public void onClick(View v) {
 											mCurFMPlayId = channel.getId();
 											videoPlay(channel.getStreamurl());
+											mLiveChannelViewAdapter
+													.notifyDataSetChanged();
 											dialog.dismiss();
 										}
 									});
@@ -547,6 +549,7 @@ public class LiveChannelListFragment extends BaseFragment implements
 		super.refresh();
 		DebugLog.e("刷新了");
 		mLiveChannelView.showHeadLoadingView();
+		this.cleanAudioPlay();
 		this.refreshNetDate();
 	}
 
