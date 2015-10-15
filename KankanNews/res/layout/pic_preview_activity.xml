@@ -7,9 +7,9 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pic_view_page"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" 
+        android:layout_height="match_parent"
         android:layout_marginBottom="50.0dp"
-        android:layout_marginTop="50.0dp"/>
+        android:layout_marginTop="50.0dp" />
 
     <RelativeLayout
         android:id="@+id/pic_preview_top_bar"
@@ -56,7 +56,6 @@
             android:paddingLeft="10dip"
             android:text="0"
             android:textColor="@android:color/white" />
-
     </RelativeLayout>
 
     <LinearLayout
@@ -67,6 +66,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50.0dp"
         android:layout_marginTop="50.0dp"
+        android:background="@color/black"
         android:orientation="horizontal" >
     </LinearLayout>
 
@@ -80,9 +80,9 @@
             android:id="@+id/pic_preview_delete"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-        	android:background="#C9C9C9"
-        	android:text="删 除" 
-        	android:textSize="20dp"/>
+            android:background="#C9C9C9"
+            android:text="删 除"
+            android:textSize="20dp" />
     </RelativeLayout>
 
 </RelativeLayout>
