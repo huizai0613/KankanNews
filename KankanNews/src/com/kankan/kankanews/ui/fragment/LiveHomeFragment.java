@@ -99,6 +99,7 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		super.onPause();
 		if (this.isPlayStat()) {
 			this.mLiveVideoView.pause();
+			updateFullStartBut(false);
 		}
 		new Thread(new Runnable() {
 			@Override
@@ -117,6 +118,7 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		if (mActivity.curTouchTab == mActivity.tabLive) {
 			if (this.isPlayStat()) {
 				this.mLiveVideoView.pause();
+				updateFullStartBut(false);
 			}
 		}
 		DebugLog.e("LiveHomeFragment onResume");
@@ -312,6 +314,7 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 	@Override
 	public void onPrepared(IMediaPlayer mp) {
 		mLiveVideoView.start();
+		updateFullStartBut(true);
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -386,10 +389,12 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		switch (what) {
 		case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
 			mLiveVideoView.pause();
+			updateFullStartBut(false);
 			mLiveBufferingIndicator.setVisibility(View.VISIBLE);
 			break;
 		case IMediaPlayer.MEDIA_INFO_BUFFERING_END:
 			mLiveVideoView.start();
+			updateFullStartBut(true);
 			mLiveBufferingIndicator.setVisibility(View.GONE);
 			break;
 		}
