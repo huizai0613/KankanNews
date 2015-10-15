@@ -117,11 +117,16 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		super.onResume();
 		if (mActivity.curTouchTab == mActivity.tabLive) {
 			if (this.isPlayStat()) {
-				this.mLiveVideoView.pause();
-				updateFullStartBut(false);
+				if (!CommonUtils.isWifi(this.mActivity)) {
+					this.closePlay();
+					mLiveHandler.sendEmptyMessage(_CLOSE_AUDIO_PLAY_);
+					mLiveHandler.sendEmptyMessage(_NET_CHANGE_);
+				} else {
+					this.mLiveVideoView.start();
+					updateFullStartBut(true);
+				}
 			}
 		}
-		DebugLog.e("LiveHomeFragment onResume");
 	}
 
 	@Override
@@ -474,7 +479,6 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 	public void netChange() {
 		if (this.isPlayStat) {
 			if (!CommonUtils.isWifi(this.mActivity)) {
-				DebugLog.e("卧槽");
 				this.closePlay();
 				mLiveHandler.sendEmptyMessage(_CLOSE_AUDIO_PLAY_);
 				mLiveHandler.sendEmptyMessage(_NET_CHANGE_);
