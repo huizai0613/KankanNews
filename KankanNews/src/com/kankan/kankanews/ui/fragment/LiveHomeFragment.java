@@ -116,7 +116,7 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		super.onResume();
 		if (mActivity.curTouchTab == mActivity.tabLive) {
 			if (this.isPlayStat()) {
-				this.mLiveVideoView.start();
+				this.mLiveVideoView.pause();
 			}
 		}
 		DebugLog.e("LiveHomeFragment onResume");
