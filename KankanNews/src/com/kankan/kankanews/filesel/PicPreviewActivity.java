@@ -207,7 +207,9 @@ public class PicPreviewActivity extends BaseActivity implements
 			imageViews.remove(image);
 			imgViewPage.removeView(image);
 			((BitmapDrawable) (image).getDrawable()).getBitmap().recycle();
-			imgViewPage.getAdapter().notifyDataSetChanged();
+//			imgViewPage.getAdapter().notifyDataSetChanged();
+			imgViewPage.setAdapter(new ViewPagerAdapter());
+			imgViewPage.setCurrentItem(curNo);
 			numPic.setText((imgViewPage.getCurrentItem() + 1) + "");
 			sumImg--;
 			sumPic.setText("/" + sumImg);
