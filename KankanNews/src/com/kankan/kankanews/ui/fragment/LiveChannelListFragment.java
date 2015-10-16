@@ -381,7 +381,7 @@ public class LiveChannelListFragment extends BaseFragment implements
 				mTvHolder.title.setText(channel.getTitle());
 				mTvHolder.nextInfo.setText("即将开始：" + channel.getTrailer_stime()
 						+ " " + channel.getTrailer());
-				if (position == mLiveChannelList.getTv().size() - 1) {
+				if (position == mLiveChannelList.getTv().size() - 1 && mLiveChannelList.getFm().size() > 0) {
 					mTvHolder.separation.setVisibility(View.VISIBLE);
 					mTvHolder.separationLine.setVisibility(View.GONE);
 				} else {
