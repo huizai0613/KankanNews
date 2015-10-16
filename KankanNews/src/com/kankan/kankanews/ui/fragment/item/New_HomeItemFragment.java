@@ -255,7 +255,11 @@ public class New_HomeItemFragment extends BaseFragment implements
 				refreshNetDate();
 			}
 		} else {
-			main_bg.setVisibility(View.VISIBLE);
+			if (initLocalDate) {
+				addData(false);
+			} else {
+				main_bg.setVisibility(View.VISIBLE);
+			}
 		}
 		return inflate;
 
@@ -540,7 +544,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 			addData(false);
 		}
 		main_bg.setVisibility(View.GONE);
-//		screnn_pb.setVisibility(View.GONE);
+		// screnn_pb.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -1085,15 +1089,15 @@ public class New_HomeItemFragment extends BaseFragment implements
 					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
 					news.getTitlepic(), news.getSharedPic(), news.getIntro());
 		} else {
-			 mActivity.startAnimActivityByParameter(
-			 New_Activity_Content_Web.class, news.getMid(),
-			 news.getType(), news.getTitleurl(), news.getNewstime(),
-			 news.getTitle(), news.getTitlepic(), news.getSharedPic(),
-			 news.getIntro());
-//			mActivity.startAnimActivityByParameter(NewsContentActivity.class,
-//					news.getMid(), "text", news.getTitleurl(),
-//					news.getNewstime(), news.getTitle(), news.getTitlepic(),
-//					news.getSharedPic(), news.getIntro());
+			mActivity.startAnimActivityByParameter(
+					New_Activity_Content_Web.class, news.getMid(),
+					news.getType(), news.getTitleurl(), news.getNewstime(),
+					news.getTitle(), news.getTitlepic(), news.getSharedPic(),
+					news.getIntro());
+			// mActivity.startAnimActivityByParameter(NewsContentActivity.class,
+			// news.getMid(), "text", news.getTitleurl(),
+			// news.getNewstime(), news.getTitle(), news.getTitlepic(),
+			// news.getSharedPic(), news.getIntro());
 		}
 	}
 

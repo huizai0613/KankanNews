@@ -439,8 +439,8 @@ public class New_HomeFragment extends BaseFragment implements
 		try {
 			homeCates = (ArrayList<New_HomeCate>) mActivity.dbUtils
 					.findAll(New_HomeCate.class);
-			if (homeCates != null) {
-				showData();
+			if (homeCates != null && homeCates.size() > 0) {
+//				showData();
 				return true;
 			} else {
 				return false;
