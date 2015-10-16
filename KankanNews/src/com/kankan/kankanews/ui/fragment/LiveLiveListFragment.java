@@ -325,7 +325,7 @@ public class LiveLiveListFragment extends BaseFragment implements
 						.findViewById(R.id.live_live_list_separation);
 				View separationLine = layout
 						.findViewById(R.id.live_live_list_separation_line);
-				if (position == mLiveLiveList.getLive().size()) {
+				if (position == mLiveLiveList.getLive().size() && mLiveLiveList.getTrailer().size() > 0) {
 					separation.setVisibility(View.VISIBLE);
 					separationLine.setVisibility(View.GONE);
 				} else {
