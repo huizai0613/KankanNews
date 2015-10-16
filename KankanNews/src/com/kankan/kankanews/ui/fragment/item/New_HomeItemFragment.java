@@ -242,18 +242,20 @@ public class New_HomeItemFragment extends BaseFragment implements
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
 		initLocalDate = initLocalDate();
-		if (!initLocalDate) {
-			main_bg.setVisibility(View.VISIBLE);
+		main_bg.setVisibility(View.GONE);
+		if (initLocalDate) {
+			screnn_pb.setVisibility(View.GONE);
+		} else {
+			screnn_pb.setVisibility(View.VISIBLE);
 		}
-		screnn_pb.setVisibility(View.GONE);
-		if (CommonUtils.isNetworkAvailable(mActivity) && !hasLoaded) {
+		if (CommonUtils.isNetworkAvailable(mActivity)) {
 			// TODO
-			listview.showHeadLoadingView();
-			if (!initLocalDate) {
-				screnn_pb.setVisibility(View.VISIBLE);
-				main_bg.setVisibility(View.GONE);
+			if (!hasLoaded) {
+				listview.showHeadLoadingView();
+				refreshNetDate();
 			}
-			refreshNetDate();
+		} else {
+			main_bg.setVisibility(View.VISIBLE);
 		}
 		return inflate;
 
@@ -362,7 +364,6 @@ public class New_HomeItemFragment extends BaseFragment implements
 					adapter = new TopAdapter();
 					listview.setAdapter(adapter);
 					listview.onRefreshComplete();
-					screnn_pb.setVisibility(View.GONE);
 
 					// // TODO
 					// if (New_HomeFragment.PUSH_NEWS_ID != null) {
@@ -391,6 +392,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					// });
 					// New_HomeFragment.PUSH_NEWS_ID = null;
 					// }
+					screnn_pb.setVisibility(View.GONE);
 				}
 			}, sleepTime);
 
@@ -537,6 +539,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 			new_news_clicks = new ArrayList<New_News_Click>();
 			addData(false);
 		}
+		main_bg.setVisibility(View.GONE);
+//		screnn_pb.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -1071,8 +1075,8 @@ public class New_HomeItemFragment extends BaseFragment implements
 		} else if (news_type % 10 == 6) {
 			// 直播
 			LiveHomeFragment fragment = mActivity.getLiveFragment();
-//			fragment.setSelectPlay(true);
-//			fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
+			// fragment.setSelectPlay(true);
+			// fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
 			mActivity.touchTab(mActivity.tabLive);
 
 		} else if (news.getZtype().equals("1")) {
@@ -1081,11 +1085,15 @@ public class New_HomeItemFragment extends BaseFragment implements
 					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
 					news.getTitlepic(), news.getSharedPic(), news.getIntro());
 		} else {
-			mActivity.startAnimActivityByParameter(
-					New_Activity_Content_Web.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), news.getSharedPic(),
-					news.getIntro());
+			 mActivity.startAnimActivityByParameter(
+			 New_Activity_Content_Web.class, news.getMid(),
+			 news.getType(), news.getTitleurl(), news.getNewstime(),
+			 news.getTitle(), news.getTitlepic(), news.getSharedPic(),
+			 news.getIntro());
+//			mActivity.startAnimActivityByParameter(NewsContentActivity.class,
+//					news.getMid(), "text", news.getTitleurl(),
+//					news.getNewstime(), news.getTitle(), news.getTitlepic(),
+//					news.getSharedPic(), news.getIntro());
 		}
 	}
 
