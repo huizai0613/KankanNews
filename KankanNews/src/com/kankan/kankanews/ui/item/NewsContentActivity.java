@@ -138,7 +138,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				super.onProgressChanged(view, newProgress);
 			}
 		});
-		mContentWebView.setWebViewClient(new WebViewClient() {	
+		mContentWebView.setWebViewClient(new WebViewClient() {
 			@Override
 			public void onPageFinished(WebView view, String url) {
 				super.onPageFinished(view, url);
@@ -362,12 +362,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			StringBuffer buf = new StringBuffer();
 			buf.append("<div class=\"line\"></div><div class=\"recommend\"><h2 class=\"tit\">热门推荐</h2>");
 			for (NewsContentRecommend related : mContent.getRecommend()) {
-				String template = "<div class=\"recomList\"><a id=\"%@_%@\" href=\"#\" onclick=\"openNews('%s','%s')\"><h3 class=\"tit\">%s</h3><span class=\"other\"><em>%s</em></span></a></div>";
+				String template = "<div class=\"recomList\"><a href=\"#\" onclick=\"openNews('%s','%s')\"><h3 class=\"tit\">%s</h3><span class=\"other\"><em>%s</em></span></a></div>";
 				buf.append(String.format(template, related.getId(),
 						related.getType(), related.getTitle(),
 						related.getNewsdate()));
 			}
 			buf.append("</div>");
+			DebugLog.e(buf.toString());
 			return buf.toString();
 		}
 		return "";
