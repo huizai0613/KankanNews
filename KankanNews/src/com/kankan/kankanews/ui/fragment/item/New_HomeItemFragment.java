@@ -62,6 +62,7 @@ import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
 import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
+import com.kankan.kankanews.ui.item.NewsContentActivity;
 import com.kankan.kankanews.ui.view.AutoImageTag;
 import com.kankan.kankanews.ui.view.AutoImageVIew;
 import com.kankan.kankanews.ui.view.AutoScrollViewPager;
@@ -1058,11 +1059,16 @@ public class New_HomeItemFragment extends BaseFragment implements
 		//
 		final int news_type = Integer.valueOf(news.getType());
 		if (news_type % 10 == 1) {
-			mActivity.startAnimActivityByParameter(
-					New_Activity_Content_Video.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), news.getSharedPic(),
-					news.getIntro());
+//			mActivity.startAnimActivityByParameter(
+//					New_Activity_Content_Video.class, news.getMid(),
+//					news.getType(), news.getTitleurl(), news.getNewstime(),
+//					news.getTitle(), news.getTitlepic(), news.getSharedPic(),
+//					news.getIntro());
+
+			mActivity.startAnimActivityByParameter(NewsContentActivity.class,
+					news.getMid(), "video", news.getTitleurl(),
+					news.getNewstime(), news.getTitle(), news.getTitlepic(),
+					news.getSharedPic(), news.getIntro());
 		} else if (news_type % 10 == 2) {
 			final String[] pics = news.getTitlepic().split("::::::");
 			mActivity.startAnimActivityByParameter(
@@ -1089,15 +1095,15 @@ public class New_HomeItemFragment extends BaseFragment implements
 					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
 					news.getTitlepic(), news.getSharedPic(), news.getIntro());
 		} else {
-			mActivity.startAnimActivityByParameter(
-					New_Activity_Content_Web.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), news.getSharedPic(),
-					news.getIntro());
-			// mActivity.startAnimActivityByParameter(NewsContentActivity.class,
-			// news.getMid(), "text", news.getTitleurl(),
-			// news.getNewstime(), news.getTitle(), news.getTitlepic(),
-			// news.getSharedPic(), news.getIntro());
+			// mActivity.startAnimActivityByParameter(
+			// New_Activity_Content_Web.class, news.getMid(),
+			// news.getType(), news.getTitleurl(), news.getNewstime(),
+			// news.getTitle(), news.getTitlepic(), news.getSharedPic(),
+			// news.getIntro());
+			mActivity.startAnimActivityByParameter(NewsContentActivity.class,
+					news.getMid(), "text", news.getTitleurl(),
+					news.getNewstime(), news.getTitle(), news.getTitlepic(),
+					news.getSharedPic(), news.getIntro());
 		}
 	}
 

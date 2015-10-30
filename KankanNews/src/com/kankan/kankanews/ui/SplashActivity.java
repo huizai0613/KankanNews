@@ -30,6 +30,7 @@ import com.kankan.kankanews.bean.New_News_Click;
 import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.config.AndroidConfig;
+import com.kankan.kankanews.ui.item.NewsContentActivity;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
@@ -123,8 +124,8 @@ public class SplashActivity extends BaseActivity {
 		instance = NetUtils.getInstance(this);
 
 		// 听云 放在友盟之后
-//		NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
-//				.withLocationServiceEnabled(true).start(this);
+		// NBSAppAgent.setLicenseKey("90d48bf7c56d4d5d9071ce32a39644d3")
+		// .withLocationServiceEnabled(true).start(this);
 
 		mApplication.setStart(true);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -151,8 +152,8 @@ public class SplashActivity extends BaseActivity {
 		}
 
 		// createShortcut();
-		// String device_token = UmengRegistrar.getRegistrationId(this);
-		// DebugLog.e(device_token);
+//		 String device_token = UmengRegistrar.getRegistrationId(this);
+//		 DebugLog.e(device_token);
 	}
 
 	@Override
@@ -250,7 +251,9 @@ public class SplashActivity extends BaseActivity {
 				intent.putExtra("LIVE_ID", liveId);
 		}
 		intent.setClass(SplashActivity.this, MainActivity.class);
+//		 intent.setClass(SplashActivity.this, NewsContentActivity.class);
 		SplashActivity.this.startActivity(intent);
+		DebugLog.e("sssss");
 		// overridePendingTransition(R.anim.alpha, R.anim.alpha_op);
 		SplashActivity.this.finish();
 	}

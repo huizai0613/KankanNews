@@ -15,8 +15,12 @@
  */
 package com.kankan.kankanews.utils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StringUtils {
 	public static String join(Object[] elements, CharSequence separator) {
@@ -84,4 +88,34 @@ public class StringUtils {
 		return str;
 	}
 
+	public static List<String> splitString(String src, String splitStr) {
+		List<String> list = new ArrayList<String>();
+		int index = 0;
+		int flag = 0;
+		while ((index = src.indexOf(splitStr, flag)) > 0) {
+			list.add("" + src.subSequence(flag, index + splitStr.length()));
+			flag = index + splitStr.length();
+		}
+		return list;
+	}
+
+	public static String deleteTag(String src, String tag) {
+		String patternStr = "<" + tag + ">(.+)</" + tag + ">";
+		Pattern pattern = Pattern.compile(patternStr);
+		Matcher matcher = pattern.matcher(src);
+		if (matcher.find()) {
+			return matcher.group(1);
+		}
+		return src;
+	}
+
+	public static String cleanAnnotationTag(String src) {
+		String patternStr = "<!--(.+)-->";
+		Pattern pattern = Pattern.compile(patternStr);
+		Matcher matcher = pattern.matcher(src);
+		if (matcher.find()) {
+			return matcher.group(1);
+		}
+		return src;
+	}
 }

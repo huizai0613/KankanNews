@@ -247,31 +247,26 @@ public class GuideActivity extends BaseActivity implements OnPageChangeListener 
 
 	@Override
 	protected void initView() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected void initData() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected void setListener() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected void onSuccess(JSONObject jsonObject) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	protected void onFailure(VolleyError error) {
-		// TODO Auto-generated method stub
 
 	}
 

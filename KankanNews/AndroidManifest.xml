@@ -133,6 +133,12 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.kankan.kankanews.ui.item.NewsContentActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" 
+            android:hardwareAccelerated="true">
+        </activity>
+        <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_MyFoot"
             android:exported="false"
             android:screenOrientation="portrait" >

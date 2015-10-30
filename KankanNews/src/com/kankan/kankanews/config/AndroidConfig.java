@@ -135,6 +135,8 @@ public class AndroidConfig {
 	public static final String New_NewsAddClick = "http://m.kankanews.com/web/clickCollector?";
 	// 新闻详情
 	public static final String New_NewsContent = "/v5/content/video_detail/";
+	// 新闻详情
+	public static final String NewsContent = "/v5/artical/detail/";
 
 	// 直播数据
 	public static final String New_LivePlay = "/v5/live/timeline/";

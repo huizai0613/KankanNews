@@ -339,6 +339,17 @@ public class NetUtils {
 	}
 
 	/**
+	 * 获取新闻内容页数据
+	 */
+	public void getNewsContent(String id, String type,
+			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.NewsContent + type
+						+ "_" + id, null, reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
+	}
+
+	/**
 	 * 获取直播数据
 	 */
 	public void getNewLivePlayData(Listener<JSONArray> reponseListener,

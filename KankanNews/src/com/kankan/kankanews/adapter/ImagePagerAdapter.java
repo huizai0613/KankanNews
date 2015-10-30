@@ -25,6 +25,7 @@ import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
+import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
 import com.kankan.kankanews.ui.view.AutoImageTag;
 import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
@@ -144,11 +145,18 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								news.getTitle(), news.getTitlepic(),
 								news.getSharedPic(), news.getIntro());
 						break;
+					case 5:
+						fragment.mActivity.startSubjectActivityByParameter(
+								New_Avtivity_Subject.class, news.getZtid(),
+								news.getTitle(), news.getTitlepic(),
+								news.getTitleurl(), news.getTitlepic(),
+								news.getSharedPic(), news.getIntro());
+						break;
 					case 6:
 						LiveHomeFragment f = fragment.mActivity
 								.getLiveFragment();
-//						f.setSelectPlay(true);
-//						f.setSelectPlayID(Integer.parseInt(news.getZtid()));
+						// f.setSelectPlay(true);
+						// f.setSelectPlayID(Integer.parseInt(news.getZtid()));
 						fragment.mActivity.touchTab(fragment.mActivity.tabLive);
 						break;
 					// 其他
@@ -162,9 +170,7 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 						break;
 					}
 				}
-
 			});
-
 		} else {
 			ImageView v = (ImageView) view;
 
@@ -207,11 +213,18 @@ public class ImagePagerAdapter extends RecyclingPagerAdapter {
 								news.getTitle(), news.getTitlepic(),
 								news.getSharedPic(), news.getIntro());
 						break;
+					case 5:
+						fragment.mActivity.startSubjectActivityByParameter(
+								New_Avtivity_Subject.class, news.getZtid(),
+								news.getTitle(), news.getTitlepic(),
+								news.getTitleurl(), news.getTitlepic(),
+								news.getSharedPic(), news.getIntro());
+						break;
 					case 6:
 						LiveHomeFragment f = fragment.mActivity
 								.getLiveFragment();
-//						f.setSelectPlay(true);
-//						f.setSelectPlayID(Integer.parseInt(news.getZtid()));
+						// f.setSelectPlay(true);
+						// f.setSelectPlayID(Integer.parseInt(news.getZtid()));
 						fragment.mActivity.touchTab(fragment.mActivity.tabLive);
 						break;
 					// 其他
