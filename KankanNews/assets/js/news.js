@@ -5,8 +5,14 @@ function initialize() {
 	initTitle();
 	initNewsDate();
 	initNewsIntro();
+	setWebWidth();
 	initNewsContent();
 	initNewsRelated();
+}
+function setWebWidth() {
+	if (window.news) {
+		news.setWebWidth(document.body.clientWidth);
+	}
 }
 function initTitle() {
 	dTitle = document.getElementById("title");

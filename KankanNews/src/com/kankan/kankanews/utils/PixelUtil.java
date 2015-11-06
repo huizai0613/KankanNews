@@ -11,7 +11,7 @@ import com.kankan.kankanews.base.IA.CrashApplication;
  * 
  * @author MarkMjw
  */
-public class PixelUtil{
+public class PixelUtil {
 
 	/**
 	 * The context.
@@ -20,7 +20,7 @@ public class PixelUtil{
 
 	/**
 	 * dp转 px.
-	 *
+	 * 
 	 * @param value
 	 *            the value
 	 * @return the int
@@ -32,12 +32,12 @@ public class PixelUtil{
 
 	/**
 	 * 获取像素比
-	 *
+	 * 
 	 * @param value
 	 *            the value
 	 * @return the int
 	 */
-	public static int getScale() {
+	public static int getScaleScope() {
 		final float scale = mContext.getResources().getDisplayMetrics().densityDpi / 160;
 		if (scale < 1.5) {
 			return 0;
@@ -45,14 +45,25 @@ public class PixelUtil{
 			return 1;
 		} else if (scale >= 3 && scale < 4) {
 			return 2;
-		}else{
+		} else {
 			return 3;
 		}
 	}
 
 	/**
+	 * 获取像素比
+	 * 
+	 * @param value
+	 *            the value
+	 * @return the int
+	 */
+	public static int getScale() {
+		return mContext.getResources().getDisplayMetrics().densityDpi / 160;
+	}
+
+	/**
 	 * dp转 px.
-	 *
+	 * 
 	 * @param value
 	 *            the value
 	 * @param context
@@ -66,7 +77,7 @@ public class PixelUtil{
 
 	/**
 	 * px转dp.
-	 *
+	 * 
 	 * @param value
 	 *            the value
 	 * @return the int
@@ -78,7 +89,7 @@ public class PixelUtil{
 
 	/**
 	 * px转dp.
-	 *
+	 * 
 	 * @param value
 	 *            the value
 	 * @param context
@@ -92,7 +103,7 @@ public class PixelUtil{
 
 	/**
 	 * sp转px.
-	 *
+	 * 
 	 * @param value
 	 *            the value
 	 * @return the int
@@ -110,7 +121,7 @@ public class PixelUtil{
 
 	/**
 	 * sp转px.
-	 *
+	 * 
 	 * @param value
 	 *            the value
 	 * @param context
@@ -130,7 +141,7 @@ public class PixelUtil{
 
 	/**
 	 * px转sp.
-	 *
+	 * 
 	 * @param value
 	 *            the value
 	 * @return the int
@@ -142,7 +153,7 @@ public class PixelUtil{
 
 	/**
 	 * px转sp.
-	 *
+	 * 
 	 * @param value
 	 *            the value
 	 * @param context

@@ -101,9 +101,6 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 
 	private SmoothScrollRunnable mCurrentSmoothScrollRunnable;
 
-	
-	
-	
 	// ===========================================================
 	// Constructors
 	// ===========================================================
@@ -1222,8 +1219,6 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout
 			return false;
 		}
 	}
-
-	
 
 	/**
 	 * Actions a Pull Event

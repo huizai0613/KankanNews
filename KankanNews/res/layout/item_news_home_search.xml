@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_no_alpha"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/item_news_home_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="30dip"
+        android:layout_marginBottom="6dip"
+        android:layout_marginLeft="@dimen/margin_base_space"
+        android:layout_marginRight="@dimen/margin_base_space"
+        android:layout_marginTop="6dip"
+        android:background="@drawable/bg_item_news_home_search"
+        android:gravity="center" >
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dip"
+            android:text="搜索"
+            android:textColor="@color/mid_gray"
+            android:textSize="16dip" />
+
+        <ImageView
+            android:layout_width="16dip"
+            android:layout_height="16dip"
+            android:src="@drawable/search_icon" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -174,6 +174,17 @@ public class NetUtils {
 	}
 
 	/**
+	 * 获取新闻首页列表
+	 */
+	public void getNewsHomeList(Listener<JSONObject> reponseListener,
+			ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(Request.Method.GET,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA, null,
+				reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
+	}
+
+	/**
 	 * 提交分享数据
 	 */
 	public void CommitShare(String mid, String type,
@@ -310,7 +321,6 @@ public class NetUtils {
 	 */
 	public void getNewNewsClickData(String midtype,
 			Listener<JSONArray> reponseListener, ErrorListener errorListener) {
-
 		mCustomRequestArray = new CustomRequestArray(Request.Method.POST,
 				AndroidConfig.New_NewsClick + midtype, null, reponseListener,
 				errorListener);
@@ -401,7 +411,6 @@ public class NetUtils {
 	public void getNewColumsSecondData(Listener<JSONArray> reponseListener,
 			ErrorListener errorListener) {
 		mCustomRequestArray = new CustomRequestArray(Request.Method.POST,
-				// AndroidConfig.New_NETHOST +
 				AndroidConfig.New_Colums_Second_Level, null, reponseListener,
 				errorListener);
 		mRequestQueue.add(mCustomRequestArray);

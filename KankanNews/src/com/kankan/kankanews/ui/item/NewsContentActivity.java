@@ -42,6 +42,7 @@ import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.StringUtils;
 import com.kankanews.kankanxinwen.R;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -62,6 +63,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private VideoView mVideoView;
 	private String mNewsId;
 	private String mNewsType;
+	private int mWebWidth = 0;
 	private Handler mHandle = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -83,6 +85,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				RelativeLayout.LayoutParams par = (LayoutParams) mVideoRootView
 						.getLayoutParams();
 				par.height = (int) ((mScreenWidth - left - left) / 16 * 9);
+				DebugLog.e(left + " " + par.height);
 				mVideoView.setmRootViewHeight(par.height);
 				par.setMargins(left, msg.getData().getInt("_OFFSETTOP_")
 						* scale, left, 0);
@@ -191,6 +194,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if (this.mVideoView != null)
+			this.mVideoView.pause();
 	}
 
 	@Override
@@ -210,6 +215,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void finish() {
+		closeVideo();
 		System.gc();
 		super.finish();
 	}
@@ -224,6 +230,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void netChanged() {
+	}
+
+	private void closeVideo() {
+		if (this.mVideoView != null) {
+			this.mVideoView.pause();
+			this.mVideoView.stopPlayback();
+		}
 	}
 
 	public String initIntro() {
@@ -301,8 +314,11 @@ public class NewsContentActivity extends BaseVideoActivity implements
 						mHandle.sendMessage(msg);
 					}
 				});
-		String template = "<p style='text-align: center'><em><i></i><img id='%s' src='images/loading_0.png' /><span>%s</span></em></p>";
-		return String.format(template, imageKey, image.getTitle());
+		int imgHeight = this.calcuHeight(image.getWidth(), image.getHeight()) / PixelUtil.getScale();
+		DebugLog.e(image.getWidth() + " " + image.getHeight() + " " +imgHeight + "");
+		String template = "<p style='text-align: center'><em><i></i><img id='%s' height='%s' width='%s' src='images/loading_0.png' /><span>%s</span></em></p>";
+		return String.format(template, imageKey, imgHeight, this.mWebWidth,
+				image.getTitle());
 	}
 
 	private String initVideo(String content) {
@@ -368,7 +384,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 						related.getNewsdate()));
 			}
 			buf.append("</div>");
-			DebugLog.e(buf.toString());
 			return buf.toString();
 		}
 		return "";
@@ -394,6 +409,14 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	public final class News {
 		News() {
 
+		}
+
+		@JavascriptInterface
+		public void setWebWidth(int width) {
+//			NewsContentActivity.this.mWebWidth = NewsContentActivity.this.mScreenWidth
+//					- width * PixelUtil.getScale() * 2;
+			NewsContentActivity.this.mWebWidth = (int) (NewsContentActivity.this.mScreenWidth * 0.9);
+			DebugLog.e(mWebWidth + "");
 		}
 
 		@JavascriptInterface
@@ -482,5 +505,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			break;
 		}
 		return true;
+	}
+
+	private int calcuHeight(int originalWidth, int originalheight) {
+		return this.mWebWidth * originalheight / originalWidth;
 	}
 }

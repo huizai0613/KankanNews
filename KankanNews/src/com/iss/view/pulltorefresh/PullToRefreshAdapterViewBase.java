@@ -70,16 +70,16 @@ public abstract class PullToRefreshAdapterViewBase<T extends AbsListView>
 	public final void setSelection(int scrollTop) {
 		mRefreshableView.setSelection(scrollTop);
 	}
-	
+
 	public final void setScroolBottom(boolean isBottom) {
-		if(isBottom){
-			mRefreshableView.setTranscriptMode(mRefreshableView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
-		}else{
-			mRefreshableView.setTranscriptMode(mRefreshableView.TRANSCRIPT_MODE_NORMAL);
+		if (isBottom) {
+			mRefreshableView
+					.setTranscriptMode(mRefreshableView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+		} else {
+			mRefreshableView
+					.setTranscriptMode(mRefreshableView.TRANSCRIPT_MODE_NORMAL);
 		}
 	}
-	
-	
 
 	public final void smoothScrollToPosition(int x, int y) {
 		mRefreshableView.smoothScrollBy(x, y);

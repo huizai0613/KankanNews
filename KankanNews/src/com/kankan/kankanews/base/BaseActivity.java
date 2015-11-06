@@ -385,6 +385,13 @@ public abstract class BaseActivity extends FragmentActivity implements
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}
 
+	public void startAnimActivityByBean(Class<?> cla, String key, BaseBean bean) {
+		Intent intent = new Intent(this, cla);
+		intent.putExtra(key, bean);
+		this.startActivity(intent);
+		this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+	}
+
 	public void AnimFinsh() {
 		this.finish();
 		this.overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);

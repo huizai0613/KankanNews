@@ -43,7 +43,7 @@ public class New_ColumsFragment extends BaseFragment {
 
 	private NetUtils instance;
 	private View inflate;
-	private ImageAdapter adapter = new ImageAdapter();;
+	private ImageAdapter adapter = new ImageAdapter();
 
 	private ArrayList<New_Colums> new_colums = new ArrayList<New_Colums>();
 
@@ -178,7 +178,6 @@ public class New_ColumsFragment extends BaseFragment {
 
 	@Override
 	protected void onFailure(VolleyError error) {
-		// TODO Auto-generated method stub
 		listview.onRefreshComplete();
 	}
 

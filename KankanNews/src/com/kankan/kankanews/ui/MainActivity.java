@@ -51,9 +51,9 @@ import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.ui.fragment.LiveHomeFragment;
 import com.kankan.kankanews.ui.fragment.New_ColumsFragment;
-import com.kankan.kankanews.ui.fragment.New_HomeFragment;
 import com.kankan.kankanews.ui.fragment.New_MyFragment;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
+import com.kankan.kankanews.ui.fragment.NewsHomeFragment;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.popup.RevelationsChoiceBoard;
 import com.kankan.kankanews.ui.view.popup.SecondColumsBoard;
@@ -235,7 +235,7 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 		nightView = findViewById(R.id.night_view);
 
 		// 初始化fragments
-		New_HomeFragment mainFragment = new New_HomeFragment();
+		NewsHomeFragment mainFragment = new NewsHomeFragment();
 		LiveHomeFragment liveFragment = new LiveHomeFragment();
 		// New_ColumsFragment columFragment = new New_ColumsFragment();
 		// New_MyFragment setFragment = new New_MyFragment();
@@ -480,11 +480,8 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 
 	// 刷新首页当前子页面
 	private void refreshMianItem() {
-		New_HomeFragment fragment = (New_HomeFragment) fragments.get(tabHome);
-		if (fragment.fragments != null
-				&& fragment.fragments.get(fragment.columnSelectIndex) != null) {
-			fragment.fragments.get(fragment.columnSelectIndex).refresh();
-		}
+		NewsHomeFragment fragment = (NewsHomeFragment) fragments.get(tabHome);
+		fragment.refresh();
 	}
 
 	// 刷新直播

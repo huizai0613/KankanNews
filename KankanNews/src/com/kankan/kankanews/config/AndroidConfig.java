@@ -129,6 +129,9 @@ public class AndroidConfig {
 	// 首页数据
 	public static final String New_HomeData = "/v5/info/public_timeline/";
 
+
+	// 主页数据
+	public static final String NEWS_HOME_DATA = "/v5/KKAppIndex";
 	// 新闻点击量
 	public static final String New_NewsClick = "http://m.kankanews.com/web/clickList?list=";
 	// 添加新闻点击量
