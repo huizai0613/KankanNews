@@ -21,9 +21,10 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/margin_base_space"
-            android:background="@color/red"
-            android:text="专题"
+            android:background="@drawable/bg_item_news_home_left_top_title"
+            android:text=" 专题 "
             android:textColor="@color/white"
+            android:textSize="16dip"
             android:textStyle="bold" />
     </RelativeLayout>
 

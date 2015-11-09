@@ -317,6 +317,18 @@ public class NetUtils {
 	}
 
 	/**
+	 * 获取首页随机数据
+	 */
+	public void getNewHomeChange(String classid,
+			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA_CHANGE
+						+ classid, null, reponseListener, errorListener);
+
+		mRequestQueue.add(mCustomRequest);
+	}
+
+	/**
 	 * 获取新闻点击量
 	 */
 	public void getNewNewsClickData(String midtype,

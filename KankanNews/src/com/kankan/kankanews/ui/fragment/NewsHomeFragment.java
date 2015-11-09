@@ -1,13 +1,16 @@
 package com.kankan.kankanews.ui.fragment;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
@@ -17,35 +20,48 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.ImageView.ScaleType;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
+import com.android.volley.Response.ErrorListener;
+import com.android.volley.Response.Listener;
+import com.iss.view.pulltorefresh.PullToRefreshBase;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
+import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.kankan.kankanews.adapter.RecyclingPagerAdapter;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.bean.NewsHome;
 import com.kankan.kankanews.bean.NewsHomeModule;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
+import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.ColumsActivity;
 import com.kankan.kankanews.ui.MeSetActivity;
 import com.kankan.kankanews.ui.SearchMainActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.PixelUtil;
+import com.kankan.kankanews.utils.TimeUtil;
+import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
+import com.lidroid.xutils.exception.DbException;
 
 public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		OnPageChangeListener {
 
 	private View inflate;
+	private View mLoadingView;
+	private View mRetryView;
 	private View mGoColumsBut;
 	private View mGoMeSetBut;
 	private PullToRefreshListView mNewsHomeListView;
@@ -85,17 +101,35 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		mGoMeSetBut = inflate.findViewById(R.id.go_me_set_but);
 		mNewsHomeListView = (PullToRefreshListView) inflate
 				.findViewById(R.id.news_home_listview);
+		mLoadingView = inflate.findViewById(R.id.activity_loading_view);
+		mRetryView = inflate.findViewById(R.id.activity_retry_view);
+		initListView();
 	}
 
-	private void initData() {
-		netUtils.getNewsHomeList(this.mListenerObject, this.mErrorListener);
-	}
+	protected void initListView() {
+		mNewsHomeListView.setMode(Mode.PULL_FROM_START);
+		mNewsHomeListView.getLoadingLayoutProxy(true, false).setPullLabel(
+				"下拉可以刷新");
+		mNewsHomeListView.getLoadingLayoutProxy(true, false)
+				.setRefreshingLabel("刷新中…");
+		mNewsHomeListView.getLoadingLayoutProxy(true, false).setReleaseLabel(
+				"释放后刷新");
+		mNewsHomeListView
+				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
+					@Override
+					public void onPullDownToRefresh(
+							PullToRefreshBase refreshView) {
+						String time = TimeUtil.getTime(new Date());
+						refreshView.getLoadingLayoutProxy()
+								.setLastUpdatedLabel("最后更新:" + time);
+						refreshNetDate();
+					}
 
-	private void initLinsenter() {
-		mGoColumsBut.setOnClickListener(this);
-		mGoMeSetBut.setOnClickListener(this);
+					@Override
+					public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+					}
+				});
 		mNewsHomeListView.setOnScrollListener(new OnScrollListener() {
-
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				switch (scrollState) {
@@ -129,6 +163,30 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		});
 	}
 
+	private void initData() {
+		boolean hasLocal = initLocalDate();
+		if (hasLocal) {
+			showData();
+		}
+		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
+			refreshNetDate();
+		} else {
+			if (hasLocal) {
+
+			} else {
+				this.mLoadingView.setVisibility(View.GONE);
+				this.mRetryView.setVisibility(View.VISIBLE);
+			}
+		}
+		netUtils.getNewsHomeList(this.mListenerObject, this.mErrorListener);
+	}
+
+	private void initLinsenter() {
+		mRetryView.setOnClickListener(this);
+		mGoColumsBut.setOnClickListener(this);
+		mGoMeSetBut.setOnClickListener(this);
+	}
+
 	@Override
 	public void onClick(View v) {
 		int id = v.getId();
@@ -143,10 +201,14 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			this.mActivity.overridePendingTransition(R.anim.in_from_right,
 					R.anim.alpha_out);
 			break;
+		case R.id.activity_retry_view:
+			refreshNetDate();
+			break;
 		}
 	}
 
 	private void showData() {
+		this.mLoadingView.setVisibility(View.GONE);
 		if (mNewsHomeListAdapter == null) {
 			mNewsHomeListAdapter = new NewsHomeListAdapter();
 			mNewsHomeListView.setAdapter(mNewsHomeListAdapter);
@@ -163,16 +225,49 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	@Override
 	protected boolean initLocalDate() {
+		try {
+			SerializableObj object = (SerializableObj) this.mActivity.dbUtils
+					.findFirst(Selector.from(SerializableObj.class).where(
+							"classType", "=", "NewsHome"));
+			if (object != null) {
+				mNewsHomeListJson = object.getJsonStr();
+				mNewsHome = JsonUtils.toObject(mNewsHomeListJson,
+						NewsHome.class);
+				return true;
+			} else {
+				return false;
+			}
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
 		return false;
 	}
 
 	@Override
 	protected void saveLocalDate() {
+		try {
+			SerializableObj obj = new SerializableObj(UUID.randomUUID()
+					.toString(), mNewsHomeListJson, "NewsHome");
+			this.mActivity.dbUtils.delete(SerializableObj.class,
+					WhereBuilder.b("classType", "=", "NewsHome"));
+			this.mActivity.dbUtils.save(obj);
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
 	}
 
 	@Override
 	protected void refreshNetDate() {
-		netUtils.getNewsHomeList(mListenerObject, mErrorListener);
+		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
+			netUtils.getNewsHomeList(mListenerObject, mErrorListener);
+		} else {
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					mNewsHomeListView.onRefreshComplete();
+				}
+			}, 500);
+		}
 	}
 
 	@Override
@@ -182,9 +277,14 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	@Override
 	protected void onSuccessObject(JSONObject jsonObject) {
 		// TODO
-		this.mNewsHomeListJson = jsonObject.toString();
-		mNewsHome = JsonUtils.toObject(this.mNewsHomeListJson, NewsHome.class);
-		showData();
+		if (jsonObject != null && !jsonObject.toString().trim().equals("")) {
+			this.mNewsHomeListJson = jsonObject.toString();
+			mNewsHome = JsonUtils.toObject(this.mNewsHomeListJson,
+					NewsHome.class);
+			saveLocalDate();
+			showData();
+		}
+		mNewsHomeListView.onRefreshComplete();
 	}
 
 	@Override
@@ -212,6 +312,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		MyTextView title2;
 		ImageView img3;
 		MyTextView title3;
+		View change;
 	}
 
 	private class MatrixListHolder {
@@ -307,7 +408,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView,
+				ViewGroup parent) {
 			int itemType = getItemViewType(position);
 			if (itemType == -1) {
 				if (convertView == null) {
@@ -329,8 +431,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				}
 				return convertView;
 			}
-			final NewsHomeModule module = mNewsHome.getModule_list()
-					.get(position - 1);
+			final NewsHomeModule module = mNewsHome.getModule_list().get(
+					position - 1);
 			if (convertView == null) {
 				if (itemType == 0) {
 					// TODO
@@ -375,6 +477,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mMatrixHolder = new MatrixHolder();
 					convertView = inflate.inflate(mActivity,
 							R.layout.item_news_home_matrix, null);
+					mMatrixHolder.change = convertView
+							.findViewById(R.id.item_news_home_change);
 					mMatrixHolder.icon = (ImageView) convertView
 							.findViewById(R.id.item_news_home_matrix_icon);
 					mMatrixHolder.title = (TextView) convertView
@@ -536,6 +640,52 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							}
 						});
 			} else if (itemType == 1) {
+				if (module.getChange() == 1) {
+					mMatrixHolder.change.setVisibility(View.VISIBLE);
+					mMatrixHolder.change
+							.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									if (CommonUtils
+											.isNetworkAvailable(mActivity)) {
+										netUtils.getNewHomeChange(
+												module.getAppclassid(),
+												new Listener<JSONObject>() {
+													@Override
+													public void onResponse(
+															JSONObject jsonObject) {
+														if (jsonObject != null
+																&& !jsonObject
+																		.toString()
+																		.trim()
+																		.equals("")) {
+															NewsHomeModule newModule = JsonUtils.toObject(
+																	jsonObject
+																			.toString(),
+																	NewsHomeModule.class);
+															mNewsHome
+																	.getModule_list()
+																	.set(position - 1,
+																			newModule);
+															mNewsHomeListAdapter
+																	.notifyDataSetChanged();
+														}
+													}
+												}, new ErrorListener() {
+													@Override
+													public void onErrorResponse(
+															VolleyError error) {
+														ToastUtils.Errortoast(
+																mActivity,
+																"请求失败,请重试");
+													}
+												});
+									}
+								}
+							});
+				} else {
+					mMatrixHolder.change.setVisibility(View.GONE);
+				}
 				mMatrixHolder.title.setText(module.getTitle());
 				ImgUtils.imageLoader.displayImage(module.getIcon(),
 						mMatrixHolder.icon, ImgUtils.homeImageOptions);
@@ -581,6 +731,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				mMatrixListHolder.title2.setText(module.getList().get(2)
 						.getTitle());
 			} else if (itemType == 3) {
+				mGalleryHolder.title.setText("#" + module.getTitle() + "#");
 				if (module != (NewsHomeModule) mGalleryHolder.rootView.getTag()) {
 					mGalleryHolder.rootView.removeAllViews();
 					for (int i = 0; i < module.getList().size(); i++) {
