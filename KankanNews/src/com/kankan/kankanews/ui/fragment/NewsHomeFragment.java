@@ -42,6 +42,7 @@ import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.ColumsActivity;
 import com.kankan.kankanews.ui.MeSetActivity;
 import com.kankan.kankanews.ui.SearchMainActivity;
+import com.kankan.kankanews.ui.item.NewsVideoPackageActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
@@ -737,6 +738,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					for (int i = 0; i < module.getList().size(); i++) {
 						View itemView = inflate.inflate(mActivity,
 								R.layout.item_news_home_image_title_item, null);
+						final NewsHomeModuleItem moduleItem = module.getList()
+								.get(i);
 						ImageView image = (ImageView) itemView
 								.findViewById(R.id.image_item);
 						int width = (mActivity.mScreenWidth - PixelUtil
@@ -748,7 +751,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						layoutParams.rightMargin = PixelUtil.dp2px(12.5f);
 						image.setLayoutParams(layoutParams);
 						ImgUtils.imageLoader.displayImage(
-								module.getList().get(i).getTitlepic(), image,
+								moduleItem.getTitlepic(), image,
 								ImgUtils.homeImageOptions);
 						LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(
 								LinearLayout.LayoutParams.MATCH_PARENT,
@@ -759,8 +762,17 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						textLayoutParams.rightMargin = PixelUtil.dp2px(12.5f);
 						MyTextView title = (MyTextView) itemView
 								.findViewById(R.id.title_item);
-						title.setText(module.getList().get(i).getTitle());
+						title.setText(moduleItem.getTitle());
 						title.setLayoutParams(textLayoutParams);
+						itemView.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								NewsHomeFragment.this
+										.startAnimActivityByAppClassId(
+												NewsVideoPackageActivity.class,
+												module.getAppclassid());
+							}
+						});
 						mGalleryHolder.rootView.addView(itemView);
 					}
 				}
@@ -846,6 +858,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	private void openNews(NewsHomeModuleItem moduleItem) {
 		// TODO Auto-generated method stub
+		if (moduleItem.getType().equals("swiper-video")) {
+			this.startAnimActivityByNewsHomeModuleItem(
+					NewsVideoPackageActivity.class, moduleItem);
+		}
 
 	}
 }

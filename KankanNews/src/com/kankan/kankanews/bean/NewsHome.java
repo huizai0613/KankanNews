@@ -1,8 +1,9 @@
 package com.kankan.kankanews.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class NewsHome {
+public class NewsHome implements Serializable{
 	private String update;
 	private String module_num;
 	private List<NewsHomeModule> module_list;

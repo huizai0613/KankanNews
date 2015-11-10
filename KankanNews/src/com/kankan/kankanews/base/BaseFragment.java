@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.IA.CrashApplication;
+import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.NetUtils;
@@ -258,6 +259,23 @@ public abstract class BaseFragment extends Fragment {
 	public void startAnimActivityByBean(Class<?> cla, String key, BaseBean bean) {
 		Intent intent = new Intent(mActivity, cla);
 		intent.putExtra(key, bean);
+		mActivity.startActivity(intent);
+		mActivity.overridePendingTransition(R.anim.in_from_right,
+				R.anim.out_to_left);
+	}
+
+	public void startAnimActivityByNewsHomeModuleItem(Class<?> cla,
+			NewsHomeModuleItem moduleItem) {
+		Intent intent = new Intent(mActivity, cla);
+		intent.putExtra("_NEWS_HOME_MODEULE_ITEM_", moduleItem);
+		mActivity.startActivity(intent);
+		mActivity.overridePendingTransition(R.anim.in_from_right,
+				R.anim.out_to_left);
+	}
+
+	public void startAnimActivityByAppClassId(Class<?> cla, String appClassId) {
+		Intent intent = new Intent(mActivity, cla);
+		intent.putExtra("_NEWS_HOME_APP_CLASS_ID_", appClassId);
 		mActivity.startActivity(intent);
 		mActivity.overridePendingTransition(R.anim.in_from_right,
 				R.anim.out_to_left);

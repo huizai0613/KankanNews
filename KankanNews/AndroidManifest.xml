@@ -140,8 +140,8 @@
         <activity
             android:name="com.kankan.kankanews.ui.item.NewsContentActivity"
             android:exported="false"
-            android:screenOrientation="portrait" 
-            android:hardwareAccelerated="true">
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_MyFoot"
@@ -190,6 +190,12 @@
         </activity>
         <activity
             android:name="com.kankan.kankanews.ui.RevelationsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.kankan.kankanews.ui.item.NewsVideoPackageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
             android:screenOrientation="portrait" >
         </activity>

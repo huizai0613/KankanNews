@@ -1,8 +1,9 @@
 package com.kankan.kankanews.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class NewsHomeModuleItem {
+public class NewsHomeModuleItem implements Serializable {
 	private String id;
 	private String o_cmsid;
 	private String o_classid;
@@ -17,6 +18,8 @@ public class NewsHomeModuleItem {
 	private String category;
 	private int onclick;
 	private String option;
+	private String videourl;
+	private String titleurl;
 
 	public String getId() {
 		return id;
@@ -128,6 +131,22 @@ public class NewsHomeModuleItem {
 
 	public void setOption(String option) {
 		this.option = option;
+	}
+
+	public String getVideourl() {
+		return videourl;
+	}
+
+	public void setVideourl(String videourl) {
+		this.videourl = videourl;
+	}
+
+	public String getTitleurl() {
+		return titleurl;
+	}
+
+	public void setTitleurl(String titleurl) {
+		this.titleurl = titleurl;
 	}
 
 }

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_no_alpha" >
+
+    <LinearLayout
+        android:id="@+id/play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/video_package_video_root_view"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="#ff000000" >
+
+            <tv.danmaku.ijk.media.widget.VideoView
+                android:id="@+id/video_package_video_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:visibility="visible" />
+
+            <com.kankan.kankanews.ui.view.VideoViewController
+                android:id="@+id/video_package_video_controller"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:clickable="true"
+                android:visibility="visible" >
+            </com.kankan.kankanews.ui.view.VideoViewController>
+
+            <ImageView
+                android:id="@+id/video_package_video_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/live_video_image"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/video_package_back"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:paddingLeft="15dip"
+                android:paddingTop="15dip"
+                android:src="@drawable/full_screen_back"
+                android:visibility="visible" />
+
+            <ImageView
+                android:id="@+id/video_package_video_start"
+                android:layout_width="90dip"
+                android:layout_height="90dip"
+                android:layout_centerInParent="true"
+                android:padding="10dip"
+                android:src="@drawable/ic_liveplay"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/video_pb"
+                android:layout_width="80dip"
+                android:layout_height="60dip"
+                android:layout_centerInParent="true"
+                android:background="@drawable/load_back_bg"
+                android:paddingBottom="15dip"
+                android:paddingLeft="25dip"
+                android:paddingRight="25dip"
+                android:paddingTop="15dip"
+                android:visibility="gone" >
+
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:indeterminateBehavior="repeat"
+                    android:indeterminateDrawable="@drawable/iamge_progress"
+                    android:indeterminateOnly="true"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:id="@+id/small_video_pb"
+                    android:layout_width="80dip"
+                    android:layout_height="60dip"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/load_back_bg"
+                    android:paddingBottom="15dip"
+                    android:paddingLeft="25dip"
+                    android:paddingRight="25dip"
+                    android:paddingTop="15dip"
+                    android:visibility="gone" >
+
+                    <ProgressBar
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:indeterminateBehavior="repeat"
+                        android:indeterminateDrawable="@drawable/iamge_progress"
+                        android:indeterminateOnly="true"
+                        android:visibility="visible" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:background="@color/deep_gray" >
+
+            <ImageView
+                android:id="@+id/video_package_image"
+                android:layout_width="30dip"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="center"
+                android:paddingLeft="10dip" />
+
+            <com.kankan.kankanews.ui.view.MyTextView
+                android:id="@+id/video_package_title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/video_package_image"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dip"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textSize="16dip" />
+
+            <ImageView
+                android:id="@+id/calendar_but"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="30dip"
+                android:src="@drawable/calendar_with_word" />
+
+            <View
+                android:id="@+id/horizontal_white"
+                android:layout_width="1dip"
+                android:layout_height="30dip"
+                android:layout_marginLeft="30dip"
+                android:layout_marginRight="30dip"
+                android:layout_marginTop="10dip"
+                android:layout_toLeftOf="@id/calendar_but"
+                android:background="@android:color/white" />
+
+            <ImageView
+                android:id="@+id/video_package_share_but"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/horizontal_white"
+                android:src="@drawable/ic_share_with_word" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <com.iss.view.pulltorefresh.PullToRefreshListView
+        android:id="@+id/video_package_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/play"
+        android:divider="@null"
+        android:listSelector="#ffffff"
+        android:scrollbars="none" >
+    </com.iss.view.pulltorefresh.PullToRefreshListView>
+
+    <TextView
+        android:id="@+id/nodata"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="暂无数据"
+        android:textColor="@color/mid_gray"
+        android:textSize="20dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/main_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/retry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/screnn_pb"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:visibility="visible" >
+
+        <ProgressBar
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@drawable/iamge_progress"
+            android:indeterminateOnly="true"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/operation_volume_brightness"
+        android:layout_width="150dip"
+        android:layout_height="150dip"
+        android:layout_centerInParent="true"
+        android:background="#00000000"
+        android:orientation="horizontal"
+        android:padding="0dip"
+        android:visibility="invisible" >
+
+        <ImageView
+            android:id="@+id/operation_bg"
+            android:layout_width="150dip"
+            android:layout_height="150dip"
+            android:layout_gravity="center"
+            android:src="@drawable/video_volumn_bg" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:paddingBottom="25dip"
+            android:paddingLeft="20dip"
+            android:paddingRight="20dip" >
+
+            <ImageView
+                android:id="@+id/operation_full"
+                android:layout_width="110dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:scaleType="fitXY"
+                android:src="@drawable/video_num_bg" />
+
+            <ImageView
+                android:id="@+id/operation_percent"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:scaleType="fitXY"
+                android:src="@drawable/video_num_front" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <View
+        android:id="@+id/night_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night_mask"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -38,6 +38,8 @@ import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.bean.New_News_Home;
+import com.kankan.kankanews.bean.NewsHomeModule;
+import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.bean.interfaz.CanBeShared;
 import com.kankan.kankanews.dialog.Loading_Dialog;
 import com.kankan.kankanews.dialog.TishiMsgHint;
@@ -388,6 +390,14 @@ public abstract class BaseActivity extends FragmentActivity implements
 	public void startAnimActivityByBean(Class<?> cla, String key, BaseBean bean) {
 		Intent intent = new Intent(this, cla);
 		intent.putExtra(key, bean);
+		this.startActivity(intent);
+		this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+	}
+
+	public void startAnimActivityByNewsHomeModuleItem(Class<?> cla,
+			NewsHomeModuleItem moduleItem) {
+		Intent intent = new Intent(this, cla);
+		intent.putExtra("_NEWS_HOME_MODEULE_ITEM_", moduleItem);
 		this.startActivity(intent);
 		this.overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
 	}

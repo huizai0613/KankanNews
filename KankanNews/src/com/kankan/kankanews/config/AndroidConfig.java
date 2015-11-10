@@ -133,6 +133,8 @@ public class AndroidConfig {
 	public static final String NEWS_HOME_DATA = "/v5/KKAppIndex";
 	// 主页随机数据
 	public static final String NEWS_HOME_DATA_CHANGE = "/v5/KKAppList/command/random/appclassid/";
+	// 列表页列表数据
+	public static final String NEWS_LIST_DATA = "/v5/KKAppList/command/normal/appclassid/";
 	// 新闻点击量
 	public static final String New_NewsClick = "http://m.kankanews.com/web/clickList?list=";
 	// 添加新闻点击量
