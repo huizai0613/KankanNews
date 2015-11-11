@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        layout="@layout/base_title_bar"
+        android:background="@color/black" />
+
+    <com.iss.view.pulltorefresh.PullToRefreshListView
+        android:id="@+id/newslist_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/base_action_bar_height"
+        android:divider="@null"
+        android:scrollbars="none" >
+    </com.iss.view.pulltorefresh.PullToRefreshListView>
+
+    <LinearLayout
+        android:id="@+id/newslist_retry_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/base_action_bar_height"
+        android:background="@color/white_no_alpha"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/retry" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/newslist_loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/base_action_bar_height"
+        android:background="@color/white_no_alpha"
+        android:gravity="center"
+        android:visibility="visible" >
+
+        <ProgressBar
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@drawable/iamge_progress"
+            android:indeterminateOnly="true"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/night_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/night_mask"
+        android:visibility="gone" />
+
+</RelativeLayout>

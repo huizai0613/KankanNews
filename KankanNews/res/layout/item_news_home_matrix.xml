@@ -27,6 +27,17 @@
             android:singleLine="true"
             android:textColor="@color/black"
             android:textStyle="bold" />
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/item_news_home_matrix_more"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="更多"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
     </RelativeLayout>
 
     <LinearLayout

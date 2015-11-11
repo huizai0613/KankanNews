@@ -331,11 +331,11 @@ public class NetUtils {
 	/**
 	 * 获取视频包列表
 	 */
-	public void getNewsVieoPackage(String chassid, String lastnewstime,
+	public void getNewsList(String classid, String lastnewstime,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
 				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_LIST_DATA
-						+ chassid + "/timestamp/" + lastnewstime, null,
+						+ classid + "/timestamp/" + lastnewstime, null,
 				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}

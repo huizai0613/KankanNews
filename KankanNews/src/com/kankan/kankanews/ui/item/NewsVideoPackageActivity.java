@@ -297,14 +297,14 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	protected void refreshNetDate() {
 		isLoadMore = false;
 		noMoreNews = false;
-		netUtils.getNewsVieoPackage(mAppClassId, mLastNewsTime,
+		netUtils.getNewsList(mAppClassId, mLastNewsTime,
 				getVideoPackageListener, getColumsInfoErrorListener);
 	}
 
 	protected void loadMoreNetDate() {
 		isLoadMore = true;
 		if (mNewsHomeModule != null && mNewsHomeModule.getList().size() > 0) {
-			netUtils.getNewsVieoPackage(
+			netUtils.getNewsList(
 					mNewsHomeModule.getAppclassid(),
 					mNewsHomeModule.getList()
 							.get(mNewsHomeModule.getList().size() - 1)

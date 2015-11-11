@@ -41,6 +41,7 @@ import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.ColumsActivity;
 import com.kankan.kankanews.ui.MeSetActivity;
+import com.kankan.kankanews.ui.NewsListActivity;
 import com.kankan.kankanews.ui.SearchMainActivity;
 import com.kankan.kankanews.ui.item.NewsVideoPackageActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
@@ -314,6 +315,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		ImageView img3;
 		MyTextView title3;
 		View change;
+		View more;
 	}
 
 	private class MatrixListHolder {
@@ -480,6 +482,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							R.layout.item_news_home_matrix, null);
 					mMatrixHolder.change = convertView
 							.findViewById(R.id.item_news_home_change);
+					mMatrixHolder.more = convertView
+							.findViewById(R.id.item_news_home_matrix_more);
 					mMatrixHolder.icon = (ImageView) convertView
 							.findViewById(R.id.item_news_home_matrix_icon);
 					mMatrixHolder.title = (TextView) convertView
@@ -710,6 +714,13 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						.setText(module.getList().get(2).getTitle());
 				mMatrixHolder.title3
 						.setText(module.getList().get(3).getTitle());
+				mMatrixHolder.more.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						NewsHomeFragment.this.startAnimActivityByAppClassId(
+								NewsListActivity.class, module.getAppclassid());
+					}
+				});
 			} else if (itemType == 2) {
 				ImgUtils.imageLoader.displayImage(module.getIcon(),
 						mMatrixListHolder.icon, ImgUtils.homeImageOptions);
