@@ -325,13 +325,17 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	}
 
 	private class MatrixListHolder {
+		View more;
 		ImageView icon;
 		TextView title;
+		View rootView0;
 		ImageView img0;
 		MyTextView title0;
 		MyTextView intro0;
+		View rootView1;
 		ImageView img1;
 		MyTextView title1;
+		View rootView2;
 		ImageView img2;
 		MyTextView title2;
 	}
@@ -525,27 +529,33 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mMatrixListHolder = new MatrixListHolder();
 					convertView = inflate.inflate(mActivity,
 							R.layout.item_news_home_matrix_list, null);
+					mMatrixListHolder.more = convertView
+							.findViewById(R.id.item_news_home_matrix_list_more);
 					mMatrixListHolder.title = (TextView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_title);
 					mMatrixListHolder.icon = (ImageView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_icon);
+					mMatrixListHolder.rootView0 = convertView
+							.findViewById(R.id.item_news_home_matrix_list_0);
 					mMatrixListHolder.img0 = (ImageView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_image0);
 					LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
 							LayoutParams.MATCH_PARENT,
 							(int) ((mActivity.mScreenWidth - PixelUtil
 									.dp2px(12.5f * 2)) * 0.5));
-					layoutParams.leftMargin = PixelUtil.dp2px(12.5f);
-					layoutParams.rightMargin = PixelUtil.dp2px(12.5f);
 					mMatrixListHolder.img0.setLayoutParams(layoutParams);
 					mMatrixListHolder.title0 = (MyTextView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_title0);
 					mMatrixListHolder.intro0 = (MyTextView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_intro0);
+					mMatrixListHolder.rootView1 = convertView
+							.findViewById(R.id.item_news_home_matrix_list_1);
 					mMatrixListHolder.img1 = (ImageView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_image1);
 					mMatrixListHolder.title1 = (MyTextView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_title1);
+					mMatrixListHolder.rootView2 = convertView
+							.findViewById(R.id.item_news_home_matrix_list_2);
 					mMatrixListHolder.img2 = (ImageView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_image2);
 					mMatrixListHolder.title2 = (MyTextView) convertView
@@ -749,14 +759,70 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						.getTitlepic(), mMatrixListHolder.img2,
 						ImgUtils.homeImageOptions);
 				mMatrixListHolder.title.setText(module.getTitle());
-				mMatrixListHolder.intro0.setText(module.getList().get(0)
-						.getIntro());
+				module.getList().get(0)
+						.setIntro("hjkhkahfjhadkjhf几乎快放假哈接口和发挥空间发哈就快点恢复空间哈咖啡壶");
+				if (!module.getList().get(0).getIntro().trim().equals("")) {
+					mMatrixListHolder.intro0.setVisibility(View.VISIBLE);
+					mMatrixListHolder.intro0.setText(module.getList().get(0)
+							.getIntro());
+				} else {
+					mMatrixListHolder.intro0.setVisibility(View.GONE);
+				}
 				mMatrixListHolder.title0.setText(module.getList().get(0)
 						.getTitle());
 				mMatrixListHolder.title1.setText(module.getList().get(1)
 						.getTitle());
 				mMatrixListHolder.title2.setText(module.getList().get(2)
 						.getTitle());
+				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+						mMatrixListHolder.title0, R.string.home_news_text_size,
+						1);
+				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+						mMatrixListHolder.intro0,
+						R.string.home_news_intro_size, 1);
+				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+						mMatrixListHolder.title1, R.string.home_news_text_size,
+						1);
+				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+						mMatrixListHolder.title2, R.string.home_news_text_size,
+						1);
+				((TextView) mMatrixListHolder.rootView1
+						.findViewById(R.id.item_news_home_matrix_list_click))
+						.setText(module.getList().get(0).getOnclick());
+				((TextView) mMatrixListHolder.rootView2
+						.findViewById(R.id.item_news_home_matrix_list_click))
+						.setText(module.getList().get(0).getOnclick());
+				mMatrixListHolder.rootView0
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								openNews(module.getList().get(0));
+							}
+						});
+				mMatrixListHolder.rootView1
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								openNews(module.getList().get(1));
+							}
+						});
+				mMatrixListHolder.rootView2
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								openNews(module.getList().get(2));
+							}
+						});
+				mMatrixListHolder.more
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								NewsHomeFragment.this
+										.startAnimActivityByAppClassId(
+												NewsListActivity.class,
+												module.getAppclassid());
+							}
+						});
 			} else if (itemType == 3) {
 				mGalleryHolder.title.setText("#" + module.getTitle() + "#");
 				if (module != (NewsHomeModule) mGalleryHolder.rootView.getTag()) {
