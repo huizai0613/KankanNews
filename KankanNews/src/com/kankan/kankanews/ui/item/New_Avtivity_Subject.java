@@ -483,7 +483,7 @@ public class New_Avtivity_Subject extends BaseActivity implements
 								.findViewById(R.id.text1);
 						FontUtils.setTextViewFontSize(
 								New_Avtivity_Subject.this, headerHolder.title,
-								R.string.home_news_title_text_size,
+								R.string.home_news_text_size,
 								spUtil.getFontSizeRadix());
 						convertView.setTag(headerHolder);
 					} else {
@@ -498,7 +498,7 @@ public class New_Avtivity_Subject extends BaseActivity implements
 									.findViewById(R.id.home_news_title);
 							FontUtils.setTextViewFontSize(
 									New_Avtivity_Subject.this, newHolder.title,
-									R.string.home_news_title_text_size,
+									R.string.home_news_text_size,
 									spUtil.getFontSizeRadix());
 							newHolder.newstime_sign = (ImageView) convertView
 									.findViewById(R.id.home_news_newstime_sign);
@@ -520,7 +520,7 @@ public class New_Avtivity_Subject extends BaseActivity implements
 							FontUtils.setTextViewFontSize(
 									New_Avtivity_Subject.this,
 									albumsHolder.title,
-									R.string.home_news_title_text_size,
+									R.string.home_news_text_size,
 									spUtil.getFontSizeRadix());
 							albumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
 									.findViewById(R.id.home_albums_imgs_layout);

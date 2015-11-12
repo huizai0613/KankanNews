@@ -20,7 +20,7 @@
             android:paddingLeft="20dip"
             android:paddingRight="20dip"
             android:paddingTop="10dip"
-            android:src="@drawable/search_icon" />
+            android:src="@drawable/ic_colums" />
 
         <ImageView
             android:layout_width="97dip"

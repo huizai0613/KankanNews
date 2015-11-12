@@ -438,7 +438,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 						.getActivity().get(position).getTitle());
 				FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
 						topHolder.activityTitle,
-						R.string.home_news_title_text_size,
+						R.string.home_news_text_size,
 						spUtil.getFontSizeRadix());
 			} else if (itemViewType == 1) {
 				final int breakLocation = position
@@ -491,7 +491,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 						.getNewstext()));
 				FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
 						newsHolder.newsText,
-						R.string.home_news_title_text_size,
+						R.string.home_news_text_size,
 						spUtil.getFontSizeRadix());
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
 				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="home_news_title_text_size">13</string>
+    <string name="home_news_text_size">13</string>
 
 </resources>

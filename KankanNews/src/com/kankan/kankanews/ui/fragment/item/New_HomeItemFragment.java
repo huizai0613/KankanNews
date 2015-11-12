@@ -715,7 +715,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 							.findViewById(R.id.new_title);
 					FontUtils.setTextViewFontSize(New_HomeItemFragment.this,
 							pagerHolder.title,
-							R.string.home_news_title_text_size,
+							R.string.home_news_text_size,
 							spUtil.getFontSizeRadix());
 					pagerHolder.pager
 							.setLayoutParams(new RelativeLayout.LayoutParams(
@@ -774,7 +774,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 
 					FontUtils.setTextViewFontSize(New_HomeItemFragment.this,
 							newHolder.title,
-							R.string.home_news_title_text_size,
+							R.string.home_news_text_size,
 							spUtil.getFontSizeRadix());
 					newHolder.newstime_sign = (ImageView) convertView
 							.findViewById(R.id.home_news_newstime_sign);
@@ -801,7 +801,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 					// textNomalSize[PixelUtil.getScale()]));
 					FontUtils.setTextViewFontSize(New_HomeItemFragment.this,
 							albumsHolder.title,
-							R.string.home_news_title_text_size,
+							R.string.home_news_text_size,
 							spUtil.getFontSizeRadix());
 					albumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
 							.findViewById(R.id.home_albums_imgs_layout);
@@ -825,7 +825,7 @@ public class New_HomeItemFragment extends BaseFragment implements
 							.findViewById(R.id.title);
 					FontUtils.setTextViewFontSize(New_HomeItemFragment.this,
 							newZhuanTiHolder.title,
-							R.string.home_news_title_text_size,
+							R.string.home_news_text_size,
 							spUtil.getFontSizeRadix());
 					newZhuanTiHolder.home_news_titlepic = (ImageView) convertView
 							.findViewById(R.id.home_news_titlepic);

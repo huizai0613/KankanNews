@@ -316,7 +316,7 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 							.findViewById(R.id.home_news_title);
 					FontUtils.setTextViewFontSize(NewsListActivity.this,
 							mNewsListHolder.title,
-							R.string.home_news_title_text_size,
+							R.string.home_news_text_size,
 							spUtil.getFontSizeRadix());
 					mNewsListHolder.newsTimeIcon = (ImageView) convertView
 							.findViewById(R.id.home_news_newstime_sign);

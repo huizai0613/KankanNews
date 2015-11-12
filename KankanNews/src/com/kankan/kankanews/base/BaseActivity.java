@@ -503,9 +503,12 @@ public abstract class BaseActivity extends FragmentActivity implements
 		titleBarContentImg.setVisibility(View.VISIBLE);
 		titleBarRightImgSecond.setVisibility(View.VISIBLE);
 		titleBarLeftImg.setVisibility(View.VISIBLE);
-		titleBarRightImg.setVisibility(View.VISIBLE);
-
-		titleBarRightImg.setImageResource(rightImgId);
+		if (rightImgId == 0) {
+			titleBarRightImg.setVisibility(View.GONE);
+		} else {
+			titleBarRightImg.setVisibility(View.VISIBLE);
+			titleBarRightImg.setImageResource(rightImgId);
+		}
 		titleBarRightImgSecond.setImageResource(rightImgSecondId);
 		titleBarLeftImg.setImageResource(leftImgId);
 		titleBarContentImg.setImageResource(contentId);

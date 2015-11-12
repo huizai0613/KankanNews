@@ -771,7 +771,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	public void setItemTitleFontSize() {
 		// TODO Auto-generated method stub
 		FontUtils.setTextViewFontSize(this, newsItemHolder.title,
-				R.string.home_news_title_text_size, spUtil.getFontSizeRadix());
+				R.string.home_news_text_size, spUtil.getFontSizeRadix());
 	}
 
 	private void videoPlay() {

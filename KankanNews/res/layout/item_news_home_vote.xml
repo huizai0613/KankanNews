@@ -5,27 +5,71 @@
     android:background="@color/white_no_alpha"
     android:orientation="vertical" >
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:background="@color/gray_cc" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="45dip" >
 
+        <ImageView
+            android:id="@+id/item_news_home_vote_icon"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="@dimen/margin_base_space"
+            android:scaleType="fitXY" />
+
         <com.kankan.kankanews.ui.view.MyTextView
-            android:id="@+id/item_news_home_outlink_title"
+            android:id="@+id/item_news_home_vote_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
+            android:layout_toRightOf="@+id/item_news_home_vote_icon"
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/black"
             android:textStyle="bold" />
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/item_news_home_vote_change"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="换一组"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/item_news_home_outlink_image"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:background="@color/gray_cc" />
+
+    <com.kankan.kankanews.ui.view.MyTextView
+        android:id="@+id/item_news_home_vote_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin_base_space"
-        android:scaleType="fitXY" />
+        android:layout_alignParentLeft="true"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/item_news_home_vote_options_root_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:background="@color/gray_cc" />
 
     <View
         android:layout_width="match_parent"

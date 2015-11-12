@@ -18,6 +18,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
@@ -43,6 +46,8 @@ import com.kankan.kankanews.ui.ColumsActivity;
 import com.kankan.kankanews.ui.MeSetActivity;
 import com.kankan.kankanews.ui.NewsListActivity;
 import com.kankan.kankanews.ui.SearchMainActivity;
+import com.kankan.kankanews.ui.item.NewsContentActivity;
+import com.kankan.kankanews.ui.item.NewsOutLinkActivity;
 import com.kankan.kankanews.ui.item.NewsVideoPackageActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
@@ -278,7 +283,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	@Override
 	protected void onSuccessObject(JSONObject jsonObject) {
-		// TODO
 		if (jsonObject != null && !jsonObject.toString().trim().equals("")) {
 			this.mNewsHomeListJson = jsonObject.toString();
 			mNewsHome = JsonUtils.toObject(this.mNewsHomeListJson,
@@ -306,15 +310,17 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	private class MatrixHolder {
 		ImageView icon;
 		TextView title;
-		ImageView img0;
-		MyTextView title0;
-		ImageView img1;
-		MyTextView title1;
-		ImageView img2;
-		MyTextView title2;
-		ImageView img3;
-		MyTextView title3;
+		View[] rootView = new View[4];
+		// ImageView img0;
+		// MyTextView title0;
+		// ImageView img1;
+		// MyTextView title1;
+		// ImageView img2;
+		// MyTextView title2;
+		// ImageView img3;
+		// MyTextView title3;
 		View change;
+		ImageView changeIcon;
 		View more;
 	}
 
@@ -352,7 +358,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	}
 
 	private class VoteHolder {
-
+		ImageView icon;
+		TextView title;
+		View change;
+		TextView quetions;
+		LinearLayout rootView;
 	}
 
 	public class NewsHomeListAdapter extends BaseAdapter {
@@ -446,7 +456,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.news_home_swiper_head_title);
 					FontUtils.setTextViewFontSize(NewsHomeFragment.this,
 							mSwiperHeadHolder.title,
-							R.string.home_news_title_text_size, 1);
+							R.string.home_news_text_size, 1);
 					mSwiperHeadHolder.imgViewPager = (ViewPager) convertView
 							.findViewById(R.id.news_home_swiper_head_view_pager);
 					mSwiperHeadHolder.imgViewPager
@@ -476,57 +486,40 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mSwiperHeadHolder.pointRootView.setTag(points);
 					convertView.setTag(mSwiperHeadHolder);
 				} else if (itemType == 1) {
-					// TODO
 					mMatrixHolder = new MatrixHolder();
 					convertView = inflate.inflate(mActivity,
 							R.layout.item_news_home_matrix, null);
 					mMatrixHolder.change = convertView
-							.findViewById(R.id.item_news_home_change);
+							.findViewById(R.id.item_news_home_matrix_change);
+					mMatrixHolder.changeIcon = (ImageView) convertView
+							.findViewById(R.id.item_news_home_matrix_change_icon);
 					mMatrixHolder.more = convertView
 							.findViewById(R.id.item_news_home_matrix_more);
 					mMatrixHolder.icon = (ImageView) convertView
 							.findViewById(R.id.item_news_home_matrix_icon);
 					mMatrixHolder.title = (TextView) convertView
 							.findViewById(R.id.item_news_home_matrix_title);
-					FontUtils.setTextViewFontSize(NewsHomeFragment.this,
-							mMatrixHolder.title,
-							R.string.home_news_title_text_size, 1);
-					mMatrixHolder.img0 = (ImageView) convertView
-							.findViewById(R.id.item_news_home_matrix_image_0);
-					mMatrixHolder.title0 = (MyTextView) convertView
-							.findViewById(R.id.item_news_home_matrix_title_0);
-					mMatrixHolder.img1 = (ImageView) convertView
-							.findViewById(R.id.item_news_home_matrix_image_1);
-					mMatrixHolder.title1 = (MyTextView) convertView
-							.findViewById(R.id.item_news_home_matrix_title_1);
-					mMatrixHolder.img2 = (ImageView) convertView
-							.findViewById(R.id.item_news_home_matrix_image_2);
-					mMatrixHolder.title2 = (MyTextView) convertView
-							.findViewById(R.id.item_news_home_matrix_title_2);
-					mMatrixHolder.img3 = (ImageView) convertView
-							.findViewById(R.id.item_news_home_matrix_image_3);
-					mMatrixHolder.title3 = (MyTextView) convertView
-							.findViewById(R.id.item_news_home_matrix_title_3);
-					LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+					mMatrixHolder.rootView[0] = convertView
+							.findViewById(R.id.item_news_home_matrix_0);
+					mMatrixHolder.rootView[1] = convertView
+							.findViewById(R.id.item_news_home_matrix_1);
+					mMatrixHolder.rootView[2] = convertView
+							.findViewById(R.id.item_news_home_matrix_2);
+					mMatrixHolder.rootView[3] = convertView
+							.findViewById(R.id.item_news_home_matrix_3);
+					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
 							LayoutParams.MATCH_PARENT,
 							(int) ((mActivity.mScreenWidth - PixelUtil
 									.dp2px(12.5f * 3)) / 2 * 0.75));
-					mMatrixHolder.img0.setLayoutParams(layoutParams);
-					mMatrixHolder.img1.setLayoutParams(layoutParams);
-					mMatrixHolder.img2.setLayoutParams(layoutParams);
-					mMatrixHolder.img3.setLayoutParams(layoutParams);
-					FontUtils.setTextViewFontSize(NewsHomeFragment.this,
-							mMatrixHolder.title0,
-							R.string.home_news_title_text_size, 1);
-					FontUtils.setTextViewFontSize(NewsHomeFragment.this,
-							mMatrixHolder.title1,
-							R.string.home_news_title_text_size, 1);
-					FontUtils.setTextViewFontSize(NewsHomeFragment.this,
-							mMatrixHolder.title2,
-							R.string.home_news_title_text_size, 1);
-					FontUtils.setTextViewFontSize(NewsHomeFragment.this,
-							mMatrixHolder.title3,
-							R.string.home_news_title_text_size, 1);
+					for (int i = 0; i < 4; i++) {
+						ImageView image = (ImageView) mMatrixHolder.rootView[i]
+								.findViewById(R.id.item_news_home_matrix_item_image);
+						TextView title = (TextView) mMatrixHolder.rootView[i]
+								.findViewById(R.id.item_news_home_matrix_item_title);
+						image.setLayoutParams(layoutParams);
+						FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+								title, R.string.home_news_text_size, 1);
+					}
 					convertView.setTag(mMatrixHolder);
 				} else if (itemType == 2) {
 					mMatrixListHolder = new MatrixListHolder();
@@ -610,6 +603,16 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mVoteHolder = new VoteHolder();
 					convertView = inflate.inflate(mActivity,
 							R.layout.item_news_home_vote, null);
+					mVoteHolder.title = (TextView) convertView
+							.findViewById(R.id.item_news_home_vote_title);
+					mVoteHolder.change = convertView
+							.findViewById(R.id.item_news_home_vote_change);
+					mVoteHolder.quetions = (TextView) convertView
+							.findViewById(R.id.item_news_home_vote_question);
+					mVoteHolder.rootView = (LinearLayout) convertView
+							.findViewById(R.id.item_news_home_vote_options_root_view);
+					mVoteHolder.icon = (ImageView) convertView
+							.findViewById(R.id.item_news_home_vote_icon);
 					convertView.setTag(mVoteHolder);
 				}
 			} else {
@@ -637,28 +640,34 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						mSwiperHeadHolder.imgViewPager.getCurrentItem());
 				mSwiperHeadHolder.title.setText(moduleItem.getTitle());
 				mSwiperHeadHolder.title.setTag(module.getList());
-				mSwiperHeadHolder.imgViewPager
-						.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								openNews(moduleItem);
-							}
-						});
 			} else if (itemType == 1) {
 				if (module.getChange() == 1) {
 					mMatrixHolder.change.setVisibility(View.VISIBLE);
+					mMatrixHolder.change.setTag(mMatrixHolder.changeIcon);
 					mMatrixHolder.change
 							.setOnClickListener(new OnClickListener() {
 								@Override
 								public void onClick(View v) {
+									final ImageView changeIcon = (ImageView) v
+											.getTag();
 									if (CommonUtils
 											.isNetworkAvailable(mActivity)) {
+										Animation operatingAnim = AnimationUtils
+												.loadAnimation(mActivity,
+														R.anim.rotate_self);
+										operatingAnim.setDuration(500);
+										LinearInterpolator lin = new LinearInterpolator();
+										operatingAnim.setInterpolator(lin);
+										changeIcon
+												.startAnimation(operatingAnim);
 										netUtils.getNewHomeChange(
 												module.getAppclassid(),
 												new Listener<JSONObject>() {
 													@Override
 													public void onResponse(
 															JSONObject jsonObject) {
+														changeIcon
+																.clearAnimation();
 														if (jsonObject != null
 																&& !jsonObject
 																		.toString()
@@ -680,6 +689,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 													@Override
 													public void onErrorResponse(
 															VolleyError error) {
+														changeIcon
+																.clearAnimation();
 														ToastUtils.Errortoast(
 																mActivity,
 																"请求失败,请重试");
@@ -694,26 +705,30 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				mMatrixHolder.title.setText(module.getTitle());
 				ImgUtils.imageLoader.displayImage(module.getIcon(),
 						mMatrixHolder.icon, ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(module.getList().get(0)
-						.getTitlepic(), mMatrixHolder.img0,
-						ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(module.getList().get(1)
-						.getTitlepic(), mMatrixHolder.img1,
-						ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(module.getList().get(2)
-						.getTitlepic(), mMatrixHolder.img2,
-						ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(module.getList().get(3)
-						.getTitlepic(), mMatrixHolder.img3,
-						ImgUtils.homeImageOptions);
-				mMatrixHolder.title0
-						.setText(module.getList().get(0).getTitle());
-				mMatrixHolder.title1
-						.setText(module.getList().get(1).getTitle());
-				mMatrixHolder.title2
-						.setText(module.getList().get(2).getTitle());
-				mMatrixHolder.title3
-						.setText(module.getList().get(3).getTitle());
+				for (int i = 0; i < 4; i++) {
+					ImageView image = (ImageView) mMatrixHolder.rootView[i]
+							.findViewById(R.id.item_news_home_matrix_item_image);
+					ImageView icon = (ImageView) mMatrixHolder.rootView[i]
+							.findViewById(R.id.item_news_home_matrix_item_icon);
+					TextView title = (TextView) mMatrixHolder.rootView[i]
+							.findViewById(R.id.item_news_home_matrix_item_title);
+					ImgUtils.imageLoader.displayImage(module.getList().get(i)
+							.getTitlepic(), image, ImgUtils.homeImageOptions);
+					title.setText(module.getList().get(i).getTitle());
+					if ("video".equals(module.getList().get(i).getType())) {
+						icon.setVisibility(View.VISIBLE);
+					} else {
+						icon.setVisibility(View.GONE);
+					}
+					mMatrixHolder.rootView[i].setTag(module.getList().get(i));
+					mMatrixHolder.rootView[i]
+							.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									openNews((NewsHomeModuleItem) v.getTag());
+								}
+							});
+				}
 				mMatrixHolder.more.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -775,13 +790,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 								.findViewById(R.id.title_item);
 						title.setText(moduleItem.getTitle());
 						title.setLayoutParams(textLayoutParams);
+						title.setLineSpacing(PixelUtil.dp2px(3), 1);
 						itemView.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								NewsHomeFragment.this
-										.startAnimActivityByAppClassId(
-												NewsVideoPackageActivity.class,
-												module.getAppclassid());
+								openNews(moduleItem);
 							}
 						});
 						mGalleryHolder.rootView.addView(itemView);
@@ -806,9 +819,38 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				ImgUtils.imageLoader.displayImage(module.getList().get(0)
 						.getTitlepic(), mOutLinkHolder.titlePic,
 						ImgUtils.homeImageOptions);
+				mOutLinkHolder.titlePic
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								openNews(module.getList().get(0));
+							}
+						});
 			} else if (itemType == 7) {
+				ImgUtils.imageLoader.displayImage(module.getIcon(),
+						mVoteHolder.icon, ImgUtils.homeImageOptions);
+				mVoteHolder.title.setText(module.getTitle());
+				mVoteHolder.quetions.setText(module.getVote());
+				initVoteView(module);
 			}
 			return convertView;
+		}
+	}
+
+	private void initVoteView(NewsHomeModule module) {
+		mVoteHolder.rootView.removeAllViews();
+		for (int i = 0; i < module.getList().size(); i++) {
+			NewsHomeModuleItem item = module.getList().get(i);
+			String option = item.getOption();
+			TextView optionView = new MyTextView(mActivity);
+			LinearLayout.LayoutParams optionParams = new LinearLayout.LayoutParams(
+					LinearLayout.LayoutParams.MATCH_PARENT,
+					LinearLayout.LayoutParams.WRAP_CONTENT);
+			optionParams.leftMargin = PixelUtil.dp2px(12.5f);
+			optionParams.rightMargin = PixelUtil.dp2px(12.5f);
+			optionView.setText(option);
+			optionView.setLayoutParams(optionParams);
+			mVoteHolder.rootView.addView(optionView);
 		}
 	}
 
@@ -826,7 +868,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup container) {
+		public View getView(final int position, View convertView,
+				ViewGroup container) {
 			if (convertView == null) {
 				ImageView imageView = new ImageView(
 						NewsHomeFragment.this.mActivity);
@@ -836,6 +879,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			ImgUtils.imageLoader.displayImage(itemList.get(position)
 					.getTitlepic(), (ImageView) convertView,
 					ImgUtils.homeImageOptions);
+			convertView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					openNews(itemList.get(position));
+				}
+			});
 			return convertView;
 		}
 
@@ -868,11 +917,22 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	}
 
 	private void openNews(NewsHomeModuleItem moduleItem) {
-		// TODO Auto-generated method stub
-		if (moduleItem.getType().equals("swiper-video")) {
+		if (moduleItem.getType().equals("video")
+				|| moduleItem.getType().equals("text")) {
+			this.startAnimActivityByNewsHomeModuleItem(
+					NewsContentActivity.class, moduleItem);
+		} else if (moduleItem.getType().equals("swiper-video")) {
 			this.startAnimActivityByNewsHomeModuleItem(
 					NewsVideoPackageActivity.class, moduleItem);
+		} else if (moduleItem.getType().equals("outlink")) {
+			this.startAnimActivityByNewsHomeModuleItem(
+					NewsOutLinkActivity.class, moduleItem);
+		} else if (moduleItem.getType().equals("album")) {
+			// TODO
+		} else if (moduleItem.getType().equals("stream")) {
+			mActivity.touchTab(mActivity.tabLive);
+		} else if (moduleItem.getType().equals("topic")) {
+			// TODO
 		}
-
 	}
 }

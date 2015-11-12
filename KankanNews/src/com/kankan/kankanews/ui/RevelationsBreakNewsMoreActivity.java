@@ -391,7 +391,7 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 				FontUtils.setTextViewFontSize(
 						RevelationsBreakNewsMoreActivity.this,
 						newsHolder.newsText,
-						R.string.home_news_title_text_size,
+						R.string.home_news_text_size,
 						spUtil.getFontSizeRadix());
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
 				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);

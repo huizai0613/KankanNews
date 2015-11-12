@@ -591,7 +591,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 
 			if (itemViewType == 0) {
 				FontUtils.setTextViewFontSize(SearchMainActivity.this,
-						holder.title, R.string.home_news_title_text_size,
+						holder.title, R.string.home_news_text_size,
 						spUtil.getFontSizeRadix());
 				final New_News_Search news = searchList.get(position);
 				news.setTitlePic(CommonUtils.doWebpUrl(news.getTitlePic()));

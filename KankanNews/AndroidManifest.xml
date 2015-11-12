@@ -199,6 +199,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.kankan.kankanews.ui.item.NewsOutLinkActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.kankan.kankanews.ui.item.NewsVideoPackageActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"

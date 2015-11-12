@@ -38,6 +38,7 @@ import com.kankan.kankanews.bean.NewsContent;
 import com.kankan.kankanews.bean.NewsContentImage;
 import com.kankan.kankanews.bean.NewsContentRecommend;
 import com.kankan.kankanews.bean.NewsContentVideo;
+import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
@@ -61,6 +62,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private LinearLayout mLoadingView;
 	private View mVideoRootView;
 	private VideoView mVideoView;
+	private NewsHomeModuleItem mModuleItem;
 	private String mNewsId;
 	private String mNewsType;
 	private int mWebWidth = 0;
@@ -152,8 +154,15 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	protected void initData() {
-		mNewsId = this.getIntent().getStringExtra("mid");
-		mNewsType = this.getIntent().getStringExtra("type");
+		mModuleItem = (NewsHomeModuleItem) this.getIntent()
+				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
+		if (mModuleItem == null) {
+			mNewsId = this.getIntent().getStringExtra("mid");
+			mNewsType = this.getIntent().getStringExtra("type");
+		} else {
+			mNewsId = mModuleItem.getO_cmsid();
+			mNewsType = mModuleItem.getType();
+		}
 		refreshNetDate();
 	}
 
@@ -314,8 +323,10 @@ public class NewsContentActivity extends BaseVideoActivity implements
 						mHandle.sendMessage(msg);
 					}
 				});
-		int imgHeight = this.calcuHeight(image.getWidth(), image.getHeight()) / PixelUtil.getScale();
-		DebugLog.e(image.getWidth() + " " + image.getHeight() + " " +imgHeight + "");
+		int imgHeight = this.calcuHeight(image.getWidth(), image.getHeight())
+				/ PixelUtil.getScale();
+		DebugLog.e(image.getWidth() + " " + image.getHeight() + " " + imgHeight
+				+ "");
 		String template = "<p style='text-align: center'><em><i></i><img id='%s' height='%s' width='%s' src='images/loading_0.png' /><span>%s</span></em></p>";
 		return String.format(template, imageKey, imgHeight, this.mWebWidth,
 				image.getTitle());
@@ -413,8 +424,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 		@JavascriptInterface
 		public void setWebWidth(int width) {
-//			NewsContentActivity.this.mWebWidth = NewsContentActivity.this.mScreenWidth
-//					- width * PixelUtil.getScale() * 2;
+			// NewsContentActivity.this.mWebWidth =
+			// NewsContentActivity.this.mScreenWidth
+			// - width * PixelUtil.getScale() * 2;
 			NewsContentActivity.this.mWebWidth = (int) (NewsContentActivity.this.mScreenWidth * 0.9);
 			DebugLog.e(mWebWidth + "");
 		}

@@ -5,6 +5,11 @@
     android:background="@color/white_no_alpha"
     android:orientation="vertical" >
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:background="@color/gray_cc" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="45dip" >
@@ -26,18 +31,33 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/black"
+            android:textSize="18dip"
             android:textStyle="bold" />
 
-        <com.kankan.kankanews.ui.view.MyTextView
+        <LinearLayout
             android:id="@+id/item_news_home_matrix_more"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:text="更多"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:orientation="horizontal" >
+
+            <com.kankan.kankanews.ui.view.MyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="进去看看"
+                android:textColor="@color/a_3_gray"
+                android:textSize="18dip"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="20dip"
+                android:layout_height="20dip"
+                android:layout_margin="@dimen/margin_base_space"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_go_look" />
+        </LinearLayout>
     </RelativeLayout>
 
     <LinearLayout
@@ -49,49 +69,85 @@
         android:orientation="horizontal" >
 
         <LinearLayout
+            android:id="@+id/item_news_home_matrix_0"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_base_space"
             android:layout_weight="1"
             android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/item_news_home_matrix_image_0"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/default_news_display" />
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/item_news_home_matrix_item_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_news_display" />
+
+                <ImageView
+                    android:id="@+id/item_news_home_matrix_item_icon"
+                    android:layout_width="35dip"
+                    android:layout_height="35dip"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:padding="7.5dip"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_video" />
+            </RelativeLayout>
 
             <com.kankan.kankanews.ui.view.MyTextView
-                android:id="@+id/item_news_home_matrix_title_0"
+                android:id="@+id/item_news_home_matrix_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_base_space"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:lineSpacingExtra="3dp"
                 android:maxLines="2"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/item_news_home_matrix_1"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/item_news_home_matrix_image_1"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/default_news_display" />
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/item_news_home_matrix_item_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_news_display" />
+
+                <ImageView
+                    android:id="@+id/item_news_home_matrix_item_icon"
+                    android:layout_width="35dip"
+                    android:layout_height="35dip"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:padding="7.5dip"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_video" />
+            </RelativeLayout>
 
             <com.kankan.kankanews.ui.view.MyTextView
-                android:id="@+id/item_news_home_matrix_title_1"
+                android:id="@+id/item_news_home_matrix_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_base_space"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:lineSpacingExtra="3dp"
                 android:maxLines="2"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -107,49 +163,85 @@
         android:orientation="horizontal" >
 
         <LinearLayout
+            android:id="@+id/item_news_home_matrix_2"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/margin_base_space"
             android:layout_weight="1"
             android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/item_news_home_matrix_image_2"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/default_news_display" />
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/item_news_home_matrix_item_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_news_display" />
+
+                <ImageView
+                    android:id="@+id/item_news_home_matrix_item_icon"
+                    android:layout_width="35dip"
+                    android:layout_height="35dip"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:padding="7.5dip"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_video" />
+            </RelativeLayout>
 
             <com.kankan.kankanews.ui.view.MyTextView
-                android:id="@+id/item_news_home_matrix_title_2"
+                android:id="@+id/item_news_home_matrix_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_base_space"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:lineSpacingExtra="3dp"
                 android:maxLines="2"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/item_news_home_matrix_3"
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/item_news_home_matrix_image_3"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:src="@drawable/default_news_display" />
+                android:layout_height="wrap_content" >
+
+                <ImageView
+                    android:id="@+id/item_news_home_matrix_item_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/default_news_display" />
+
+                <ImageView
+                    android:id="@+id/item_news_home_matrix_item_icon"
+                    android:layout_width="35dip"
+                    android:layout_height="35dip"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:padding="7.5dip"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/ic_video" />
+            </RelativeLayout>
 
             <com.kankan.kankanews.ui.view.MyTextView
-                android:id="@+id/item_news_home_matrix_title_3"
+                android:id="@+id/item_news_home_matrix_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_base_space"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:lineSpacingExtra="3dp"
                 android:maxLines="2"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -157,7 +249,7 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/item_news_home_change"
+        android:id="@+id/item_news_home_matrix_change"
         android:layout_width="match_parent"
         android:layout_height="@dimen/base_action_bar_height"
         android:layout_marginBottom="10dip"
@@ -175,14 +267,16 @@
             <com.kankan.kankanews.ui.view.MyTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/margin_base_space"
                 android:text="换一组看看"
                 android:textColor="@color/mid_gray"
                 android:textSize="16dip" />
 
             <ImageView
-                android:layout_width="16dip"
-                android:layout_height="16dip"
-                android:src="@drawable/search_icon" />
+                android:id="@+id/item_news_home_matrix_change_icon"
+                android:layout_width="20dip"
+                android:layout_height="20dip"
+                android:src="@drawable/ic_change" />
         </LinearLayout>
     </RelativeLayout>
 
