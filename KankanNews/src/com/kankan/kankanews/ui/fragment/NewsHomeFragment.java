@@ -330,14 +330,16 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		TextView title;
 		View rootView0;
 		ImageView img0;
-		MyTextView title0;
-		MyTextView intro0;
+		TextView title0;
+		TextView intro0;
 		View rootView1;
 		ImageView img1;
-		MyTextView title1;
+		TextView title1;
+		TextView click1;
 		View rootView2;
 		ImageView img2;
-		MyTextView title2;
+		TextView title2;
+		TextView click2;
 	}
 
 	private class GalleryHolder {
@@ -554,6 +556,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.item_news_home_matrix_list_image1);
 					mMatrixListHolder.title1 = (MyTextView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_title1);
+					mMatrixListHolder.click1 = (MyTextView) convertView
+							.findViewById(R.id.item_news_home_matrix_list_click1);
+					mMatrixListHolder.click2 = (MyTextView) convertView
+							.findViewById(R.id.item_news_home_matrix_list_click2);
 					mMatrixListHolder.rootView2 = convertView
 							.findViewById(R.id.item_news_home_matrix_list_2);
 					mMatrixListHolder.img2 = (ImageView) convertView
@@ -759,8 +765,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						.getTitlepic(), mMatrixListHolder.img2,
 						ImgUtils.homeImageOptions);
 				mMatrixListHolder.title.setText(module.getTitle());
-				module.getList().get(0)
-						.setIntro("hjkhkahfjhadkjhf几乎快放假哈接口和发挥空间发哈就快点恢复空间哈咖啡壶");
 				if (!module.getList().get(0).getIntro().trim().equals("")) {
 					mMatrixListHolder.intro0.setVisibility(View.VISIBLE);
 					mMatrixListHolder.intro0.setText(module.getList().get(0)
@@ -786,12 +790,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
 						mMatrixListHolder.title2, R.string.home_news_text_size,
 						1);
-				((TextView) mMatrixListHolder.rootView1
-						.findViewById(R.id.item_news_home_matrix_list_click))
-						.setText(module.getList().get(0).getOnclick());
-				((TextView) mMatrixListHolder.rootView2
-						.findViewById(R.id.item_news_home_matrix_list_click))
-						.setText(module.getList().get(0).getOnclick());
+				mMatrixListHolder.click1.setText(module.getList().get(1)
+						.getOnclick()
+						+ "");
+				mMatrixListHolder.click2.setText(module.getList().get(2)
+						.getOnclick()
+						+ "");
 				mMatrixListHolder.rootView0
 						.setOnClickListener(new OnClickListener() {
 							@Override

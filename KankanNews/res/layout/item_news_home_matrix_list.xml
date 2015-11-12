@@ -152,7 +152,7 @@
                     android:visibility="visible" />
 
                 <com.kankan.kankanews.ui.view.MyTextView
-                    android:id="@+id/item_news_home_matrix_list_click"
+                    android:id="@+id/item_news_home_matrix_list_click1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -220,7 +220,7 @@
                     android:visibility="visible" />
 
                 <com.kankan.kankanews.ui.view.MyTextView
-                    android:id="@+id/item_news_home_matrix_list_click"
+                    android:id="@+id/item_news_home_matrix_list_click2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
