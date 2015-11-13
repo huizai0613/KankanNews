@@ -840,7 +840,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 								.findViewById(R.id.image_item);
 						int width = (mActivity.mScreenWidth - PixelUtil
 								.dp2px(12.5f * 3)) / 7 * 3;
-						LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+						RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
 								width, (int) (width * 0.75));
 						if (i == 0)
 							layoutParams.leftMargin = PixelUtil.dp2px(12.5f);
@@ -864,7 +864,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						itemView.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								openNews(moduleItem);
+								// openNews(moduleItem);
+								NewsHomeFragment.this
+										.startAnimActivityByAppClassId(
+												NewsVideoPackageActivity.class,
+												module.getAppclassid());
 							}
 						});
 						mGalleryHolder.rootView.addView(itemView);
@@ -874,6 +878,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			} else if (itemType == 4) {
 				ImgUtils.imageLoader.displayImage(module.getTitlepic(),
 						mTopicOneHolder.titlePic, ImgUtils.homeImageOptions);
+				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+						mTopicOneHolder.title, R.string.home_news_text_size, 1);
+				FontUtils
+						.setTextViewFontSize(NewsHomeFragment.this,
+								mTopicOneHolder.intro,
+								R.string.home_news_intro_size, 1);
 				mTopicOneHolder.title.setText(module.getTitle());
 				mTopicOneHolder.intro.setText(module.getIntro());
 			} else if (itemType == 5) {
@@ -991,9 +1001,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				|| moduleItem.getType().equals("text")) {
 			this.startAnimActivityByNewsHomeModuleItem(
 					NewsContentActivity.class, moduleItem);
-		} else if (moduleItem.getType().equals("swiper-video")) {
-			this.startAnimActivityByNewsHomeModuleItem(
-					NewsVideoPackageActivity.class, moduleItem);
 		} else if (moduleItem.getType().equals("outlink")) {
 			this.startAnimActivityByNewsHomeModuleItem(
 					NewsOutLinkActivity.class, moduleItem);

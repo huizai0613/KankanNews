@@ -5,6 +5,11 @@
     android:background="@color/white_no_alpha"
     android:orientation="vertical" >
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:background="@color/gray_cc" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
@@ -32,7 +37,12 @@
         android:id="@+id/item_news_home_topic_one_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_base_space"
+        android:layout_marginRight="@dimen/margin_base_space"
+        android:layout_marginTop="@dimen/margin_base_space"
+        android:ellipsize="end"
         android:gravity="center_vertical"
+        android:lineSpacingExtra="4.5dp"
         android:singleLine="true"
         android:textColor="@color/black"
         android:textStyle="bold" />
@@ -41,10 +51,20 @@
         android:id="@+id/item_news_home_topic_one_intro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_base_space"
+        android:layout_marginRight="@dimen/margin_base_space"
+        android:layout_marginTop="@dimen/margin_base_space"
+        android:ellipsize="end"
         android:gravity="center_vertical"
-        android:singleLine="true"
-        android:textColor="@color/black"
+        android:lineSpacingExtra="3dp"
+        android:maxLines="2"
+        android:textColor="@color/mid_light_gray"
         android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:background="@color/gray_cc" />
 
     <View
         android:layout_width="match_parent"

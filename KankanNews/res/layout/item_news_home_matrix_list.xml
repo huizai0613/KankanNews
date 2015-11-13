@@ -81,7 +81,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:lineSpacingExtra="4.5dp"
-            android:maxLines="2"
+			android:singleLine="true"
             android:textColor="@color/black"
             android:textStyle="bold" />
 

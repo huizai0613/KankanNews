@@ -2,7 +2,7 @@
 <resources>
 
     <!-- hdpi -->
-    <string name="home_news_intro_size">11</string>
+    <string name="home_news_intro_size">11.5</string>
     <string name="home_news_text_size">12</string>
     <string name="home_news_title_size">14</string>
     <string name="home_cates_text_size">14</string>
