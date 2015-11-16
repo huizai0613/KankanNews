@@ -50,6 +50,7 @@ import com.kankan.kankanews.ui.NewsListActivity;
 import com.kankan.kankanews.ui.SearchMainActivity;
 import com.kankan.kankanews.ui.item.NewsContentActivity;
 import com.kankan.kankanews.ui.item.NewsOutLinkActivity;
+import com.kankan.kankanews.ui.item.NewsSubjectActivity;
 import com.kankan.kankanews.ui.item.NewsVideoPackageActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
@@ -1058,9 +1059,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			if (i != module.getList().size() - 1) {
 				answerPercent.setText(tmpPercent + "%");
 			} else {
-				if (tmpVoteSumNum != 100)
-					answerPercent.setText(tmpPercent + 100 - tmpVoteSumNum
-							+ "%");
+				if (tmpVoteSumNum < 100)
+					answerPercent.setText(tmpPercent + 0.01 + "%");
+				else if (tmpVoteSumNum > 100)
+					answerPercent.setText(tmpPercent - 0.01 + "%");
 				else
 					answerPercent.setText(tmpPercent + "%");
 			}
@@ -1190,7 +1192,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		} else if (moduleItem.getType().equals("stream")) {
 			mActivity.touchTab(mActivity.tabLive);
 		} else if (moduleItem.getType().equals("topic")) {
-			// TODO
+			this.startAnimActivityByNewsHomeModuleItem(
+					NewsSubjectActivity.class, moduleItem);
 		}
 	}
 }

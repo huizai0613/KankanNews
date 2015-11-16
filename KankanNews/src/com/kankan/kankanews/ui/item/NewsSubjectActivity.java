@@ -47,6 +47,7 @@ import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_News_Click;
 import com.kankan.kankanews.bean.New_Subject_Json;
+import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.bean.Subject_Item;
 import com.kankan.kankanews.bean.subject_List;
 import com.kankan.kankanews.exception.NetRequestException;
@@ -81,19 +82,21 @@ public class NewsSubjectActivity extends BaseActivity implements
 	// 分享类
 	private ShareUtil shareUtil;
 
-	private String ztid;
-	private String title;
-	private String titlepic;
-	private String sharedPic;
-	private String titleurl;
-	private String intro;
-	private MyTextView titleText;
+//	private String ztid;
+//	private String title;
+//	private String titlepic;
+//	private String sharedPic;
+//	private String titleurl;
+//	private String intro;
+//	private MyTextView titleText;
 
 	private LinkedList<Subject_Item> subjectData = new LinkedList<Subject_Item>();
 	private SubjectAdapter mAdapter;
 	private boolean fadeHeader = true;
 
 	private subject_List subjectList = new subject_List();
+	
+	private NewsHomeModuleItem mModuleItem;
 
 	protected ImageLoader imageLoader = ImageLoader.getInstance();
 
@@ -150,28 +153,28 @@ public class NewsSubjectActivity extends BaseActivity implements
 		instance = NetUtils.getInstance(this);
 		// 获取上个页面传来的数据
 		Intent intent = getIntent();
-		ztid = intent.getStringExtra("ztid");
-		title = intent.getStringExtra("title");
-		titlepic = intent.getStringExtra("titlepic");
-		sharedPic = intent.getStringExtra("sharedPic");
-		titleurl = intent.getStringExtra("titleurl");
-		intro = intent.getStringExtra("intro");
-
-		new_news = new New_News();
-
-		new_news.setTitlelist(title);
-		if (sharedPic == null || sharedPic.trim().equals(""))
-			new_news.setSharedPic(titlepic);
-		else
-			new_news.setSharedPic(sharedPic);
-		new_news.setTitleurl(titleurl);
-		new_news.setIntro(intro);
-
-		NetUtils.getInstance(mContext).getAnalyse(this, "topic",
-				new_news.getTitlelist(), new_news.getTitleurl());
+		mModuleItem = (NewsHomeModuleItem)intent.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
+//		title = intent.getStringExtra("title");
+//		titlepic = intent.getStringExtra("titlepic");
+//		sharedPic = intent.getStringExtra("sharedPic");
+//		titleurl = intent.getStringExtra("titleurl");
+//		intro = intent.getStringExtra("intro");
+//
+//		new_news = new New_News();
+//
+//		new_news.setTitlelist(title);
+//		if (sharedPic == null || sharedPic.trim().equals(""))
+//			new_news.setSharedPic(titlepic);
+//		else
+//			new_news.setSharedPic(sharedPic);
+//		new_news.setTitleurl(titleurl);
+//		new_news.setIntro(intro);
+//
+//		NetUtils.getInstance(mContext).getAnalyse(this, "topic",
+//				new_news.getTitlelist(), new_news.getTitleurl());
 
 		// 初始化shareutil类
-		shareUtil = new ShareUtil(new_news, mContext);
+		shareUtil = new ShareUtil(mModuleItem, mContext);
 
 		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
 				R.drawable.ic_close_white, R.drawable.ic_font,
@@ -906,7 +909,6 @@ public class NewsSubjectActivity extends BaseActivity implements
 			// new_news_clicks
 		}
 	};
-	private New_News new_news;
 
 	// 初始化数据
 	private void initContentData() {
