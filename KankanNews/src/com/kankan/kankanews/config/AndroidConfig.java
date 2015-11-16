@@ -133,6 +133,10 @@ public class AndroidConfig {
 	public static final String NEWS_HOME_DATA = "/v5/KKAppIndex";
 	// 主页随机数据
 	public static final String NEWS_HOME_DATA_CHANGE = "/v5/KKAppList/command/random/appclassid/";
+	// 主页投票随机数据 
+	public static final String NEWS_HOME_VOTE_DATA_CHANGE = "/v5/KKAppVote/command/random/appclassid/";
+	// 提交投票结果
+	public static final String NEWS_HOME_VOTE_PUT = "/v5/KKAppVote/command/vote/appclassid/";
 	// 列表页列表数据
 	public static final String NEWS_LIST_DATA = "/v5/KKAppList/command/normal/appclassid/";
 	// 新闻点击量

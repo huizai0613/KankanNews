@@ -5,18 +5,27 @@
     android:background="@color/white_no_alpha"
     android:orientation="vertical" >
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:background="@color/gray_cc" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="45dip" >
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_base_space"
+        android:layout_marginRight="@dimen/margin_base_space"
+        android:layout_marginTop="@dimen/margin_base_space" >
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/item_news_home_outlink_title"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/black"
+            android:textSize="18dip"
             android:textStyle="bold" />
     </RelativeLayout>
 
@@ -26,6 +35,11 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_base_space"
         android:scaleType="fitXY" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:background="@color/gray_cc" />
 
     <View
         android:layout_width="match_parent"

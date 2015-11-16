@@ -3,12 +3,14 @@ package com.kankan.kankanews.ui.fragment;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -87,6 +89,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	private VoteHolder mVoteHolder;
 
 	private int mLastVisibleItem = 2;
+
+	private String[] VOTE_ANSWER_PREFIX = { "A.", "B.", "C.", "D.", "E.", "F." };
+
+	private int[] VOTE_ANSWER_COLOR = { R.color.green, R.color.blue,
+			R.color.yellow, R.color.red, R.color.cyan, R.color.fuchsia };
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -330,14 +337,17 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		TextView title;
 		View rootView0;
 		ImageView img0;
+		ImageView icon0;
 		TextView title0;
 		TextView intro0;
 		View rootView1;
 		ImageView img1;
+		ImageView icon1;
 		TextView title1;
 		TextView click1;
 		View rootView2;
 		ImageView img2;
+		ImageView icon2;
 		TextView title2;
 		TextView click2;
 	}
@@ -367,6 +377,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		ImageView icon;
 		TextView title;
 		View change;
+		View changeIcon;
 		TextView quetions;
 		LinearLayout rootView;
 	}
@@ -541,7 +552,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.item_news_home_matrix_list_0);
 					mMatrixListHolder.img0 = (ImageView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_image0);
-					LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+					mMatrixListHolder.icon0 = (ImageView) convertView
+							.findViewById(R.id.item_news_home_matrix_list_icon0);
+					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
 							LayoutParams.MATCH_PARENT,
 							(int) ((mActivity.mScreenWidth - PixelUtil
 									.dp2px(12.5f * 2)) * 0.5));
@@ -554,6 +567,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.item_news_home_matrix_list_1);
 					mMatrixListHolder.img1 = (ImageView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_image1);
+					mMatrixListHolder.icon1 = (ImageView) convertView
+							.findViewById(R.id.item_news_home_matrix_list_icon1);
 					mMatrixListHolder.title1 = (MyTextView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_title1);
 					mMatrixListHolder.click1 = (MyTextView) convertView
@@ -564,6 +579,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.item_news_home_matrix_list_2);
 					mMatrixListHolder.img2 = (ImageView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_image2);
+					mMatrixListHolder.icon2 = (ImageView) convertView
+							.findViewById(R.id.item_news_home_matrix_list_icon2);
 					mMatrixListHolder.title2 = (MyTextView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_title2);
 					convertView.setTag(mMatrixListHolder);
@@ -623,6 +640,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.item_news_home_vote_title);
 					mVoteHolder.change = convertView
 							.findViewById(R.id.item_news_home_vote_change);
+					mVoteHolder.changeIcon = convertView
+							.findViewById(R.id.item_news_home_vote_change_icon);
 					mVoteHolder.quetions = (TextView) convertView
 							.findViewById(R.id.item_news_home_vote_question);
 					mVoteHolder.rootView = (LinearLayout) convertView
@@ -753,6 +772,21 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					}
 				});
 			} else if (itemType == 2) {
+				if (module.getList().get(0).getType().trim().equals("video")) {
+					mMatrixListHolder.icon0.setVisibility(View.VISIBLE);
+				} else {
+					mMatrixListHolder.icon0.setVisibility(View.GONE);
+				}
+				if (module.getList().get(1).getType().trim().equals("video")) {
+					mMatrixListHolder.icon1.setVisibility(View.VISIBLE);
+				} else {
+					mMatrixListHolder.icon1.setVisibility(View.GONE);
+				}
+				if (module.getList().get(2).getType().trim().equals("video")) {
+					mMatrixListHolder.icon2.setVisibility(View.VISIBLE);
+				} else {
+					mMatrixListHolder.icon2.setVisibility(View.GONE);
+				}
 				ImgUtils.imageLoader.displayImage(module.getIcon(),
 						mMatrixListHolder.icon, ImgUtils.homeImageOptions);
 				ImgUtils.imageLoader.displayImage(module.getList().get(0)
@@ -834,6 +868,15 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					for (int i = 0; i < module.getList().size(); i++) {
 						View itemView = inflate.inflate(mActivity,
 								R.layout.item_news_home_image_title_item, null);
+						View imageRootView = itemView
+								.findViewById(R.id.image_root_view);
+						if (i == 0)
+							((LinearLayout.LayoutParams) imageRootView
+									.getLayoutParams()).leftMargin = PixelUtil
+									.dp2px(12.5f);
+						((LinearLayout.LayoutParams) imageRootView
+								.getLayoutParams()).rightMargin = PixelUtil
+								.dp2px(12.5f);
 						final NewsHomeModuleItem moduleItem = module.getList()
 								.get(i);
 						ImageView image = (ImageView) itemView
@@ -842,9 +885,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 								.dp2px(12.5f * 3)) / 7 * 3;
 						RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
 								width, (int) (width * 0.75));
-						if (i == 0)
-							layoutParams.leftMargin = PixelUtil.dp2px(12.5f);
-						layoutParams.rightMargin = PixelUtil.dp2px(12.5f);
 						image.setLayoutParams(layoutParams);
 						ImgUtils.imageLoader.displayImage(
 								moduleItem.getTitlepic(), image,
@@ -899,19 +939,77 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				ImgUtils.imageLoader.displayImage(module.getList().get(0)
 						.getTitlepic(), mOutLinkHolder.titlePic,
 						ImgUtils.homeImageOptions);
-				mOutLinkHolder.titlePic
-						.setOnClickListener(new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								openNews(module.getList().get(0));
-							}
-						});
+				convertView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						openNews(module.getList().get(0));
+					}
+				});
 			} else if (itemType == 7) {
 				ImgUtils.imageLoader.displayImage(module.getIcon(),
 						mVoteHolder.icon, ImgUtils.homeImageOptions);
 				mVoteHolder.title.setText(module.getTitle());
 				mVoteHolder.quetions.setText(module.getVote());
 				initVoteView(module);
+				mVoteHolder.change.setTag(mVoteHolder.changeIcon);
+				mVoteHolder.change.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						final ImageView changeIcon = (ImageView) v.getTag();
+						if (CommonUtils.isNetworkAvailable(mActivity)) {
+							Animation operatingAnim = AnimationUtils
+									.loadAnimation(mActivity,
+											R.anim.rotate_self);
+							operatingAnim.setDuration(500);
+							LinearInterpolator lin = new LinearInterpolator();
+							operatingAnim.setInterpolator(lin);
+							changeIcon.startAnimation(operatingAnim);
+							netUtils.getNewHomeVoteChange(
+									module.getAppclassid(), module.getId(),
+									new Listener<JSONObject>() {
+										@Override
+										public void onResponse(
+												JSONObject jsonObject) {
+											changeIcon.clearAnimation();
+											if (jsonObject != null
+													&& !jsonObject.toString()
+															.trim().equals("")) {
+												NewsHomeModule newModule = JsonUtils.toObject(
+														jsonObject.toString(),
+														NewsHomeModule.class);
+												mNewsHome
+														.getModule_list()
+														.get(position - 1)
+														.setList(
+																newModule
+																		.getList());
+												mNewsHome
+														.getModule_list()
+														.get(position - 1)
+														.setId(newModule
+																.getId());
+												mNewsHome
+														.getModule_list()
+														.get(position - 1)
+														.setVote(
+																newModule
+																		.getVote());
+												mNewsHomeListAdapter
+														.notifyDataSetChanged();
+											}
+										}
+									}, new ErrorListener() {
+										@Override
+										public void onErrorResponse(
+												VolleyError error) {
+											changeIcon.clearAnimation();
+											ToastUtils.Errortoast(mActivity,
+													"请求失败,请重试");
+										}
+									});
+						}
+					}
+				});
 			}
 			return convertView;
 		}
@@ -919,8 +1017,62 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	private void initVoteView(NewsHomeModule module) {
 		mVoteHolder.rootView.removeAllViews();
+		if (spUtil.judgeVoteId(module.getId())) {
+			initVoteHasVote(module);
+		} else {
+			initVoteNoVote(module);
+		}
+	}
+
+	public void initVoteHasVote(final NewsHomeModule module) {
+		int voteSumNum = 0;
+		double tmpVoteSumNum = 0;
+		int maxLength = (int) (mActivity.mScreenWidth * 0.7);
 		for (int i = 0; i < module.getList().size(); i++) {
-			NewsHomeModuleItem item = module.getList().get(i);
+			voteSumNum += module.getList().get(i).getNum();
+		}
+		for (int i = 0; i < module.getList().size(); i++) {
+			if (i >= VOTE_ANSWER_PREFIX.length)
+				break;
+			final NewsHomeModuleItem item = module.getList().get(i);
+			View itemView = View.inflate(mActivity,
+					R.layout.item_news_home_vote_item, null);
+			TextView answer = (TextView) itemView
+					.findViewById(R.id.vote_answer);
+			answer.setTextSize(PixelUtil.dp2px(7));
+			answer.setText(VOTE_ANSWER_PREFIX[i] + item.getOption());
+			View answerLoading = itemView
+					.findViewById(R.id.vote_answer_loading);
+			double percent = (double) item.getNum() / voteSumNum;
+			DebugLog.e(percent + "");
+			if (maxLength * percent > PixelUtil.dp2px(10))
+				answerLoading.getLayoutParams().width = (int) (maxLength * percent);
+			else
+				answerLoading.getLayoutParams().width = PixelUtil.dp2px(10);
+			((GradientDrawable) answerLoading.getBackground())
+					.setColor(getResources().getColor(VOTE_ANSWER_COLOR[i]));
+			TextView answerPercent = (TextView) itemView
+					.findViewById(R.id.vote_answer_percent);
+			double tmpPercent = (double) Math.round(percent * 10000) / 100;
+			tmpVoteSumNum += tmpPercent;
+			if (i != module.getList().size() - 1) {
+				answerPercent.setText(tmpPercent + "%");
+			} else {
+				if (tmpVoteSumNum != 100)
+					answerPercent.setText(tmpPercent + 100 - tmpVoteSumNum
+							+ "%");
+				else
+					answerPercent.setText(tmpPercent + "%");
+			}
+			mVoteHolder.rootView.addView(itemView);
+		}
+	}
+
+	public void initVoteNoVote(final NewsHomeModule module) {
+		for (int i = 0; i < module.getList().size(); i++) {
+			if (i >= VOTE_ANSWER_PREFIX.length)
+				break;
+			final NewsHomeModuleItem item = module.getList().get(i);
 			String option = item.getOption();
 			TextView optionView = new MyTextView(mActivity);
 			LinearLayout.LayoutParams optionParams = new LinearLayout.LayoutParams(
@@ -928,8 +1080,37 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					LinearLayout.LayoutParams.WRAP_CONTENT);
 			optionParams.leftMargin = PixelUtil.dp2px(12.5f);
 			optionParams.rightMargin = PixelUtil.dp2px(12.5f);
-			optionView.setText(option);
+			optionParams.topMargin = PixelUtil.dp2px(5f);
+			optionParams.bottomMargin = PixelUtil.dp2px(5f);
+			optionView.setText(VOTE_ANSWER_PREFIX[i] + option);
+			optionView.setTextSize(PixelUtil.dp2px(8));
 			optionView.setLayoutParams(optionParams);
+			optionView
+					.setBackgroundResource(R.drawable.bg_item_news_home_vote_answer);
+			optionView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					netUtils.putVoteAnswer(module.getAppclassid(),
+							module.getId(), item.getId(),
+							new Listener<JSONObject>() {
+								@Override
+								public void onResponse(JSONObject jsonObject) {
+									Map voteMap = JsonUtils.toMap(jsonObject
+											.toString());
+									spUtil.addVoteId(module.getId());
+									item.setNum(((Double) voteMap.get("num"))
+											.intValue());
+									mNewsHomeListAdapter.notifyDataSetChanged();
+								}
+							}, new ErrorListener() {
+								@Override
+								public void onErrorResponse(VolleyError arg0) {
+									ToastUtils
+											.Errortoast(mActivity, "请求失败,请重试");
+								}
+							});
+				}
+			});
 			mVoteHolder.rootView.addView(optionView);
 		}
 	}

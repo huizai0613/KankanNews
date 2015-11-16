@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashSet;
+import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -60,6 +62,8 @@ public class SharePreferenceUtil {
 	private String FIRST_GET_COLUMNS = "first_get_columns";
 
 	private String FIRST_GET_REVELATIONS = "first_get_revelations";
+
+	private String NEWS_HOME_VOTE = "NEWS_HOME_VOTE";
 
 	// 应用版本号
 	public void setVersion(String version) {
@@ -312,5 +316,20 @@ public class SharePreferenceUtil {
 
 	public boolean getFirstGetRevalations() {
 		return mSharedPreferences.getBoolean(FIRST_GET_REVELATIONS, true);
+	}
+
+	/** 是否第一次进入报料 */
+	public void addVoteId(String voteId) {
+		Set<String> voteSet = mSharedPreferences.getStringSet(NEWS_HOME_VOTE,
+				new HashSet<String>());
+		voteSet.add(voteId);
+		editor.putStringSet(NEWS_HOME_VOTE, voteSet);
+		editor.commit();
+	}
+
+	public boolean judgeVoteId(String voteId) {
+		Set<String> voteSet = mSharedPreferences.getStringSet(NEWS_HOME_VOTE,
+				new HashSet<String>());
+		return voteSet.contains(voteId);
 	}
 }

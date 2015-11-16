@@ -329,6 +329,31 @@ public class NetUtils {
 	}
 
 	/**
+	 * 获取首页投票随机数据
+	 */
+	public void getNewHomeVoteChange(String classid, String voteId,
+			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.KANKAN_HOST
+						+ AndroidConfig.NEWS_HOME_VOTE_DATA_CHANGE + classid
+						+ "/vot/" + voteId, null, reponseListener,
+				errorListener);
+		mRequestQueue.add(mCustomRequest);
+	}
+
+	/**
+	 * 提交投票结果
+	 */
+	public void putVoteAnswer(String classid, String voteId, String optionId,
+			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_VOTE_PUT
+						+ classid + "/vot/" + voteId + "/opt/" + optionId, null,
+				reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
+	}
+
+	/**
 	 * 获取视频包列表
 	 */
 	public void getNewsList(String classid, String lastnewstime,

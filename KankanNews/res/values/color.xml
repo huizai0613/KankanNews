@@ -54,7 +54,7 @@
 
     <!-- 很淡很淡灰色颜色  头部标题栏 -->
     <color name="a_3_gray">#A3A3A3</color>
-    
+
     <!-- 中灰色 字体颜色 -->
     <color name="mid_gray">#8E8E8E</color>
 
@@ -73,6 +73,18 @@
 
     <!-- 蓝色 -->
     <color name="blue">#0000FF</color>
+
+    <!-- 绿色 -->
+    <color name="green">#00FF00</color>
+
+    <!-- 黄色 -->
+    <color name="yellow">#FFFF00</color>
+
+    <!-- 青色 -->
+    <color name="cyan">#00FFFF</color>
+
+    <!-- 紫红色 -->
+    <color name="fuchsia">#FF00FF</color>
 
     <!-- 日历组件颜色 -->
     <color name="calendar_active_month_bg">#fff5f7f9</color>

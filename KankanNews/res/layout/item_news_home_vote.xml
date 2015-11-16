@@ -30,18 +30,34 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:textColor="@color/black"
+            android:textSize="18dip"
             android:textStyle="bold" />
 
-        <com.kankan.kankanews.ui.view.MyTextView
+        <LinearLayout
             android:id="@+id/item_news_home_vote_change"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:gravity="center_vertical"
-            android:singleLine="true"
-            android:text="换一组"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
+            android:orientation="horizontal" >
+
+            <com.kankan.kankanews.ui.view.MyTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="换一组"
+                android:textColor="@color/a_3_gray"
+                android:textSize="18dip"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/item_news_home_vote_change_icon"
+                android:layout_width="20dip"
+                android:layout_height="20dip"
+                android:layout_margin="@dimen/margin_base_space"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_change" />
+        </LinearLayout>
     </RelativeLayout>
 
     <View
@@ -54,15 +70,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
+        android:layout_margin="@dimen/margin_base_space"
         android:gravity="center_vertical"
-        android:singleLine="true"
+        android:lineSpacingExtra="4.5dp"
         android:textColor="@color/black"
+        android:textSize="18dip"
         android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/item_news_home_vote_options_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_base_space"
         android:orientation="vertical" >
     </LinearLayout>
 
