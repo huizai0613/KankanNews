@@ -62,7 +62,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.kankan.kankanews.ui.item.NewsSubjectActivity"
+            android:name="com.kankan.kankanews.ui.item.NewsTopicActivity"
             android:exported="false"
             android:screenOrientation="portrait" >
         </activity>

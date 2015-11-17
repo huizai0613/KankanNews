@@ -16,6 +16,7 @@ public class NewsHomeModule implements Serializable {
 	private List<NewsHomeModuleItem> list;
 	private String vote;
 	private String id;
+	private String category;
 
 	public String getAppclassid() {
 		return appclassid;
@@ -111,6 +112,14 @@ public class NewsHomeModule implements Serializable {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 }

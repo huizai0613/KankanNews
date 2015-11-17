@@ -69,6 +69,7 @@ public class SharePreferenceUtil {
 	public void setVersion(String version) {
 		editor.putString(SHARE_KEY_VERSION, version);
 		editor.commit();
+		editor.clear();
 	}
 
 	public String getVersion() {
@@ -83,6 +84,7 @@ public class SharePreferenceUtil {
 	public void setFristComing(boolean isFrist) {
 		editor.putBoolean(SHARED_KEY_FRIST, isFrist);
 		editor.commit();
+		editor.clear();
 	}
 
 	// 是否用流量看视频
@@ -93,12 +95,14 @@ public class SharePreferenceUtil {
 	public void setFlow(boolean isFlow) {
 		editor.putBoolean(SHARED_KEY_FLOW, isFlow);
 		editor.commit();
+		editor.clear();
 	}
 
 	// 用户id
 	public void setUserId(String userid) {
 		editor.putString(SHARED_KEY_USER_ID, userid);
 		editor.commit();
+		editor.clear();
 	}
 
 	public String getUserId() {
@@ -109,6 +113,7 @@ public class SharePreferenceUtil {
 	public void setUserName(String usernmae) {
 		editor.putString(SHARED_KEY_USER_NAME, usernmae);
 		editor.commit();
+		editor.clear();
 	}
 
 	public String getUserName() {
@@ -119,6 +124,7 @@ public class SharePreferenceUtil {
 	public void setUserPost(String userpost) {
 		editor.putString(SHARED_KEY_USER_POST, userpost);
 		editor.commit();
+		editor.clear();
 	}
 
 	public String getUserPost() {
@@ -133,6 +139,7 @@ public class SharePreferenceUtil {
 	public void setPushNotifyEnable(boolean isChecked) {
 		editor.putBoolean(SHARED_KEY_NOTIFY, isChecked);
 		editor.commit();
+		editor.clear();
 	}
 
 	// 允许声音
@@ -143,6 +150,7 @@ public class SharePreferenceUtil {
 	public void setAllowVoiceEnable(boolean isChecked) {
 		editor.putBoolean(SHARED_KEY_VOICE, isChecked);
 		editor.commit();
+		editor.clear();
 	}
 
 	// 允许震动
@@ -153,12 +161,14 @@ public class SharePreferenceUtil {
 	public void setAllowVibrateEnable(boolean isChecked) {
 		editor.putBoolean(SHARED_KEY_VIBRATE, isChecked);
 		editor.commit();
+		editor.clear();
 	}
 
 	// 登陆账号
 	public void setAccount(String phone) {
 		editor.putString(SHARED_KEY_ACCOUNT, phone);
 		editor.commit();
+		editor.clear();
 	}
 
 	public String getAccount() {
@@ -169,6 +179,7 @@ public class SharePreferenceUtil {
 	public void setPwd(String pwd) {
 		editor.putString(SHARED_KEY_PASSWORD, pwd);
 		editor.commit();
+		editor.clear();
 	}
 
 	public String getPwd() {
@@ -179,6 +190,7 @@ public class SharePreferenceUtil {
 	public void setLastTime(long lastTime) {
 		editor.putLong(SHARED_KEY_LASRTIME, lastTime);
 		editor.commit();
+		editor.clear();
 	}
 
 	public long getLastTime() {
@@ -198,6 +210,7 @@ public class SharePreferenceUtil {
 					Base64.DEFAULT));
 			editor.putString(key, objStr);
 			editor.commit();
+			editor.clear();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -238,6 +251,7 @@ public class SharePreferenceUtil {
 	public void setFirstContent(boolean pwd) {
 		editor.putBoolean(SHARED_KEY_CONTENT, pwd);
 		editor.commit();
+		editor.clear();
 	}
 
 	public boolean getFirstContent() {
@@ -248,6 +262,7 @@ public class SharePreferenceUtil {
 	public void setFirstFull(boolean pwd) {
 		editor.putBoolean(SHARED_KEY_FULL, pwd);
 		editor.commit();
+		editor.clear();
 	}
 
 	public boolean getFirstFull() {
@@ -258,6 +273,7 @@ public class SharePreferenceUtil {
 	public void saveSearchHisList(String hisString) {
 		editor.putString(SEARCH_HIS_LIST, hisString);
 		editor.commit();
+		editor.clear();
 	}
 
 	/** 搜索历史 */
@@ -269,6 +285,7 @@ public class SharePreferenceUtil {
 	public void saveFontSizeRadix(float redix) {
 		editor.putFloat(FONT_SIZE_RADIX, redix);
 		editor.commit();
+		editor.clear();
 	}
 
 	/** 字体大小调整基数 */
@@ -280,6 +297,7 @@ public class SharePreferenceUtil {
 	public void saveIsDayMode(boolean isDay) {
 		editor.putBoolean(IS_DAY_MODE, isDay);
 		editor.commit();
+		editor.clear();
 	}
 
 	/** 是否为日间模式 */
@@ -291,6 +309,7 @@ public class SharePreferenceUtil {
 	public void saveUserTelephone(String userTelephone) {
 		editor.putString(USER_TELEPHONE, userTelephone);
 		editor.commit();
+		editor.clear();
 	}
 
 	/** 是否为日间模式 */
@@ -302,6 +321,7 @@ public class SharePreferenceUtil {
 	public void setFirstGetColumns(boolean get) {
 		editor.putBoolean(FIRST_GET_COLUMNS, get);
 		editor.commit();
+		editor.clear();
 	}
 
 	public boolean getFirstGetColumns() {
@@ -312,6 +332,7 @@ public class SharePreferenceUtil {
 	public void setFirstGetRevalations(boolean get) {
 		editor.putBoolean(FIRST_GET_REVELATIONS, get);
 		editor.commit();
+		editor.clear();
 	}
 
 	public boolean getFirstGetRevalations() {
@@ -325,6 +346,7 @@ public class SharePreferenceUtil {
 		voteSet.add(voteId);
 		editor.putStringSet(NEWS_HOME_VOTE, voteSet);
 		editor.commit();
+		editor.clear();
 	}
 
 	public boolean judgeVoteId(String voteId) {

@@ -1,5 +1,6 @@
 package com.kankan.kankanews.ui.fragment;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,7 +51,7 @@ import com.kankan.kankanews.ui.NewsListActivity;
 import com.kankan.kankanews.ui.SearchMainActivity;
 import com.kankan.kankanews.ui.item.NewsContentActivity;
 import com.kankan.kankanews.ui.item.NewsOutLinkActivity;
-import com.kankan.kankanews.ui.item.NewsSubjectActivity;
+import com.kankan.kankanews.ui.item.NewsTopicActivity;
 import com.kankan.kankanews.ui.item.NewsVideoPackageActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
@@ -229,6 +230,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			mNewsHomeListView.setAdapter(mNewsHomeListAdapter);
 		} else {
 			mNewsHomeListAdapter.notifyDataSetChanged();
+			DebugLog.e("卧槽");
+			mSwiperHeadHolder.imgViewPager.setCurrentItem(0);
 		}
 		mNewsHomeListView.setSelection(2);
 	}
@@ -489,19 +492,28 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mSwiperHeadHolder.imgViewPager.setCurrentItem(0);
 					mSwiperHeadHolder.pointRootView = (LinearLayout) convertView
 							.findViewById(R.id.news_home_swiper_head_point_root_view);
-					android.widget.LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-							PixelUtil.dp2px(6), PixelUtil.dp2px(6));
-					layoutParams.rightMargin = PixelUtil.dp2px(4);
-					List<View> points = new ArrayList<View>();
-					for (int i = 0; i < module.getList().size(); i++) {
-						View point = new View(mActivity);
-						point.setLayoutParams(layoutParams);
-						point.setBackgroundResource(R.drawable.point_white);
-						mSwiperHeadHolder.pointRootView.addView(point);
-						points.add(point);
+					if (module.getList().size() > 1) {
+						mSwiperHeadHolder.pointRootView
+								.setVisibility(View.VISIBLE);
+						android.widget.LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+								PixelUtil.dp2px(6), PixelUtil.dp2px(6));
+						layoutParams.rightMargin = PixelUtil.dp2px(4);
+						List<View> points = new ArrayList<View>();
+						for (int i = 0; i < module.getList().size(); i++) {
+							View point = new View(mActivity);
+							point.setLayoutParams(layoutParams);
+							point.setBackgroundResource(R.drawable.point_white);
+							mSwiperHeadHolder.pointRootView.addView(point);
+							points.add(point);
+						}
+						points.get(0).setBackgroundResource(
+								R.drawable.point_red);
+						mSwiperHeadHolder.pointRootView.setTag(points);
+					} else {
+						mSwiperHeadHolder.pointRootView
+								.setVisibility(View.GONE);
 					}
-					points.get(0).setBackgroundResource(R.drawable.point_red);
-					mSwiperHeadHolder.pointRootView.setTag(points);
+
 					convertView.setTag(mSwiperHeadHolder);
 				} else if (itemType == 1) {
 					mMatrixHolder = new MatrixHolder();
@@ -927,6 +939,19 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 								R.string.home_news_intro_size, 1);
 				mTopicOneHolder.title.setText(module.getTitle());
 				mTopicOneHolder.intro.setText(module.getIntro());
+				final NewsHomeModuleItem tmp = new NewsHomeModuleItem();
+				tmp.setAppclassid(module.getAppclassid());
+				tmp.setTitle(module.getTitle());
+				tmp.setTitlepic(module.getTitlepic());
+				tmp.setIntro(module.getIntro());
+				tmp.setNum(module.getNum());
+				tmp.setType(module.getType());
+				convertView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						openNews(tmp);
+					}
+				});
 			} else if (itemType == 5) {
 				ImgUtils.imageLoader.displayImage(module.getList().get(0)
 						.getTitlepic(), mTopicTwoHolder.titlePic0,
@@ -934,6 +959,40 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				ImgUtils.imageLoader.displayImage(module.getList().get(1)
 						.getTitlepic(), mTopicTwoHolder.titlePic1,
 						ImgUtils.homeImageOptions);
+				mTopicTwoHolder.titlePic0
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								if (module.getList().get(0).getNum() > 0)
+									NewsHomeFragment.this
+											.startAnimActivityByNewsHomeModuleItem(
+													NewsTopicActivity.class,
+													module.getList().get(0));
+								else
+									NewsHomeFragment.this
+											.startAnimActivityByAppClassId(
+													NewsListActivity.class,
+													module.getList().get(0)
+															.getAppclassid());
+							}
+						});
+				mTopicTwoHolder.titlePic1
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								if (module.getList().get(1).getNum() > 0)
+									NewsHomeFragment.this
+											.startAnimActivityByNewsHomeModuleItem(
+													NewsTopicActivity.class,
+													module.getList().get(1));
+								else
+									NewsHomeFragment.this
+											.startAnimActivityByAppClassId(
+													NewsListActivity.class,
+													module.getList().get(1)
+															.getAppclassid());
+							}
+						});
 			} else if (itemType == 6) {
 				mOutLinkHolder.title
 						.setText(module.getList().get(0).getTitle());
@@ -1027,10 +1086,14 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	public void initVoteHasVote(final NewsHomeModule module) {
 		int voteSumNum = 0;
-		double tmpVoteSumNum = 0;
+		BigDecimal tmpVoteSumNum = new BigDecimal(0);
+		int _flag = 0;
 		int maxLength = (int) (mActivity.mScreenWidth * 0.7);
-		for (int i = 0; i < module.getList().size(); i++) {
-			voteSumNum += module.getList().get(i).getNum();
+		for (int i = module.getList().size() - 1; i >= 0; i--) {
+			int num = module.getList().get(i).getNum();
+			voteSumNum += num;
+			if (num != 0 && _flag == 0)
+				_flag = i;
 		}
 		for (int i = 0; i < module.getList().size(); i++) {
 			if (i >= VOTE_ANSWER_PREFIX.length)
@@ -1045,7 +1108,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			View answerLoading = itemView
 					.findViewById(R.id.vote_answer_loading);
 			double percent = (double) item.getNum() / voteSumNum;
-			DebugLog.e(percent + "");
 			if (maxLength * percent > PixelUtil.dp2px(10))
 				answerLoading.getLayoutParams().width = (int) (maxLength * percent);
 			else
@@ -1054,17 +1116,19 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					.setColor(getResources().getColor(VOTE_ANSWER_COLOR[i]));
 			TextView answerPercent = (TextView) itemView
 					.findViewById(R.id.vote_answer_percent);
-			double tmpPercent = (double) Math.round(percent * 10000) / 100;
-			tmpVoteSumNum += tmpPercent;
-			if (i != module.getList().size() - 1) {
+			BigDecimal tmpPercent = new BigDecimal(
+					(double) Math.round(percent * 10000) / 100 + "");
+			tmpVoteSumNum = tmpVoteSumNum.add(tmpPercent);
+			if (i != _flag) {
 				answerPercent.setText(tmpPercent + "%");
 			} else {
-				if (tmpVoteSumNum < 100)
-					answerPercent.setText(tmpPercent + 0.01 + "%");
-				else if (tmpVoteSumNum > 100)
-					answerPercent.setText(tmpPercent - 0.01 + "%");
+				if (tmpVoteSumNum.intValue() != 100)
+					answerPercent.setText(tmpPercent.add(
+							new BigDecimal(100).subtract(tmpVoteSumNum))
+							.toString()
+							+ "%");
 				else
-					answerPercent.setText(tmpPercent + "%");
+					answerPercent.setText(tmpPercent.toString() + "%");
 			}
 			mVoteHolder.rootView.addView(itemView);
 		}
@@ -1100,8 +1164,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 									Map voteMap = JsonUtils.toMap(jsonObject
 											.toString());
 									spUtil.addVoteId(module.getId());
-									item.setNum(((Double) voteMap.get("num"))
-											.intValue());
+									item.setNum(Integer.parseInt(voteMap.get(
+											"num").toString()));
 									mNewsHomeListAdapter.notifyDataSetChanged();
 								}
 							}, new ErrorListener() {
@@ -1127,25 +1191,27 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 		@Override
 		public int getCount() {
-			return itemList.size();
+//			return itemList.size();
+			return itemList.size() == 1 ? 1 : Integer.MAX_VALUE;
 		}
 
 		@Override
 		public View getView(final int position, View convertView,
 				ViewGroup container) {
+			final int index = position % itemList.size();
 			if (convertView == null) {
 				ImageView imageView = new ImageView(
 						NewsHomeFragment.this.mActivity);
 				imageView.setScaleType(ScaleType.FIT_XY);
 				convertView = imageView;
 			}
-			ImgUtils.imageLoader.displayImage(itemList.get(position)
+			ImgUtils.imageLoader.displayImage(itemList.get(index)
 					.getTitlepic(), (ImageView) convertView,
 					ImgUtils.homeImageOptions);
 			convertView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					openNews(itemList.get(position));
+					openNews(itemList.get(index));
 				}
 			});
 			return convertView;
@@ -1165,16 +1231,18 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	@Override
 	public void onPageSelected(int arg0) {
+		// TODO
 		if (mSwiperHeadHolder != null) {
 			List<NewsHomeModuleItem> itemList = (List<NewsHomeModuleItem>) mSwiperHeadHolder.title
 					.getTag();
-			mSwiperHeadHolder.title.setText(itemList.get(arg0).getTitle());
+			int index = arg0 % itemList.size();
+			mSwiperHeadHolder.title.setText(itemList.get(index).getTitle());
 			List<View> points = (List<View>) mSwiperHeadHolder.pointRootView
 					.getTag();
 			for (View v : points) {
 				v.setBackgroundResource(R.drawable.point_white);
 			}
-			points.get(arg0 % itemList.size()).setBackgroundResource(
+			points.get(index).setBackgroundResource(
 					R.drawable.point_red);
 		}
 	}
@@ -1192,8 +1260,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		} else if (moduleItem.getType().equals("stream")) {
 			mActivity.touchTab(mActivity.tabLive);
 		} else if (moduleItem.getType().equals("topic")) {
-			this.startAnimActivityByNewsHomeModuleItem(
-					NewsSubjectActivity.class, moduleItem);
+			if (moduleItem.getNum() > 0)
+				this.startAnimActivityByNewsHomeModuleItem(
+						NewsTopicActivity.class, moduleItem);
+			else
+				NewsHomeFragment.this.startAnimActivityByAppClassId(
+						NewsListActivity.class, moduleItem.getAppclassid());
 		}
 	}
 }

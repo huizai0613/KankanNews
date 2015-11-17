@@ -21,8 +21,8 @@ public class JsonUtils {
 		return gson.fromJson(json, typeOfT);
 	}
 
-	public static Map<String, Object> toMap(String json) {
-		return gson.fromJson(json, new TypeToken<Map<String, Object>>() {
+	public static Map<String, String> toMap(String json) {
+		return gson.fromJson(json, new TypeToken<Map<String, String>>() {
 		}.getType());
 	}
 }

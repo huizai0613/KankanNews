@@ -348,8 +348,8 @@ public class NetUtils {
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
 				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_VOTE_PUT
-						+ classid + "/vot/" + voteId + "/opt/" + optionId, null,
-				reponseListener, errorListener);
+						+ classid + "/vot/" + voteId + "/opt/" + optionId,
+				null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
 
@@ -503,6 +503,17 @@ public class NetUtils {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
 				AndroidConfig.KANKAN_HOST + AndroidConfig.New_Subject + ztid,
 				null, reponseListener, errorListener);
+		mRequestQueue.add(mCustomRequest);
+	}
+
+	/**
+	 * 获取专题详情(V3.0)
+	 */
+	public void getTopicData(String appClassId,
+			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
+		mCustomRequest = new CustomRequest(Request.Method.POST,
+				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_LIST_DATA
+						+ appClassId, null, reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
 
