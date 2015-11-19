@@ -2,7 +2,7 @@ package com.kankan.kankanews.bean.interfaz;
 
 public interface CanSharedObject {
 	String getTitle();
-	String getTitlelist();
+	String getShareTitle();
 	String getTitleurl();
 	String getTitlepic();
 	String getSharedPic();

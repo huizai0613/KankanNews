@@ -125,7 +125,7 @@ public class ShareUtil {
 		String sharedUrl = handleUrl(shareObj.getTitleurl());
 
 		String sharedIntro = (shareObj.getIntro() == null || shareObj
-				.getIntro().trim().equals("")) ? shareObj.getTitlelist()
+				.getIntro().trim().equals("")) ? shareObj.getShareTitle()
 				: shareObj.getIntro();
 
 		// 视频分享
@@ -142,7 +142,7 @@ public class ShareUtil {
 		// .getTitlelist() : shareObj.getTitle());
 		weixinContent.setShareContent(sharedIntro == null ? shareObj.getTitle()
 				: sharedIntro);
-		weixinContent.setTitle(shareObj.getTitlelist());
+		weixinContent.setTitle(shareObj.getShareTitle());
 		weixinContent.setTargetUrl(sharedUrl);
 		weixinContent.setShareMedia(titlePic);
 		mController.setShareMedia(weixinContent);
@@ -150,7 +150,7 @@ public class ShareUtil {
 		// 设置朋友圈分享的内容
 		CircleShareContent circleMedia = new CircleShareContent();
 		circleMedia.setShareContent(sharedIntro);
-		circleMedia.setTitle(shareObj.getTitlelist());
+		circleMedia.setTitle(shareObj.getShareTitle());
 		circleMedia.setShareImage(titlePic);
 		// circleMedia.setShareMedia(uMusic);
 		// circleMedia.setShareMedia(video);
@@ -171,7 +171,7 @@ public class ShareUtil {
 		// 设置qq分享内容
 		QQShareContent qqShareContent = new QQShareContent();
 		qqShareContent.setShareContent(sharedIntro);
-		qqShareContent.setTitle(shareObj.getTitlelist());
+		qqShareContent.setTitle(shareObj.getShareTitle());
 		qqShareContent.setShareImage(titlePic);
 		// qqShareContent.setShareMusic(uMusic);
 		// qqShareContent.setShareVideo(video);
@@ -199,7 +199,7 @@ public class ShareUtil {
 		}
 		// UMImage maillocalImage = new
 		// UMImage(activity,R.drawable.ic_launcher);
-		mail.setTitle(shareObj.getTitlelist());
+		mail.setTitle(shareObj.getShareTitle());
 		mail.setShareContent(sharedUrl);
 		// 设置tencent分享内容
 		mController.setShareMedia(mail);

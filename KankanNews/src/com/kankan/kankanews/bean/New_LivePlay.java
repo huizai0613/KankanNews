@@ -124,7 +124,7 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements
 	}
 
 	@Override
-	public String getTitlelist() {
+	public String getShareTitle() {
 		// TODO Auto-generated method stub
 		return this.title;
 	}

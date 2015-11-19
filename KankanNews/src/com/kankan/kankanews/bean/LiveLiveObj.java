@@ -140,7 +140,7 @@ public class LiveLiveObj implements CanBePlay, Serializable, CanSharedObject {
 	}
 
 	@Override
-	public String getTitlelist() {
+	public String getShareTitle() {
 		return title;
 	}
 

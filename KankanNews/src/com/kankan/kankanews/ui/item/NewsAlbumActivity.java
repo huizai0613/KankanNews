@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
+import java.util.UUID;
 
 import org.json.JSONObject;
 
@@ -41,6 +43,11 @@ import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_NewsPic;
+import com.kankan.kankanews.bean.NewsAlbum;
+import com.kankan.kankanews.bean.NewsHome;
+import com.kankan.kankanews.bean.NewsHomeModule;
+import com.kankan.kankanews.bean.NewsHomeModuleItem;
+import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.photoview.PhotoView;
@@ -53,6 +60,7 @@ import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
+import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -60,87 +68,40 @@ import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
 import com.umeng.socialize.sso.UMSsoHandler;
 
-public class New_Activity_Content_PicSet extends BaseActivity implements
-		OnClickListener, OnPageChangeListener {
+public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
+		OnPageChangeListener {
 
-	/** 微博微博分享接口实例 */
-	// private IWeiboShareAPI mWeiboShareAPI = null;
-
-	private String mid;
-	private String type;
-	private String titleurl;
-	private String newstime;
-	private String titlePic;
-	private String sharedPic;
-	private String titlelist;
-	private String intro;
+	private NewsHomeModuleItem mHomeModuleItem;
+	private NewsAlbum mAlbum;
+	private String mAlbumJson;
 
 	private boolean isHide = false;
-	private ViewPager vp;
-	private TextView vp_content;
+	private ViewPager mImageViewPager;
+	private TextView mTitleView;
 
-	private MyVpAdapter myVpAdapter;
-	private New_NewsPic new_NewsPic;
+	private AlbumImageViewPagerAdapter myVpAdapter;
 	private View nightView;
 
-	private String[][] parseImagegroups;
-
-	private View rLayout_bottom;
-
-	private New_News new_news;
+	private View mBottomRootView;
 
 	// 分享类
 	private ShareUtil shareUtil;
 
-	private View main_bg;
+	private View mRetryView;
 
-	// private SildingFinishLayout mSildingFinishLayout;
+	private View mLoadingView;
 
-	int curPage;
+	private int curPage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.new_activity_pic_set);
-		// mSildingFinishLayout = (SildingFinishLayout)
-		// findViewById(R.id.sildingFinishLayout);
-		// mSildingFinishLayout
-		// .setOnSildingFinishListener(new
-		// SildingFinishLayout.OnSildingFinishListener() {
-		//
-		// @Override
-		// public void onSildingFinish() {
-		// finish();
-		// }
-		// });
-	}
-
-	// @Override
-	// public boolean dispatchTouchEvent(MotionEvent ev) {
-	// // TODO Auto-generated method stub
-	// if (this.mApplication.getMainActivity() != null) {
-	// if (curPage == 0) {
-	// boolean flag = mSildingFinishLayout.onTouch(ev);
-	// if (flag)
-	// return flag;
-	// }
-	// }
-	// return super.dispatchTouchEvent(ev);
-	// }
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		/** 使用SSO授权必须添加如下代码 */
-
-		UMSsoHandler ssoHandler = shareUtil.getmController().getConfig()
-				.getSsoHandler(requestCode);
-		if (ssoHandler != null) {
-			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-		}
+		setContentView(R.layout.activity_album);
 	}
 
 	@Override
@@ -149,16 +110,18 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 				R.drawable.ic_close_white, R.drawable.ic_font,
 				R.drawable.ic_refresh);
 
-		vp = (ViewPager) findViewById(R.id.vp);
-		vp_content = (TextView) findViewById(R.id.vp_content);
-		rLayout_bottom = findViewById(R.id.rLayout_bottom);
-		main_bg = findViewById(R.id.main_bg);
+		mImageViewPager = (ViewPager) findViewById(R.id.album_image_view_pager);
+		mTitleView = (TextView) findViewById(R.id.album_title_view);
+		mBottomRootView = findViewById(R.id.album_bottom_root_view);
+		mRetryView = findViewById(R.id.album_retry_view);
+		mLoadingView = findViewById(R.id.album_loading_view);
 		nightView = findViewById(R.id.night_view);
-		main_bg.setOnClickListener(new OnClickListener() {
-
+		mRetryView.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				initNetData();
+				if (CommonUtils.isNetworkAvailable(mContext)) {
+					initNetData();
+				}
 			}
 		});
 
@@ -166,71 +129,87 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 
 	@Override
 	protected void initData() {
-		// 获取上个页面传来的数据
+		mLoadingView.setVisibility(View.VISIBLE);
+		// TODO
 		Intent intent = getIntent();
-		mid = intent.getStringExtra("mid");
-		type = intent.getStringExtra("type");
-		titleurl = intent.getStringExtra("titleurl");
-		newstime = intent.getStringExtra("newstime");
-		titlePic = intent.getStringExtra("titlePic");
-		sharedPic = intent.getStringExtra("sharedPic");
-		titlelist = intent.getStringExtra("titlelist");
-		intro = intent.getStringExtra("intro");
-		// 存储数据
-		new_news = new New_News();
-		new_news.setId(mid);
-		new_news.setType(type);
-		new_news.setTitleurl(titleurl);
-		new_news.setNewstime(newstime);
-		new_news.setTitlepic(titlePic);
-		new_news.setSharedPic(sharedPic);
-		new_news.setTitlelist(titlelist);
-		new_news.setIntro(intro);
-
+		mHomeModuleItem = (NewsHomeModuleItem) intent
+				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
+		if (initLocalData()) {
+			showData();
+		} else {
+			if (CommonUtils.isNetworkAvailable(mContext)) {
+				initNetData();
+			} else {
+				this.mLoadingView.setVisibility(View.GONE);
+				this.mRetryView.setVisibility(View.VISIBLE);
+			}
+		}
 		// 提交点击
-		NetUtils.getInstance(mContext).addNewNewsClickData("tjid=" + mid);
+		NetUtils.getInstance(mContext).addNewNewsClickData(
+				"tjid=" + mHomeModuleItem.getO_cmsid());
 
 		NetUtils.getInstance(mContext).getAnalyse(this, "album",
-				new_news.getShareTitle(), new_news.getTitleurl());
-
-		myVpAdapter = new MyVpAdapter();
-		initLocalData();
-		initNetData();
+				mHomeModuleItem.getTitle(), mHomeModuleItem.getTitleurl());
 	}
 
-	boolean isLocalData;
-
-	private void initLocalData() {
+	@Override
+	protected void saveLocalDate() {
 		try {
-			new_NewsPic = dbUtils.findById(New_NewsPic.class, new_news.getId());
-			if (new_NewsPic != null) {
-				parseImagegroups = new_NewsPic.parseImagegroup();
-				vp.setOnPageChangeListener(this);
-				vp.setAdapter(myVpAdapter);
-				setbootmText(0);
-				isLocalData = true;
-				return;
+			SerializableObj obj = new SerializableObj(UUID.randomUUID()
+					.toString(), mAlbumJson, "NewsAlbum" + mAlbum.getId(),
+					new Date().getTime());
+			this.dbUtils
+					.delete(SerializableObj.class,
+							WhereBuilder.b("classType", "=",
+									"mAlbum" + mAlbum.getId()));
+			this.dbUtils.save(obj);
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
+	}
+
+	private boolean initLocalData() {
+		try {
+			SerializableObj object = (SerializableObj) this.dbUtils
+					.findFirst(Selector.from(SerializableObj.class).where(
+							"classType", "=",
+							"NewsAlbum" + mHomeModuleItem.getO_cmsid()));
+			if (object != null) {
+				if (TimeUtil.isSaveTimeOK(object.getSaveTime())) {
+					mAlbumJson = object.getJsonStr();
+					mAlbum = JsonUtils.toObject(mAlbumJson, NewsAlbum.class);
+					return true;
+				} else {
+					this.dbUtils.delete(
+							SerializableObj.class,
+							WhereBuilder.b("classType", "=", "mAlbum"
+									+ mHomeModuleItem.getO_cmsid()));
+					return false;
+				}
+			} else {
+				return false;
 			}
 		} catch (DbException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			DebugLog.e(e.getLocalizedMessage());
 		}
-		isLocalData = false;
+		return false;
 	}
 
 	private void initNetData() {
-		NetUtils.getInstance(this).getNewNewsContent(mid, type, mListener,
-				mErrorListener);
+		if (CommonUtils.isNetworkAvailable(this)) {
+			netUtils.getNewsContent(mHomeModuleItem.getO_cmsid(),
+					mHomeModuleItem.getType(), this.mListener,
+					this.mErrorListener);
+		}
 	}
 
 	@Override
 	protected void setListener() {
-		vp.setOnPageChangeListener(this);
+		mImageViewPager.setOnPageChangeListener(this);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
 		setOnContentClickLinester(this);
-
 	}
 
 	@Override
@@ -257,45 +236,34 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 
 	@Override
 	protected void onSuccess(JSONObject jsonObject) {
-		new_NewsPic = new New_NewsPic();
-
-		try {
-			main_bg.setVisibility(View.GONE);
-			new_NewsPic.parseJSON(jsonObject);
-			new_NewsPic.setid(new_news.getId());
-			parseImagegroups = new_NewsPic.parseImagegroup();
-			// myVpAdapter.notifyDataSetChanged();
-			vp.setOnPageChangeListener(this);
-			vp.setAdapter(myVpAdapter);
-			vp.setCurrentItem(curPage, false);
-			setbootmText(curPage);
-
-		} catch (NetRequestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// 保存数据到本地
-		try {
-			dbUtils.saveOrUpdate(new_NewsPic);
-			new_news.setTitle(new_NewsPic.getTitle());
-			new_news.setTitlepic(new_NewsPic.getTitlepic());
-			new_news.setLooktime(Long.toString(TimeUtil.now()));
-			dbUtils.saveOrUpdate(new_news);
-		} catch (DbException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		mAlbumJson = jsonObject.toString();
+		mAlbum = (NewsAlbum) JsonUtils.toObject(mAlbumJson, NewsAlbum.class);
 		// 初始化shareutil类
-		shareUtil = new ShareUtil(new_news, mContext);
+		shareUtil = new ShareUtil(mAlbum, mContext);
+		saveLocalDate();
+		showData();
+	}
 
+	private void showData() {
+		if (myVpAdapter == null) {
+			myVpAdapter = new AlbumImageViewPagerAdapter();
+			mImageViewPager.setAdapter(myVpAdapter);
+		} else {
+			myVpAdapter.notifyDataSetChanged();
+		}
+		mImageViewPager.setCurrentItem(curPage, false);
+		setbootmText(curPage);
+		mLoadingView.setVisibility(View.GONE);
+		mRetryView.setVisibility(View.GONE);
 	}
 
 	@Override
 	protected void onFailure(VolleyError error) {
-		if (!isLocalData) {
-			main_bg.setVisibility(View.VISIBLE);
+		this.mLoadingView.setVisibility(View.GONE);
+		if (mAlbum == null) {
+			mRetryView.setVisibility(View.VISIBLE);
+		} else {
+			this.mRetryView.setVisibility(View.GONE);
 		}
 		ToastUtils.ErrorToastNoNet(mContext);
 	}
@@ -306,9 +274,9 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 	 * @param position
 	 */
 	private void setbootmText(int position) {
-		if (parseImagegroups != null) {
-			String str = (position + 1) + "/" + parseImagegroups.length + "　"
-					+ parseImagegroups[position][0];
+		if (mAlbum.getAlbum().size() != 0) {
+			String str = (position + 1) + "/" + mAlbum.getAlbum().size() + "　"
+					+ mAlbum.getAlbum().get(position).getTitle();
 			// SpannableStringBuilder style = new SpannableStringBuilder(str);
 			// // SpannableStringBuilder实现CharSequence接口
 			// style.setSpan(new AbsoluteSizeSpan(PixelUtil.dp2px(20)), 0,
@@ -320,17 +288,17 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 			// ((position + 1) + "/" + parseImagegroups.length)
 			// .length() + 1, str.length() - 1,
 			// Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			FontUtils.setTextViewFontSize(this, vp_content,
+			FontUtils.setTextViewFontSize(this, mTitleView,
 					R.string.news_content_text_size, spUtil.getFontSizeRadix());
-			vp_content.setText(str);
+			mTitleView.setText(str);
 		}
 	}
 
-	private class MyVpAdapter extends PagerAdapter {
+	private class AlbumImageViewPagerAdapter extends PagerAdapter {
 		@Override
 		public int getCount() {
-			if (parseImagegroups != null) {
-				return parseImagegroups.length;
+			if (mAlbum.getAlbum() != null) {
+				return mAlbum.getAlbum().size();
 			} else {
 				return 0;
 			}
@@ -343,8 +311,8 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {
-			String picUrl = CommonUtils
-					.doWebpUrl(parseImagegroups[position][1]);
+			String picUrl = CommonUtils.doWebpUrl(mAlbum.getAlbum()
+					.get(position).getImageurl());
 			View view = getLayoutInflater().inflate(
 					R.layout.new_item_activity_picset, null);
 			final PhotoView photoView = (PhotoView) view
@@ -355,7 +323,6 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 			photoView.setOnPhotoTapListener(new OnPhotoTapListener() {
 				@Override
 				public void onPhotoTap(View view, float x, float y) {
-					DebugLog.e("卧槽  点进来了");
 					// Animation top_in = AnimationUtils.loadAnimation(
 					// New_Activity_Content_PicSet.this, R.anim.top_in);
 					// top_in.setAnimationListener(new AnimationListener() {
@@ -405,15 +372,15 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 						// titleBarView.startAnimation(top_out);
 						// rLayout_bottom.startAnimation(bottom_out);
 						titleBarView.setVisibility(View.GONE);
-						rLayout_bottom.setVisibility(View.GONE);
-						vp_content.setVisibility(View.GONE);
+						mBottomRootView.setVisibility(View.GONE);
+						mTitleView.setVisibility(View.GONE);
 					} else {
 						// titleBarView.startAnimation(top_in);
 						// rLayout_bottom.startAnimation(bottom_in);
 
 						titleBarView.setVisibility(View.VISIBLE);
-						rLayout_bottom.setVisibility(View.VISIBLE);
-						vp_content.setVisibility(View.VISIBLE);
+						mBottomRootView.setVisibility(View.VISIBLE);
+						mTitleView.setVisibility(View.VISIBLE);
 					}
 				}
 			});
@@ -523,7 +490,7 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 	public void copy2Clip() {
 		// TODO Auto-generated method stub
 		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		clip.setText(titleurl);
+		clip.setText(mAlbum.getUrl());
 		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
 	}
 
@@ -531,7 +498,7 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 	public void changeFontSize() {
 		// TODO Auto-generated method stub
 
-		FontUtils.setTextViewFontSize(this, vp_content,
+		FontUtils.setTextViewFontSize(this, mTitleView,
 				R.string.news_content_text_size, spUtil.getFontSizeRadix());
 		FontUtils.chagneFontSizeGlobal();
 	}
@@ -540,6 +507,18 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 	public void initNightView(boolean isFullScreen) {
 		if (!spUtil.getIsDayMode())
 			chage2Night();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		/** 使用SSO授权必须添加如下代码 */
+
+		UMSsoHandler ssoHandler = shareUtil.getmController().getConfig()
+				.getSsoHandler(requestCode);
+		if (ssoHandler != null) {
+			ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+		}
 	}
 
 }

@@ -13,6 +13,7 @@ public class SerializableObj implements Serializable {
 	private String id;
 	private String jsonStr;
 	private String classType;
+	private long saveTime;
 
 	public SerializableObj() {
 
@@ -23,6 +24,15 @@ public class SerializableObj implements Serializable {
 		this.id = id;
 		this.jsonStr = jsonStr;
 		this.classType = classType;
+	}
+
+	public SerializableObj(String id, String jsonStr, String classType,
+			long saveTime) {
+		super();
+		this.id = id;
+		this.jsonStr = jsonStr;
+		this.classType = classType;
+		this.saveTime = saveTime;
 	}
 
 	public String getId() {
@@ -47,6 +57,14 @@ public class SerializableObj implements Serializable {
 
 	public void setClassType(String classType) {
 		this.classType = classType;
+	}
+
+	public long getSaveTime() {
+		return saveTime;
+	}
+
+	public void setSaveTime(long saveTime) {
+		this.saveTime = saveTime;
 	}
 
 }

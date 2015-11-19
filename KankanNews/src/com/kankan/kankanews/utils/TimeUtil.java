@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.kankan.kankanews.config.AndroidConfig;
+
 import android.annotation.SuppressLint;
 
 @SuppressLint("SimpleDateFormat")
@@ -333,6 +335,10 @@ public class TimeUtil {
 		} else {
 			return unix2date(timestamp, "yyyy-MM-dd HH:mm:ss");
 		}
+	}
+
+	public static boolean isSaveTimeOK(long saveTime) {
+		return new Date().getTime() - saveTime < AndroidConfig._NEWS_CONTENT_SAVE_OK_TIME_;
 	}
 
 }

@@ -47,11 +47,12 @@ import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.ColumsActivity;
 import com.kankan.kankanews.ui.MeSetActivity;
-import com.kankan.kankanews.ui.NewsListActivity;
 import com.kankan.kankanews.ui.SearchMainActivity;
 import com.kankan.kankanews.ui.item.NewsContentActivity;
+import com.kankan.kankanews.ui.item.NewsListActivity;
 import com.kankan.kankanews.ui.item.NewsOutLinkActivity;
 import com.kankan.kankanews.ui.item.NewsTopicActivity;
+import com.kankan.kankanews.ui.item.NewsTopicListActivity;
 import com.kankan.kankanews.ui.item.NewsVideoPackageActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
@@ -1191,7 +1192,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 		@Override
 		public int getCount() {
-//			return itemList.size();
+			// return itemList.size();
 			return itemList.size() == 1 ? 1 : Integer.MAX_VALUE;
 		}
 
@@ -1205,8 +1206,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				imageView.setScaleType(ScaleType.FIT_XY);
 				convertView = imageView;
 			}
-			ImgUtils.imageLoader.displayImage(itemList.get(index)
-					.getTitlepic(), (ImageView) convertView,
+			ImgUtils.imageLoader.displayImage(
+					itemList.get(index).getTitlepic(), (ImageView) convertView,
 					ImgUtils.homeImageOptions);
 			convertView.setOnClickListener(new OnClickListener() {
 				@Override
@@ -1242,8 +1243,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			for (View v : points) {
 				v.setBackgroundResource(R.drawable.point_white);
 			}
-			points.get(index).setBackgroundResource(
-					R.drawable.point_red);
+			points.get(index).setBackgroundResource(R.drawable.point_red);
 		}
 	}
 
@@ -1264,8 +1264,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				this.startAnimActivityByNewsHomeModuleItem(
 						NewsTopicActivity.class, moduleItem);
 			else
-				NewsHomeFragment.this.startAnimActivityByAppClassId(
-						NewsListActivity.class, moduleItem.getAppclassid());
+				NewsHomeFragment.this.startAnimActivityByNewsHomeModuleItem(
+						NewsTopicListActivity.class, moduleItem);
 		}
 	}
 }

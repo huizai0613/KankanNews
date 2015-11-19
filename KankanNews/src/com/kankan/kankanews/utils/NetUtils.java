@@ -354,7 +354,7 @@ public class NetUtils {
 	}
 
 	/**
-	 * 获取视频包列表
+	 * 获取新闻列表
 	 */
 	public void getNewsList(String classid, String lastnewstime,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {

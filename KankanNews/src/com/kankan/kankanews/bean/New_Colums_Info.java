@@ -166,7 +166,7 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> implements
 	}
 
 	@Override
-	public String getTitlelist() {
+	public String getShareTitle() {
 		// TODO Auto-generated method stub
 		return this.title;
 	}

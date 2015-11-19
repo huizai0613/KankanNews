@@ -399,7 +399,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		instance.addNewNewsClickData("id=" + mid);
 
 		NetUtils.getInstance(mContext).getAnalyse(this, "video",
-				new_news.getTitlelist(), new_news.getTitleurl());
+				new_news.getShareTitle(), new_news.getTitleurl());
 
 		initLocalDate = initLocalDate(new_news.getId());
 
@@ -967,7 +967,7 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// String news_time = String.format("%tF %<tT", newstime);
 		String news_time = TimeUtil.unix2date(newstime, "yyyy-MM-dd HH:mm:ss");
 		// 新闻
-		content_title.setText(new_news.getTitlelist());
+		content_title.setText(new_news.getShareTitle());
 
 		FontUtils.setTextViewFontSize(this, content_title,
 				R.string.news_title_text_size, spUtil.getFontSizeRadix());

@@ -3,7 +3,9 @@ package com.kankan.kankanews.bean;
 import java.io.Serializable;
 import java.util.List;
 
-public class NewsHomeModule implements Serializable {
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
+
+public class NewsHomeModule implements Serializable, CanSharedObject {
 	private String appclassid;
 	private String title;
 	private String titlepic;
@@ -120,6 +122,27 @@ public class NewsHomeModule implements Serializable {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	@Override
+	public String getShareTitle() {
+		return this.getTitle();
+	}
+
+	@Override
+	public String getTitleurl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getSharedPic() {
+		return getSharepic();
+	}
+
+	@Override
+	public void setSharedPic(String sharepic) {
+		this.setSharepic(sharepic);
 	}
 
 }

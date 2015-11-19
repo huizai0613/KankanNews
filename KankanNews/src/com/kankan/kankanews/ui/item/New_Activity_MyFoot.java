@@ -215,8 +215,8 @@ public class New_Activity_MyFoot extends BaseActivity implements
 						.split("::::::")[0], titlepic,
 						ImgUtils.homeImageOptions);
 			}
-			if (new_news.getTitlelist() != null) {
-				title.setText(new_news.getTitlelist());
+			if (new_news.getShareTitle() != null) {
+				title.setText(new_news.getShareTitle());
 			} else {
 				title.setText(new_news.getTitle());
 			}
@@ -259,7 +259,7 @@ public class New_Activity_MyFoot extends BaseActivity implements
 			startAnimActivityByParameter(New_Activity_Content_Web.class,
 					new_news.getId(), new_news.getType(),
 					new_news.getTitleurl(), new_news.getNewstime(),
-					new_news.getTitlelist(), new_news.getTitlepic(),
+					new_news.getShareTitle(), new_news.getTitlepic(),
 					new_news.getSharedPic(), new_news.getIntro());
 			break;
 		}

@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,13 +42,14 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.google.gson.reflect.TypeToken;
+import com.iss.view.pulltorefresh.PullToRefreshBase;
+import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.iss.view.pulltorefresh.PullToRefreshPinnedSectionListView;
+import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.IA.CrashApplication;
-import com.kankan.kankanews.bean.NewsHome;
 import com.kankan.kankanews.bean.NewsHomeModule;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
-import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.bean.Subject_Item;
 import com.kankan.kankanews.photoview.PhotoView;
 import com.kankan.kankanews.ui.MainActivity;
@@ -68,36 +68,23 @@ import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
-import com.lidroid.xutils.db.sqlite.Selector;
-import com.lidroid.xutils.db.sqlite.WhereBuilder;
 import com.lidroid.xutils.exception.DbException;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.socialize.sso.UMSsoHandler;
 
-public class NewsTopicActivity extends BaseActivity implements
-		AdapterView.OnItemClickListener,
-		StickyListHeadersListView.OnHeaderClickListener,
-		StickyListHeadersListView.OnStickyHeaderOffsetChangedListener,
-		StickyListHeadersListView.OnStickyHeaderChangedListener,
+public class NewsTopicListActivity extends BaseActivity implements
 		OnClickListener {
 
 	// 分享类
 	private ShareUtil shareUtil;
 
-	private TextView mTitleText;
-	private boolean fadeHeader = true;
-
 	private NewsHomeModuleItem mHomeModuleItem;
 
-	private NewsHomeModule mTopicModule;
+	private NewsHomeModule mTopicListModule;
 
-	private JSONObject mTopicModuleJson;
+	private PullToRefreshListView mTopicListListView;
 
-	private StickyListHeadersListView stickyList;
-
-	private View headerView;
-
-	private TopicAdapter mTopicAdapter;
+	private TopicListAdapter mTopicListAdapter;
 
 	// 加载
 	private RelativeLayout mLoadingView;
@@ -106,12 +93,24 @@ public class NewsTopicActivity extends BaseActivity implements
 
 	private View nightView;
 
-	private String[] categorys;
+	private TopicHeaderHolder mTopicHeaderHolder;
+
+	private NewContentHolder mNewContentHolder;
+
+	private NewAlbumsHolder mNewAlbumsHolder;
+	private String mLastTime = "";
+	private boolean mIsLoadEnd = false;
+
+	@Override
+	public void initNightView(boolean isFullScreen) {
+		if (!spUtil.getIsDayMode())
+			chage2Night();
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_topic);
+		setContentView(R.layout.activity_topic_list);
 	}
 
 	@Override
@@ -134,21 +133,8 @@ public class NewsTopicActivity extends BaseActivity implements
 
 		nightView = findViewById(R.id.night_view);
 
-		// title = intent.getStringExtra("title");
-		// titlepic = intent.getStringExtra("titlepic");
-		// sharedPic = intent.getStringExtra("sharedPic");
-		// titleurl = intent.getStringExtra("titleurl");
-		// intro = intent.getStringExtra("intro");
-		//
-		// new_news = new New_News();
-		//
-		// new_news.setTitlelist(title);
-		// if (sharedPic == null || sharedPic.trim().equals(""))
-		// new_news.setSharedPic(titlepic);
-		// else
-		// new_news.setSharedPic(sharedPic);
-		// new_news.setTitleurl(titleurl);
-		// new_news.setIntro(intro);
+		mTopicListListView = (PullToRefreshListView) findViewById(R.id.topiclist_list_view);
+		initListView();
 		//
 		// NetUtils.getInstance(mContext).getAnalyse(this, "topic",
 		// new_news.getTitlelist(), new_news.getTitleurl());
@@ -160,90 +146,94 @@ public class NewsTopicActivity extends BaseActivity implements
 				R.drawable.ic_close_white, R.drawable.ic_font,
 				R.drawable.ic_refresh);
 
-		// com_title_bar_right_bt.setVisibility(View.GONE);
+	}
 
-		// mTopicAdapter = new TopicAdapter(this);
+	protected void initListView() {
+		// TODO Auto-generated method stub
+		mTopicListListView.setMode(Mode.PULL_UP_TO_REFRESH);
+		mTopicListListView.getLoadingLayoutProxy(true, false).setPullLabel(
+				"下拉可以刷新");
+		mTopicListListView.getLoadingLayoutProxy(true, false).setReleaseLabel(
+				"释放后刷新");
+		mTopicListListView.getLoadingLayoutProxy(false, true).setPullLabel(
+				"上拉加载更多");
+		mTopicListListView.getLoadingLayoutProxy(false, true)
+				.setRefreshingLabel("刷新中…");
+		mTopicListListView.getLoadingLayoutProxy(false, true).setReleaseLabel(
+				"松开立即加载");
+		mTopicListListView
+				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
 
-		headerView = getLayoutInflater().inflate(R.layout.item_topic_header,
-				null);
+					@Override
+					public void onPullDownToRefresh(
+							PullToRefreshBase refreshView) {
+						// String time = TimeUtil.getTime(new Date());
+						// refreshView.getLoadingLayoutProxy()
+						// .setLastUpdatedLabel("最后更新:" + time);
+						refreshNetDate();
+					}
 
-		stickyList = (StickyListHeadersListView) findViewById(R.id.list);
-		// stickyList.setVerticalScrollBarEnabled(false);
-		stickyList.setOnItemClickListener(this);
-		// stickyList.setOnHeaderClickListener(this);
-		// stickyList.setOnStickyHeaderChangedListener(this);
-		// stickyList.setOnStickyHeaderOffsetChangedListener(this);
-		stickyList.addHeaderView(headerView);
-		// stickyList.setDrawingListUnderStickyHeader(false);
-		// stickyList.setAreHeadersSticky(true);
-		// stickyList.setAdapter(mTopicAdapter);
-
-		mTitleText = (MyTextView) headerView.findViewById(R.id.intro);
-		FontUtils.setTextViewFontSize(this, mTitleText,
-				R.string.news_content_text_size, spUtil.getFontSizeRadix());
-
+					@Override
+					public void onPullUpToRefresh(PullToRefreshBase refreshView) {
+//						loadMoreNetDate();
+					}
+				});
 	}
 
 	private boolean initLocalData() {
-		try {
-			DebugLog.e(mHomeModuleItem.getAppclassid());
-			SerializableObj object = (SerializableObj) this.dbUtils
-					.findFirst(Selector.from(SerializableObj.class).where(
-							"classType", "=",
-							"NewsTopic" + mHomeModuleItem.getAppclassid()));
-			if (object != null) {
-				mTopicModuleJson = new JSONObject(object.getJsonStr());
-				mTopicModule = JsonUtils.toObject(mTopicModuleJson.toString(),
-						NewsHomeModule.class);
-				return true;
-			} else {
-				return false;
-			}
-		} catch (DbException e) {
-			DebugLog.e(e.getLocalizedMessage());
-		} catch (JSONException e) {
-			DebugLog.e(e.getLocalizedMessage());
-		}
+
 		return false;
 	}
 
-	@Override
-	protected void saveLocalDate() {
-		try {
-			SerializableObj obj = new SerializableObj(UUID.randomUUID()
-					.toString(), mTopicModuleJson.toString(), "NewsTopic"
-					+ mTopicModule.getAppclassid());
-			this.dbUtils.delete(
-					SerializableObj.class,
-					WhereBuilder.b("classType", "=",
-							"NewsTopic" + mTopicModule.getAppclassid()));
-			this.dbUtils.save(obj);
-		} catch (DbException e) {
-			DebugLog.e(e.getLocalizedMessage());
-		}
+	private void refreshNetDate() {
+		mLoadingView.setVisibility(View.VISIBLE);
+		netUtils.getNewsList(mHomeModuleItem.getAppclassid(), mLastTime,
+				mListener, mErrorListener);
 	}
 
-	private void initNetDate() {
-		netUtils.getTopicData(mHomeModuleItem.getAppclassid(), mListener,
-				mErrorListener);
-	}
+//	protected void loadMoreNetDate() {
+//		// TODO Auto-generated method stub
+//		if (mIsLoadEnd || !CommonUtils.isNetworkAvailable(this)) {
+//			mTopicListListView.postDelayed(new Runnable() {
+//				@Override
+//				public void run() {
+//					mNewsListView.onRefreshComplete();
+//				}
+//			}, 300);
+//			return;
+//		}
+//		this.netUtils.getNewsList(
+//				mAppClassId,
+//				mNewsHomeModule.getList()
+//						.get(mNewsHomeModule.getList().size() - 1)
+//						.getNewstime(), new Listener<JSONObject>() {
+//					@Override
+//					public void onResponse(JSONObject jsonObject) {
+//						mNewsListView.onRefreshComplete();
+//						NewsHomeModule more = JsonUtils.toObject(
+//								jsonObject.toString(), NewsHomeModule.class);
+//						if (more.getList().size() == 0) {
+//							mIsLoadEnd = true;
+//						} else {
+//							mIsLoadEnd = false;
+//							mNewsHomeModule.getList().addAll(more.getList());
+//						}
+//						mNewsListAdapter.notifyDataSetChanged();
+//					}
+//				}, mErrorListener);
+//	}
 
 	@Override
 	protected void initData() {
 		Intent intent = getIntent();
 		mHomeModuleItem = (NewsHomeModuleItem) intent
 				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
-		this.mLoadingView.setVisibility(View.VISIBLE);
-		boolean _flag = initLocalData();
-		if (_flag) {
-			showData();
-		}
 		if (CommonUtils.isNetworkAvailable(mContext)) {
-			initNetDate();
+			// ToastUtils.Errortoast(mContext, "参数错误");
+			refreshNetDate();
 		} else {
-			if (!_flag) {
-				this.mRetryView.setVisibility(View.VISIBLE);
-			}
+			ToastUtils.ErrorToastNoNet(mContext);
+			initLocalData();
 		}
 	}
 
@@ -257,48 +247,17 @@ public class NewsTopicActivity extends BaseActivity implements
 
 	@Override
 	protected void onSuccess(JSONObject jsonObject) {
-		mTopicModuleJson = jsonObject;
-		mTopicModule = JsonUtils.toObject(mTopicModuleJson.toString(),
+		mTopicListModule = JsonUtils.toObject(jsonObject.toString(),
 				NewsHomeModule.class);
-		if (!mTopicModule.getAppclassid().trim().equals("")) {
-			this.saveLocalDate();
-			showData();
-		} else {
-			if (mTopicModule == null)
-				this.mRetryView.setVisibility(View.VISIBLE);
-		}
+		showData();
 	}
 
 	private void showData() {
-		try {
-			categorys = mTopicModule.getCategory().split(",");
-			mTopicModule.setList(new ArrayList<NewsHomeModuleItem>());
-			for (int i = 0; i < categorys.length; i++) {
-				List<NewsHomeModuleItem> list;
-				list = JsonUtils.toObjectByType(
-						mTopicModuleJson.get(categorys[i]).toString(),
-						new TypeToken<List<NewsHomeModuleItem>>() {
-						}.getType());
-				for (NewsHomeModuleItem newsHomeModuleItem : list) {
-					newsHomeModuleItem.setCategory(i + "");
-				}
-				mTopicModule.getList().addAll(list);
-			}
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		ImageView photoView = (ImageView) headerView
-				.findViewById(R.id.titlepic);
-		photoView.getLayoutParams().height = mScreenWidth * 65 / 320;
-		ImgUtils.imageLoader.displayImage(
-				CommonUtils.doWebpUrl(mTopicModule.getTitlepic()), photoView,
-				ImgUtils.homeImageOptions);
-		mTitleText.setText("         " + mTopicModule.getIntro());
-		if (mTopicAdapter == null) {
-			mTopicAdapter = new TopicAdapter(this);
-			stickyList.setAdapter(mTopicAdapter);
+		if (mTopicListAdapter == null) {
+			mTopicListAdapter = new TopicListAdapter(this);
+			mTopicListListView.setAdapter(mTopicListAdapter);
 		} else {
-			mTopicAdapter.notifyDataSetChanged();
+			mTopicListAdapter.notifyDataSetChanged();
 		}
 		mLoadingView.setVisibility(View.GONE);
 		mRetryView.setVisibility(View.GONE);
@@ -306,79 +265,49 @@ public class NewsTopicActivity extends BaseActivity implements
 
 	@Override
 	protected void onFailure(VolleyError error) {
-		ToastUtils.Errortoast(mContext, "请求失败,请重试");
-		if (mTopicAdapter == null) {
-			mRetryView.setVisibility(View.VISIBLE);
-		}
+		ToastUtils.Errortoast(mContext, "网络不可用");
+		// if () {
+		// mRetryView.setVisibility(View.VISIBLE);
+		// }
 		mLoadingView.setVisibility(View.GONE);
 	}
 
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
+	private class TopicHeaderHolder {
+		ImageView titlePic;
+		TextView intro;
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
+	private class NewContentHolder {
+		ImageView titlepic;
+		MyTextView title;
+		ImageView newstime_sign;
+		ImageView home_news_play;
+		MyTextView newstime;
+		ImageView news_type;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		return super.onOptionsItemSelected(item);
-	}
-
-	View.OnClickListener buttonListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View view) {
-		}
-	};
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-	}
-
-	@Override
-	public void onHeaderClick(StickyListHeadersListView l, View header,
-			int itemPosition, long headerId, boolean currentlySticky) {
-		// Toast.makeText(this, "Header " + headerId + " currentlySticky ? " +
-		// currentlySticky, Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void onStickyHeaderOffsetChanged(StickyListHeadersListView l,
-			View header, int offset) {
-		if (fadeHeader
-				&& Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			header.setAlpha(1 - (offset / (float) header.getMeasuredHeight()));
-		}
-	}
-
-	@Override
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
-	public void onStickyHeaderChanged(StickyListHeadersListView l, View header,
-			int itemPosition, long headerId) {
-		header.setAlpha(1);
+	private class NewAlbumsHolder {
+		MyTextView title;
+		LinearLayout home_albums_imgs_layout;
+		ImageView albums_image_1;
+		ImageView albums_image_2;
+		ImageView albums_image_3;
 	}
 
 	// 自定义适配器
-	private class TopicAdapter extends BaseAdapter implements
-			StickyListHeadersAdapter, SectionIndexer {
+	private class TopicListAdapter extends BaseAdapter {
 
 		private final Context mContext;
 		private LayoutInflater mInflater;
 
-		public TopicAdapter(Context context) {
+		public TopicListAdapter(Context context) {
 			mContext = context;
 			mInflater = LayoutInflater.from(context);
 		}
 
 		@Override
 		public int getCount() {
-			return mTopicModule.getList().size();
+			return mTopicListModule.getList().size() + 1;
 		}
 
 		@Override
@@ -393,96 +322,120 @@ public class NewsTopicActivity extends BaseActivity implements
 
 		@Override
 		public int getItemViewType(int position) {
-			String type = mTopicModule.getList().get(position).getType();
-			if (type.equals("album")) {
-				return 3;
-			} else {
-				return 1;
+			if (position != 0) {
+				String type = mTopicListModule.getList().get(position - 1)
+						.getType();
+				if (type.equals("album")) {
+					return 3;
+				} else {
+					return 1;
+				}
 			}
+			return 0;
 		}
 
 		@Override
 		public int getViewTypeCount() {
-			return 4;
+			return 3;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			NewContentHolder newHolder = null;
-			NewAlbumsHolder albumsHolder = null;
 
 			int itemViewType = getItemViewType(position);
 
 			if (convertView == null) {
-				if (itemViewType == 1) {
+				if (itemViewType == 0) {
+					convertView = mInflater.inflate(R.layout.item_topic_header,
+							parent, false);
+					mTopicHeaderHolder = new TopicHeaderHolder();
+					mTopicHeaderHolder.titlePic = (ImageView) convertView
+							.findViewById(R.id.titlepic);
+					mTopicHeaderHolder.intro = (TextView) convertView
+							.findViewById(R.id.intro);
+
+					mTopicHeaderHolder.titlePic.getLayoutParams().height = mScreenWidth * 65 / 320;
+					convertView.setTag(mTopicHeaderHolder);
+				} else if (itemViewType == 1) {
 					convertView = mInflater.inflate(
 							R.layout.new_home_news_item, parent, false);
-					newHolder = new NewContentHolder();
-					newHolder.titlepic = (ImageView) convertView
+					mNewContentHolder = new NewContentHolder();
+					mNewContentHolder.titlepic = (ImageView) convertView
 							.findViewById(R.id.home_news_titlepic);
-
-					newHolder.title = (MyTextView) convertView
+					mNewContentHolder.title = (MyTextView) convertView
 							.findViewById(R.id.home_news_title);
-					FontUtils.setTextViewFontSize(NewsTopicActivity.this,
-							newHolder.title, R.string.home_news_text_size,
+					FontUtils.setTextViewFontSize(NewsTopicListActivity.this,
+							mNewContentHolder.title,
+							R.string.home_news_text_size,
 							spUtil.getFontSizeRadix());
-					newHolder.newstime_sign = (ImageView) convertView
+					mNewContentHolder.newstime_sign = (ImageView) convertView
 							.findViewById(R.id.home_news_newstime_sign);
-					newHolder.newstime = (MyTextView) convertView
+					mNewContentHolder.newstime = (MyTextView) convertView
 							.findViewById(R.id.home_news_newstime);
-					newHolder.news_type = (ImageView) convertView
+					mNewContentHolder.news_type = (ImageView) convertView
 							.findViewById(R.id.home_news_newstype);
-					newHolder.home_news_play = (ImageView) convertView
+					mNewContentHolder.home_news_play = (ImageView) convertView
 							.findViewById(R.id.home_news_play);
-
-					convertView.setTag(newHolder);
+					convertView.setTag(mNewContentHolder);
 				} else if (itemViewType == 3) {
 					convertView = mInflater.inflate(
 							R.layout.new_home_news_albums_item, parent, false);
-					albumsHolder = new NewAlbumsHolder();
-					albumsHolder.title = (MyTextView) convertView
+					mNewAlbumsHolder = new NewAlbumsHolder();
+					mNewAlbumsHolder.title = (MyTextView) convertView
 							.findViewById(R.id.home_albums_title);
-					FontUtils.setTextViewFontSize(NewsTopicActivity.this,
-							albumsHolder.title, R.string.home_news_text_size,
+					FontUtils.setTextViewFontSize(NewsTopicListActivity.this,
+							mNewAlbumsHolder.title,
+							R.string.home_news_text_size,
 							spUtil.getFontSizeRadix());
-					albumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
+					mNewAlbumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
 							.findViewById(R.id.home_albums_imgs_layout);
-					albumsHolder.albums_image_1 = (ImageView) convertView
+					mNewAlbumsHolder.albums_image_1 = (ImageView) convertView
 							.findViewById(R.id.home_albums_img_1);
-					albumsHolder.albums_image_2 = (ImageView) convertView
+					mNewAlbumsHolder.albums_image_2 = (ImageView) convertView
 							.findViewById(R.id.home_albums_img_2);
-					albumsHolder.albums_image_3 = (ImageView) convertView
+					mNewAlbumsHolder.albums_image_3 = (ImageView) convertView
 							.findViewById(R.id.home_albums_img_3);
-					albumsHolder.home_albums_imgs_layout
+					mNewAlbumsHolder.home_albums_imgs_layout
 							.setLayoutParams(new LinearLayout.LayoutParams(
 									LinearLayout.LayoutParams.MATCH_PARENT,
 									(int) ((mScreenWidth - PixelUtil
 											.dp2px(10 * 4)) / 3 * 0.7)));
 
-					convertView.setTag(albumsHolder);
+					convertView.setTag(mNewAlbumsHolder);
 				}
 			} else {
 				if (itemViewType == 1) {
-					newHolder = (NewContentHolder) convertView.getTag();
+					mNewContentHolder = (NewContentHolder) convertView.getTag();
 				} else if (itemViewType == 3) {
-					albumsHolder = (NewAlbumsHolder) convertView.getTag();
+					mNewAlbumsHolder = (NewAlbumsHolder) convertView.getTag();
 				}
 			}
 
-			final NewsHomeModuleItem item = mTopicModule.getList()
-					.get(position);
-			if (itemViewType == 1) {
+			if (itemViewType == 0) {
+				mTopicHeaderHolder.intro.setText(mTopicListModule.getTitle());
+				FontUtils.setTextViewFontSize(NewsTopicListActivity.this,
+						mTopicHeaderHolder.intro,
+						R.string.news_content_text_size,
+						spUtil.getFontSizeRadix());
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(mTopicListModule.getTitlepic()),
+						mTopicHeaderHolder.titlePic, ImgUtils.homeImageOptions);
+			} else if (itemViewType == 1) {
+				final NewsHomeModuleItem item = mTopicListModule.getList().get(
+						position - 1);
 				item.setTitlepic(CommonUtils.doWebpUrl(item.getTitlepic()));
 				if (NewsBrowseUtils.isBrowed(item.getId())) {
-					newHolder.title.setTextColor(Color.parseColor("#B0B0B0"));
+					mNewContentHolder.title.setTextColor(Color
+							.parseColor("#B0B0B0"));
 				} else {
-					newHolder.title.setTextColor(Color.parseColor("#000000"));
+					mNewContentHolder.title.setTextColor(Color
+							.parseColor("#000000"));
 				}
-				newHolder.titlepic.setTag(R.string.viewwidth,
+				mNewContentHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
 				ImgUtils.imageLoader.displayImage(item.getTitlepic(),
-						newHolder.titlepic, ImgUtils.homeImageOptions);
-				newHolder.title.setText(item.getTitle());
+						mNewContentHolder.titlepic, ImgUtils.homeImageOptions);
+				mNewContentHolder.title.setText(item.getTitle());
 				// switch (news_type / 10) {
 				// case 1:
 				// newHolder.news_type
@@ -607,30 +560,40 @@ public class NewsTopicActivity extends BaseActivity implements
 					}
 				});
 			} else if (itemViewType == 3) {
+				final NewsHomeModuleItem item = mTopicListModule.getList().get(
+						position - 1);
 				if (NewsBrowseUtils.isBrowed(item.getId())) {
-					albumsHolder.title
-							.setTextColor(Color.parseColor("#B0B0B0"));
+					mNewAlbumsHolder.title.setTextColor(Color
+							.parseColor("#B0B0B0"));
 				} else {
-					albumsHolder.title
-							.setTextColor(Color.parseColor("#000000"));
+					mNewAlbumsHolder.title.setTextColor(Color
+							.parseColor("#000000"));
 				}
 
-				albumsHolder.title.setText(item.getTitle());
-				// final String[] pics = item.getTitlepic().split("::::::");
+				mNewAlbumsHolder.title.setText(item.getTitle());
+				final String[] pics = item.getTitlepic().split("::::::");
+				ArrayList<ImageView> image_view_list = new ArrayList<ImageView>();
 
 				int width = (mScreenWidth - PixelUtil.dp2px(20) / 3);
-				albumsHolder.albums_image_1.setTag(R.string.viewwidth, width);
-				albumsHolder.albums_image_2.setTag(R.string.viewwidth, width);
-				albumsHolder.albums_image_3.setTag(R.string.viewwidth, width);
-				ImgUtils.imageLoader.displayImage(
-						CommonUtils.doWebpUrl(item.getAlbum_1()),
-						albumsHolder.albums_image_1, ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(
-						CommonUtils.doWebpUrl(item.getAlbum_2()),
-						albumsHolder.albums_image_2, ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(
-						CommonUtils.doWebpUrl(item.getAlbum_3()),
-						albumsHolder.albums_image_3, ImgUtils.homeImageOptions);
+				mNewAlbumsHolder.albums_image_1.setTag(R.string.viewwidth,
+						width);
+				mNewAlbumsHolder.albums_image_2.setTag(R.string.viewwidth,
+						width);
+				mNewAlbumsHolder.albums_image_3.setTag(R.string.viewwidth,
+						width);
+
+				image_view_list.add(mNewAlbumsHolder.albums_image_1);
+				image_view_list.add(mNewAlbumsHolder.albums_image_2);
+				image_view_list.add(mNewAlbumsHolder.albums_image_3);
+				for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++) {
+					// CommonUtils.zoomImage(imageLoader,
+					// CommonUtils.doWebpUrl(pics[i + 1]),
+					// image_view_list.get(i), mContext,
+					// imageCache);
+					ImgUtils.imageLoader.displayImage(
+							CommonUtils.doWebpUrl(pics[i + 1]),
+							image_view_list.get(i), ImgUtils.homeImageOptions);
+				}
 
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
@@ -638,9 +601,6 @@ public class NewsTopicActivity extends BaseActivity implements
 						if (ClickUtils.isFastDoubleClick()) {
 							return;
 						}
-						NewsTopicActivity.this
-								.startAnimActivityByNewsHomeModuleItem(
-										NewsAlbumActivity.class, item);
 						// MyTextView textView = (MyTextView) arg0
 						// .findViewById(R.id.home_albums_title);
 						// NewsBrowseUtils.hasBrowedNews(item.getId());
@@ -656,100 +616,14 @@ public class NewsTopicActivity extends BaseActivity implements
 					}
 				});
 
-				// viewHolder.title.setText(item.getTitle());
-				// imageLoader.displayImage(item.getTitlepic(),
-				// viewHolder.titlePic,
-				// Options.getSmallImageOptions(false));
-			}
-			return convertView;
-		}
-
-		@Override
-		public View getHeaderView(int position, View convertView,
-				ViewGroup parent) {
-			HeaderViewHolder headerHolder = null;
-			if (convertView == null) {
-				headerHolder = new HeaderViewHolder();
-				convertView = mInflater.inflate(R.layout.subject_section,
-						parent, false);
-				headerHolder.title = (MyTextView) convertView
-						.findViewById(R.id.text1);
-				convertView.setTag(headerHolder);
-			} else {
-				headerHolder = (HeaderViewHolder) convertView.getTag();
 			}
 
-			// int key = subjectList.getHeaderids()[position];
-			// String title = subjectList.getKeys()[key];
-			int index = Integer.parseInt(mTopicModule.getList().get(position)
-					.getCategory());
-			headerHolder.title.setText(categorys[index]);
+			// viewHolder.title.setText(item.getTitle());
+			// imageLoader.displayImage(item.getTitlepic(),
+			// viewHolder.titlePic,
+			// Options.getSmallImageOptions(false));
 
 			return convertView;
-		}
-
-		/**
-		 * Remember that these have to be static, postion=1 should always return
-		 * the same Id that is.
-		 */
-		@Override
-		public long getHeaderId(int position) {
-			// return subjectList.getHeaderids()[position];
-			return Integer.parseInt(mTopicModule.getList().get(position)
-					.getCategory());
-		}
-
-		@Override
-		public int getPositionForSection(int section) {
-			return 0;
-		}
-
-		@Override
-		public int getSectionForPosition(int position) {
-			return 0;
-		}
-
-		@Override
-		public Object[] getSections() {
-			return null;
-		}
-
-		public void clear() {
-			notifyDataSetChanged();
-		}
-
-		public void restore() {
-			notifyDataSetChanged();
-		}
-
-		private class TagViewHolder {
-			LinearLayout tagview;
-		}
-
-		private class HeaderViewHolder {
-			MyTextView title;
-		}
-
-		private class ViewHolder {
-			MyTextView title;
-			PhotoView titlePic;
-		}
-
-		private class NewContentHolder {
-			ImageView titlepic;
-			MyTextView title;
-			ImageView newstime_sign;
-			ImageView home_news_play;
-			MyTextView newstime;
-			ImageView news_type;
-		}
-
-		private class NewAlbumsHolder {
-			MyTextView title;
-			LinearLayout home_albums_imgs_layout;
-			ImageView albums_image_1;
-			ImageView albums_image_2;
-			ImageView albums_image_3;
 		}
 	}
 
@@ -778,26 +652,158 @@ public class NewsTopicActivity extends BaseActivity implements
 			break;
 		case R.id.main_bg:
 			if (CommonUtils.isNetworkAvailable(mContext)) {
-				initNetDate();
+				// if (ztid != null && Integer.valueOf(ztid) > 0) {
+				refreshNetDate();
+				// }
 			}
 			break;
 
 		}
 	}
 
+	// /*
+	// * 获取新闻点击量
+	// */
+	// // 处理网络出错
+	// protected ErrorListener getClickTimeErrorListener = new ErrorListener() {
+	// @Override
+	// public void onErrorResponse(VolleyError error) {
+	// error.printStackTrace();
+	// mLoadingView.setVisibility(View.GONE);
+	// }
+	// };
+
+	// 处理网络成功
+	// protected Listener<JSONArray> getClickTimeListener = new
+	// Listener<JSONArray>() {
+	// @Override
+	// public void onResponse(JSONArray jsonObject) {
+	//
+	// try {
+	// // JSONArray jsonArray = new JSONArray(jsonObject.toString());
+	// JSONArray jsonArray = jsonObject;
+	// if (jsonArray != null && jsonArray.length() > 0) {
+	// for (int i = 0; i < jsonArray.length(); i++) {
+	// JSONObject jsonObject1 = (JSONObject) jsonArray.get(i);
+	// String clickTime = jsonObject1
+	// .optString(new_news_clicks.get(i).getId()
+	// + "_"
+	// + (Integer.valueOf(new_news_clicks.get(
+	// i).getType()) % 10));
+	// new_news_clicks.get(i).setClickTime(clickTime);
+	// new_news_clicks.get(i).setZtid(ztid);
+	// }
+	// }
+	// } catch (JSONException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// // 存储数据
+	// try {
+	// dbUtils.saveOrUpdateAll(new_news_clicks);
+	// } catch (DbException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// initContentData();
+	// // new_news_clicks
+	// }
+	// };
+
+	// 初始化数据
+	// private void initContentData() {
+	// // 点击量
+	// for (int i = 0; new_news_clicks != null && i < new_news_clicks.size();
+	// i++) {
+	// mClicks.put(new_news_clicks.get(i).getId(), new_news_clicks.get(i)
+	// .getClickTime());
+	// }
+	// //
+	// ImageView photoView = (ImageView) headerView
+	// .findViewById(R.id.titlepic);
+	// imageLoader.displayImage(
+	// CommonUtils.doWebpUrl(subjectList.getTitlePic()), photoView,
+	// Options.getSmallImageOptions(false));
+	//
+	// titleText.setText("         " + subjectList.getIntro());
+	//
+	// mAdapter.notifyDataSetChanged();
+	// main_bg.setVisibility(View.GONE);
+	// content_loading.setVisibility(View.GONE);
+	// }
+
+	/**
+	 * 获取当前新闻的缩略图对应的 Bitmap。
+	 */
+	// private Bitmap getThumbBitmap() {
+	// BitmapFactory.Options options = new BitmapFactory.Options();
+	// options.inJustDecodeBounds = true;
+	// options.inPreferredConfig = Bitmap.Config.RGB_565;
+	// // Bitmap decodeFile = BitmapFactory.decodeFile(CommonUtils
+	// // .getImageCachePath(mContext)
+	// // + "/"
+	// // + CommonUtils.generate(titlepic));
+	// Bitmap decodeFile = BitmapFactory.decodeFile(CommonUtils
+	// .getImageCachePath(mContext)
+	// + "/"
+	// + CommonUtils.doWebpUrl(CommonUtils.generate(titlepic)));
+	//
+	// if (decodeFile == null) {
+	// decodeFile = BitmapFactory.decodeFile(CommonUtils
+	// .getImageCachePath(mContext)
+	// + "/"
+	// + "big_"
+	// + CommonUtils.doWebpUrl(CommonUtils.generate(titlepic)));
+	// }
+	// if (decodeFile == null) {
+	// decodeFile = ImgUtils.getNetImage(titlepic);
+	// if (decodeFile == null) {
+	// BitmapDrawable draw = (BitmapDrawable) getResources()
+	// .getDrawable(R.drawable.ic_logo);
+	// decodeFile = draw.getBitmap();
+	// }
+	// }
+	// int byteCount = decodeFile.getRowBytes();
+	// int height2 = decodeFile.getHeight();
+	// long mem = height2 * byteCount;
+	// ByteArrayOutputStream bao = new ByteArrayOutputStream();
+	//
+	// if (mem > 100 * 1024 * 8) {
+	// decodeFile.compress(CompressFormat.JPEG, 80, bao);
+	// } else if (mem < 100 * 1024 * 8 && mem > 80 * 1024 * 8) {
+	// decodeFile.compress(CompressFormat.JPEG, 90, bao);
+	// } else {
+	// decodeFile.compress(CompressFormat.JPEG, 100, bao);
+	// }
+	// if (decodeFile != null && !decodeFile.isRecycled()) {
+	// decodeFile.recycle();
+	// }
+	// byte[] byteArray = bao.toByteArray();
+	// Bitmap decodeByteArray = BitmapFactory.decodeByteArray(byteArray, 0,
+	// byteArray.length);
+	// return decodeByteArray;
+	// }
+
 	@Override
 	public void refresh() {
 		mLoadingView.setVisibility(View.VISIBLE);
 		if (CommonUtils.isNetworkAvailable(mContext)) {
-			initNetDate();
+			// if (ztid != null && Integer.valueOf(ztid) > 0) {
+			refreshNetDate();
+			// } else {
+			// ToastUtils.Errortoast(mContext, "参数错误");
+			// }
 		} else {
-			if (mTopicModule != null)
-				mLoadingView.setVisibility(View.GONE);
+			ToastUtils.ErrorToastNoNet(mContext);
+			initLocalData();
 		}
 	}
 
 	@Override
 	public void finish() {
+		// TODO Auto-generated method stub
 		if (this.mApplication.getMainActivity() == null) {
 			Intent intent = getIntent();
 			intent.setClass(this, MainActivity.class);
@@ -809,6 +815,7 @@ public class NewsTopicActivity extends BaseActivity implements
 
 	@Override
 	public void chage2Day() {
+		// TODO Auto-generated method stub
 		nightView.setVisibility(View.GONE);
 		((CrashApplication) this.getApplication()).changeMainActivityDayMode();
 	}
@@ -821,7 +828,7 @@ public class NewsTopicActivity extends BaseActivity implements
 
 	@Override
 	public void copy2Clip() {
-		// TODO
+		// TODO Auto-generated method stub
 		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 		// clip.setText(mTopicModule.get);
 		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
@@ -829,17 +836,18 @@ public class NewsTopicActivity extends BaseActivity implements
 
 	@Override
 	public void changeFontSize() {
-		FontUtils.setTextViewFontSize(this, mTitleText,
-				R.string.news_content_text_size, spUtil.getFontSizeRadix());
-		FontUtils.chagneFontSizeGlobal();
-
-		int first = stickyList.getFirstVisiblePosition();
-		stickyList.setAdapter(mTopicAdapter);
-		stickyList.setSelection(first);
+		// FontUtils.setTextViewFontSize(this, titleText,
+		// R.string.news_content_text_size, spUtil.getFontSizeRadix());
+		// FontUtils.chagneFontSizeGlobal();
+		//
+		// int first = stickyList.getFirstVisiblePosition();
+		// stickyList.setAdapter(mAdapter);
+		// stickyList.setSelection(first);
 	}
 
 	@Override
 	protected void onResume() {
+		// TODO Auto-generated method stub
 		super.onResume();
 		if (FontUtils.isSubjectFontSizeHasChanged()) {
 			changeFontSize();
@@ -849,11 +857,5 @@ public class NewsTopicActivity extends BaseActivity implements
 			chage2Night();
 		else
 			chage2Day();
-	}
-
-	@Override
-	public void initNightView(boolean isFullScreen) {
-		if (!spUtil.getIsDayMode())
-			chage2Night();
 	}
 }

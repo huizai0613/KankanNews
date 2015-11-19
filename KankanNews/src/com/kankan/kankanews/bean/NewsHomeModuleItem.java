@@ -22,6 +22,9 @@ public class NewsHomeModuleItem implements Serializable, CanSharedObject {
 	private String option;
 	private String videourl;
 	private String titleurl;
+	private String album_1;
+	private String album_2;
+	private String album_3;
 
 	public String getId() {
 		return id;
@@ -151,8 +154,32 @@ public class NewsHomeModuleItem implements Serializable, CanSharedObject {
 		this.titleurl = titleurl;
 	}
 
+	public String getAlbum_1() {
+		return album_1;
+	}
+
+	public void setAlbum_1(String album_1) {
+		this.album_1 = album_1;
+	}
+
+	public String getAlbum_2() {
+		return album_2;
+	}
+
+	public void setAlbum_2(String album_2) {
+		this.album_2 = album_2;
+	}
+
+	public String getAlbum_3() {
+		return album_3;
+	}
+
+	public void setAlbum_3(String album_3) {
+		this.album_3 = album_3;
+	}
+
 	@Override
-	public String getTitlelist() {
+	public String getShareTitle() {
 		return this.title;
 	}
 

@@ -538,6 +538,10 @@ public abstract class BaseActivity extends FragmentActivity implements
 		titleBarLeftImgSecond.setVisibility(View.VISIBLE);
 	}
 
+	protected void setContentTextView(String title) {
+		titleBarContent.setText(title);
+	}
+
 	/**
 	 * 初始化视图
 	 */

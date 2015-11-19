@@ -67,6 +67,11 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.kankan.kankanews.ui.item.NewsTopicListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.kankan.kankanews.ui.GuideActivity"
             android:exported="false"
             android:screenOrientation="portrait" >
@@ -149,6 +154,12 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
+            android:name="com.kankan.kankanews.ui.item.NewsAlbumActivity"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
             android:name="com.kankan.kankanews.ui.item.New_Activity_MyFoot"
             android:exported="false"
             android:screenOrientation="portrait" >
@@ -199,7 +210,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.kankan.kankanews.ui.NewsListActivity"
+            android:name="com.kankan.kankanews.ui.item.NewsListActivity"
             android:exported="false"
             android:screenOrientation="portrait" >
         </activity>

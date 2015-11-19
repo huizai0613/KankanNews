@@ -222,7 +222,7 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 		this.newstext = newstext;
 	}
 
-	public String getTitlelist() {
+	public String getShareTitle() {
 		return titlelist;
 	}
 

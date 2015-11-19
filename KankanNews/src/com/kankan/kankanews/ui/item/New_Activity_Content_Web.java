@@ -241,7 +241,7 @@ public class New_Activity_Content_Web extends BaseActivity implements
 		// 提交点击
 		NetUtils.getInstance(mContext).addNewNewsClickData("id=" + mid);
 		NetUtils.getInstance(mContext).getAnalyse(this, "text",
-				new_news.getTitlelist(), new_news.getTitleurl());
+				new_news.getShareTitle(), new_news.getTitleurl());
 		// 更新数据
 		try {
 			dbUtils.saveOrUpdate(new_news);

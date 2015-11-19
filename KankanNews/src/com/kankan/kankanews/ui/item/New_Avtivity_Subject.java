@@ -199,7 +199,7 @@ public class New_Avtivity_Subject extends BaseActivity implements
 		new_news.setIntro(intro);
 
 		NetUtils.getInstance(mContext).getAnalyse(this, "topic",
-				new_news.getTitlelist(), new_news.getTitleurl());
+				new_news.getShareTitle(), new_news.getTitleurl());
 
 		// 初始化shareutil类
 		shareUtil = new ShareUtil(new_news, mContext);
@@ -216,7 +216,7 @@ public class New_Avtivity_Subject extends BaseActivity implements
 
 		mAdapter = new SubjectAdapter(this);
 
-		headerView = getLayoutInflater().inflate(R.layout.subject_header, null);
+		headerView = getLayoutInflater().inflate(R.layout.item_topic_header, null);
 
 		stickyList = (StickyListHeadersListView) findViewById(R.id.list);
 		stickyList.setVerticalScrollBarEnabled(false);

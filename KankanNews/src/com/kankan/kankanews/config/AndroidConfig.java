@@ -4,6 +4,8 @@ public class AndroidConfig {
 
 	public static final int FRAGMENTREFRESHTIME = 1000 * 60 * 10;// fragment刷新间隔时间
 
+	public static final long _NEWS_CONTENT_SAVE_OK_TIME_ = 24 * 60 * 60 * 1000;// 新闻内容页缓存过期时间
+
 	public static final String SHARENAME = "transportationAndroid";
 
 	public static final String DOWLOADAPK = "http://www.uw52.com/apk/test.apk";
@@ -133,7 +135,7 @@ public class AndroidConfig {
 	public static final String NEWS_HOME_DATA = "/v5/KKAppIndex";
 	// 主页随机数据
 	public static final String NEWS_HOME_DATA_CHANGE = "/v5/KKAppList/command/random/appclassid/";
-	// 主页投票随机数据 
+	// 主页投票随机数据
 	public static final String NEWS_HOME_VOTE_DATA_CHANGE = "/v5/KKAppVote/command/random/appclassid/";
 	// 提交投票结果
 	public static final String NEWS_HOME_VOTE_PUT = "/v5/KKAppVote/command/vote/appclassid/";

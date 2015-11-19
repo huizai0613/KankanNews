@@ -158,7 +158,7 @@ public class LiveChannelObj implements CanBePlay, CanSharedObject, Serializable 
 	}
 
 	@Override
-	public String getTitlelist() {
+	public String getShareTitle() {
 		// TODO Auto-generated method stub
 		return title;
 	}

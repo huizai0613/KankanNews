@@ -15,7 +15,7 @@ import com.kankan.kankanews.base.BaseBean;
 import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankan.kankanews.exception.NetRequestException;
 
-public class NewsContent implements Serializable, CanSharedObject {
+public class NewsAlbum implements Serializable, CanSharedObject {
 	private String id;
 	private String type;
 	private String url;
@@ -25,10 +25,10 @@ public class NewsContent implements Serializable, CanSharedObject {
 	private String newsdate;
 	private String intro;
 	private String keywords;
-	private String contents;
-	private NewsContentConponent conponents;
-	private List<NewsContentRecommend> recommend;
-	private String sharedPic;
+	private String share_title;
+	private String share_titlepic;
+	private String share_intro;
+	private List<NewsAlbumImage> album;
 
 	public String getId() {
 		return id;
@@ -62,7 +62,7 @@ public class NewsContent implements Serializable, CanSharedObject {
 		this.title = title;
 	}
 
-	public String getTitlePic() {
+	public String getTitlepic() {
 		return titlepic;
 	}
 
@@ -102,53 +102,56 @@ public class NewsContent implements Serializable, CanSharedObject {
 		this.keywords = keywords;
 	}
 
-	public String getContents() {
-		return contents;
+	public String getShare_title() {
+		return share_title;
 	}
 
-	public void setContents(String contents) {
-		this.contents = contents;
+	public void setShare_title(String share_title) {
+		this.share_title = share_title;
 	}
 
-	public NewsContentConponent getConponents() {
-		return conponents;
+	public String getShare_titlepic() {
+		return share_titlepic;
 	}
 
-	public void setConponents(NewsContentConponent conponents) {
-		this.conponents = conponents;
+	public void setShare_titlepic(String share_titlepic) {
+		this.share_titlepic = share_titlepic;
 	}
 
-	public List<NewsContentRecommend> getRecommend() {
-		return recommend;
+	public String getShare_intro() {
+		return share_intro;
 	}
 
-	public void setRecommend(List<NewsContentRecommend> recommend) {
-		this.recommend = recommend;
+	public void setShare_intro(String share_intro) {
+		this.share_intro = share_intro;
+	}
+
+	public List<NewsAlbumImage> getAlbum() {
+		return album;
+	}
+
+	public void setAlbum(List<NewsAlbumImage> album) {
+		this.album = album;
 	}
 
 	@Override
 	public String getShareTitle() {
-		return title;
+		return this.getShare_title();
 	}
 
 	@Override
 	public String getTitleurl() {
-		return url;
-	}
-
-	@Override
-	public String getTitlepic() {
-		return titlepic;
+		return this.getUrl();
 	}
 
 	@Override
 	public String getSharedPic() {
-		return this.sharedPic;
+		return this.getShare_titlepic();
 	}
 
 	@Override
-	public void setSharedPic(String sharedPic) {
-		this.sharedPic = sharedPic;
+	public void setSharedPic(String sharepic) {
+		this.setShare_titlepic(sharepic);
 	}
 
 }

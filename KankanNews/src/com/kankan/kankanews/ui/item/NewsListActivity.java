@@ -1,5 +1,6 @@
-package com.kankan.kankanews.ui;
+package com.kankan.kankanews.ui.item;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -45,22 +46,21 @@ import com.kankan.kankanews.bean.RevelationsBreaknews;
 import com.kankan.kankanews.bean.RevelationsHomeList;
 import com.kankan.kankanews.bean.RevelationsNew;
 import com.kankan.kankanews.bean.SerializableObj;
+import com.kankan.kankanews.ui.fragment.LiveLiveListFragment;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
 import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
-import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
-import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
-import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
-import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView.EllipsizeListener;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.StringUtils;
 import com.kankan.kankanews.utils.TimeUtil;
@@ -82,6 +82,7 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 	private NewsListAdapter mNewsListAdapter;
 
 	private NewsListHolder mNewsListHolder;
+	private NewAlbumsHolder mNewAlbumsHolder;
 	private LoadedFinishHolder mFinishHolder;
 	private boolean mIsLoadEnd = false;
 	private String mLastTime = "";
@@ -96,13 +97,13 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void initView() {
-		initTitleLeftBar("热点新闻", R.drawable.new_ic_back);
 		inflate = LayoutInflater.from(this);
 		mLoadingView = this.findViewById(R.id.newslist_loading_view);
 		mRetryView = this.findViewById(R.id.newslist_retry_view);
 		mNewsListView = (PullToRefreshListView) this
 				.findViewById(R.id.newslist_list_view);
 		nightView = findViewById(R.id.night_view);
+		initTitleLeftBar("", R.drawable.new_ic_back);
 		initListView();
 	}
 
@@ -113,7 +114,7 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 				"_NEWS_HOME_APP_CLASS_ID_");
 		boolean flag = this.initLocalDate();
 		if (flag) {
-			showData(true);
+			showData();
 			mLoadingView.setVisibility(View.GONE);
 			mNewsListView.showHeadLoadingView();
 		}
@@ -121,7 +122,6 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 	}
 
 	protected void initListView() {
-		// TODO Auto-generated method stub
 		mNewsListView.setMode(Mode.BOTH);
 		mNewsListView.getLoadingLayoutProxy(true, false).setPullLabel("下拉可以刷新");
 		mNewsListView.getLoadingLayoutProxy(true, false).setReleaseLabel(
@@ -133,13 +133,9 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 				"松开立即加载");
 		mNewsListView
 				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
-
 					@Override
 					public void onPullDownToRefresh(
 							PullToRefreshBase refreshView) {
-						// String time = TimeUtil.getTime(new Date());
-						// refreshView.getLoadingLayoutProxy()
-						// .setLastUpdatedLabel("最后更新:" + time);
 						refreshNetDate();
 					}
 
@@ -151,7 +147,6 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 	}
 
 	protected void refreshNetDate() {
-		// TODO Auto-generated method stub
 		mIsLoadEnd = false;
 		if (CommonUtils.isNetworkAvailable(this)) {
 			this.netUtils.getNewsList(mAppClassId, "", this.mListener,
@@ -221,10 +216,7 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void onSuccess(JSONObject jsonObject) {
-		// TODO Auto-generated method stub
 		mNewsHomeModuleJson = jsonObject.toString();
-		boolean needRefresh = (mNewsHomeModuleJson == null);
-		// ToastUtils.Infotoast(getActivity(), jsonObject.toString());
 		mNewsHomeModule = JsonUtils.toObject(mNewsHomeModuleJson,
 				NewsHomeModule.class);
 		if (mNewsHomeModule != null) {
@@ -232,11 +224,12 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 			if (mNewsHomeModule.getList().size() == 0)
 				mIsLoadEnd = true;
 			saveLocalDate();
-			showData(needRefresh);
+			showData();
 		}
 	}
 
-	private void showData(boolean needRefresh) {
+	private void showData() {
+		this.setContentTextView(mNewsHomeModule.getTitle());
 		mNewsListView.onRefreshComplete();
 		if (mNewsListAdapter == null) {
 			mNewsListAdapter = new NewsListAdapter();
@@ -262,6 +255,15 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		ImageView newsTimeIcon;
 		MyTextView newsClick;
 		ImageView newsType;
+		LinearLayout keyboardIconContent;
+	}
+
+	private class NewAlbumsHolder {
+		MyTextView title;
+		LinearLayout home_albums_imgs_layout;
+		ImageView albums_image_1;
+		ImageView albums_image_2;
+		ImageView albums_image_3;
 	}
 
 	private class LoadedFinishHolder {
@@ -279,15 +281,22 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 
 		@Override
 		public int getViewTypeCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
 		public int getItemViewType(int position) {
 			if (position == mNewsHomeModule.getList().size()) {
 				return 1;
-			} else
-				return 0;
+			} else {
+				NewsHomeModuleItem news = mNewsHomeModule.getList().get(
+						position);
+				if (news.getType().equals("album")) {
+					return 2;
+				} else {
+					return 0;
+				}
+			}
 		}
 
 		@Override
@@ -303,12 +312,12 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		@Override
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
-			int itemViewType = getItemViewType(position);
 
+			int itemViewType = getItemViewType(position);
 			if (convertView == null) {
 				if (itemViewType == 0) {
-					convertView = inflate.inflate(R.layout.new_home_news_item,
-							null);
+					convertView = inflate.inflate(
+							R.layout.item_news_list_content, null);
 					mNewsListHolder = new NewsListHolder();
 					mNewsListHolder.titlepic = (ImageView) convertView
 							.findViewById(R.id.home_news_titlepic);
@@ -324,6 +333,8 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 							.findViewById(R.id.home_news_newstime);
 					mNewsListHolder.newsType = (ImageView) convertView
 							.findViewById(R.id.home_news_newstype);
+					mNewsListHolder.keyboardIconContent = (LinearLayout) convertView
+							.findViewById(R.id.news_list_keyboard_content);
 					convertView.setTag(mNewsListHolder);
 				} else if (itemViewType == 1) {
 					convertView = inflate.inflate(R.layout.item_list_foot_text,
@@ -332,72 +343,136 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 					mFinishHolder.loadedTextView = (MyTextView) convertView
 							.findViewById(R.id.list_has_loaded_item_textview);
 					convertView.setTag(mFinishHolder);
+					return convertView;
+				} else if (itemViewType == 2) {
+					convertView = inflate.inflate(
+							R.layout.new_home_news_albums_item, null);
+					mNewAlbumsHolder = new NewAlbumsHolder();
+					mNewAlbumsHolder.title = (MyTextView) convertView
+							.findViewById(R.id.home_albums_title);
+					FontUtils.setTextViewFontSize(NewsListActivity.this,
+							mNewAlbumsHolder.title,
+							R.string.home_news_text_size,
+							spUtil.getFontSizeRadix());
+					mNewAlbumsHolder.home_albums_imgs_layout = (LinearLayout) convertView
+							.findViewById(R.id.home_albums_imgs_layout);
+					mNewAlbumsHolder.albums_image_1 = (ImageView) convertView
+							.findViewById(R.id.home_albums_img_1);
+					mNewAlbumsHolder.albums_image_2 = (ImageView) convertView
+							.findViewById(R.id.home_albums_img_2);
+					mNewAlbumsHolder.albums_image_3 = (ImageView) convertView
+							.findViewById(R.id.home_albums_img_3);
+					mNewAlbumsHolder.home_albums_imgs_layout
+							.setLayoutParams(new LinearLayout.LayoutParams(
+									LinearLayout.LayoutParams.MATCH_PARENT,
+									(int) ((mScreenWidth - PixelUtil
+											.dp2px(10 * 4)) / 3 * 0.7)));
+					convertView.setTag(mNewAlbumsHolder);
 				}
 			} else {
 				if (itemViewType == 0) {
 					mNewsListHolder = (NewsListHolder) convertView.getTag();
 				} else if (itemViewType == 1) {
 					mFinishHolder = (LoadedFinishHolder) convertView.getTag();
+					return convertView;
+				} else if (itemViewType == 2) {
+					mNewAlbumsHolder = (NewAlbumsHolder) convertView.getTag();
 				}
 			}
+			final NewsHomeModuleItem news = mNewsHomeModule.getList().get(
+					position);
 			if (itemViewType == 0) {
-				final NewsHomeModuleItem news = mNewsHomeModule.getList().get(
-						position);
 				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
 				String clicktime = news.getOnclick() + "";
 				clicktime = TextUtils.isEmpty(clicktime) ? "0" : clicktime;
-//				final int news_type = Integer.valueOf(news.getType());
 				mNewsListHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
-
 				ImgUtils.imageLoader.displayImage(news.getTitlepic(),
 						mNewsListHolder.titlepic, ImgUtils.homeImageOptions);
-
 				mNewsListHolder.title.setText(news.getTitle());
 				mNewsListHolder.newsClick.setText(clicktime);
+				mNewsListHolder.keyboardIconContent.setVisibility(View.VISIBLE);
+				Keyboard mKeyboard = news.getKeyboard();
+				mKeyboard.setColor("#ffcc00");
+				mKeyboard.setText("我了割草");
+				if (mKeyboard != null
+						&& !mKeyboard.getColor().trim().equals("")
+						&& !mKeyboard.getText().trim().equals("")) {
+					mNewsListHolder.keyboardIconContent.removeAllViews();
+					TextView view = new BorderTextView(mContext,
+							mKeyboard.getColor());
+					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+							LinearLayout.LayoutParams.MATCH_PARENT,
+							LinearLayout.LayoutParams.WRAP_CONTENT);
+					view.setLayoutParams(params);
+					view.setGravity(Gravity.CENTER);
+					int px3 = PixelUtil.dp2px(3);
+					view.setPadding(px3, px3, px3, px3);
+					view.setText(mKeyboard.getText());
+					FontUtils.setTextViewFontSize(mContext, view,
+							R.string.live_border_text_view_text_size, 1);
+					view.setTextColor(Color.parseColor(mKeyboard.getColor()));
+					mNewsListHolder.keyboardIconContent.addView(view);
+				}
+				convertView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						if (ClickUtils.isFastDoubleClick()) {
+							return;
+						}
+						NewsBrowseUtils.hasBrowedNews(news.getId());
+						NewsListActivity.this
+								.startAnimActivityByNewsHomeModuleItem(
+										NewsContentActivity.class, news);
+					}
+				});
+			} else if (itemViewType == 2) {
+				if (NewsBrowseUtils.isBrowed(news.getId())) {
+					mNewAlbumsHolder.title.setTextColor(Color
+							.parseColor("#B0B0B0"));
+				} else {
+					mNewAlbumsHolder.title.setTextColor(Color
+							.parseColor("#000000"));
+				}
+				mNewAlbumsHolder.title.setText(news.getTitle());
+				int width = (mScreenWidth - PixelUtil.dp2px(20) / 3);
+				mNewAlbumsHolder.albums_image_1.setTag(R.string.viewwidth,
+						width);
+				mNewAlbumsHolder.albums_image_2.setTag(R.string.viewwidth,
+						width);
+				mNewAlbumsHolder.albums_image_3.setTag(R.string.viewwidth,
+						width);
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(news.getAlbum_1()),
+						mNewAlbumsHolder.albums_image_1,
+						ImgUtils.homeImageOptions);
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(news.getAlbum_2()),
+						mNewAlbumsHolder.albums_image_2,
+						ImgUtils.homeImageOptions);
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(news.getAlbum_3()),
+						mNewAlbumsHolder.albums_image_3,
+						ImgUtils.homeImageOptions);
+				convertView.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(View arg0) {
+						if (ClickUtils.isFastDoubleClick()) {
+							return;
+						}
+						NewsBrowseUtils.hasBrowedNews(news.getId());
+						NewsListActivity.this
+								.startAnimActivityByNewsHomeModuleItem(
+										NewsAlbumActivity.class, news);
+					}
+				});
 			}
 			return convertView;
 		}
 	}
 
-	private void openNews(RevelationsNew news) {
-		//
-		final int news_type = Integer.valueOf(news.getType());
-		if (news_type % 10 == 1) {
-			this.startAnimActivityByParameter(New_Activity_Content_Video.class,
-					news.getMid(), news.getType(), news.getTitleurl(),
-					news.getNewstime(), news.getTitle(), news.getTitlepic(),
-					news.getTitlepic(), news.getIntro());
-		} else if (news_type % 10 == 2) {
-			final String[] pics = news.getTitlepic().split("::::::");
-			this.startAnimActivityByParameter(
-					New_Activity_Content_PicSet.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), pics[1],
-					news.getIntro());
-		} else if (news_type % 10 == 5) {
-			// 专题
-			this.startSubjectActivityByParameter(New_Avtivity_Subject.class,
-					news.getZtid(), news.getTitle(), news.getTitlepic(),
-					news.getTitleurl(), news.getTitlepic(), news.getTitlepic(),
-					news.getIntro());
-		}
-		// else if (news.getZtype().equals("1")) {
-		// this.startSubjectActivityByParameter(New_Avtivity_Subject.class,
-		// news.getZtid(), news.getTitle(), news.getTitlepic(),
-		// news.getTitleurl(), news.getTitlepic(), news.getTitlepic());
-		// }
-		else {
-			this.startAnimActivityByParameter(New_Activity_Content_Web.class,
-					news.getMid(), news.getType(), news.getTitleurl(),
-					news.getNewstime(), news.getTitle(), news.getTitlepic(),
-					news.getTitlepic(), news.getIntro());
-		}
-	}
-
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		if (FontUtils.isRevelationsBreaknewsFontSizeHasChanged()) {
 			changeFontSize();
@@ -411,7 +486,6 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	public void changeFontSize() {
-		// TODO Auto-generated method stub
 		int first = mNewsListView.getFirstVisiblePosition();
 		mNewsListView.setAdapter(mNewsListAdapter);
 		mNewsListView.setSelection(first);
