@@ -112,10 +112,9 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		mAppClassId = this.getIntent().getStringExtra(
 				"_NEWS_HOME_APP_CLASS_ID_");
-		boolean flag = this.initLocalDate();
+		boolean flag = this.initLocalData();
 		if (flag) {
 			showData();
-			mLoadingView.setVisibility(View.GONE);
 			mNewsListView.showHeadLoadingView();
 		}
 		refreshNetDate();
@@ -152,12 +151,16 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 			this.netUtils.getNewsList(mAppClassId, "", this.mListener,
 					mErrorListener);
 		} else {
+			this.mLoadingView.setVisibility(View.GONE);
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
 					mNewsListView.onRefreshComplete();
 				}
 			}, 500);
+			if (mNewsHomeModule == null) {
+				this.mRetryView.setVisibility(View.VISIBLE);
+			}
 		}
 	}
 
@@ -220,7 +223,6 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		mNewsHomeModule = JsonUtils.toObject(mNewsHomeModuleJson,
 				NewsHomeModule.class);
 		if (mNewsHomeModule != null) {
-			mLoadingView.setVisibility(View.GONE);
 			if (mNewsHomeModule.getList().size() == 0)
 				mIsLoadEnd = true;
 			saveLocalDate();
@@ -237,6 +239,8 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		} else {
 			mNewsListAdapter.notifyDataSetChanged();
 		}
+		mLoadingView.setVisibility(View.GONE);
+		mRetryView.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -382,6 +386,13 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 			final NewsHomeModuleItem news = mNewsHomeModule.getList().get(
 					position);
 			if (itemViewType == 0) {
+				if (NewsBrowseUtils.isBrowed(news.getId())) {
+					mNewsListHolder.title.setTextColor(Color
+							.parseColor("#B0B0B0"));
+				} else {
+					mNewsListHolder.title.setTextColor(Color
+							.parseColor("#000000"));
+				}
 				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
 				String clicktime = news.getOnclick() + "";
 				clicktime = TextUtils.isEmpty(clicktime) ? "0" : clicktime;
@@ -416,10 +427,13 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 				}
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
-					public void onClick(View arg0) {
+					public void onClick(View v) {
 						if (ClickUtils.isFastDoubleClick()) {
 							return;
 						}
+						MyTextView textView = (MyTextView) v
+								.findViewById(R.id.home_news_title);
+						textView.setTextColor(Color.parseColor("#B0B0B0"));
 						NewsBrowseUtils.hasBrowedNews(news.getId());
 						NewsListActivity.this
 								.startAnimActivityByNewsHomeModuleItem(
@@ -460,6 +474,10 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 						if (ClickUtils.isFastDoubleClick()) {
 							return;
 						}
+						MyTextView textView = (MyTextView) arg0
+								.findViewById(R.id.home_albums_title);
+						NewsBrowseUtils.hasBrowedNews(news.getId());
+						textView.setTextColor(Color.parseColor("#B0B0B0"));
 						NewsBrowseUtils.hasBrowedNews(news.getId());
 						NewsListActivity.this
 								.startAnimActivityByNewsHomeModuleItem(
@@ -492,7 +510,7 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 	}
 
 	@Override
-	protected boolean initLocalDate() {
+	protected boolean initLocalData() {
 		try {
 			SerializableObj object = (SerializableObj) this.dbUtils
 					.findFirst(Selector.from(SerializableObj.class).where(

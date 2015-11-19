@@ -127,7 +127,7 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 	@Override
 	protected void initData() {
 		// TODO Auto-generated method stub
-		boolean flag = this.initLocalDate();
+		boolean flag = this.initLocalData();
 		if (flag) {
 			showData(true);
 			loadingView.setVisibility(View.GONE);
@@ -735,7 +735,7 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 	}
 
 	@Override
-	protected boolean initLocalDate() {
+	protected boolean initLocalData() {
 		try {
 			SerializableObj object = (SerializableObj) this.dbUtils
 					.findFirst(Selector.from(SerializableObj.class).where(

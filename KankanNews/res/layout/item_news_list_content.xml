@@ -75,9 +75,10 @@
                 <LinearLayout
                     android:id="@+id/news_list_keyboard_content"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="16dip"
                     android:layout_alignParentRight="true"
-                    android:gravity="end|center_vertical" >
+                    android:gravity="end|center_vertical"
+                    android:orientation="horizontal" >
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

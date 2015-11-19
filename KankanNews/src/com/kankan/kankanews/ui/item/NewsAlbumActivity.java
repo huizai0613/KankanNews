@@ -168,7 +168,7 @@ public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
 		}
 	}
 
-	private boolean initLocalData() {
+	protected boolean initLocalData() {
 		try {
 			SerializableObj object = (SerializableObj) this.dbUtils
 					.findFirst(Selector.from(SerializableObj.class).where(

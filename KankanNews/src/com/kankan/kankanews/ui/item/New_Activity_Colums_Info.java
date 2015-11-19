@@ -282,7 +282,6 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			refreshNetDate();
 		} else {
 			// initLocalData();
-			ToastUtils.Infotoast(mContext, "暂无网络请退回重试");
 		}
 
 	}
@@ -323,7 +322,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		// }, 500);
 	}
 
-	private void initLocalData() {
+	protected boolean initLocalData() {
 		try {
 			if (dbUtils.tableIsExist(New_Colums_Info.class)) {
 				new_colums_infos = dbUtils.findAll(Selector.from(
@@ -336,7 +335,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		} catch (DbException e) {
 			e.printStackTrace();
 		}
-
+		return false;
 	}
 
 	protected void refreshNetDate() {

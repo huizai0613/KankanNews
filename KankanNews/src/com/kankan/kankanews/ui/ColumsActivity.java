@@ -79,7 +79,7 @@ public class ColumsActivity extends BaseActivity implements OnClickListener {
 
 	@Override
 	protected void initData() {
-		boolean hasLocal = initLocalDate();
+		boolean hasLocal = initLocalData();
 		if (hasLocal) {
 			showData();
 		}
@@ -159,7 +159,7 @@ public class ColumsActivity extends BaseActivity implements OnClickListener {
 	}
 
 	@Override
-	protected boolean initLocalDate() {
+	protected boolean initLocalData() {
 
 		try {
 			mNewColums = (ArrayList<New_Colums>) this.dbUtils

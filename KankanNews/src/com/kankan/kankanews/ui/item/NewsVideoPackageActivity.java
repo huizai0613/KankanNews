@@ -278,22 +278,6 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 				});
 	}
 
-	private void initLocalData() {
-		// try {
-		// if (dbUtils.tableIsExist(New_Colums_Info.class)) {
-		// new_colums_infos = dbUtils.findAll(Selector.from(
-		// New_Colums_Info.class).where("classId", "=",
-		// colums.getClassId()));
-		// if (new_colums_infos != null && new_colums_infos.size() > 0) {
-		// myAdapter.notifyDataSetChanged();
-		// }
-		// }
-		// } catch (DbException e) {
-		// e.printStackTrace();
-		// }
-
-	}
-
 	protected void refreshNetDate() {
 		isLoadMore = false;
 		noMoreNews = false;

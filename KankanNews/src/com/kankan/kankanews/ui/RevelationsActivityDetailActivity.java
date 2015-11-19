@@ -135,7 +135,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		this.aid = this.getIntent().getStringExtra("_AID_");
 		if (this.aid == null)
 			this.finish();
-		boolean flag = this.initLocalDate();
+		boolean flag = this.initLocalData();
 		if (flag) {
 			showData(true);
 			loadingView.setVisibility(View.GONE);
@@ -805,7 +805,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 	}
 
 	@Override
-	protected boolean initLocalDate() {
+	protected boolean initLocalData() {
 		try {
 			SerializableObj object = (SerializableObj) this.dbUtils
 					.findFirst(Selector.from(SerializableObj.class).where(

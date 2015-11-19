@@ -200,7 +200,7 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 
 	boolean isLocalData;
 
-	private void initLocalData() {
+	protected boolean initLocalData() {
 		try {
 			new_NewsPic = dbUtils.findById(New_NewsPic.class, new_news.getId());
 			if (new_NewsPic != null) {
@@ -209,13 +209,14 @@ public class New_Activity_Content_PicSet extends BaseActivity implements
 				vp.setAdapter(myVpAdapter);
 				setbootmText(0);
 				isLocalData = true;
-				return;
+				return isLocalData;
 			}
 		} catch (DbException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		isLocalData = false;
+		return isLocalData;
 	}
 
 	private void initNetData() {

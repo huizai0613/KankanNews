@@ -702,7 +702,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 	}
 
-	protected boolean initLocalDate() {
+	protected boolean initLocalData() {
 		// TODO Auto-generated method stub
 		return true;
 	}
