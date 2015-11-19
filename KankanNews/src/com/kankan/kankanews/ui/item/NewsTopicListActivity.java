@@ -519,6 +519,16 @@ public class NewsTopicListActivity extends BaseActivity implements
 
 					@Override
 					public void onClick(View v) {
+						if (ClickUtils.isFastDoubleClick()) {
+							return;
+						}
+						MyTextView textView = (MyTextView) v
+								.findViewById(R.id.home_news_title);
+						textView.setTextColor(Color.parseColor("#B0B0B0"));
+						NewsBrowseUtils.hasBrowedNews(item.getId());
+						NewsTopicListActivity.this
+								.startAnimActivityByNewsHomeModuleItem(
+										NewsContentActivity.class, item);
 					}
 				});
 			} else if (itemViewType == 2) {
@@ -557,6 +567,14 @@ public class NewsTopicListActivity extends BaseActivity implements
 						if (ClickUtils.isFastDoubleClick()) {
 							return;
 						}
+						MyTextView textView = (MyTextView) arg0
+								.findViewById(R.id.home_albums_title);
+						NewsBrowseUtils.hasBrowedNews(item.getId());
+						textView.setTextColor(Color.parseColor("#B0B0B0"));
+						NewsBrowseUtils.hasBrowedNews(item.getId());
+						NewsTopicListActivity.this
+								.startAnimActivityByNewsHomeModuleItem(
+										NewsAlbumActivity.class, item);
 					}
 				});
 			}
