@@ -97,12 +97,14 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	private ShareUtil shareUtil = null;
 	private static CustomShareBoard shareBoard;
 
-	private NewsHomeModule mNewsHomeModule;
-	private String mAppClassId;
+	private NewsHomeModule mNewsVPModule;
+	private NewsHomeModuleItem mHomeModuleItem;
+	// private String mAppClassId;
 	private NewsVideoPkgListAdapter mListAdapter;
 
 	private PullToRefreshListView mListView;
 	private TextView nodata;
+	private LinearLayout mFullRootView;
 	private RelativeLayout mVideoRootView;
 	private VideoView mVideoPkgVideoView;
 	private VideoViewController mVideoPkgVideoController;
@@ -127,6 +129,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	private View mVolumeBrightnessLayout;
 	private ImageView mOperationPercent;
 	private WindowManager wm;
+	private View mRetryView;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -153,6 +156,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			mVideoPkgVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullScrenn = true;
+			((RelativeLayout.LayoutParams) mFullRootView.getLayoutParams()).topMargin = 0;
 			if (mVideoPkgVideoView != null
 					&& mVideoPkgVideoImage.getVisibility() == View.GONE)
 				mVideoPkgVideoView.start();
@@ -165,6 +169,8 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			mVideoPkgVideoController.changeView();
 			setRightFinsh(true);
 			isFullScrenn = false;
+			((RelativeLayout.LayoutParams) mFullRootView.getLayoutParams()).topMargin = PixelUtil
+					.dp2px(44);
 			// mActivity.bottomBarVisible(View.VISIBLE);
 			attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			this.getWindow().setAttributes(attrs);
@@ -195,6 +201,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 		mVideoPkgVideoController = (VideoViewController) findViewById(R.id.video_package_video_controller);
 		mVideoPkgVideoImage = (ImageView) findViewById(R.id.video_package_video_image);
 		mVideoPkgVideoStart = (ImageView) findViewById(R.id.video_package_video_start);
+		mFullRootView = (LinearLayout) findViewById(R.id.play_root_view);
 
 		screen_pb = (LinearLayout) findViewById(R.id.screnn_pb);
 		screen_pb.setVisibility(View.GONE);
@@ -203,8 +210,9 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 		mVolumeBrightnessLayout = findViewById(R.id.operation_volume_brightness);
 		mOperationPercent = (ImageView) findViewById(R.id.operation_percent);
 		nightView = findViewById(R.id.night_view);
-
+		mRetryView = findViewById(R.id.main_bg);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+		initTitleLeftBar("", R.drawable.new_ic_back);
 	}
 
 	@Override
@@ -217,43 +225,38 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				// TODO Auto-generated method stub
-				if (position == 1
-						|| position - 2 >= mNewsHomeModule.getList().size())
+				if (view == null || mVideoPkgVideoView == null)
 					return;
-				curPlayNo = position - 2;
+				if (position - 1 == mNewsVPModule.getList().size())
+					return;
+				curPlayNo = position - 1;
 				mListAdapter.notifyDataSetChanged();
 				view.setSelected(true);
-				if (columsInfoDetailHolder.showBut != null)
-					columsInfoDetailHolder.showBut
-							.setBackgroundResource(R.drawable.ic_arrowshow);
 				videoPlay();
 			}
-
 		});
-
 		mGestureDetector = new GestureDetector(this, new MyGestureListener());
 		mAM = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		mMaxVolume = mAM.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
 		wm = (WindowManager) getApplicationContext().getSystemService(
 				Context.WINDOW_SERVICE);
-
 		mVideoPkgVideoController.setPlayerControl(mVideoPkgVideoView);
 		mVideoPkgVideoController.setActivity_Content(this);
 		mVideoPkgVideoView.setIsNeedRelease(false);
-
-		mAppClassId = this.getIntent().getStringExtra(
-				"_NEWS_HOME_APP_CLASS_ID_");
+		mHomeModuleItem = (NewsHomeModuleItem) this.getIntent()
+				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
 
 		if (CommonUtils.isNetworkAvailable(this)) {
 			refreshNetDate();
 		} else {
-			ToastUtils.Infotoast(mContext, "暂无网络请退回重试");
+			this.mRetryView.setVisibility(View.VISIBLE);
 		}
 
 	}
 
 	@Override
 	protected void setListener() {
+		this.mRetryView.setOnClickListener(this);
 		mVideoPkgVideoStart.setOnClickListener(this);
 		mVideoPkgVideoView.setOnCompletionListener(this);
 		mVideoPkgVideoView.setOnErrorListener(this);
@@ -281,18 +284,16 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	protected void refreshNetDate() {
 		isLoadMore = false;
 		noMoreNews = false;
-		netUtils.getNewsList(mAppClassId, mLastNewsTime,
+		netUtils.getNewsList(mHomeModuleItem.getAppclassid(), mLastNewsTime,
 				getVideoPackageListener, getColumsInfoErrorListener);
 	}
 
 	protected void loadMoreNetDate() {
 		isLoadMore = true;
-		if (mNewsHomeModule != null && mNewsHomeModule.getList().size() > 0) {
-			netUtils.getNewsList(
-					mNewsHomeModule.getAppclassid(),
-					mNewsHomeModule.getList()
-							.get(mNewsHomeModule.getList().size() - 1)
-							.getNewstime(), getVideoPackageListener,
+		if (mNewsVPModule != null && mNewsVPModule.getList().size() > 0) {
+			netUtils.getNewsList(mNewsVPModule.getAppclassid(), mNewsVPModule
+					.getList().get(mNewsVPModule.getList().size() - 1)
+					.getNewstime(), getVideoPackageListener,
 					getColumsInfoErrorListener);
 		} else {
 			mListView.onRefreshComplete();
@@ -313,6 +314,9 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.main_bg:
+			refreshNetDate();
+			break;
 		case R.id.video_package_video_start:
 			videoPlay();
 			mVideoPkgVideoStart.setVisibility(View.GONE);
@@ -361,28 +365,42 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	protected Listener<JSONObject> getVideoPackageListener = new Listener<JSONObject>() {
 		@Override
 		public void onResponse(JSONObject jsonObject) {
-			DebugLog.e("卧槽");
 			if (jsonObject != null && !jsonObject.equals("")) {
 				NewsHomeModule tmpModule = JsonUtils.toObject(
 						jsonObject.toString(), NewsHomeModule.class);
+				mRetryView.setVisibility(View.GONE);
+				if (!tmpModule.getTitle().trim().equals(""))
+					NewsVideoPackageActivity.this.setContentTextView(tmpModule
+							.getTitle());
 				if (!isLoadMore) {
 					curPlayNo = 0;
-					mNewsHomeModule = tmpModule;
+					mNewsVPModule = tmpModule;
 					saveDate();
 					mListAdapter = new NewsVideoPkgListAdapter();
 					mListView.setAdapter(mListAdapter);
 					// TODO
-					if (mNewsHomeModule.getList().size() > 0) {
+					if (mNewsVPModule.getList().size() > 0) {
+						for (int i = 0; i < mNewsVPModule.getList().size(); i++) {
+							if (mNewsVPModule.getList().get(i).getO_cmsid()
+									.equals(mHomeModuleItem.getO_cmsid())) {
+								curPlayNo = i;
+								break;
+							}
+						}
 						mVideoPkgVideoStart.setVisibility(View.GONE);
 						videoPlay();
 					}
 				} else {
-					mNewsHomeModule.getList().addAll(tmpModule.getList());
-					if (mVideoPkgVideoImage.getVisibility() == View.VISIBLE) {
-						curPlayNo++;
-						mVideoPkgVideoStart.setVisibility(View.GONE);
-						videoPlay();
-						video_pb.setVisibility(View.VISIBLE);
+					if (tmpModule.getList().size() == 0) {
+						noMoreNews = true;
+					} else {
+						mNewsVPModule.getList().addAll(tmpModule.getList());
+						if (mVideoPkgVideoImage.getVisibility() == View.VISIBLE) {
+							curPlayNo++;
+							mVideoPkgVideoStart.setVisibility(View.GONE);
+							videoPlay();
+							video_pb.setVisibility(View.VISIBLE);
+						}
 					}
 					mListAdapter.notifyDataSetChanged();
 				}
@@ -421,11 +439,11 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 		@Override
 		public int getCount() {
-			if (mNewsHomeModule != null && mNewsHomeModule.getList().size() > 0) {
+			if (mNewsVPModule != null && mNewsVPModule.getList().size() > 0) {
 				if (noMoreNews) {
-					return mNewsHomeModule.getList().size() + 2;
+					return mNewsVPModule.getList().size() + 1;
 				} else {
-					return mNewsHomeModule.getList().size() + 1;
+					return mNewsVPModule.getList().size();
 				}
 			} else {
 				return 0;
@@ -444,21 +462,17 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 		@Override
 		public int getItemViewType(int position) {
-			if (position == 0) {
-				return 0;
-			} else if (mNewsHomeModule != null
-					&& mNewsHomeModule.getList().size() > 0
-					&& mNewsHomeModule.getList().size() + 1 == position
-					&& noMoreNews) {
-				return 2;
-			} else {
+			if (mNewsVPModule != null && mNewsVPModule.getList().size() > 0
+					&& mNewsVPModule.getList().size() == position && noMoreNews) {
 				return 1;
+			} else {
+				return 0;
 			}
 		}
 
 		@Override
 		public int getViewTypeCount() {
-			return 3;
+			return 2;
 		}
 
 		@Override
@@ -467,7 +481,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			int itemViewType = getItemViewType(position);
 
 			if (convertView == null) {
-				if (itemViewType == 0) {
+				if (itemViewType == -1) {
 					convertView = LayoutInflater.from(mContext).inflate(
 							R.layout.colums_info_detail_item, null);
 					columsInfoDetailHolder = new ColumsInfoDetailHolder();
@@ -486,7 +500,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 					columsInfoDetailHolder.detailContent = (TextView) convertView
 							.findViewById(R.id.colums_detail_content);
 					convertView.setTag(columsInfoDetailHolder);
-				} else if (itemViewType == 1) {
+				} else if (itemViewType == 0) {
 					convertView = LayoutInflater.from(mContext).inflate(
 							R.layout.new_colums_info_item, null);
 					newsItemHolder = new NewsItemHolder();
@@ -499,7 +513,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 					newsItemHolder.newstime = (TextView) convertView
 							.findViewById(R.id.conlums_item_newstime);
 					convertView.setTag(newsItemHolder);
-				} else if (itemViewType == 2) {
+				} else if (itemViewType == 1) {
 					convertView = LayoutInflater.from(mContext).inflate(
 							R.layout.comment_nomore, null);
 					holderInfo = new ViewHolderInfo();
@@ -508,28 +522,28 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 					convertView.setTag(holderInfo);
 				}
 			} else {
-				if (itemViewType == 0) {
+				if (itemViewType == -1) {
 					columsInfoDetailHolder = (ColumsInfoDetailHolder) convertView
 							.getTag();
-				} else if (itemViewType == 1) {
+				} else if (itemViewType == 0) {
 					newsItemHolder = (NewsItemHolder) convertView.getTag();
-				} else if (itemViewType == 2) {
+				} else if (itemViewType == 1) {
 					holderInfo = (ViewHolderInfo) convertView.getTag();
 				}
 			}
-			if (itemViewType == 0) {
-				columsInfoDetailHolder.detailTitle.setText(mNewsHomeModule
+			if (itemViewType == -1) {
+				columsInfoDetailHolder.detailTitle.setText(mNewsVPModule
 						.getList().get(curPlayNo).getTitle());
 				columsInfoDetailHolder.detailTime.setText(TimeUtil.unix2date(
-						Long.valueOf(mNewsHomeModule.getList().get(curPlayNo)
+						Long.valueOf(mNewsVPModule.getList().get(curPlayNo)
 								.getNewstime()), "yyyy-MM-dd HH:mm"));
-				columsInfoDetailHolder.detailCal.setText(mNewsHomeModule
+				columsInfoDetailHolder.detailCal.setText(mNewsVPModule
 						.getList().get(curPlayNo).getNewstime()
 						+ "期");
-				mLastNewsTime = mNewsHomeModule.getList().get(curPlayNo)
+				mLastNewsTime = mNewsVPModule.getList().get(curPlayNo)
 						.getNewstime();
-				if (mNewsHomeModule.getList().get(curPlayNo).getIntro() == null
-						|| mNewsHomeModule.getList().get(curPlayNo).getIntro()
+				if (mNewsVPModule.getList().get(curPlayNo).getIntro() == null
+						|| mNewsVPModule.getList().get(curPlayNo).getIntro()
 								.trim().equals("")) {
 					columsInfoDetailHolder.showBut.setVisibility(View.GONE);
 					columsInfoDetailHolder.detailContentOmit
@@ -549,11 +563,10 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 							.setVisibility(View.VISIBLE);
 					columsInfoDetailHolder.detailContent
 							.setVisibility(View.GONE);
-					columsInfoDetailHolder.detailContent
-							.setText(mNewsHomeModule.getList().get(curPlayNo)
-									.getIntro());
+					columsInfoDetailHolder.detailContent.setText(mNewsVPModule
+							.getList().get(curPlayNo).getIntro());
 					columsInfoDetailHolder.detailContentOmit
-							.setText(mNewsHomeModule.getList().get(curPlayNo)
+							.setText(mNewsVPModule.getList().get(curPlayNo)
 									.getIntro());
 					columsInfoDetailHolder.detailTitleRootView
 							.setOnClickListener(new OnClickListener() {
@@ -581,10 +594,10 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 							});
 				}
 
-			} else if (itemViewType == 1) {
+			} else if (itemViewType == 0) {
 				setItemTitleFontSize();
-				final NewsHomeModuleItem moduleItem = mNewsHomeModule.getList()
-						.get(position - 1);
+				final NewsHomeModuleItem moduleItem = mNewsVPModule.getList()
+						.get(position);
 				moduleItem.setTitlepic(CommonUtils.doWebpUrl(moduleItem
 						.getTitlepic()));
 
@@ -597,14 +610,14 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 				newsItemHolder.newstime.setText(TimeUtil.unix2date(
 						Long.valueOf(moduleItem.getNewstime()),
 						"yyyy-MM-dd HH:mm"));
-				if (curPlayNo == position - 1) {
+				if (curPlayNo == position) {
 					newsItemHolder.rootView.setBackgroundColor(getResources()
 							.getColor(R.color.thin_gray));
 				} else {
 					newsItemHolder.rootView.setBackgroundColor(getResources()
 							.getColor(R.color.white));
 				}
-			} else if (itemViewType == 2) {
+			} else if (itemViewType == 1) {
 				int padding_in_dp = 10; // 6 dps
 				final float scale = getResources().getDisplayMetrics().density;
 				int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
@@ -690,11 +703,10 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 								mVideoPkgVideoView.stopPlayback();
 								mVideoPkgVideoController.reset();
 								mVideoPkgVideoView
-										.setVideoPath(mNewsHomeModule.getList()
+										.setVideoPath(mNewsVPModule.getList()
 												.get(curPlayNo).getVideourl());
-								mVideoPkgVideoController
-										.setTitle(mNewsHomeModule.getList()
-												.get(curPlayNo).getTitle());
+								mVideoPkgVideoController.setTitle(mNewsVPModule
+										.getList().get(curPlayNo).getTitle());
 								mVideoPkgVideoView.requestFocus();
 								mVideoPkgVideoView.start();
 							}
@@ -708,25 +720,23 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			} else {
 				if (mVideoPkgVideoView != null) {
 					Log.e("new_colums_infos.get(curPlayNo).getVideoUrl()",
-							mNewsHomeModule.getList().get(curPlayNo)
+							mNewsVPModule.getList().get(curPlayNo)
 									.getVideourl());
 					mVideoPkgVideoView.stopPlayback();
 					mVideoPkgVideoController.reset();
-					mVideoPkgVideoView.setVideoPath(mNewsHomeModule.getList()
+					mVideoPkgVideoView.setVideoPath(mNewsVPModule.getList()
 							.get(curPlayNo).getVideourl());
-					mVideoPkgVideoController.setTitle(mNewsHomeModule.getList()
+					mVideoPkgVideoController.setTitle(mNewsVPModule.getList()
 							.get(curPlayNo).getTitle());
 					mVideoPkgVideoView.requestFocus();
 					mVideoPkgVideoView.start();
 
-					NetUtils.getInstance(mContext)
-							.getAnalyse(
-									this,
-									"column",
-									mNewsHomeModule.getList().get(curPlayNo)
-											.getTitle(),
-									mNewsHomeModule.getList().get(curPlayNo)
-											.getTitleurl());
+					NetUtils.getInstance(mContext).getAnalyse(
+							this,
+							"column",
+							mNewsVPModule.getList().get(curPlayNo).getTitle(),
+							mNewsVPModule.getList().get(curPlayNo)
+									.getTitleurl());
 				}
 			}
 		} else {
@@ -762,7 +772,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	public void onCompletion(IMediaPlayer mp) {
 		// TODO
 		mVideoPkgVideoImage.setVisibility(View.VISIBLE);
-		if (curPlayNo < mNewsHomeModule.getList().size() - 1) {
+		if (curPlayNo < mNewsVPModule.getList().size() - 1) {
 			curPlayNo++;
 			videoPlay();
 			video_pb.setVisibility(View.VISIBLE);
@@ -978,7 +988,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	public void copy2Clip() {
 		// TODO Auto-generated method stub
 		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		clip.setText(mNewsHomeModule.getList().get(curPlayNo).getTitleurl());
+		clip.setText(mNewsVPModule.getList().get(curPlayNo).getTitleurl());
 		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
 	}
 

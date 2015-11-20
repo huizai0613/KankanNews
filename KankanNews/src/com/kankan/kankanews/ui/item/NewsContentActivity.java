@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.JavascriptInterface;
@@ -39,11 +40,14 @@ import com.kankan.kankanews.bean.NewsContentImage;
 import com.kankan.kankanews.bean.NewsContentRecommend;
 import com.kankan.kankanews.bean.NewsContentVideo;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
+import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
+import com.kankan.kankanews.ui.view.popup.FontColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.PixelUtil;
+import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.StringUtils;
 import com.kankanews.kankanxinwen.R;
 import com.nostra13.universalimageloader.core.assist.FailReason;
@@ -57,6 +61,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private final static int _SHOW_IMAGE_ = 1;
 	private final static int _CHANGE_IMAGE_PROCESS_ = 2;
 	private final static int _SHOW_VIDEO_ = 3;
+	// 分享类
+	private ShareUtil shareUtil;
 	private NewsContent mContent;
 	private WebView mContentWebView;
 	private LinearLayout mLoadingView;
@@ -150,6 +156,10 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				mLoadingView.setVisibility(View.GONE);
 			}
 		});
+
+		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
+				R.drawable.ic_close_white, R.drawable.ic_font,
+				R.drawable.ic_refresh);
 	}
 
 	@Override
@@ -171,6 +181,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		mVideoView.setOnPreparedListener(this);
 		mVideoView.setOnInfoListener(this);
 		mVideoView.setOnErrorListener(this);
+		setOnLeftClickLinester(this);
+		setOnRightClickLinester(this);
+		setOnContentClickLinester(this);
 	}
 
 	protected void refreshNetDate() {
@@ -193,6 +206,28 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.title_bar_left_img:
+			onBackPressed();
+			break;
+		case R.id.title_bar_content_img:
+			// 一键分享
+			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
+					this);
+			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
+			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
+					Gravity.BOTTOM, 0, 0);
+			break;
+		case R.id.title_bar_right_second_img:
+			this.refresh();
+			break;
+		case R.id.title_bar_right_img:
+			FontColumsBoard fontBoard = new FontColumsBoard(this);
+			fontBoard.setAnimationStyle(R.style.popwin_anim_style);
+			fontBoard.showAtLocation(mContext.getWindow().getDecorView(),
+					Gravity.BOTTOM, 0, 0);
+			break;
+		}
 	}
 
 	@Override
@@ -433,7 +468,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 		@JavascriptInterface
 		public String getTitle() {
-			return NewsContentActivity.this.mContent.getTitle();
+			return NewsContentActivity.this.mModuleItem.getTitle();
 		}
 
 		@JavascriptInterface

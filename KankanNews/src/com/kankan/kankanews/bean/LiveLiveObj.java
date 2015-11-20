@@ -21,6 +21,7 @@ public class LiveLiveObj implements CanBePlay, Serializable, CanSharedObject {
 	private String datetime;
 	private String type;
 	private String time;
+	private String widepic;
 	private boolean isOrder = false;
 
 	public String getId() {
@@ -137,6 +138,14 @@ public class LiveLiveObj implements CanBePlay, Serializable, CanSharedObject {
 
 	public void setOrder(boolean isOrder) {
 		this.isOrder = isOrder;
+	}
+
+	public String getWidepic() {
+		return widepic;
+	}
+
+	public void setWidepic(String widepic) {
+		this.widepic = widepic;
 	}
 
 	@Override

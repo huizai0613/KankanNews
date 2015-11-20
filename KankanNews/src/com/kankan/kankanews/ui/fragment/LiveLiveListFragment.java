@@ -336,9 +336,10 @@ public class LiveLiveListFragment extends BaseFragment implements
 						.findViewById(R.id.live_live_list_intro_but);
 				ImageView titlePic = (ImageView) layout
 						.findViewById(R.id.live_live_list_titlepic);
+				titlePic.getLayoutParams().height = (mActivity.mScreenWidth - PixelUtil.dp2px(25)) / 4;
 				ImageView yuyueBut = (ImageView) layout
 						.findViewById(R.id.live_live_list_yuyue);
-				ImgUtils.imageLoader.displayImage(liveObj.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(liveObj.getWidepic(),
 						titlePic, ImgUtils.homeImageOptions);
 				ImageView liveType = (ImageView) layout
 						.findViewById(R.id.live_live_list_livetype);
@@ -394,7 +395,7 @@ public class LiveLiveListFragment extends BaseFragment implements
 								LiveLiveListFragment.this.mActivity,
 								keyboard.getColor());
 						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-								LinearLayout.LayoutParams.MATCH_PARENT,
+								LinearLayout.LayoutParams.WRAP_CONTENT,
 								LinearLayout.LayoutParams.WRAP_CONTENT);
 						view.setLayoutParams(params);
 						view.setGravity(Gravity.CENTER);

@@ -48,6 +48,7 @@ import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.ColumsActivity;
 import com.kankan.kankanews.ui.MeSetActivity;
 import com.kankan.kankanews.ui.SearchMainActivity;
+import com.kankan.kankanews.ui.item.NewsAlbumActivity;
 import com.kankan.kankanews.ui.item.NewsContentActivity;
 import com.kankan.kankanews.ui.item.NewsListActivity;
 import com.kankan.kankanews.ui.item.NewsOutLinkActivity;
@@ -231,10 +232,14 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			mNewsHomeListView.setAdapter(mNewsHomeListAdapter);
 		} else {
 			mNewsHomeListAdapter.notifyDataSetChanged();
-			DebugLog.e("卧槽");
 			mSwiperHeadHolder.imgViewPager.setCurrentItem(0);
 		}
-		mNewsHomeListView.setSelection(2);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				mNewsHomeListView.setSelection(2);
+			}
+		}, 200);
 	}
 
 	@Override
@@ -686,7 +691,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			if (itemType == 0) {
 				// TODO
 				final NewsHomeModuleItem moduleItem = module.getList().get(
-						mSwiperHeadHolder.imgViewPager.getCurrentItem());
+						mSwiperHeadHolder.imgViewPager.getCurrentItem()
+								% module.getList().size());
 				mSwiperHeadHolder.title.setText(moduleItem.getTitle());
 				mSwiperHeadHolder.title.setTag(module.getList());
 			} else if (itemType == 1) {
@@ -893,6 +899,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 								.dp2px(12.5f);
 						final NewsHomeModuleItem moduleItem = module.getList()
 								.get(i);
+						moduleItem.setAppclassid(module.getAppclassid());
 						ImageView image = (ImageView) itemView
 								.findViewById(R.id.image_item);
 						int width = (mActivity.mScreenWidth - PixelUtil
@@ -920,9 +927,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							public void onClick(View v) {
 								// openNews(moduleItem);
 								NewsHomeFragment.this
-										.startAnimActivityByAppClassId(
+										.startAnimActivityByNewsHomeModuleItem(
 												NewsVideoPackageActivity.class,
-												module.getAppclassid());
+												moduleItem);
 							}
 						});
 						mGalleryHolder.rootView.addView(itemView);
@@ -1256,7 +1263,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			this.startAnimActivityByNewsHomeModuleItem(
 					NewsOutLinkActivity.class, moduleItem);
 		} else if (moduleItem.getType().equals("album")) {
-			// TODO
+			this.startAnimActivityByNewsHomeModuleItem(NewsAlbumActivity.class,
+					moduleItem);
 		} else if (moduleItem.getType().equals("stream")) {
 			mActivity.touchTab(mActivity.tabLive);
 		} else if (moduleItem.getType().equals("topic")) {

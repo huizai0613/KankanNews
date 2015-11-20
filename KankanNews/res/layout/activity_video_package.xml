@@ -5,10 +5,15 @@
     android:layout_height="match_parent"
     android:background="@color/white_no_alpha" >
 
+    <include
+        android:layout_alignParentTop="true"
+        layout="@layout/base_title_bar" />
+
     <LinearLayout
-        android:id="@+id/play"
+        android:id="@+id/play_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/base_action_bar_height"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -40,17 +45,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/live_video_image"
-                android:visibility="visible" />
-
-            <ImageView
-                android:id="@+id/video_package_back"
-                android:layout_width="40dip"
-                android:layout_height="40dip"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:paddingLeft="15dip"
-                android:paddingTop="15dip"
-                android:src="@drawable/full_screen_back"
                 android:visibility="visible" />
 
             <ImageView
@@ -104,64 +98,13 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dip"
-            android:background="@color/deep_gray" >
-
-            <ImageView
-                android:id="@+id/video_package_image"
-                android:layout_width="30dip"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_gravity="center"
-                android:paddingLeft="10dip" />
-
-            <com.kankan.kankanews.ui.view.MyTextView
-                android:id="@+id/video_package_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toRightOf="@id/video_package_image"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dip"
-                android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textSize="16dip" />
-
-            <ImageView
-                android:id="@+id/calendar_but"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="30dip"
-                android:src="@drawable/calendar_with_word" />
-
-            <View
-                android:id="@+id/horizontal_white"
-                android:layout_width="1dip"
-                android:layout_height="30dip"
-                android:layout_marginLeft="30dip"
-                android:layout_marginRight="30dip"
-                android:layout_marginTop="10dip"
-                android:layout_toLeftOf="@id/calendar_but"
-                android:background="@android:color/white" />
-
-            <ImageView
-                android:id="@+id/video_package_share_but"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toLeftOf="@id/horizontal_white"
-                android:src="@drawable/ic_share_with_word" />
-        </RelativeLayout>
     </LinearLayout>
 
     <com.iss.view.pulltorefresh.PullToRefreshListView
         android:id="@+id/video_package_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/play"
+        android:layout_below="@id/play_root_view"
         android:divider="@null"
         android:listSelector="#ffffff"
         android:scrollbars="none" >

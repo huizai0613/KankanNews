@@ -8,16 +8,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_base_space"
-        android:layout_marginTop="@dimen/margin_base_space"
-        android:paddingLeft="@dimen/margin_base_space"
-        android:paddingRight="@dimen/margin_base_space" >
+        android:layout_margin="@dimen/margin_base_space" >
 
         <ImageView
             android:id="@+id/live_live_list_titlepic"
-            android:layout_width="100dip"
-            android:layout_height="75dip"
+            android:layout_width="match_parent"
+            android:layout_height="65dip"
             android:layout_alignParentLeft="true"
+            android:background="@drawable/bg_item_live_titlepic"
             android:scaleType="fitXY" />
 
         <ImageView
@@ -26,94 +24,97 @@
             android:layout_height="20dip"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_base_space"
+        android:layout_marginRight="@dimen/margin_base_space"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/live_live_list_livetitle"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:ellipsize="end"
+            android:lineSpacingExtra="4.5dp"
+            android:maxLines="2"
+            android:minLines="1"
+            android:textSize="18dip"
+            android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="75dip"
-            android:layout_marginLeft="@dimen/margin_base_space"
-            android:layout_toRightOf="@+id/live_live_list_titlepic"
-            android:orientation="vertical" >
+            android:id="@+id/live_live_list_keyboard_content"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="end|center_vertical" >
 
-            <com.kankan.kankanews.ui.view.MyTextView
-                android:id="@+id/live_live_list_livetitle"
-                android:layout_width="match_parent"
-                android:layout_height="55dip"
-                android:ellipsize="end"
-                android:lineSpacingExtra="4.5dp"
-                android:maxLines="2"
-                android:minLines="2"
-                android:textSize="18dip"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:id="@+id/live_live_list_yuyue"
+                android:layout_width="wrap_content"
                 android:layout_height="20dip"
-                android:orientation="horizontal" >
-
-                <LinearLayout
-                    android:id="@+id/live_live_list_intro_but"
-                    android:layout_width="0dip"
-                    android:layout_height="20dip"
-                    android:layout_weight="8"
-                    android:gravity="center|start"
-                    android:orientation="horizontal" >
-
-                    <ImageView
-                        android:id="@+id/live_live_list_livetype"
-                        android:layout_width="20dip"
-                        android:layout_height="20dip"
-                        android:padding="2dip"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/icon_content_time" />
-
-                    <com.kankan.kankanews.ui.view.MyTextView
-                        android:id="@+id/live_live_list_livetime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="5dip"
-                        android:gravity="center"
-                        android:singleLine="true"
-                        android:textSize="12dip" />
-
-                    <com.kankan.kankanews.ui.view.MyTextView
-                        android:id="@+id/live_live_list_livetime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="5dip"
-                        android:gravity="center"
-                        android:singleLine="true"
-                        android:text="详细"
-                        android:textSize="12dip" />
-
-                    <ImageView
-                        android:id="@+id/live_live_list_arrowshow"
-                        android:layout_width="12dip"
-                        android:layout_height="18dip"
-                        android:layout_marginLeft="5dip"
-                        android:paddingBottom="5dip"
-                        android:paddingTop="5dip"
-                        android:scaleType="fitXY" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/live_live_list_keyboard_content"
-                    android:layout_width="0dip"
-                    android:layout_height="20dip"
-                    android:layout_weight="2"
-                    android:gravity="end|center_vertical" >
-
-                    <ImageView
-                        android:id="@+id/live_live_list_yuyue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dip"
-                        android:paddingBottom="3dip"
-                        android:paddingTop="3dip"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_yuyue"
-                        android:visibility="gone" />
-                </LinearLayout>
-            </LinearLayout>
+                android:paddingBottom="3dip"
+                android:paddingTop="3dip"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_yuyue"
+                android:visibility="gone" />
         </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/live_live_list_intro_but"
+        android:layout_width="match_parent"
+        android:layout_height="20dip"
+        android:layout_marginBottom="@dimen/margin_base_space"
+        android:layout_marginLeft="@dimen/margin_base_space"
+        android:layout_marginRight="@dimen/margin_base_space"
+        android:layout_marginTop="11dip"
+        android:gravity="center|start" >
+
+        <ImageView
+            android:id="@+id/live_live_list_livetype"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_alignParentLeft="true"
+            android:padding="2dip"
+            android:scaleType="fitXY"
+            android:src="@drawable/icon_content_time" />
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/live_live_list_livetime"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dip"
+            android:layout_toRightOf="@+id/live_live_list_livetype"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@color/mid_gray"
+            android:textSize="12dip" />
+
+        <ImageView
+            android:id="@+id/live_live_list_arrowshow"
+            android:layout_width="12dip"
+            android:layout_height="18dip"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dip"
+            android:paddingBottom="5dip"
+            android:paddingTop="5dip"
+            android:scaleType="fitXY" />
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/live_live_list_livetime"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dip"
+            android:layout_toLeftOf="@+id/live_live_list_arrowshow"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="详细"
+            android:textSize="12dip" />
     </RelativeLayout>
 
     <com.kankan.kankanews.ui.view.MyTextView
