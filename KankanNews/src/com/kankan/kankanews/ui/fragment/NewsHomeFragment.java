@@ -3,6 +3,7 @@ package com.kankan.kankanews.ui.fragment;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -11,11 +12,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,6 +44,7 @@ import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.kankan.kankanews.adapter.RecyclingPagerAdapter;
 import com.kankan.kankanews.base.BaseFragment;
+import com.kankan.kankanews.bean.Keyboard;
 import com.kankan.kankanews.bean.NewsHome;
 import com.kankan.kankanews.bean.NewsHomeModule;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
@@ -55,6 +59,7 @@ import com.kankan.kankanews.ui.item.NewsOutLinkActivity;
 import com.kankan.kankanews.ui.item.NewsTopicActivity;
 import com.kankan.kankanews.ui.item.NewsTopicListActivity;
 import com.kankan.kankanews.ui.item.NewsVideoPackageActivity;
+import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
@@ -98,6 +103,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	private int[] VOTE_ANSWER_COLOR = { R.color.green, R.color.blue,
 			R.color.yellow, R.color.red, R.color.cyan, R.color.fuchsia };
+
+	private Map<String, Integer> mRandomNumMap = new HashMap<String, Integer>();
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -301,6 +308,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	@Override
 	protected void onSuccessObject(JSONObject jsonObject) {
 		if (jsonObject != null && !jsonObject.toString().trim().equals("")) {
+			mRandomNumMap = new HashMap<String, Integer>();
 			this.mNewsHomeListJson = jsonObject.toString();
 			mNewsHome = JsonUtils.toObject(this.mNewsHomeListJson,
 					NewsHome.class);
@@ -381,6 +389,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	private class OutLinkHolder {
 		ImageView titlePic;
 		TextView title;
+		LinearLayout keyboardIconContent;
 	}
 
 	private class VoteHolder {
@@ -646,6 +655,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							R.layout.item_news_home_outlink, null);
 					mOutLinkHolder.title = (TextView) convertView
 							.findViewById(R.id.item_news_home_outlink_title);
+					mOutLinkHolder.keyboardIconContent = (LinearLayout) convertView
+							.findViewById(R.id.item_news_home_outlink_keyboard_content);
 					mOutLinkHolder.titlePic = (ImageView) convertView
 							.findViewById(R.id.item_news_home_outlink_image);
 					mOutLinkHolder.titlePic.getLayoutParams().height = (int) ((mActivity.mScreenWidth - PixelUtil
@@ -707,6 +718,16 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 											.getTag();
 									if (CommonUtils
 											.isNetworkAvailable(mActivity)) {
+										int num = 1;
+										String time = "";
+										if (mRandomNumMap.get(module
+												.getAppclassid()) == null) {
+											mRandomNumMap.put(
+													module.getAppclassid(), num);
+										} else {
+											num = mRandomNumMap.get(module
+													.getAppclassid());
+										}
 										Animation operatingAnim = AnimationUtils
 												.loadAnimation(mActivity,
 														R.anim.rotate_self);
@@ -715,8 +736,17 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 										operatingAnim.setInterpolator(lin);
 										changeIcon
 												.startAnimation(operatingAnim);
+										// if (num > 10) {
+										// num = 0;
+										// } else {
+										time = module.getList().get(3)
+												.getNewstime();
+										// }
+										mRandomNumMap.put(
+												module.getAppclassid(), num + 1);
 										netUtils.getNewHomeChange(
-												module.getAppclassid(),
+												module.getAppclassid(), time,
+												num,
 												new Listener<JSONObject>() {
 													@Override
 													public void onResponse(
@@ -732,6 +762,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 																	jsonObject
 																			.toString(),
 																	NewsHomeModule.class);
+															if (newModule
+																	.getList()
+																	.size() != 4)
+																return;
 															mNewsHome
 																	.getModule_list()
 																	.set(position - 1,
@@ -1007,6 +1041,29 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				ImgUtils.imageLoader.displayImage(module.getList().get(0)
 						.getTitlepic(), mOutLinkHolder.titlePic,
 						ImgUtils.homeImageOptions);
+				mOutLinkHolder.keyboardIconContent.setVisibility(View.VISIBLE);
+				Keyboard mKeyboard = module.getList().get(0).getKeyboard();
+				mKeyboard.setColor("#ffcc00");
+				mKeyboard.setText("我了割草");
+				if (mKeyboard != null
+						&& !mKeyboard.getColor().trim().equals("")
+						&& !mKeyboard.getText().trim().equals("")) {
+					mOutLinkHolder.keyboardIconContent.removeAllViews();
+					TextView view = new BorderTextView(mActivity,
+							mKeyboard.getColor());
+					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+							LinearLayout.LayoutParams.MATCH_PARENT,
+							LinearLayout.LayoutParams.WRAP_CONTENT);
+					view.setLayoutParams(params);
+					view.setGravity(Gravity.CENTER);
+					int px3 = PixelUtil.dp2px(3);
+					view.setPadding(px3, px3, px3, px3);
+					view.setText(mKeyboard.getText());
+					FontUtils.setTextViewFontSize(mActivity, view,
+							R.string.live_border_text_view_text_size, 1);
+					view.setTextColor(Color.parseColor(mKeyboard.getColor()));
+					mOutLinkHolder.keyboardIconContent.addView(view);
+				}
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {

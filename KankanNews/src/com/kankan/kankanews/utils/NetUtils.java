@@ -319,11 +319,12 @@ public class NetUtils {
 	/**
 	 * 获取首页随机数据
 	 */
-	public void getNewHomeChange(String classid,
+	public void getNewHomeChange(String classid, String time, int pageNum,
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
 				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA_CHANGE
-						+ classid, null, reponseListener, errorListener);
+						+ classid + "/timestamp/" + time + "/page/" + pageNum,
+				null, reponseListener, errorListener);
 
 		mRequestQueue.add(mCustomRequest);
 	}

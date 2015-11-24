@@ -542,8 +542,8 @@ public class NewsTopicListActivity extends BaseActivity implements
 							.parseColor("#000000"));
 				}
 				mNewAlbumsHolder.title.setText(item.getTitle());
-				final String[] pics = item.getTitlepic().split("::::::");
-				ArrayList<ImageView> image_view_list = new ArrayList<ImageView>();
+//				final String[] pics = item.getTitlepic().split("::::::");
+//				ArrayList<ImageView> image_view_list = new ArrayList<ImageView>();
 
 				int width = (mScreenWidth - PixelUtil.dp2px(20) / 3);
 				mNewAlbumsHolder.albums_image_1.setTag(R.string.viewwidth,
@@ -552,14 +552,23 @@ public class NewsTopicListActivity extends BaseActivity implements
 						width);
 				mNewAlbumsHolder.albums_image_3.setTag(R.string.viewwidth,
 						width);
-				image_view_list.add(mNewAlbumsHolder.albums_image_1);
-				image_view_list.add(mNewAlbumsHolder.albums_image_2);
-				image_view_list.add(mNewAlbumsHolder.albums_image_3);
-				for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++) {
-					ImgUtils.imageLoader.displayImage(
-							CommonUtils.doWebpUrl(pics[i + 1]),
-							image_view_list.get(i), ImgUtils.homeImageOptions);
-				}
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(item.getAlbum_1()),
+						mNewAlbumsHolder.albums_image_1, ImgUtils.homeImageOptions);
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(item.getAlbum_2()),
+						mNewAlbumsHolder.albums_image_2, ImgUtils.homeImageOptions);
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(item.getAlbum_3()),
+						mNewAlbumsHolder.albums_image_3, ImgUtils.homeImageOptions);
+//				image_view_list.add(mNewAlbumsHolder.albums_image_1);
+//				image_view_list.add(mNewAlbumsHolder.albums_image_2);
+//				image_view_list.add(mNewAlbumsHolder.albums_image_3);
+//				for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++) {
+//					ImgUtils.imageLoader.displayImage(
+//							CommonUtils.doWebpUrl(pics[i + 1]),
+//							image_view_list.get(i), ImgUtils.homeImageOptions);
+//				}
 
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
