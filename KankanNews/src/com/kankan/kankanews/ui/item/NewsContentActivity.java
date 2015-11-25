@@ -81,7 +81,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private ShareUtil shareUtil;
 	private NewsContent mNewsContent;
 	private WebView mContentWebView;
-	private LinearLayout mLoadingView;
+	private RelativeLayout mLoadingView;
 
 	private View mVideoRootView;
 	private VideoView mVideoView;
@@ -227,7 +227,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	protected void initView() {
-		mLoadingView = (LinearLayout) this
+		mLoadingView = (RelativeLayout) this
 				.findViewById(R.id.content_buffering_indicator);
 		mVideoRootView = this.findViewById(R.id.content_video_root_view);
 		mVideoView = (VideoView) this.findViewById(R.id.content_video_view);
@@ -302,7 +302,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			mNewsType = mModuleItem.getType();
 			mNewsTitle = mModuleItem.getTitle();
 		}
-		refreshNetDate();
+		refreshNetData();
 	}
 
 	@Override
@@ -341,7 +341,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		setOnContentClickLinester(this);
 	}
 
-	protected void refreshNetDate() {
+	protected void refreshNetData() {
 		if (CommonUtils.isNetworkAvailable(this)) {
 			DebugLog.e(mNewsId + " " + mNewsType);
 			netUtils.getNewsContent(mNewsId, mNewsType, this.mListener,
@@ -394,6 +394,12 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	}
 
 	@Override
+	public void refresh() {
+		this.mLoadingView.setVisibility(View.VISIBLE);
+		this.refreshNetData();
+	}
+
+	@Override
 	public void onBackPressed() {
 		AnimFinsh();
 	}
@@ -410,6 +416,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	protected void onResume() {
 		super.onResume();
 		isPause = false;
+		changeFontSize();
 	}
 
 	public void showData() {
