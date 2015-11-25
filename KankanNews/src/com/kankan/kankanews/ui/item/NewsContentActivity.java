@@ -89,26 +89,32 @@ public class NewsContentActivity extends BaseVideoActivity implements
 						+ msg.getData().getString("_IMAGE_KEY_") + "')");
 				break;
 			case _SHOW_VIDEO_:
-				int scale = mContext.getResources().getDisplayMetrics().densityDpi / 160;
-				int left = msg.getData().getInt("_OFFSETLEFT_") * scale;
+				String videoKey = msg.getData().getString("_VIDEO_KEY_");
+				final NewsContentVideo video = mNewsContent.getConponents()
+						.getVideo().get(videoKey);
+				int displayScale = mContext.getResources().getDisplayMetrics().densityDpi / 160;
+				int left = msg.getData().getInt("_OFFSETLEFT_") * displayScale;
 				RelativeLayout.LayoutParams par = (LayoutParams) mVideoRootView
 						.getLayoutParams();
-				par.height = (int) ((mScreenWidth - left - left) / 16 * 9);
+				String scale = video.getDisplayscale();
+				if (scale.equals("16:9"))
+					par.height = mWebWidth * 9 / 16;
+				if (scale.equals("4:3"))
+					par.height = mWebWidth * 3 / 4;
+				// par.height = (int) ((mScreenWidth - left - left) / 16 * 9);
 				DebugLog.e(left + " " + par.height);
 				mVideoView.setmRootViewHeight(par.height);
 				par.setMargins(left, msg.getData().getInt("_OFFSETTOP_")
-						* scale, left, 0);
+						* displayScale, left, 0);
 				mVideoRootView.setLayoutParams(par);
 				mVideoRootView.setVisibility(View.VISIBLE);
-				playVideo(msg.getData().getString("_VIDEO_KEY_"));
+				playVideo(video);
 				break;
 			}
 		}
 	};
 
-	private void playVideo(String videoKey) {
-		final NewsContentVideo video = mNewsContent.getConponents().getVideo()
-				.get(videoKey);
+	private void playVideo(final NewsContentVideo video) {
 		mHandle.post(new Runnable() {
 			@Override
 			public void run() {
@@ -290,9 +296,21 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		}
 	}
 
+	public String initAuthor() {
+		if (this.mNewsContent.getJournalist_name() == null
+				|| "".equals(this.mNewsContent.getJournalist_name().trim())
+				|| Integer.parseInt(this.mNewsContent.getJournalist_id()) <= 0)
+			return "";
+		String template = "<div class=\"portrait\"><img src=\"%s\"></div><p>%s<i>%s</i></p>";
+		return String.format(template, this.mNewsContent.getJournalist_pic(),
+				this.mNewsContent.getJournalist_name(),
+				this.mNewsContent.getJournalist_intro());
+	}
+
 	public String initIntro() {
 		if (this.mNewsContent.getIntro() == null
-				|| "".equals(this.mNewsContent.getIntro().trim()))
+				|| "".equals(this.mNewsContent.getIntro().trim())
+				|| mNewsType.equals("video"))
 			return "";
 		String template = "<div class='line'></div><span class='tag'>核心提示</span><div class='tips-con'>%s</div>";
 		return String.format(template, this.mNewsContent.getIntro());
@@ -397,7 +415,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 						msg.what = _SHOW_IMAGE_;
 						Bundle bundle = new Bundle();
 						bundle.putString("_IMAGE_CONTENT_", base);
-						bundle.putString("_IMAGE_KEY_", videoKey);
+						bundle.putString("_IMAGE_KEY_", videoKey
+								+ "_video_image");
 						msg.setData(bundle);
 						mHandle.sendMessage(msg);
 					}
@@ -417,13 +436,22 @@ public class NewsContentActivity extends BaseVideoActivity implements
 						msg.what = _CHANGE_IMAGE_PROCESS_;
 						Bundle bundle = new Bundle();
 						bundle.putString("_PROCESS_", "" + process);
-						bundle.putString("_IMAGE_KEY_", videoKey);
+						bundle.putString("_IMAGE_KEY_", videoKey
+								+ "_video_image");
 						msg.setData(bundle);
 						mHandle.sendMessage(msg);
 					}
 				});
-		String template = "<p style='text-align: center'><img id='%s' src='images/loading_0.png' onclick=\"openVideo('%s')\" /><span>%s</span></p>";
-		return String.format(template, videoKey, videoKey, video.getTitle());
+		int videoImageH = 0;
+		int imageH = this.mWebWidth * 3 / 4 / PixelUtil.getScale();
+		String scale = video.getDisplayscale();
+		if (scale.equals("16:9"))
+			videoImageH = this.mWebWidth * 9 / 16 / PixelUtil.getScale();
+		if (scale.equals("4:3"))
+			videoImageH = this.mWebWidth * 3 / 4 / PixelUtil.getScale();
+		String template = "<em id=\"%s\" class=\"video\" style=\"height:%spx\"><img id=\"%s\" width=\"%spx\" height=\"%spx\" src='images/small_no_loading.png' onclick=\"openVideo('%s')\"/><i><img src=\"images/ic_liveplay.png\" onclick=\"openVideo('%s')\"/></i></em>";
+		return String.format(template, videoKey, videoImageH, videoKey
+				+ "_video_image", this.mWebWidth, imageH, videoKey, videoKey);
 	}
 
 	public String initRecommend() {
@@ -481,6 +509,11 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		@JavascriptInterface
 		public String getDate() {
 			return NewsContentActivity.this.mNewsContent.getNewsdate();
+		}
+
+		@JavascriptInterface
+		public String getAuthor() {
+			return initAuthor();
 		}
 
 		@JavascriptInterface

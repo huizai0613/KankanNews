@@ -4,6 +4,7 @@ window.onload = function () {
 function initialize() {
 	initTitle();
 	initNewsDate();
+	initNewsAuthor();
 	initNewsIntro();
 	setWebWidth();
 	initNewsContent();
@@ -26,6 +27,13 @@ function initNewsDate() {
 	if (window.news) {
 		var newsDate = news.getDate();
 		dNewsDate.innerHTML = newsDate;
+	}
+}
+function initNewsAuthor() {
+	dNewsAuthor = document.getElementById("news_author");
+	if (window.news) {
+		var author = news.getAuthor();
+		dNewsAuthor.innerHTML = author;
 	}
 }
 function initNewsIntro() {
