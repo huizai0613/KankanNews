@@ -72,6 +72,9 @@ function openVideo(id) {
 	var video_1 = document.getElementById(id);
 	news.openVideo(id, video_1.offsetLeft, video_1.offsetTop);
 }
+function changeFontSize(font) {
+	document.body.className = font;
+}
 function showBody() {
 	var bodyHtml = document.body.innerHTML;
 	//alert(document.body.offsetWidth);

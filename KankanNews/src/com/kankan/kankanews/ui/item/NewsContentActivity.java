@@ -44,6 +44,7 @@ import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
 import com.kankan.kankanews.ui.view.popup.FontColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
+import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -283,6 +284,10 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void changeFontSize() {
+		int index = FontUtils
+				.getFontSetIndex(spUtil.getFontSizeRadix());
+		mContentWebView.loadUrl("javascript:changeFontSize('font_"
+				+ FontUtils.fontSizeWeb[index] + "')");
 	}
 
 	@Override
