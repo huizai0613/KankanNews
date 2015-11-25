@@ -35,7 +35,7 @@
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="2"
-        android:minLines="1"
+        android:minLines="2"
         android:paddingBottom="5dip"
         android:paddingTop="5dip"
         android:textColor="@color/black"
