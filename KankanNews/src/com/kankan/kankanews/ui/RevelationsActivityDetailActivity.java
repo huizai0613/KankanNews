@@ -421,7 +421,8 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 			if (itemViewType == 0) {
 				com.kankan.kankanews.bean.RevelationsActivity activity = revelationsActivityList
 						.getActivity();
-				ImgUtils.imageLoader.displayImage(activity.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(activity.getTitlepic()),
 						topHolder.activityImageView, ImgUtils.homeImageOptions);
 				topHolder.activityTitle.setText(revelationsActivityList
 						.getActivity().getTitle());
@@ -429,13 +430,11 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 						.getActivity().getIntro());
 				FontUtils.setTextViewFontSize(
 						RevelationsActivityDetailActivity.this,
-						topHolder.activityTitle,
-						R.string.home_news_text_size,
+						topHolder.activityTitle, R.string.home_news_text_size,
 						spUtil.getFontSizeRadix());
 				FontUtils.setTextViewFontSize(
 						RevelationsActivityDetailActivity.this,
-						topHolder.activityIntro,
-						R.string.home_news_text_size,
+						topHolder.activityIntro, R.string.home_news_text_size,
 						spUtil.getFontSizeRadix());
 			} else if (itemViewType == 1) {
 				int breakLocation = position
@@ -460,8 +459,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 						.getNewstext()));
 				FontUtils.setTextViewFontSize(
 						RevelationsActivityDetailActivity.this,
-						newsHolder.newsText,
-						R.string.home_news_text_size,
+						newsHolder.newsText, R.string.home_news_text_size,
 						spUtil.getFontSizeRadix());
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
 				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);
