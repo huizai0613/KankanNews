@@ -293,7 +293,7 @@ public class NewsTopicActivity extends BaseActivity implements
 		}
 		ImageView photoView = (ImageView) headerView
 				.findViewById(R.id.titlepic);
-		photoView.getLayoutParams().height = mScreenWidth * 65 / 320;
+		photoView.getLayoutParams().height = (int) (mScreenWidth / 3.2);
 		ImgUtils.imageLoader.displayImage(
 				CommonUtils.doWebpUrl(mTopicModule.getTitlepic()), photoView,
 				ImgUtils.homeImageOptions);
@@ -519,9 +519,16 @@ public class NewsTopicActivity extends BaseActivity implements
 								.findViewById(R.id.home_news_title);
 						textView.setTextColor(Color.parseColor("#B0B0B0"));
 						NewsBrowseUtils.hasBrowedNews(item.getId());
-						NewsTopicActivity.this
-								.startAnimActivityByNewsHomeModuleItem(
-										NewsContentActivity.class, item);
+						if (item.getType().equals("video")
+								|| item.getType().equals("text")) {
+							NewsTopicActivity.this
+									.startAnimActivityByNewsHomeModuleItem(
+											NewsContentActivity.class, item);
+						} else if (item.getType().equals("outlink")) {
+							NewsTopicActivity.this
+									.startAnimActivityByNewsHomeModuleItem(
+											NewsOutLinkActivity.class, item);
+						}
 					}
 				});
 			} else if (itemViewType == 3) {

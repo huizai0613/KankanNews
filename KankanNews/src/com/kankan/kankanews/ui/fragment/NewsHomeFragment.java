@@ -88,6 +88,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	private String mNewsHomeListJson;
 	private NewsHome mNewsHome;
 
+	private NewsHomeSwiperHeadAdapter mNewsHomeSwiperHeadAdapter;
 	private NewsHomeListAdapter mNewsHomeListAdapter;
 	private SwiperHeadHolder mSwiperHeadHolder;
 	private MatrixHolder mMatrixHolder;
@@ -238,6 +239,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	}
 
 	private void showData() {
+		DebugLog.e("卧槽");
 		this.mRetryView.setVisibility(View.GONE);
 		this.mLoadingView.setVisibility(View.GONE);
 		if (mNewsHomeListAdapter == null) {
@@ -245,8 +247,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			mNewsHomeListView.setAdapter(mNewsHomeListAdapter);
 		} else {
 			mNewsHomeListAdapter.notifyDataSetChanged();
-			mSwiperHeadHolder.imgViewPager.setCurrentItem(0);
 		}
+		if (mNewsHomeSwiperHeadAdapter != null)
+			mNewsHomeSwiperHeadAdapter.notifyDataSetChanged();
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -325,8 +328,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			this.mNewsHomeListJson = jsonObject.toString();
 			mNewsHome = JsonUtils.toObject(this.mNewsHomeListJson,
 					NewsHome.class);
-			saveLocalDate();
 			showData();
+			saveLocalDate();
 		}
 		mNewsHomeListView.onRefreshComplete();
 	}
@@ -514,9 +517,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 									(int) (mActivity.mScreenWidth / 6.4 * 3)));
 					mSwiperHeadHolder.imgViewPager
 							.setOnPageChangeListener(NewsHomeFragment.this);
+					mNewsHomeSwiperHeadAdapter = new NewsHomeSwiperHeadAdapter(
+							module.getList());
 					mSwiperHeadHolder.imgViewPager
-							.setAdapter(new NewsHomeSwiperHeadAdapter(module
-									.getList()));
+							.setAdapter(mNewsHomeSwiperHeadAdapter);
 					mSwiperHeadHolder.imgViewPager.setCurrentItem(0);
 					mSwiperHeadHolder.pointRootView = (LinearLayout) convertView
 							.findViewById(R.id.news_home_swiper_head_point_root_view);
@@ -805,7 +809,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mMatrixHolder.change.setVisibility(View.GONE);
 				}
 				mMatrixHolder.title.setText(module.getTitle());
-				ImgUtils.imageLoader.displayImage(module.getIcon(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getIcon()),
 						mMatrixHolder.icon, ImgUtils.homeImageOptions);
 				for (int i = 0; i < 4; i++) {
 					ImageView image = (ImageView) mMatrixHolder.rootView[i]
@@ -856,7 +861,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				} else {
 					mMatrixListHolder.icon2.setVisibility(View.GONE);
 				}
-				ImgUtils.imageLoader.displayImage(module.getIcon(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getIcon()),
 						mMatrixListHolder.icon, ImgUtils.homeImageOptions);
 				ImgUtils.imageLoader.displayImage(
 						CommonUtils.doWebpUrl(module.getList().get(0)
@@ -1092,7 +1098,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					}
 				});
 			} else if (itemType == 7) {
-				ImgUtils.imageLoader.displayImage(module.getIcon(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getIcon()),
 						mVoteHolder.icon, ImgUtils.homeImageOptions);
 				mVoteHolder.title.setText(module.getTitle());
 				mVoteHolder.quetions.setText(module.getVote());
@@ -1162,12 +1169,13 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	}
 
 	private void initVoteView(NewsHomeModule module) {
+		// TODO
 		mVoteHolder.rootView.removeAllViews();
-		if (spUtil.judgeVoteId(module.getId())) {
-			initVoteHasVote(module);
-		} else {
-			initVoteNoVote(module);
-		}
+		// if (spUtil.judgeVoteId(module.getId())) {
+		initVoteHasVote(module);
+		// } else {
+		// initVoteNoVote(module);
+		// }
 	}
 
 	public void initVoteHasVote(final NewsHomeModule module) {
@@ -1208,12 +1216,17 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			if (i != _flag) {
 				answerPercent.setText(tmpPercent + "%");
 			} else {
-				if (tmpVoteSumNum.intValue() != 100)
+				if (!tmpVoteSumNum.toString().equals("100.00")
+						|| !tmpVoteSumNum.toString().equals("100.0")
+						|| !tmpVoteSumNum.toString().equals("100")) {
+					DebugLog.e(tmpVoteSumNum.toString());
+					DebugLog.e(tmpPercent.toString());
 					answerPercent.setText(tmpPercent.add(
-							new BigDecimal(100).subtract(tmpVoteSumNum))
-							.toString()
+							new BigDecimal(new BigDecimal("100").subtract(
+									new BigDecimal(tmpVoteSumNum.toString()))
+									.toString())).toString()
 							+ "%");
-				else
+				} else
 					answerPercent.setText(tmpPercent.toString() + "%");
 			}
 			mVoteHolder.rootView.addView(itemView);
@@ -1270,9 +1283,26 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	public class NewsHomeSwiperHeadAdapter extends RecyclingPagerAdapter {
 		private List<NewsHomeModuleItem> itemList;
 
+		private int mChildCount = 0;
+
 		public NewsHomeSwiperHeadAdapter(List<NewsHomeModuleItem> itemList) {
 			super();
 			this.itemList = itemList;
+		}
+
+		@Override
+		public void notifyDataSetChanged() {
+			mChildCount = getCount();
+			super.notifyDataSetChanged();
+		}
+
+		@Override
+		public int getItemPosition(Object object) {
+			if (mChildCount > 0) {
+				// mChildCount--;
+				return POSITION_NONE;
+			}
+			return super.getItemPosition(object);
 		}
 
 		@Override

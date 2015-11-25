@@ -435,9 +435,16 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 								.findViewById(R.id.home_news_title);
 						textView.setTextColor(Color.parseColor("#B0B0B0"));
 						NewsBrowseUtils.hasBrowedNews(news.getId());
-						NewsListActivity.this
-								.startAnimActivityByNewsHomeModuleItem(
-										NewsContentActivity.class, news);
+						if (news.getType().equals("video")
+								|| news.getType().equals("text")) {
+							NewsListActivity.this
+									.startAnimActivityByNewsHomeModuleItem(
+											NewsContentActivity.class, news);
+						} else if (news.getType().equals("outlink")) {
+							NewsListActivity.this
+									.startAnimActivityByNewsHomeModuleItem(
+											NewsOutLinkActivity.class, news);
+						}
 					}
 				});
 			} else if (itemViewType == 2) {

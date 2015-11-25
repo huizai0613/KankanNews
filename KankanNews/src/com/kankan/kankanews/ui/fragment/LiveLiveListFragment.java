@@ -339,7 +339,7 @@ public class LiveLiveListFragment extends BaseFragment implements
 				titlePic.getLayoutParams().height = (mActivity.mScreenWidth - PixelUtil.dp2px(25)) / 4;
 				ImageView yuyueBut = (ImageView) layout
 						.findViewById(R.id.live_live_list_yuyue);
-				ImgUtils.imageLoader.displayImage(liveObj.getWidepic(),
+				ImgUtils.imageLoader.displayImage(CommonUtils.doWebpUrl(liveObj.getWidepic()),
 						titlePic, ImgUtils.homeImageOptions);
 				ImageView liveType = (ImageView) layout
 						.findViewById(R.id.live_live_list_livetype);

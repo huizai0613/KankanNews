@@ -397,7 +397,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 					mTopicHeaderHolder.intro = (TextView) convertView
 							.findViewById(R.id.intro);
 
-					mTopicHeaderHolder.titlePic.getLayoutParams().height = mScreenWidth * 65 / 320;
+					mTopicHeaderHolder.titlePic.getLayoutParams().height = (int) (mScreenWidth / 3.2);
 					convertView.setTag(mTopicHeaderHolder);
 				} else if (itemViewType == 1) {
 					convertView = mInflater.inflate(
@@ -526,9 +526,16 @@ public class NewsTopicListActivity extends BaseActivity implements
 								.findViewById(R.id.home_news_title);
 						textView.setTextColor(Color.parseColor("#B0B0B0"));
 						NewsBrowseUtils.hasBrowedNews(item.getId());
-						NewsTopicListActivity.this
-								.startAnimActivityByNewsHomeModuleItem(
-										NewsContentActivity.class, item);
+						if (item.getType().equals("video")
+								|| item.getType().equals("text")) {
+							NewsTopicListActivity.this
+									.startAnimActivityByNewsHomeModuleItem(
+											NewsContentActivity.class, item);
+						} else if (item.getType().equals("outlink")) {
+							NewsTopicListActivity.this
+									.startAnimActivityByNewsHomeModuleItem(
+											NewsOutLinkActivity.class, item);
+						}
 					}
 				});
 			} else if (itemViewType == 2) {

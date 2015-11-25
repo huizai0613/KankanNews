@@ -376,12 +376,14 @@ public class LiveChannelListFragment extends BaseFragment implements
 			}
 
 			if (ItemType == _TV_) {
-				ImgUtils.imageLoader.displayImage(channel.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(channel.getTitlepic()),
 						mTvHolder.titlePic, ImgUtils.homeImageOptions);
 				mTvHolder.title.setText(channel.getTitle());
 				mTvHolder.nextInfo.setText("即将开始：" + channel.getTrailer_stime()
 						+ " " + channel.getTrailer());
-				if (position == mLiveChannelList.getTv().size() - 1 && mLiveChannelList.getFm().size() > 0) {
+				if (position == mLiveChannelList.getTv().size() - 1
+						&& mLiveChannelList.getFm().size() > 0) {
 					mTvHolder.separation.setVisibility(View.VISIBLE);
 					mTvHolder.separationLine.setVisibility(View.GONE);
 				} else {
@@ -431,7 +433,8 @@ public class LiveChannelListFragment extends BaseFragment implements
 					}
 				});
 			} else if (ItemType == _FM_) {
-				ImgUtils.imageLoader.displayImage(channel.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(channel.getTitlepic()),
 						mFmHolder.titlePic, ImgUtils.homeImageOptions);
 				mFmHolder.title.setText(channel.getTitle());
 				mFmHolder.nextInfo.setText("即将开始：" + channel.getTrailer_stime()
