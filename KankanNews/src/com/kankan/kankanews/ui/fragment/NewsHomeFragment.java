@@ -1171,11 +1171,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	private void initVoteView(NewsHomeModule module) {
 		// TODO
 		mVoteHolder.rootView.removeAllViews();
-		// if (spUtil.judgeVoteId(module.getId())) {
-		initVoteHasVote(module);
-		// } else {
-		// initVoteNoVote(module);
-		// }
+		if (spUtil.judgeVoteId(module.getId())) {
+			initVoteHasVote(module);
+		} else {
+			initVoteNoVote(module);
+		}
 	}
 
 	public void initVoteHasVote(final NewsHomeModule module) {
