@@ -79,6 +79,7 @@
         android:id="@+id/activity_loading_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/base_action_bar_height"
         android:background="@color/white_no_alpha"
         android:gravity="center"
         android:visibility="visible" >

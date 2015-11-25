@@ -467,7 +467,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 
 			if (itemViewType == 0) {
 				mTopicHeaderHolder.intro.setText("         "
-						+ mTopicListModule.getTitle());
+						+ mTopicListModule.getIntro());
 				FontUtils.setTextViewFontSize(NewsTopicListActivity.this,
 						mTopicHeaderHolder.intro,
 						R.string.news_content_text_size,

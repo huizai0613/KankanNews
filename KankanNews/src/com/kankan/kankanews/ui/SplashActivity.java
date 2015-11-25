@@ -152,8 +152,8 @@ public class SplashActivity extends BaseActivity {
 		}
 
 		// createShortcut();
-//		 String device_token = UmengRegistrar.getRegistrationId(this);
-//		 DebugLog.e(device_token);
+		// String device_token = UmengRegistrar.getRegistrationId(this);
+		// DebugLog.e(device_token);
 	}
 
 	@Override
@@ -251,7 +251,7 @@ public class SplashActivity extends BaseActivity {
 				intent.putExtra("LIVE_ID", liveId);
 		}
 		intent.setClass(SplashActivity.this, MainActivity.class);
-//		 intent.setClass(SplashActivity.this, NewsContentActivity.class);
+		// intent.setClass(SplashActivity.this, NewsContentActivity.class);
 		SplashActivity.this.startActivity(intent);
 		DebugLog.e("sssss");
 		// overridePendingTransition(R.anim.alpha, R.anim.alpha_op);
@@ -357,8 +357,7 @@ public class SplashActivity extends BaseActivity {
 								// mHandler.sendEmptyMessage(CLICK_GO_HOME);
 								if (key.equalsIgnoreCase("infoid"))
 									goTrasition();
-								if (key.equalsIgnoreCase("liveid"))
-									goHome();
+								goHome();
 							}
 						}
 					}

@@ -228,7 +228,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					R.anim.alpha_out);
 			break;
 		case R.id.activity_retry_view:
-			refreshNetDate();
+			if (CommonUtils.isNetworkAvailable(this.mActivity)) {
+				this.mRetryView.setVisibility(View.GONE);
+				this.mLoadingView.setVisibility(View.VISIBLE);
+				refreshNetDate();
+			}
 			break;
 		}
 	}
@@ -299,8 +303,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	@Override
 	protected void refreshNetDate() {
 		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
-			this.mRetryView.setVisibility(View.GONE);
-			this.mLoadingView.setVisibility(View.VISIBLE);
 			netUtils.getNewsHomeList(mListenerObject, mErrorListener);
 		} else {
 			new Handler().postDelayed(new Runnable() {
@@ -1032,10 +1034,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 													module.getList().get(0));
 								else
 									NewsHomeFragment.this
-											.startAnimActivityByAppClassId(
-													NewsListActivity.class,
-													module.getList().get(0)
-															.getAppclassid());
+											.startAnimActivityByNewsHomeModuleItem(
+													NewsTopicListActivity.class,
+													module.getList().get(0));
 							}
 						});
 				mTopicTwoHolder.titlePic1
@@ -1049,10 +1050,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 													module.getList().get(1));
 								else
 									NewsHomeFragment.this
-											.startAnimActivityByAppClassId(
-													NewsListActivity.class,
-													module.getList().get(1)
-															.getAppclassid());
+											.startAnimActivityByNewsHomeModuleItem(
+													NewsTopicListActivity.class,
+													module.getList().get(1));
 							}
 						});
 			} else if (itemType == 6) {

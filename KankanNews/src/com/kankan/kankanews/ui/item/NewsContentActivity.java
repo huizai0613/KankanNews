@@ -14,6 +14,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener;
 import tv.danmaku.ijk.media.widget.VideoView;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -52,6 +53,7 @@ import com.kankan.kankanews.bean.NewsContentRecommend;
 import com.kankan.kankanews.bean.NewsContentVideo;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.config.AndroidConfig;
+import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
@@ -184,6 +186,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 						+ msg.getData().getString("_IMAGE_KEY_") + "')");
 				break;
 			case _SHOW_VIDEO_:
+				closeVideo();
 				String videoKey = msg.getData().getString("_VIDEO_KEY_");
 				final NewsContentVideo video = mNewsContent.getConponents()
 						.getVideo().get(videoKey);
@@ -215,6 +218,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			@Override
 			public void run() {
 				mVideoView.setVideoPath(video.getVideourl());
+//				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 			}
 		});
 	};
@@ -434,6 +438,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		closeVideo();
 		System.gc();
 		super.finish();
+		if (this.mApplication.getMainActivity() == null) {
+			Intent intent = getIntent();
+			intent.setClass(this, MainActivity.class);
+			this.startActivity(intent);
+			overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
+		}
+		this.overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 	}
 
 	@Override

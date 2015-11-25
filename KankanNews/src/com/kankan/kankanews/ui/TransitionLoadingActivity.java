@@ -10,11 +10,16 @@ import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.New_News_Home;
+import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.exception.NetRequestException;
 import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
 import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
+import com.kankan.kankanews.ui.item.NewsAlbumActivity;
+import com.kankan.kankanews.ui.item.NewsContentActivity;
+import com.kankan.kankanews.ui.item.NewsOutLinkActivity;
+import com.kankan.kankanews.ui.item.NewsTopicActivity;
 import com.kankanews.kankanxinwen.R;
 
 public class TransitionLoadingActivity extends BaseActivity {
@@ -42,6 +47,10 @@ public class TransitionLoadingActivity extends BaseActivity {
 		netUtils.getNewsContentDataPush(news_id, new Listener<JSONObject>() {
 			@Override
 			public void onResponse(JSONObject jsonObject) {
+				if (jsonObject == null
+						|| jsonObject.toString().trim().equals("")) {
+					goHome();
+				}
 				New_News_Home news = new New_News_Home();
 				try {
 					news.parseJSON(jsonObject);
@@ -101,24 +110,48 @@ public class TransitionLoadingActivity extends BaseActivity {
 
 	private void openNews(New_News_Home news) {
 		//
+		if (news.getTitle() == null || news.getTitle().trim().equals("")) {
+			goHome();
+		}
+
 		final int news_type = Integer.valueOf(news.getType());
+		NewsHomeModuleItem moduleItem = new NewsHomeModuleItem();
+		moduleItem.setId(news.getMid());
+		moduleItem.setO_cmsid(news.getMid());
+		moduleItem.setAppclassid(news.getZtid());
+		moduleItem.setTitle(news.getTitle());
+		moduleItem.setTitlepic(news.getTitlepic());
+		moduleItem.setTitleurl(news.getTitleurl());
+		moduleItem.setSharedPic(news.getSharedPic());
 		if (news_type % 10 == 1) {
-			this.startAnimActivityByParameterAlpha(
-					New_Activity_Content_Video.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), news.getSharedPic());
+			moduleItem.setType("video");
+			this.startAnimActivityByNewsHomeModuleItem(
+					NewsContentActivity.class, moduleItem);
+			// this.startAnimActivityByParameterAlpha(
+			// New_Activity_Content_Video.class, news.getMid(),
+			// news.getType(), news.getTitleurl(), news.getNewstime(),
+			// news.getTitle(), news.getTitlepic(), news.getSharedPic());
 		} else if (news_type % 10 == 2) {
-			final String[] pics = news.getTitlepic().split("::::::");
-			this.startAnimActivityByParameterAlpha(
-					New_Activity_Content_PicSet.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), pics[1]);
+			moduleItem.setType("album");
+			this.startAnimActivityByNewsHomeModuleItem(NewsAlbumActivity.class,
+					moduleItem);
+			// final String[] pics = news.getTitlepic().split("::::::");
+			// this.startAnimActivityByParameterAlpha(
+			// New_Activity_Content_PicSet.class, news.getMid(),
+			// news.getType(), news.getTitleurl(), news.getNewstime(),
+			// news.getTitle(), news.getTitlepic(), pics[1]);
 		} else if (news_type % 10 == 5) {
 			// 专题
-			this.startSubjectActivityByParameterAlpha(
-					New_Avtivity_Subject.class, news.getZtid(),
-					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
-					news.getTitlepic(), news.getSharedPic());
+			moduleItem.setType("topic");
+
+			// this.startAnimActivityByNewsHomeModuleItem(NewsTopicActivity.class,
+			// moduleItem);
+			goHome();
+
+			// this.startSubjectActivityByParameterAlpha(
+			// New_Avtivity_Subject.class, news.getZtid(),
+			// news.getTitle(), news.getTitlepic(), news.getTitleurl(),
+			// news.getTitlepic(), news.getSharedPic());
 		} else if (news_type % 10 == 6) {
 			Intent intent = getIntent();
 			intent.setClass(this, MainActivity.class);
@@ -132,17 +165,33 @@ public class TransitionLoadingActivity extends BaseActivity {
 			// fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
 			// mActivity.touchTab(mActivity.tab_two);
 		} else if (news.getZtype().equals("1")) {
-			this.startSubjectActivityByParameterAlpha(
-					New_Avtivity_Subject.class, news.getZtid(),
-					news.getTitle(), news.getTitlepic(), news.getTitleurl(),
-					news.getTitlepic(), news.getSharedPic());
+			moduleItem.setType("topic");
+			// this.startAnimActivityByNewsHomeModuleItem(NewsTopicActivity.class,
+			// moduleItem);
+			goHome();
+			// this.startSubjectActivityByParameterAlpha(
+			// New_Avtivity_Subject.class, news.getZtid(),
+			// news.getTitle(), news.getTitlepic(), news.getTitleurl(),
+			// news.getTitlepic(), news.getSharedPic());
 		} else {
-			this.startAnimActivityByParameterAlpha(
-					New_Activity_Content_Web.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), news.getSharedPic());
+			moduleItem.setType("outlink");
+			// this.startAnimActivityByNewsHomeModuleItem(
+			// NewsContentActivity.class, moduleItem);
+			this.startAnimActivityByNewsHomeModuleItem(
+					NewsOutLinkActivity.class, moduleItem);
+			// this.startAnimActivityByParameterAlpha(
+			// New_Activity_Content_Web.class, news.getMid(),
+			// news.getType(), news.getTitleurl(), news.getNewstime(),
+			// news.getTitle(), news.getTitlepic(), news.getSharedPic());
 		}
 		this.finish();
+	}
+
+	private void goHome() {
+		Intent intent = getIntent();
+		intent.setClass(this, MainActivity.class);
+		this.startActivity(intent);
+		overridePendingTransition(R.anim.alpha_in, R.anim.out_to_right);
 	}
 
 }
