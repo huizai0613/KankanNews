@@ -502,7 +502,8 @@ public class NewsTopicActivity extends BaseActivity implements
 				}
 				newHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
-				ImgUtils.imageLoader.displayImage(item.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(item.getTitlepic()),
 						newHolder.titlepic, ImgUtils.homeImageOptions);
 				newHolder.title.setText(item.getTitle());
 				newHolder.newstime.setText(item.getOnclick() + "");

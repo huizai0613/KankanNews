@@ -808,8 +808,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.item_news_home_matrix_item_icon);
 					TextView title = (TextView) mMatrixHolder.rootView[i]
 							.findViewById(R.id.item_news_home_matrix_item_title);
-					ImgUtils.imageLoader.displayImage(module.getList().get(i)
-							.getTitlepic(), image, ImgUtils.homeImageOptions);
+					ImgUtils.imageLoader.displayImage(
+							CommonUtils.doWebpUrl(module.getList().get(i)
+									.getTitlepic()), image,
+							ImgUtils.homeImageOptions);
 					title.setText(module.getList().get(i).getTitle());
 					if ("video".equals(module.getList().get(i).getType())) {
 						icon.setVisibility(View.VISIBLE);
@@ -850,14 +852,17 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				}
 				ImgUtils.imageLoader.displayImage(module.getIcon(),
 						mMatrixListHolder.icon, ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(module.getList().get(0)
-						.getTitlepic(), mMatrixListHolder.img0,
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getList().get(0)
+								.getTitlepic()), mMatrixListHolder.img0,
 						ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(module.getList().get(1)
-						.getTitlepic(), mMatrixListHolder.img1,
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getList().get(1)
+								.getTitlepic()), mMatrixListHolder.img1,
 						ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(module.getList().get(2)
-						.getTitlepic(), mMatrixListHolder.img2,
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getList().get(2)
+								.getTitlepic()), mMatrixListHolder.img2,
 						ImgUtils.homeImageOptions);
 				mMatrixListHolder.title.setText(module.getTitle());
 				if (!module.getList().get(0).getIntro().trim().equals("")) {
@@ -948,9 +953,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
 								width, (int) (width * 0.75));
 						image.setLayoutParams(layoutParams);
-						ImgUtils.imageLoader.displayImage(
-								moduleItem.getTitlepic(), image,
-								ImgUtils.homeImageOptions);
+						ImgUtils.imageLoader
+								.displayImage(CommonUtils.doWebpUrl(moduleItem
+										.getTitlepic()), image,
+										ImgUtils.homeImageOptions);
 						LinearLayout.LayoutParams textLayoutParams = new LinearLayout.LayoutParams(
 								LinearLayout.LayoutParams.MATCH_PARENT,
 								LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -978,7 +984,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				}
 				mGalleryHolder.rootView.setTag(module);
 			} else if (itemType == 4) {
-				ImgUtils.imageLoader.displayImage(module.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getTitlepic()),
 						mTopicOneHolder.titlePic, ImgUtils.homeImageOptions);
 				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
 						mTopicOneHolder.title, R.string.home_news_text_size, 1);
@@ -1002,11 +1009,13 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					}
 				});
 			} else if (itemType == 5) {
-				ImgUtils.imageLoader.displayImage(module.getList().get(0)
-						.getTitlepic(), mTopicTwoHolder.titlePic0,
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getList().get(0)
+								.getTitlepic()), mTopicTwoHolder.titlePic0,
 						ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(module.getList().get(1)
-						.getTitlepic(), mTopicTwoHolder.titlePic1,
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getList().get(1)
+								.getTitlepic()), mTopicTwoHolder.titlePic1,
 						ImgUtils.homeImageOptions);
 				mTopicTwoHolder.titlePic0
 						.setOnClickListener(new OnClickListener() {
@@ -1045,8 +1054,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			} else if (itemType == 6) {
 				mOutLinkHolder.title
 						.setText(module.getList().get(0).getTitle());
-				ImgUtils.imageLoader.displayImage(module.getList().get(0)
-						.getTitlepic(), mOutLinkHolder.titlePic,
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getList().get(0)
+								.getTitlepic()), mOutLinkHolder.titlePic,
 						ImgUtils.homeImageOptions);
 				mOutLinkHolder.keyboardIconContent.setVisibility(View.VISIBLE);
 				Keyboard mKeyboard = module.getList().get(0).getKeyboard();
@@ -1278,8 +1288,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				convertView = imageView;
 			}
 			ImgUtils.imageLoader.displayImage(
-					itemList.get(index).getTitlepic(), (ImageView) convertView,
-					ImgUtils.homeImageOptions);
+					CommonUtils.doWebpUrl(itemList.get(index).getTitlepic()),
+					(ImageView) convertView, ImgUtils.homeImageOptions);
 			convertView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

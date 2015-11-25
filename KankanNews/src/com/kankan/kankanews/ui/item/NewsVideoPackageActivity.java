@@ -655,7 +655,8 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 				newsItemHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
-				ImgUtils.imageLoader.displayImage(moduleItem.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(moduleItem.getTitlepic()),
 						newsItemHolder.titlepic, ImgUtils.homeImageOptions);
 
 				newsItemHolder.title.setText(moduleItem.getTitle());

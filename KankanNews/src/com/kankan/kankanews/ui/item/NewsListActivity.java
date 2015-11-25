@@ -166,7 +166,8 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 
 	protected void loadMoreNetDate() {
 		// TODO Auto-generated method stub
-		if (mIsLoadEnd || !CommonUtils.isNetworkAvailable(this)) {
+		if (mIsLoadEnd || !CommonUtils.isNetworkAvailable(this)
+				|| mNewsHomeModule == null) {
 			mNewsListView.postDelayed(new Runnable() {
 				@Override
 				public void run() {
@@ -398,7 +399,8 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 				clicktime = TextUtils.isEmpty(clicktime) ? "0" : clicktime;
 				mNewsListHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
-				ImgUtils.imageLoader.displayImage(news.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(news.getTitlepic()),
 						mNewsListHolder.titlepic, ImgUtils.homeImageOptions);
 				mNewsListHolder.title.setText(news.getTitle());
 				mNewsListHolder.newsClick.setText(clicktime);

@@ -488,7 +488,8 @@ public class NewsTopicListActivity extends BaseActivity implements
 				}
 				mNewContentHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
-				ImgUtils.imageLoader.displayImage(item.getTitlepic(),
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(item.getTitlepic()),
 						mNewContentHolder.titlepic, ImgUtils.homeImageOptions);
 				mNewContentHolder.title.setText(item.getTitle());
 				mNewContentHolder.keyboardIconContent

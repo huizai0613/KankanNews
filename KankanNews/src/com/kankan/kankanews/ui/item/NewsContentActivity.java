@@ -106,6 +106,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private ImageView mOperationPercent;
 
 	private NewsHomeModuleItem mModuleItem;
+	// 使用列表页传过来的
 	private String mNewsId;
 	private String mNewsType;
 	private String mNewsTitle;
