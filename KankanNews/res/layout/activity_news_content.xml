@@ -8,6 +8,7 @@
         layout="@layout/base_title_bar" />
 
     <ScrollView
+        android:id="@+id/content_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/base_action_bar_height"
