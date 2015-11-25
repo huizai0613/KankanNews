@@ -1070,8 +1070,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						ImgUtils.homeImageOptions);
 				mOutLinkHolder.keyboardIconContent.setVisibility(View.VISIBLE);
 				Keyboard mKeyboard = module.getList().get(0).getKeyboard();
-				mKeyboard.setColor("#ffcc00");
-				mKeyboard.setText("我了割草");
 				if (mKeyboard != null
 						&& !mKeyboard.getColor().trim().equals("")
 						&& !mKeyboard.getText().trim().equals("")) {
