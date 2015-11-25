@@ -2,6 +2,7 @@ window.onload = function () {
 	initialize();
 }
 function initialize() {
+	initFontSize();
 	initTitle();
 	initNewsDate();
 	initNewsAuthor();
@@ -13,6 +14,12 @@ function initialize() {
 function setWebWidth() {
 	if (window.news) {
 		news.setWebWidth(document.body.clientWidth);
+	}
+}
+function initFontSize() {
+	if (window.news) {
+		var fontSize = news.initFontSize();
+		changeFontSize(fontSize);
 	}
 }
 function initTitle() {

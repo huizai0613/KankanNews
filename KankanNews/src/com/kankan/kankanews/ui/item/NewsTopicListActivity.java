@@ -493,6 +493,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 				mNewContentHolder.title.setText(item.getTitle());
 				mNewContentHolder.keyboardIconContent
 						.setVisibility(View.VISIBLE);
+				mNewContentHolder.newstime.setText(item.getOnclick() + "");
 				Keyboard mKeyboard = item.getKeyboard();
 				if (mKeyboard != null
 						&& !mKeyboard.getColor().trim().equals("")

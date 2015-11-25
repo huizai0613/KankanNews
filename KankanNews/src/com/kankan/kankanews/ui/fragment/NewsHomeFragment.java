@@ -251,7 +251,14 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	@Override
 	public void refresh() {
-		super.refresh();
+		this.mNewsHomeListView.setSelection(0);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				mNewsHomeListView.setmCurrentMode(Mode.PULL_FROM_START);
+				mNewsHomeListView.setRefreshing(false);
+			}
+		}, 100);
 	}
 
 	@Override

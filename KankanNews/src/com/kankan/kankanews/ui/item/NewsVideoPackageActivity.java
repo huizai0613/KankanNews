@@ -97,7 +97,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	private String mLastNewsTime = "";
 
 	private ShareUtil shareUtil = null;
-	private static CustomShareBoard shareBoard;
+	private CustomShareBoard shareBoard;
 
 	private NewsHomeModule mNewsVPModule;
 	private NewsHomeModuleItem mHomeModuleItem;
@@ -365,8 +365,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 						return mNewsVPModule.getList().get(0).getIntro();
 					}
 				}, mContext);
-			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
-					this);
+			shareBoard = new CustomShareBoard(this, shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
@@ -385,7 +384,6 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		isPause = false;
 		setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
@@ -716,7 +714,6 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	}
 
 	public void setItemTitleFontSize() {
-		// TODO Auto-generated method stub
 		FontUtils.setTextViewFontSize(this, newsItemHolder.title,
 				R.string.home_news_text_size, spUtil.getFontSizeRadix());
 	}

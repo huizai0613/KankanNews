@@ -638,7 +638,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		contentVideoView.setOnInfoListener(this);
 
 		player_bg.setOnClickListener(this);
-		player_bg.setOnClickListener(this);
 		full_screen_guide.setOnClickListener(this);
 		player_guide.setOnClickListener(this);
 		video_controller.setOnClickListener(this);
@@ -1265,7 +1264,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	public boolean onInfo(IMediaPlayer mp, int what, int extra) {
 		// TODO Auto-generated method stub
 		switch (what) {
-
 		case IMediaPlayer.MEDIA_INFO_BUFFERING_START:
 			Log.e("MEDIA_INFO_BUFFERING_START", "MEDIA_INFO_BUFFERING_START");
 			contentVideoView.pause();
