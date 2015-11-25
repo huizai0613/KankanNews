@@ -404,8 +404,6 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 				mNewsListHolder.newsClick.setText(clicktime);
 				mNewsListHolder.keyboardIconContent.setVisibility(View.VISIBLE);
 				Keyboard mKeyboard = news.getKeyboard();
-				mKeyboard.setColor("#ffcc00");
-				mKeyboard.setText("我了割草");
 				if (mKeyboard != null
 						&& !mKeyboard.getColor().trim().equals("")
 						&& !mKeyboard.getText().trim().equals("")) {

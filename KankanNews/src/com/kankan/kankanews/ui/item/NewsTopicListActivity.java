@@ -295,7 +295,6 @@ public class NewsTopicListActivity extends BaseActivity implements
 		}
 		mLoadingView.setVisibility(View.GONE);
 		mRetryView.setVisibility(View.GONE);
-		DebugLog.e(mIsLoadEnd + "     " + "我了割草");
 	}
 
 	@Override
@@ -495,8 +494,6 @@ public class NewsTopicListActivity extends BaseActivity implements
 				mNewContentHolder.keyboardIconContent
 						.setVisibility(View.VISIBLE);
 				Keyboard mKeyboard = item.getKeyboard();
-				mKeyboard.setColor("#ffcc00");
-				mKeyboard.setText("我了割草");
 				if (mKeyboard != null
 						&& !mKeyboard.getColor().trim().equals("")
 						&& !mKeyboard.getText().trim().equals("")) {

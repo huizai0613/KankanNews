@@ -103,7 +103,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				if (scale.equals("4:3"))
 					par.height = mWebWidth * 3 / 4;
 				// par.height = (int) ((mScreenWidth - left - left) / 16 * 9);
-				DebugLog.e(left + " " + par.height);
 				mVideoView.setmRootViewHeight(par.height);
 				par.setMargins(left, msg.getData().getInt("_OFFSETTOP_")
 						* displayScale, left, 0);
@@ -284,8 +283,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void changeFontSize() {
-		int index = FontUtils
-				.getFontSetIndex(spUtil.getFontSizeRadix());
+		int index = FontUtils.getFontSetIndex(spUtil.getFontSizeRadix());
 		mContentWebView.loadUrl("javascript:changeFontSize('font_"
 				+ FontUtils.fontSizeWeb[index] + "')");
 	}

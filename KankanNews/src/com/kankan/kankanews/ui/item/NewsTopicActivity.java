@@ -475,8 +475,6 @@ public class NewsTopicActivity extends BaseActivity implements
 			if (itemViewType == 1) {
 				newHolder.keyboardIconContent.setVisibility(View.VISIBLE);
 				Keyboard mKeyboard = item.getKeyboard();
-				mKeyboard.setColor("#ffcc00");
-				mKeyboard.setText("我了割草");
 				if (mKeyboard != null
 						&& !mKeyboard.getColor().trim().equals("")
 						&& !mKeyboard.getText().trim().equals("")) {
