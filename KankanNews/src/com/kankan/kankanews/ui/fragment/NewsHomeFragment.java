@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1185,7 +1186,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					R.layout.item_news_home_vote_item, null);
 			TextView answer = (TextView) itemView
 					.findViewById(R.id.vote_answer);
-			answer.setTextSize(PixelUtil.dp2px(7));
+			answer.setTextSize(TypedValue.COMPLEX_UNIT_DIP, PixelUtil.dp2px(7));
 			answer.setText(VOTE_ANSWER_PREFIX[i] + item.getOption());
 			View answerLoading = itemView
 					.findViewById(R.id.vote_answer_loading);
@@ -1231,7 +1232,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			optionParams.topMargin = PixelUtil.dp2px(5f);
 			optionParams.bottomMargin = PixelUtil.dp2px(5f);
 			optionView.setText(VOTE_ANSWER_PREFIX[i] + option);
-			optionView.setTextSize(PixelUtil.dp2px(8));
+			optionView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,
+					PixelUtil.dp2px(8));
 			optionView.setLayoutParams(optionParams);
 			optionView
 					.setBackgroundResource(R.drawable.bg_item_news_home_vote_answer);
