@@ -29,6 +29,7 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -43,6 +44,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -85,6 +87,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private WebView mContentWebView;
 	private RelativeLayout mLoadingView;
 
+	private ScrollView mScrollView;
 	private View mVideoRootView;
 	private VideoView mVideoView;
 	private VideoViewController mVideoViewController;
@@ -119,7 +122,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-
+		DebugLog.e("我了割草");
 		int width = wm.getDefaultDisplay().getWidth();
 		int height = wm.getDefaultDisplay().getHeight();
 		WindowManager.LayoutParams attrs = getWindow().getAttributes();
@@ -137,12 +140,18 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			this.getWindow().setAttributes(attrs);
 			this.getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-			mVideoRootView.setLayoutParams(new LinearLayout.LayoutParams(
+			mVideoRootView.setLayoutParams(new RelativeLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			mVideoView.setmRootViewHeight(this.mScreenWidth);
 			mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullScrenn = true;
-			// ((RelativeLayout.LayoutParams)
-			// mFullRootView.getLayoutParams()).topMargin = 0;
+			((RelativeLayout.LayoutParams) mScrollView.getLayoutParams()).topMargin = 0;
+			mScrollView.setOnTouchListener(new OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					return true;
+				}
+			});
 			if (mVideoView != null && mVideoView.getVisibility() == View.GONE)
 				mVideoView.start();
 			mVideoView.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,
@@ -154,16 +163,16 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			mVideoViewController.changeView();
 			setRightFinsh(true);
 			isFullScrenn = false;
-			// ((RelativeLayout.LayoutParams)
-			// mFullRootView.getLayoutParams()).topMargin = PixelUtil
-			// .dp2px(44);
+			((RelativeLayout.LayoutParams) mScrollView.getLayoutParams()).topMargin = PixelUtil
+					.dp2px(44);
+			mScrollView.setOnTouchListener(null);
 			// mActivity.bottomBarVisible(View.VISIBLE);
 			attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
 			this.getWindow().setAttributes(attrs);
 			// 取消全屏设置
 			this.getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-			mVideoRootView.setLayoutParams(new LinearLayout.LayoutParams(
+			mVideoRootView.setLayoutParams(new RelativeLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT,
 					(int) (this.mScreenWidth / 16 * 9)));
 			mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
@@ -231,6 +240,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	protected void initView() {
+		mScrollView = (ScrollView) this.findViewById(R.id.content_scroll_view);
 		mLoadingView = (RelativeLayout) this
 				.findViewById(R.id.content_buffering_indicator);
 		mVideoRootView = this.findViewById(R.id.content_video_root_view);
@@ -399,6 +409,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void refresh() {
+		this.closeVideo();
+		this.hideVideo();
 		this.mLoadingView.setVisibility(View.VISIBLE);
 		this.refreshNetData();
 	}
@@ -468,6 +480,10 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			this.mVideoView.pause();
 			this.mVideoView.stopPlayback();
 		}
+	}
+
+	private void hideVideo() {
+		this.mVideoRootView.setVisibility(View.GONE);
 	}
 
 	public String initAuthor() {
