@@ -63,7 +63,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private final static int _SHOW_VIDEO_ = 3;
 	// 分享类
 	private ShareUtil shareUtil;
-	private NewsContent mContent;
+	private NewsContent mNewsContent;
 	private WebView mContentWebView;
 	private LinearLayout mLoadingView;
 	private View mVideoRootView;
@@ -71,6 +71,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private NewsHomeModuleItem mModuleItem;
 	private String mNewsId;
 	private String mNewsType;
+	private String mNewsTitle;
 	private int mWebWidth = 0;
 	private Handler mHandle = new Handler() {
 		public void handleMessage(Message msg) {
@@ -106,7 +107,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	};
 
 	private void playVideo(String videoKey) {
-		final NewsContentVideo video = mContent.getConponents().getVideo()
+		final NewsContentVideo video = mNewsContent.getConponents().getVideo()
 				.get(videoKey);
 		mHandle.post(new Runnable() {
 			@Override
@@ -169,9 +170,11 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		if (mModuleItem == null) {
 			mNewsId = this.getIntent().getStringExtra("mid");
 			mNewsType = this.getIntent().getStringExtra("type");
+			mNewsTitle = this.getIntent().getStringExtra("title");
 		} else {
 			mNewsId = mModuleItem.getO_cmsid();
 			mNewsType = mModuleItem.getType();
+			mNewsTitle = mModuleItem.getTitle();
 		}
 		refreshNetDate();
 	}
@@ -196,7 +199,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	protected void onSuccess(JSONObject jsonObject) {
-		mContent = JsonUtils.toObject(jsonObject.toString(), NewsContent.class);
+		mNewsContent = JsonUtils.toObject(jsonObject.toString(),
+				NewsContent.class);
+		shareUtil = new ShareUtil(mNewsContent, mContext);
 		showData();
 	}
 
@@ -212,6 +217,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			break;
 		case R.id.title_bar_content_img:
 			// 一键分享
+			if (shareUtil == null)
+				return;
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
@@ -284,17 +291,17 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	}
 
 	public String initIntro() {
-		if (this.mContent.getIntro() == null
-				|| "".equals(this.mContent.getIntro().trim()))
+		if (this.mNewsContent.getIntro() == null
+				|| "".equals(this.mNewsContent.getIntro().trim()))
 			return "";
 		String template = "<div class='line'></div><span class='tag'>核心提示</span><div class='tips-con'>%s</div>";
-		return String.format(template, this.mContent.getIntro());
+		return String.format(template, this.mNewsContent.getIntro());
 	}
 
 	public String initContent() {
 		StringBuffer buf = new StringBuffer();
-		List<String> contents = StringUtils.splitString(mContent.getContents(),
-				"</p>");
+		List<String> contents = StringUtils.splitString(
+				mNewsContent.getContents(), "</p>");
 		for (String paragraph : contents) {
 			String content = StringUtils.deleteTag(paragraph, "p").trim();
 			if (content.startsWith("<!--IMAGE_")) {
@@ -311,7 +318,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	private String initImage(String content) {
 		final String imageKey = StringUtils.cleanAnnotationTag(content);
-		NewsContentImage image = this.mContent.getConponents().getImage()
+		NewsContentImage image = this.mNewsContent.getConponents().getImage()
 				.get(imageKey);
 		ImageSize imageSize = new ImageSize(image.getWidth(), image.getHeight());
 		ImgUtils.imageLoader.loadImage(image.getImageurl(), imageSize,
@@ -369,7 +376,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	private String initVideo(String content) {
 		final String videoKey = StringUtils.cleanAnnotationTag(content);
-		NewsContentVideo video = this.mContent.getConponents().getVideo()
+		NewsContentVideo video = this.mNewsContent.getConponents().getVideo()
 				.get(videoKey);
 		ImgUtils.imageLoader.loadImage(video.getTitlepic(), null,
 				ImgUtils.homeImageOptions, new ImageLoadingListener() {
@@ -420,14 +427,14 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	}
 
 	public String initRecommend() {
-		if (mContent.getRecommend().size() > 0) {
+		if (mNewsContent.getRecommend().size() > 0) {
 			StringBuffer buf = new StringBuffer();
 			buf.append("<div class=\"line\"></div><div class=\"recommend\"><h2 class=\"tit\">热门推荐</h2>");
-			for (NewsContentRecommend related : mContent.getRecommend()) {
-				String template = "<div class=\"recomList\"><a href=\"#\" onclick=\"openNews('%s','%s')\"><h3 class=\"tit\">%s</h3><span class=\"other\"><em>%s</em></span></a></div>";
+			for (NewsContentRecommend related : mNewsContent.getRecommend()) {
+				String template = "<div class=\"recomList\"><a href=\"#\" onclick=\"openNews('%s','%s','%s')\"><h3 class=\"tit\">%s</h3><span class=\"other\"><em>%s</em></span></a></div>";
 				buf.append(String.format(template, related.getId(),
 						related.getType(), related.getTitle(),
-						related.getNewsdate()));
+						related.getTitle(), related.getNewsdate()));
 			}
 			buf.append("</div>");
 			return buf.toString();
@@ -468,12 +475,12 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 		@JavascriptInterface
 		public String getTitle() {
-			return NewsContentActivity.this.mModuleItem.getTitle();
+			return NewsContentActivity.this.mNewsTitle;
 		}
 
 		@JavascriptInterface
 		public String getDate() {
-			return NewsContentActivity.this.mContent.getNewsdate();
+			return NewsContentActivity.this.mNewsContent.getNewsdate();
 		}
 
 		@JavascriptInterface
@@ -506,11 +513,12 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		}
 
 		@JavascriptInterface
-		public void openNews(String id, String type) {
+		public void openNews(String id, String type, String title) {
 			Intent intent = new Intent(NewsContentActivity.this,
 					NewsContentActivity.class);
 			intent.putExtra("mid", id);
 			intent.putExtra("type", type);
+			intent.putExtra("title", title);
 			NewsContentActivity.this.startActivity(intent);
 		}
 

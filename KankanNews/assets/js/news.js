@@ -57,8 +57,8 @@ function changeImageProcess(process, id) {
 	imageView = document.getElementById(id);
 	imageView.src = 'images/loading_' + process + '.png';
 }
-function openNews(id, type) {
-	news.openNews(id, type);
+function openNews(id, type, title) {
+	news.openNews(id, type, title);
 }
 function openVideo(id) {
 	var video_1 = document.getElementById(id);

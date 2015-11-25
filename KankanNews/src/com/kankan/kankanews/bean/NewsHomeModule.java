@@ -19,6 +19,7 @@ public class NewsHomeModule implements Serializable, CanSharedObject {
 	private String vote;
 	private String id;
 	private String category;
+	private String share_url;
 
 	public String getAppclassid() {
 		return appclassid;
@@ -124,6 +125,14 @@ public class NewsHomeModule implements Serializable, CanSharedObject {
 		this.category = category;
 	}
 
+	public String getShare_url() {
+		return share_url;
+	}
+
+	public void setShare_url(String share_url) {
+		this.share_url = share_url;
+	}
+
 	@Override
 	public String getShareTitle() {
 		return this.getTitle();
@@ -131,8 +140,7 @@ public class NewsHomeModule implements Serializable, CanSharedObject {
 
 	@Override
 	public String getTitleurl() {
-		// TODO Auto-generated method stub
-		return null;
+		return getShare_url();
 	}
 
 	@Override

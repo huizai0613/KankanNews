@@ -61,6 +61,7 @@ import com.kankan.kankanews.bean.New_Colums_Info;
 import com.kankan.kankanews.bean.New_Colums_Second;
 import com.kankan.kankanews.bean.NewsHomeModule;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
+import com.kankan.kankanews.bean.interfaz.CanSharedObject;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.dialog.TishiMsgHint;
@@ -70,6 +71,7 @@ import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
+import com.kankan.kankanews.ui.view.popup.FontColumsBoard;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
@@ -212,7 +214,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 		nightView = findViewById(R.id.night_view);
 		mRetryView = findViewById(R.id.main_bg);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-		initTitleLeftBar("", R.drawable.new_ic_back);
+		initTitleBar("", R.drawable.new_ic_back, R.drawable.ic_share);
 	}
 
 	@Override
@@ -279,6 +281,9 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 						loadMoreNetDate();
 					}
 				});
+		setOnLeftClickLinester(this);
+		setOnRightClickLinester(this);
+		setOnContentClickLinester(this);
 	}
 
 	protected void refreshNetDate() {
@@ -315,7 +320,56 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.main_bg:
-			refreshNetDate();
+			if (CommonUtils.isNetworkAvailable(mContext)) {
+				refreshNetDate();
+			}
+			break;
+		case R.id.title_bar_left_img:
+			onBackPressed();
+			break;
+		case R.id.title_bar_right_img:
+			if (shareUtil == null)
+				shareUtil = new ShareUtil(new CanSharedObject() {
+					@Override
+					public void setSharedPic(String sharepic) {
+						mNewsVPModule.getList().get(0).getSharedPic();
+					}
+
+					@Override
+					public String getTitleurl() {
+						return mNewsVPModule.getShare_url();
+					}
+
+					@Override
+					public String getTitlepic() {
+						return mNewsVPModule.getList().get(0).getTitlepic();
+					}
+
+					@Override
+					public String getTitle() {
+						return mNewsVPModule.getList().get(0).getTitle();
+					}
+
+					@Override
+					public String getSharedPic() {
+						return mNewsVPModule.getList().get(0).getSharedPic();
+					}
+
+					@Override
+					public String getShareTitle() {
+						return mNewsVPModule.getList().get(0).getShareTitle();
+					}
+
+					@Override
+					public String getIntro() {
+						return mNewsVPModule.getList().get(0).getIntro();
+					}
+				}, mContext);
+			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
+					this);
+			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
+			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
+					Gravity.BOTTOM, 0, 0);
 			break;
 		case R.id.video_package_video_start:
 			videoPlay();

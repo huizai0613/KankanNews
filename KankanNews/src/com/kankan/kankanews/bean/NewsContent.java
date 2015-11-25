@@ -28,7 +28,14 @@ public class NewsContent implements Serializable, CanSharedObject {
 	private String contents;
 	private NewsContentConponent conponents;
 	private List<NewsContentRecommend> recommend;
-	private String sharedPic;
+	private String journalist_id;
+	private String journalist_name;
+	private String journalist_pic;
+	private String journalist_sign;
+	private String journalist_intro;
+	private String share_title;
+	private String share_titlepic;
+	private String share_intro;
 
 	public String getId() {
 		return id;
@@ -126,9 +133,73 @@ public class NewsContent implements Serializable, CanSharedObject {
 		this.recommend = recommend;
 	}
 
+	public String getJournalist_id() {
+		return journalist_id;
+	}
+
+	public void setJournalist_id(String journalist_id) {
+		this.journalist_id = journalist_id;
+	}
+
+	public String getJournalist_name() {
+		return journalist_name;
+	}
+
+	public void setJournalist_name(String journalist_name) {
+		this.journalist_name = journalist_name;
+	}
+
+	public String getJournalist_pic() {
+		return journalist_pic;
+	}
+
+	public void setJournalist_pic(String journalist_pic) {
+		this.journalist_pic = journalist_pic;
+	}
+
+	public String getJournalist_sign() {
+		return journalist_sign;
+	}
+
+	public void setJournalist_sign(String journalist_sign) {
+		this.journalist_sign = journalist_sign;
+	}
+
+	public String getJournalist_intro() {
+		return journalist_intro;
+	}
+
+	public void setJournalist_intro(String journalist_intro) {
+		this.journalist_intro = journalist_intro;
+	}
+
+	public String getShare_title() {
+		return share_title;
+	}
+
+	public void setShare_title(String share_title) {
+		this.share_title = share_title;
+	}
+
+	public String getShare_titlepic() {
+		return share_titlepic;
+	}
+
+	public void setShare_titlepic(String share_titlepic) {
+		this.share_titlepic = share_titlepic;
+	}
+
+	public String getShare_intro() {
+		return share_intro;
+	}
+
+	public void setShare_intro(String share_intro) {
+		this.share_intro = share_intro;
+	}
+
 	@Override
 	public String getShareTitle() {
-		return title;
+		return getShare_title();
 	}
 
 	@Override
@@ -138,17 +209,17 @@ public class NewsContent implements Serializable, CanSharedObject {
 
 	@Override
 	public String getTitlepic() {
-		return titlepic;
+		return getShare_titlepic();
 	}
 
 	@Override
 	public String getSharedPic() {
-		return this.sharedPic;
+		return getShare_titlepic();
 	}
 
 	@Override
 	public void setSharedPic(String sharedPic) {
-		this.sharedPic = sharedPic;
+		this.share_titlepic = sharedPic;
 	}
 
 }

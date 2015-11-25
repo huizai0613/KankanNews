@@ -129,8 +129,6 @@ public class NewsTopicListActivity extends BaseActivity implements
 		// NetUtils.getInstance(mContext).getAnalyse(this, "topic",
 		// new_news.getTitlelist(), new_news.getTitleurl());
 		// TODO
-		// 初始化shareutil类
-		// shareUtil = new ShareUtil(mHomeModuleItem, mContext);
 
 		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
 				R.drawable.ic_close_white, R.drawable.ic_font,
@@ -221,6 +219,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 		boolean _flag = this.initLocalData();
 		if (_flag) {
 			showData();
+			shareUtil = new ShareUtil(mTopicListModule, mContext);
 		}
 		refreshNetDate();
 	}
@@ -242,6 +241,8 @@ public class NewsTopicListActivity extends BaseActivity implements
 		if (mTopicListModule != null) {
 			if (mTopicListModule.getList().size() == 0)
 				mIsLoadEnd = true;
+			// 初始化shareutil类
+			shareUtil = new ShareUtil(mTopicListModule, mContext);
 			saveLocalDate();
 			showData();
 		}
@@ -542,8 +543,9 @@ public class NewsTopicListActivity extends BaseActivity implements
 							.parseColor("#000000"));
 				}
 				mNewAlbumsHolder.title.setText(item.getTitle());
-//				final String[] pics = item.getTitlepic().split("::::::");
-//				ArrayList<ImageView> image_view_list = new ArrayList<ImageView>();
+				// final String[] pics = item.getTitlepic().split("::::::");
+				// ArrayList<ImageView> image_view_list = new
+				// ArrayList<ImageView>();
 
 				int width = (mScreenWidth - PixelUtil.dp2px(20) / 3);
 				mNewAlbumsHolder.albums_image_1.setTag(R.string.viewwidth,
@@ -554,21 +556,25 @@ public class NewsTopicListActivity extends BaseActivity implements
 						width);
 				ImgUtils.imageLoader.displayImage(
 						CommonUtils.doWebpUrl(item.getAlbum_1()),
-						mNewAlbumsHolder.albums_image_1, ImgUtils.homeImageOptions);
+						mNewAlbumsHolder.albums_image_1,
+						ImgUtils.homeImageOptions);
 				ImgUtils.imageLoader.displayImage(
 						CommonUtils.doWebpUrl(item.getAlbum_2()),
-						mNewAlbumsHolder.albums_image_2, ImgUtils.homeImageOptions);
+						mNewAlbumsHolder.albums_image_2,
+						ImgUtils.homeImageOptions);
 				ImgUtils.imageLoader.displayImage(
 						CommonUtils.doWebpUrl(item.getAlbum_3()),
-						mNewAlbumsHolder.albums_image_3, ImgUtils.homeImageOptions);
-//				image_view_list.add(mNewAlbumsHolder.albums_image_1);
-//				image_view_list.add(mNewAlbumsHolder.albums_image_2);
-//				image_view_list.add(mNewAlbumsHolder.albums_image_3);
-//				for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++) {
-//					ImgUtils.imageLoader.displayImage(
-//							CommonUtils.doWebpUrl(pics[i + 1]),
-//							image_view_list.get(i), ImgUtils.homeImageOptions);
-//				}
+						mNewAlbumsHolder.albums_image_3,
+						ImgUtils.homeImageOptions);
+				// image_view_list.add(mNewAlbumsHolder.albums_image_1);
+				// image_view_list.add(mNewAlbumsHolder.albums_image_2);
+				// image_view_list.add(mNewAlbumsHolder.albums_image_3);
+				// for (int i = 0; i < (pics.length > 3 ? 3 : pics.length); i++)
+				// {
+				// ImgUtils.imageLoader.displayImage(
+				// CommonUtils.doWebpUrl(pics[i + 1]),
+				// image_view_list.get(i), ImgUtils.homeImageOptions);
+				// }
 
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
@@ -598,6 +604,8 @@ public class NewsTopicListActivity extends BaseActivity implements
 			onBackPressed();
 			break;
 		case R.id.title_bar_content_img:
+			if (shareUtil == null)
+				return;
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);

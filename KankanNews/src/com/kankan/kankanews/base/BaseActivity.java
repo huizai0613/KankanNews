@@ -462,6 +462,19 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 	}
 
+	protected void initTitleBar(String content, int leftImgId,
+			int rightImgId) {
+		initTitleBarView();
+		titleBarContent.setVisibility(View.VISIBLE);
+		titleBarLeftImg.setVisibility(View.VISIBLE);
+		titleBarRightImg.setVisibility(View.VISIBLE);
+
+		titleBarContent.setText(content);
+		titleBarLeftImg.setImageResource(leftImgId);
+		titleBarRightImg.setImageResource(rightImgId);
+
+	}
+
 	protected void initTitleBar(String content) {
 		initTitleBarView();
 		titleBarContent.setVisibility(View.VISIBLE);

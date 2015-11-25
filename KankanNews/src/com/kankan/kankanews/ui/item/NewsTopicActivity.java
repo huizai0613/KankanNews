@@ -155,9 +155,6 @@ public class NewsTopicActivity extends BaseActivity implements
 		// NetUtils.getInstance(mContext).getAnalyse(this, "topic",
 		// new_news.getTitlelist(), new_news.getTitleurl());
 
-		// 初始化shareutil类
-		// shareUtil = new ShareUtil(mHomeModuleItem, mContext);
-
 		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
 				R.drawable.ic_close_white, R.drawable.ic_font,
 				R.drawable.ic_refresh);
@@ -239,6 +236,7 @@ public class NewsTopicActivity extends BaseActivity implements
 		boolean _flag = initLocalData();
 		if (_flag) {
 			showData();
+			shareUtil = new ShareUtil(mTopicModule, mContext);
 		}
 		if (CommonUtils.isNetworkAvailable(mContext)) {
 			initNetDate();
@@ -263,11 +261,15 @@ public class NewsTopicActivity extends BaseActivity implements
 		mTopicModule = JsonUtils.toObject(mTopicModuleJson.toString(),
 				NewsHomeModule.class);
 		if (!mTopicModule.getAppclassid().trim().equals("")) {
+			// 初始化shareutil类
+			shareUtil = new ShareUtil(mTopicModule, mContext);
 			this.saveLocalDate();
 			showData();
 		} else {
 			if (mTopicModule == null)
 				this.mRetryView.setVisibility(View.VISIBLE);
+			else
+				shareUtil = new ShareUtil(mTopicModule, mContext);
 		}
 	}
 
@@ -666,6 +668,8 @@ public class NewsTopicActivity extends BaseActivity implements
 			break;
 		case R.id.title_bar_content_img:
 			// 一键分享
+			if (shareUtil == null)
+				return;
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
@@ -686,7 +690,6 @@ public class NewsTopicActivity extends BaseActivity implements
 				initNetDate();
 			}
 			break;
-
 		}
 	}
 
