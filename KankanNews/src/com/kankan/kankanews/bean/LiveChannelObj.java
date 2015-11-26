@@ -169,4 +169,9 @@ public class LiveChannelObj implements CanBePlay, CanSharedObject, Serializable 
 		return sharepic;
 	}
 
+	@Override
+	public String getShareIntro() {
+		return this.getIntro();
+	}
+
 }

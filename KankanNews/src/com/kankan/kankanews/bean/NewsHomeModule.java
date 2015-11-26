@@ -153,4 +153,9 @@ public class NewsHomeModule implements Serializable, CanSharedObject {
 		this.setSharepic(sharepic);
 	}
 
+	@Override
+	public String getShareIntro() {
+		return getIntro();
+	}
+
 }

@@ -169,4 +169,10 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements
 		return this;
 	}
 
+	@Override
+	public String getShareIntro() {
+		return this.getIntro();
+	}
+
+
 }

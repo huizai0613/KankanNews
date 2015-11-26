@@ -124,9 +124,9 @@ public class ShareUtil {
 
 		String sharedUrl = handleUrl(shareObj.getTitleurl());
 
-		String sharedIntro = (shareObj.getIntro() == null || shareObj
-				.getIntro().trim().equals("")) ? shareObj.getShareTitle()
-				: shareObj.getIntro();
+		String sharedIntro = (shareObj.getShareIntro() == null || shareObj
+				.getShareIntro().trim().equals("")) ? shareObj.getShareTitle()
+				: shareObj.getShareIntro();
 
 		// 视频分享
 		UMVideo video = new UMVideo(shareObj.getTitleurl());

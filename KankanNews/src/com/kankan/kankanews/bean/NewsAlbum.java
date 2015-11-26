@@ -154,4 +154,9 @@ public class NewsAlbum implements Serializable, CanSharedObject {
 		this.setShare_titlepic(sharepic);
 	}
 
+	@Override
+	public String getShareIntro() {
+		return this.getShare_intro();
+	}
+
 }

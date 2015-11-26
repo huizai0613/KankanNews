@@ -171,4 +171,9 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> implements
 		return this.title;
 	}
 
+	@Override
+	public String getShareIntro() {
+		return this.getIntro();
+	}
+
 }

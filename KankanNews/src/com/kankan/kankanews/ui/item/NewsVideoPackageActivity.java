@@ -328,43 +328,47 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			onBackPressed();
 			break;
 		case R.id.title_bar_right_img:
-			if (shareUtil == null)
-				shareUtil = new ShareUtil(new CanSharedObject() {
-					@Override
-					public void setSharedPic(String sharepic) {
-						mNewsVPModule.getList().get(0).getSharedPic();
-					}
+			shareUtil = new ShareUtil(new CanSharedObject() {
+				@Override
+				public void setSharedPic(String sharepic) {
+					mNewsVPModule.getList().get(0).getSharedPic();
+				}
 
-					@Override
-					public String getTitleurl() {
-						return mNewsVPModule.getShare_url();
-					}
+				@Override
+				public String getTitleurl() {
+					return mNewsVPModule.getShare_url();
+				}
 
-					@Override
-					public String getTitlepic() {
-						return mNewsVPModule.getList().get(0).getTitlepic();
-					}
+				@Override
+				public String getTitlepic() {
+					return mNewsVPModule.getList().get(0).getTitlepic();
+				}
 
-					@Override
-					public String getTitle() {
-						return mNewsVPModule.getList().get(0).getTitle();
-					}
+				@Override
+				public String getTitle() {
+					return mNewsVPModule.getList().get(0).getTitle();
+				}
 
-					@Override
-					public String getSharedPic() {
-						return mNewsVPModule.getList().get(0).getSharedPic();
-					}
+				@Override
+				public String getSharedPic() {
+					return mNewsVPModule.getList().get(0).getSharedPic();
+				}
 
-					@Override
-					public String getShareTitle() {
-						return mNewsVPModule.getList().get(0).getShareTitle();
-					}
+				@Override
+				public String getShareTitle() {
+					return mNewsVPModule.getList().get(0).getShareTitle();
+				}
 
-					@Override
-					public String getIntro() {
-						return mNewsVPModule.getList().get(0).getIntro();
-					}
-				}, mContext);
+				@Override
+				public String getIntro() {
+					return mNewsVPModule.getList().get(0).getIntro();
+				}
+
+				@Override
+				public String getShareIntro() {
+					return mNewsVPModule.getList().get(0).getIntro();
+				}
+			}, mContext);
 			shareBoard = new CustomShareBoard(this, shareUtil, this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),

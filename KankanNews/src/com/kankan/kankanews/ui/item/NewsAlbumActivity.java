@@ -238,8 +238,6 @@ public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
 	protected void onSuccess(JSONObject jsonObject) {
 		mAlbumJson = jsonObject.toString();
 		mAlbum = (NewsAlbum) JsonUtils.toObject(mAlbumJson, NewsAlbum.class);
-		// 初始化shareutil类
-		shareUtil = new ShareUtil(mAlbum, mContext);
 		saveLocalDate();
 		showData();
 	}
@@ -429,6 +427,8 @@ public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
 			onBackPressed();
 			break;
 		case R.id.title_bar_content_img:
+			// 初始化shareutil类
+			shareUtil = new ShareUtil(mAlbum, mContext);
 			// 一键分享
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);

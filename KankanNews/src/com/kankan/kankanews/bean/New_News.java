@@ -237,6 +237,12 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 	public void setSharedPic(String sharedPic) {
 		this.sharedPic = sharedPic;
 	}
+
+	@Override
+	public String getShareIntro() {
+		return this.getIntro();
+	}
+
 	
 	// public ArrayList<String> getParagraph() {
 	// return paragraph;

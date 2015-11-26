@@ -222,4 +222,9 @@ public class NewsContent implements Serializable, CanSharedObject {
 		this.share_titlepic = sharedPic;
 	}
 
+	@Override
+	public String getShareIntro() {
+		return this.getShare_intro();
+	}
+
 }

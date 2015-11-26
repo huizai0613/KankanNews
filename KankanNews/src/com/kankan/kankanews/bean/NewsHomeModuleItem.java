@@ -194,4 +194,9 @@ public class NewsHomeModuleItem implements Serializable, CanSharedObject {
 
 	}
 
+	@Override
+	public String getShareIntro() {
+		return getIntro();
+	}
+
 }

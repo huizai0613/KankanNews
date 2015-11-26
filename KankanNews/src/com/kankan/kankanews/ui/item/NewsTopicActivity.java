@@ -247,7 +247,6 @@ public class NewsTopicActivity extends BaseActivity implements
 		boolean _flag = initLocalData();
 		if (_flag) {
 			showData();
-			shareUtil = new ShareUtil(mTopicModule, mContext);
 		} else {
 			if (CommonUtils.isNetworkAvailable(mContext)) {
 				initNetDate();
@@ -274,14 +273,11 @@ public class NewsTopicActivity extends BaseActivity implements
 				NewsHomeModule.class);
 		if (!mTopicModule.getAppclassid().trim().equals("")) {
 			// 初始化shareutil类
-			shareUtil = new ShareUtil(mTopicModule, mContext);
 			this.saveLocalDate();
 			showData();
 		} else {
 			if (mTopicModule == null)
 				this.mRetryView.setVisibility(View.VISIBLE);
-			else
-				shareUtil = new ShareUtil(mTopicModule, mContext);
 		}
 	}
 
@@ -696,8 +692,8 @@ public class NewsTopicActivity extends BaseActivity implements
 			break;
 		case R.id.title_bar_content_img:
 			// 一键分享
-			if (shareUtil == null)
-				return;
+			// if (shareUtil == null)
+			shareUtil = new ShareUtil(mTopicModule, mContext);
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);

@@ -158,6 +158,11 @@ public class LiveLiveObj implements CanBePlay, Serializable, CanSharedObject {
 		return sharepic;
 	}
 
+	@Override
+	public String getShareIntro() {
+		return this.getIntro();
+	}
+
 	/**
 	 * "id": "326", "title": "《琅琊榜》点映+发布会—上海站", "titlepic":
 	 * "http://p3.img.kksmg.com/image/2015/08/20/5d8c1101f7089cb1fea998b9537a9721.jpg"

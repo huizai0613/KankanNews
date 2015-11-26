@@ -221,7 +221,6 @@ public class NewsTopicListActivity extends BaseActivity implements
 		boolean _flag = this.initLocalData();
 		if (_flag) {
 			showData();
-			shareUtil = new ShareUtil(mTopicListModule, mContext);
 		} else {
 			refreshNetDate();
 		}
@@ -243,8 +242,6 @@ public class NewsTopicListActivity extends BaseActivity implements
 		if (mTopicListModule != null) {
 			if (mTopicListModule.getList().size() == 0)
 				mIsLoadEnd = true;
-			// 初始化shareutil类
-			shareUtil = new ShareUtil(mTopicListModule, mContext);
 			saveLocalDate();
 			showData();
 		}
@@ -630,8 +627,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 			onBackPressed();
 			break;
 		case R.id.title_bar_content_img:
-			if (shareUtil == null)
-				return;
+			shareUtil = new ShareUtil(mTopicListModule, mContext);
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);

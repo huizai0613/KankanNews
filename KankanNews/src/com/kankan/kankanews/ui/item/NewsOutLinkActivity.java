@@ -164,6 +164,8 @@ public class NewsOutLinkActivity extends BaseActivity implements
 			webFinish();
 			break;
 		case R.id.title_bar_right_second_img:
+			// 初始化shareutil类
+			shareUtil = new ShareUtil(mModuleItem, mContext);
 			// 一键分享
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
@@ -190,9 +192,6 @@ public class NewsOutLinkActivity extends BaseActivity implements
 		// NetUtils.getInstance(mContext).getAnalyse(this, "text",
 		// new_news.getTitlelist(), new_news.getTitleurl());
 		// 更新数据
-
-		// 初始化shareutil类
-		shareUtil = new ShareUtil(mModuleItem, mContext);
 
 		// webView.loadUrl(titleurl + "?fromkkApp=1");
 

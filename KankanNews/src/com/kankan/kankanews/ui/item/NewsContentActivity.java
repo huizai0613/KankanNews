@@ -242,7 +242,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			@Override
 			public void run() {
 				mVideoView.setVideoPath(video.getVideourl());
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+//				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 			}
 		});
 	};
@@ -382,7 +382,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	protected void onSuccess(JSONObject jsonObject) {
 		mNewsContent = JsonUtils.toObject(jsonObject.toString(),
 				NewsContent.class);
-		shareUtil = new ShareUtil(mNewsContent, mContext);
 		showData();
 	}
 
@@ -397,9 +396,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			onBackPressed();
 			break;
 		case R.id.title_bar_content_img:
+			shareUtil = new ShareUtil(mNewsContent, mContext);
 			// 一键分享
-			if (shareUtil == null)
-				return;
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);
