@@ -123,9 +123,8 @@ public class NewsOutLinkActivity extends BaseActivity implements
 
 		// 初始化头部 int leftImgId, String leftContent,
 		// int rightImgId, int rightImgSecondId, String bgColor
-		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
-				R.drawable.ic_close_white, R.drawable.ic_font,
-				R.drawable.ic_refresh);
+		initTitleBarIcon(0, R.drawable.new_ic_back, R.drawable.ic_close_white,
+				R.drawable.ic_refresh, R.drawable.ic_share);
 		// 头部的左右点击事件
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
@@ -165,9 +164,6 @@ public class NewsOutLinkActivity extends BaseActivity implements
 			webFinish();
 			break;
 		case R.id.title_bar_right_second_img:
-			this.refresh();
-			break;
-		case R.id.title_bar_content_img:
 			// 一键分享
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
@@ -175,8 +171,10 @@ public class NewsOutLinkActivity extends BaseActivity implements
 			shareBoard.showAtLocation(mContext.getWindow().getDecorView(),
 					Gravity.BOTTOM, 0, 0);
 			break;
-
+		case R.id.title_bar_content_img:
+			break;
 		case R.id.title_bar_right_img:
+			this.refresh();
 			break;
 
 		}

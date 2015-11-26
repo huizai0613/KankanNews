@@ -325,7 +325,8 @@ public class LiveLiveListFragment extends BaseFragment implements
 						.findViewById(R.id.live_live_list_separation);
 				View separationLine = layout
 						.findViewById(R.id.live_live_list_separation_line);
-				if (position == mLiveLiveList.getLive().size() && mLiveLiveList.getTrailer().size() > 0) {
+				if (position == mLiveLiveList.getLive().size()
+						&& mLiveLiveList.getTrailer().size() > 0) {
 					separation.setVisibility(View.VISIBLE);
 					separationLine.setVisibility(View.GONE);
 				} else {
@@ -336,11 +337,13 @@ public class LiveLiveListFragment extends BaseFragment implements
 						.findViewById(R.id.live_live_list_intro_but);
 				ImageView titlePic = (ImageView) layout
 						.findViewById(R.id.live_live_list_titlepic);
-				titlePic.getLayoutParams().height = (mActivity.mScreenWidth - PixelUtil.dp2px(25)) / 4;
+				titlePic.getLayoutParams().height = (mActivity.mScreenWidth - PixelUtil
+						.dp2px(25)) / 4;
 				ImageView yuyueBut = (ImageView) layout
 						.findViewById(R.id.live_live_list_yuyue);
-				ImgUtils.imageLoader.displayImage(CommonUtils.doWebpUrl(liveObj.getWidepic()),
-						titlePic, ImgUtils.homeImageOptions);
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(liveObj.getWidepic()), titlePic,
+						ImgUtils.homeImageOptions);
 				ImageView liveType = (ImageView) layout
 						.findViewById(R.id.live_live_list_livetype);
 				MyTextView title = (MyTextView) layout

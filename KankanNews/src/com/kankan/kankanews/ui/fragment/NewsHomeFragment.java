@@ -1067,7 +1067,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							}
 						});
 			} else if (itemType == 6) {
-				mOutLinkHolder.title.setText(module.getTitle());
+				mOutLinkHolder.title
+						.setText(module.getList().get(0).getTitle());
 				ImgUtils.imageLoader.displayImage(
 						CommonUtils.doWebpUrl(module.getList().get(0)
 								.getTitlepic()), mOutLinkHolder.titlePic,

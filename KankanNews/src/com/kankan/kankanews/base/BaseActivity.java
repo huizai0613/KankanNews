@@ -462,8 +462,7 @@ public abstract class BaseActivity extends FragmentActivity implements
 
 	}
 
-	protected void initTitleBar(String content, int leftImgId,
-			int rightImgId) {
+	protected void initTitleBar(String content, int leftImgId, int rightImgId) {
 		initTitleBarView();
 		titleBarContent.setVisibility(View.VISIBLE);
 		titleBarLeftImg.setVisibility(View.VISIBLE);
@@ -524,7 +523,12 @@ public abstract class BaseActivity extends FragmentActivity implements
 		}
 		titleBarRightImgSecond.setImageResource(rightImgSecondId);
 		titleBarLeftImg.setImageResource(leftImgId);
-		titleBarContentImg.setImageResource(contentId);
+		if (contentId == 0) {
+			titleBarContentImg.setBackground(null);
+			// titleBarContentImg.setVisibility(View.GONE);
+		} else {
+			titleBarContentImg.setImageResource(contentId);
+		}
 		titleBarLeftImgSecond.setImageResource(leftImgSecondId);
 	}
 
