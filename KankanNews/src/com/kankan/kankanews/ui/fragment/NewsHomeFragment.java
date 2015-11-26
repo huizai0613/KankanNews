@@ -239,7 +239,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	}
 
 	private void showData() {
-		DebugLog.e("卧槽");
 		this.mRetryView.setVisibility(View.GONE);
 		this.mLoadingView.setVisibility(View.GONE);
 		if (mNewsHomeListAdapter == null) {
@@ -248,8 +247,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		} else {
 			mNewsHomeListAdapter.notifyDataSetChanged();
 		}
-		if (mNewsHomeSwiperHeadAdapter != null)
+		if (mNewsHomeSwiperHeadAdapter != null) {
+			DebugLog.e("卧槽");
+			mNewsHomeSwiperHeadAdapter.setItemList(mNewsHome.getModule_list()
+					.get(0).getList());
 			mNewsHomeSwiperHeadAdapter.notifyDataSetChanged();
+		}
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -328,8 +331,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			this.mNewsHomeListJson = jsonObject.toString();
 			mNewsHome = JsonUtils.toObject(this.mNewsHomeListJson,
 					NewsHome.class);
-			showData();
-			saveLocalDate();
+			if (judgeObject()) {
+				showData();
+				saveLocalDate();
+			}
 		}
 		mNewsHomeListView.onRefreshComplete();
 	}
@@ -1281,6 +1286,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	public class NewsHomeSwiperHeadAdapter extends RecyclingPagerAdapter {
 		private List<NewsHomeModuleItem> itemList;
 
+		public void setItemList(List<NewsHomeModuleItem> itemList) {
+			this.itemList = itemList;
+		}
+
 		private int mChildCount = 0;
 
 		public NewsHomeSwiperHeadAdapter(List<NewsHomeModuleItem> itemList) {
@@ -1381,5 +1390,28 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				NewsHomeFragment.this.startAnimActivityByNewsHomeModuleItem(
 						NewsTopicListActivity.class, moduleItem);
 		}
+	}
+
+	private boolean judgeObject() {
+		if (mNewsHome.getModule_list().get(0).getList().size() < 1)
+			return false;
+		if (mNewsHome.getModule_list().size() > 1) {
+			for (int i = 1; i < mNewsHome.getModule_list().size(); i++) {
+				NewsHomeModule module = mNewsHome.getModule_list().get(i);
+				if (module.getType().equals("matrix")) {
+					if (module.getNum() != 4 && module.getNum() != 3)
+						return false;
+				}
+				if (module.getType().equals("swiper-video")) {
+					if (module.getList().size() < 1)
+						return false;
+				}
+				if (module.getType().equals("topicpackage")) {
+					if (module.getList().size() < 2)
+						return false;
+				}
+			}
+		}
+		return true;
 	}
 }

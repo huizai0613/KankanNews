@@ -355,9 +355,11 @@ public class SplashActivity extends BaseActivity {
 								goGuide();
 							} else {
 								// mHandler.sendEmptyMessage(CLICK_GO_HOME);
-								if (key.equalsIgnoreCase("infoid"))
+								if (key.equalsIgnoreCase("infoid")) {
 									goTrasition();
-								goHome();
+								} else {
+									goHome();
+								}
 							}
 						}
 					}
