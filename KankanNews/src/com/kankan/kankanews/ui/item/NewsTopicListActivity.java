@@ -139,7 +139,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 	}
 
 	protected void initListView() {
-		mTopicListListView.setMode(Mode.PULL_UP_TO_REFRESH);
+		mTopicListListView.setMode(Mode.BOTH);
 		mTopicListListView.getLoadingLayoutProxy(true, false).setPullLabel(
 				"下拉可以刷新");
 		mTopicListListView.getLoadingLayoutProxy(true, false).setReleaseLabel(
@@ -152,7 +152,6 @@ public class NewsTopicListActivity extends BaseActivity implements
 				"松开立即加载");
 		mTopicListListView
 				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
-
 					@Override
 					public void onPullDownToRefresh(
 							PullToRefreshBase refreshView) {
@@ -653,13 +652,21 @@ public class NewsTopicListActivity extends BaseActivity implements
 
 	@Override
 	public void refresh() {
-		mLoadingView.setVisibility(View.VISIBLE);
-		if (CommonUtils.isNetworkAvailable(mContext)) {
-			refreshNetDate();
-		} else {
-			if (mTopicListModule != null)
-				mLoadingView.setVisibility(View.GONE);
-		}
+		// mLoadingView.setVisibility(View.VISIBLE);
+		// if (CommonUtils.isNetworkAvailable(mContext)) {
+		// refreshNetDate();
+		// } else {
+		// if (mTopicListModule != null)
+		// mLoadingView.setVisibility(View.GONE);
+		// }
+		this.mTopicListListView.setSelection(0);
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				mTopicListListView.setmCurrentMode(Mode.PULL_FROM_START);
+				mTopicListListView.setRefreshing(false);
+			}
+		}, 100);
 	}
 
 	@Override

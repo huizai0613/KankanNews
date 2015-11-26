@@ -654,8 +654,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 				setItemTitleFontSize();
 				final NewsHomeModuleItem moduleItem = mNewsVPModule.getList()
 						.get(position);
-				moduleItem.setTitlepic(CommonUtils.doWebpUrl(moduleItem
-						.getTitlepic()));
+				moduleItem.setTitlepic(moduleItem.getTitlepic());
 
 				newsItemHolder.titlepic.setTag(R.string.viewwidth,
 						PixelUtil.dp2px(80));
@@ -709,6 +708,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		DebugLog.e("我i可分区域");
 		if (shareUtil != null) {
 			UMSsoHandler ssoHandler = shareUtil.getmController().getConfig()
 					.getSsoHandler(requestCode);
