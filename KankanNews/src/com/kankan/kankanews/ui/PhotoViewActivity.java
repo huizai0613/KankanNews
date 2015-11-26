@@ -17,7 +17,9 @@ import android.widget.LinearLayout;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.photoview.PhotoView;
+import com.kankan.kankanews.photoview.PhotoViewAttacher;
 import com.kankan.kankanews.photoview.PhotoViewAttacher.OnPhotoTapListener;
+import com.kankan.kankanews.photoview.PhotoViewAttacher.OnViewTapListener;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
@@ -122,6 +124,13 @@ public class PhotoViewActivity extends BaseActivity implements OnClickListener,
 					.findViewById(R.id.img_photo_view);
 			ImgUtils.imageLoader.displayImage(picUrl, photoView,
 					ImgUtils.homeImageOptions);
+			// PhotoViewAttacher mAttacher = new PhotoViewAttacher(photoView);
+			// mAttacher.setOnViewTapListener(new OnViewTapListener() {
+			// @Override
+			// public void onViewTap(View view, float x, float y) {
+			// DebugLog.e("单击");
+			// }
+			// });
 			view.setTag(photoView);
 			container.addView(view);
 			return view;
