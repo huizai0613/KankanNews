@@ -83,7 +83,7 @@ function changeFontSize(font) {
 	document.body.className = font;
 }
 function showBody() {
-	var bodyHtml = document.body.innerHTML;
+	var bodyHtml = document.getElementsByTagName('html')[0].innerHTML;
 	//alert(document.body.offsetWidth);
 	//window.news.showBody(window.height + '   ' + window.width);
 	window.news.showBody(bodyHtml);

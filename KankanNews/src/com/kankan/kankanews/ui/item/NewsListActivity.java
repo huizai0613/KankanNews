@@ -115,9 +115,10 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		boolean flag = this.initLocalData();
 		if (flag) {
 			showData();
+		} else {
 			mNewsListView.showHeadLoadingView();
+			refreshNetDate();
 		}
-		refreshNetDate();
 	}
 
 	protected void initListView() {
@@ -403,7 +404,14 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 						CommonUtils.doWebpUrl(news.getTitlepic()),
 						mNewsListHolder.titlepic, ImgUtils.homeImageOptions);
 				mNewsListHolder.title.setText(news.getTitle());
-				mNewsListHolder.newsClick.setText(clicktime);
+				if (news.getType().equals("outlink")) {
+					mNewsListHolder.newsTimeIcon.setVisibility(View.GONE);
+					mNewsListHolder.newsClick.setVisibility(View.GONE);
+				} else {
+					mNewsListHolder.newsTimeIcon.setVisibility(View.VISIBLE);
+					mNewsListHolder.newsClick.setVisibility(View.VISIBLE);
+					mNewsListHolder.newsClick.setText(clicktime);
+				}
 				mNewsListHolder.keyboardIconContent.setVisibility(View.VISIBLE);
 				Keyboard mKeyboard = news.getKeyboard();
 				if (mKeyboard != null
@@ -523,10 +531,18 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 					.findFirst(Selector.from(SerializableObj.class).where(
 							"classType", "=", "NewsListView" + mAppClassId));
 			if (object != null) {
-				mNewsHomeModuleJson = object.getJsonStr();
-				mNewsHomeModule = JsonUtils.toObject(mNewsHomeModuleJson,
-						NewsHomeModule.class);
-				return true;
+				if (TimeUtil.isListSaveTimeOK(object.getSaveTime())) {
+					mNewsHomeModuleJson = object.getJsonStr();
+					mNewsHomeModule = JsonUtils.toObject(mNewsHomeModuleJson,
+							NewsHomeModule.class);
+					return true;
+				} else {
+					this.dbUtils.delete(
+							SerializableObj.class,
+							WhereBuilder.b("classType", "=", "NewsListView"
+									+ mAppClassId));
+					return false;
+				}
 			} else {
 				return false;
 			}
@@ -541,7 +557,7 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		try {
 			SerializableObj obj = new SerializableObj(UUID.randomUUID()
 					.toString(), mNewsHomeModuleJson, "NewsListView"
-					+ mAppClassId);
+					+ mAppClassId, new Date().getTime());
 			this.dbUtils.delete(
 					SerializableObj.class,
 					WhereBuilder.b("classType", "=", "NewsListView"

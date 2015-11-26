@@ -1,6 +1,9 @@
 package com.kankan.kankanews.ui.item;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -119,6 +122,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	private boolean isPause;
 
+	private int mScrollY;
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -130,6 +135,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			// if (shareBoard != null && shareBoard.isShowing()) {
 			// shareBoard.dismiss();
 			// }
+			this.mContentWebView.setVisibility(View.GONE);
+			mScrollY = this.mScrollView.getScrollY();
 			mVideoViewController
 					.setmControllerType(ControllerType.FullScrennController);
 			mVideoViewController.changeView();
@@ -158,6 +165,14 @@ public class NewsContentActivity extends BaseVideoActivity implements
 					LayoutParams.MATCH_PARENT);
 
 		} else {
+			this.mContentWebView.setVisibility(View.VISIBLE);
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					DebugLog.e(mScrollY + "");
+					mScrollView.scrollTo(0, mScrollY);// 改变滚动条的位置
+				}
+			}, 200);
 			mVideoViewController
 					.setmControllerType(ControllerType.SmallController);
 			mVideoViewController.changeView();
@@ -227,7 +242,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			@Override
 			public void run() {
 				mVideoView.setVideoPath(video.getVideourl());
-//				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 			}
 		});
 	};
@@ -521,6 +536,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			} else
 				buf.append(paragraph);
 		}
+		DebugLog.e(buf.toString());
 		return buf.toString();
 	}
 
@@ -759,6 +775,27 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		@JavascriptInterface
 		public void showBody(String body) {
 			DebugLog.e(body);
+			File file = CommonUtils.getImageCachePath(getApplicationContext());
+			file = new File(file.getAbsolutePath() + "test.html");
+			DebugLog.e(file.getAbsolutePath());
+			FileOutputStream out = null;
+			try {
+				out = new FileOutputStream(file);
+				out.write(body.getBytes());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				DebugLog.e(e.getLocalizedMessage());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				DebugLog.e(e.getLocalizedMessage());
+			} finally{
+				try {
+					out.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					DebugLog.e(e.getLocalizedMessage());
+				}
+			}
 		}
 	}
 

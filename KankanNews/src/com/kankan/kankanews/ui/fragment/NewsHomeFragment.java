@@ -103,8 +103,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	private String[] VOTE_ANSWER_PREFIX = { "A.", "B.", "C.", "D.", "E.", "F." };
 
-	private int[] VOTE_ANSWER_COLOR = { R.color.green, R.color.blue,
-			R.color.yellow, R.color.red, R.color.cyan, R.color.fuchsia };
+	private String[] VOTE_ANSWER_COLOR = { "#5cc644", "#51bce4", "#ff9a16",
+			"#ec3838", "#00FFFF", "#FF00FF" };
 
 	private Map<String, Integer> mRandomNumMap = new HashMap<String, Integer>();
 
@@ -682,7 +682,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mOutLinkHolder.titlePic = (ImageView) convertView
 							.findViewById(R.id.item_news_home_outlink_image);
 					mOutLinkHolder.titlePic.getLayoutParams().height = (int) ((mActivity.mScreenWidth - PixelUtil
-							.dp2px(12.5f * 2)) / 2.4);
+							.dp2px(12.5f * 2)) / 600 * 285);
 					convertView.setTag(mOutLinkHolder);
 				} else if (itemType == 7) {
 					mVoteHolder = new VoteHolder();
@@ -1067,14 +1067,15 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							}
 						});
 			} else if (itemType == 6) {
-				mOutLinkHolder.title
-						.setText(module.getList().get(0).getTitle());
+				mOutLinkHolder.title.setText(module.getTitle());
 				ImgUtils.imageLoader.displayImage(
 						CommonUtils.doWebpUrl(module.getList().get(0)
 								.getTitlepic()), mOutLinkHolder.titlePic,
 						ImgUtils.homeImageOptions);
 				mOutLinkHolder.keyboardIconContent.setVisibility(View.VISIBLE);
 				Keyboard mKeyboard = module.getList().get(0).getKeyboard();
+				mKeyboard.setColor("#ffab40");
+				mKeyboard.setText("推广");
 				if (mKeyboard != null
 						&& !mKeyboard.getColor().trim().equals("")
 						&& !mKeyboard.getText().trim().equals("")) {
@@ -1209,8 +1210,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				answerLoading.getLayoutParams().width = (int) (maxLength * percent);
 			else
 				answerLoading.getLayoutParams().width = PixelUtil.dp2px(10);
-			((GradientDrawable) answerLoading.getBackground())
-					.setColor(getResources().getColor(VOTE_ANSWER_COLOR[i]));
+			((GradientDrawable) answerLoading.getBackground()).setColor(Color
+					.parseColor(VOTE_ANSWER_COLOR[i]));
 			TextView answerPercent = (TextView) itemView
 					.findViewById(R.id.vote_answer_percent);
 			BigDecimal tmpPercent = new BigDecimal(

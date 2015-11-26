@@ -6,6 +6,8 @@ public class AndroidConfig {
 
 	public static final long _NEWS_CONTENT_SAVE_OK_TIME_ = 24 * 60 * 60 * 1000;// 新闻内容页缓存过期时间
 
+	public static final long _NEWS_LIST_SAVE_OK_TIME_ = 60 * 60 * 1000;// 新闻内容页缓存过期时间
+
 	public static final String SHARENAME = "transportationAndroid";
 
 	public static final String DOWLOADAPK = "http://www.uw52.com/apk/test.apk";

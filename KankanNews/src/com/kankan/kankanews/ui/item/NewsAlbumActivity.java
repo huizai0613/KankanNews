@@ -175,7 +175,7 @@ public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
 							"classType", "=",
 							"NewsAlbum" + mHomeModuleItem.getO_cmsid()));
 			if (object != null) {
-				if (TimeUtil.isSaveTimeOK(object.getSaveTime())) {
+				if (TimeUtil.isContentSaveTimeOK(object.getSaveTime())) {
 					mAlbumJson = object.getJsonStr();
 					mAlbum = JsonUtils.toObject(mAlbumJson, NewsAlbum.class);
 					return true;

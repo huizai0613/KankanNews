@@ -2,6 +2,7 @@ package com.kankan.kankanews.ui.item;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -47,6 +48,7 @@ import com.iss.view.pulltorefresh.PullToRefreshPinnedSectionListView;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.bean.Keyboard;
+import com.kankan.kankanews.bean.NewsAlbum;
 import com.kankan.kankanews.bean.NewsHome;
 import com.kankan.kankanews.bean.NewsHomeModule;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
@@ -68,6 +70,7 @@ import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
+import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -191,10 +194,18 @@ public class NewsTopicActivity extends BaseActivity implements
 							"classType", "=",
 							"NewsTopic" + mHomeModuleItem.getAppclassid()));
 			if (object != null) {
-				mTopicModuleJson = new JSONObject(object.getJsonStr());
-				mTopicModule = JsonUtils.toObject(mTopicModuleJson.toString(),
-						NewsHomeModule.class);
-				return true;
+				if (TimeUtil.isListSaveTimeOK(object.getSaveTime())) {
+					mTopicModuleJson = new JSONObject(object.getJsonStr());
+					mTopicModule = JsonUtils.toObject(
+							mTopicModuleJson.toString(), NewsHomeModule.class);
+					return true;
+				} else {
+					this.dbUtils.delete(
+							SerializableObj.class,
+							WhereBuilder.b("classType", "=", "NewsTopic"
+									+ mHomeModuleItem.getAppclassid()));
+					return false;
+				}
 			} else {
 				return false;
 			}
@@ -211,7 +222,7 @@ public class NewsTopicActivity extends BaseActivity implements
 		try {
 			SerializableObj obj = new SerializableObj(UUID.randomUUID()
 					.toString(), mTopicModuleJson.toString(), "NewsTopic"
-					+ mTopicModule.getAppclassid());
+					+ mTopicModule.getAppclassid(), new Date().getTime());
 			this.dbUtils.delete(
 					SerializableObj.class,
 					WhereBuilder.b("classType", "=",
@@ -237,12 +248,13 @@ public class NewsTopicActivity extends BaseActivity implements
 		if (_flag) {
 			showData();
 			shareUtil = new ShareUtil(mTopicModule, mContext);
-		}
-		if (CommonUtils.isNetworkAvailable(mContext)) {
-			initNetDate();
 		} else {
-			if (!_flag) {
-				this.mRetryView.setVisibility(View.VISIBLE);
+			if (CommonUtils.isNetworkAvailable(mContext)) {
+				initNetDate();
+			} else {
+				if (!_flag) {
+					this.mRetryView.setVisibility(View.VISIBLE);
+				}
 			}
 		}
 	}
@@ -430,6 +442,8 @@ public class NewsTopicActivity extends BaseActivity implements
 							spUtil.getFontSizeRadix());
 					newHolder.newstime = (MyTextView) convertView
 							.findViewById(R.id.home_news_newstime);
+					newHolder.newsTimeIcon = (ImageView) convertView
+							.findViewById(R.id.home_news_newstime_sign);
 					newHolder.news_type = (ImageView) convertView
 							.findViewById(R.id.home_news_newstype);
 					newHolder.home_news_play = (ImageView) convertView
@@ -506,7 +520,14 @@ public class NewsTopicActivity extends BaseActivity implements
 						CommonUtils.doWebpUrl(item.getTitlepic()),
 						newHolder.titlepic, ImgUtils.homeImageOptions);
 				newHolder.title.setText(item.getTitle());
-				newHolder.newstime.setText(item.getOnclick() + "");
+				if (item.getType().equals("outlink")) {
+					newHolder.newsTimeIcon.setVisibility(View.GONE);
+					newHolder.newstime.setVisibility(View.GONE);
+				} else {
+					newHolder.newsTimeIcon.setVisibility(View.VISIBLE);
+					newHolder.newstime.setVisibility(View.VISIBLE);
+					newHolder.newstime.setText(item.getOnclick() + "");
+				}
 				convertView.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -652,6 +673,7 @@ public class NewsTopicActivity extends BaseActivity implements
 			MyTextView title;
 			ImageView newstime_sign;
 			ImageView home_news_play;
+			ImageView newsTimeIcon;
 			MyTextView newstime;
 			ImageView news_type;
 			LinearLayout keyboardIconContent;

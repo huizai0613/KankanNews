@@ -337,8 +337,12 @@ public class TimeUtil {
 		}
 	}
 
-	public static boolean isSaveTimeOK(long saveTime) {
+	public static boolean isContentSaveTimeOK(long saveTime) {
 		return new Date().getTime() - saveTime < AndroidConfig._NEWS_CONTENT_SAVE_OK_TIME_;
+	}
+
+	public static boolean isListSaveTimeOK(long saveTime) {
+		return new Date().getTime() - saveTime < AndroidConfig._NEWS_LIST_SAVE_OK_TIME_;
 	}
 
 }

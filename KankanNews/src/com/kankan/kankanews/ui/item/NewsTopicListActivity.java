@@ -2,6 +2,7 @@ package com.kankan.kankanews.ui.item;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -71,6 +72,7 @@ import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
+import com.kankan.kankanews.utils.TimeUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -220,8 +222,9 @@ public class NewsTopicListActivity extends BaseActivity implements
 		if (_flag) {
 			showData();
 			shareUtil = new ShareUtil(mTopicListModule, mContext);
+		} else {
+			refreshNetDate();
 		}
-		refreshNetDate();
 	}
 
 	@Override
@@ -234,7 +237,6 @@ public class NewsTopicListActivity extends BaseActivity implements
 
 	@Override
 	protected void onSuccess(JSONObject jsonObject) {
-		DebugLog.e("onSuccess");
 		mTopicListModuleJson = jsonObject.toString();
 		mTopicListModule = JsonUtils.toObject(mTopicListModuleJson,
 				NewsHomeModule.class);
@@ -253,7 +255,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 		try {
 			SerializableObj obj = new SerializableObj(UUID.randomUUID()
 					.toString(), mTopicListModuleJson, "NewsTopicList"
-					+ mHomeModuleItem.getAppclassid());
+					+ mHomeModuleItem.getAppclassid(), new Date().getTime());
 			this.dbUtils.delete(
 					SerializableObj.class,
 					WhereBuilder.b("classType", "=", "NewsTopicList"
@@ -272,10 +274,18 @@ public class NewsTopicListActivity extends BaseActivity implements
 							"classType", "=",
 							"NewsTopicList" + mHomeModuleItem.getAppclassid()));
 			if (object != null) {
-				mTopicListModuleJson = object.getJsonStr();
-				mTopicListModule = JsonUtils.toObject(mTopicListModuleJson,
-						NewsHomeModule.class);
-				return true;
+				if (TimeUtil.isListSaveTimeOK(object.getSaveTime())) {
+					mTopicListModuleJson = object.getJsonStr();
+					mTopicListModule = JsonUtils.toObject(mTopicListModuleJson,
+							NewsHomeModule.class);
+					return true;
+				} else {
+					this.dbUtils.delete(
+							SerializableObj.class,
+							WhereBuilder.b("classType", "=", "NewsTopicList"
+									+ mHomeModuleItem.getAppclassid()));
+					return false;
+				}
 			} else {
 				return false;
 			}
@@ -316,6 +326,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 		MyTextView title;
 		ImageView newstime_sign;
 		ImageView home_news_play;
+		ImageView newsTimeIcon;
 		MyTextView newstime;
 		ImageView news_type;
 		LinearLayout keyboardIconContent;
@@ -413,6 +424,8 @@ public class NewsTopicListActivity extends BaseActivity implements
 							spUtil.getFontSizeRadix());
 					mNewContentHolder.newstime = (MyTextView) convertView
 							.findViewById(R.id.home_news_newstime);
+					mNewContentHolder.newsTimeIcon = (ImageView) convertView
+							.findViewById(R.id.home_news_newstime_sign);
 					mNewContentHolder.news_type = (ImageView) convertView
 							.findViewById(R.id.home_news_newstype);
 					mNewContentHolder.home_news_play = (ImageView) convertView
@@ -494,7 +507,14 @@ public class NewsTopicListActivity extends BaseActivity implements
 				mNewContentHolder.title.setText(item.getTitle());
 				mNewContentHolder.keyboardIconContent
 						.setVisibility(View.VISIBLE);
-				mNewContentHolder.newstime.setText(item.getOnclick() + "");
+				if (item.getType().equals("outlink")) {
+					mNewContentHolder.newsTimeIcon.setVisibility(View.GONE);
+					mNewContentHolder.newstime.setVisibility(View.GONE);
+				} else {
+					mNewContentHolder.newsTimeIcon.setVisibility(View.VISIBLE);
+					mNewContentHolder.newstime.setVisibility(View.VISIBLE);
+					mNewContentHolder.newstime.setText(item.getOnclick() + "");
+				}
 				Keyboard mKeyboard = item.getKeyboard();
 				if (mKeyboard != null
 						&& !mKeyboard.getColor().trim().equals("")
