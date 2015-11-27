@@ -131,6 +131,15 @@ public class PhotoViewActivity extends BaseActivity implements OnClickListener,
 			// DebugLog.e("单击");
 			// }
 			// });
+			photoView.setOnPhotoTapListener(new OnPhotoTapListener() {
+
+				@Override
+				public void onPhotoTap(View view, float x, float y) {
+					// TODO Auto-generated method stub
+					DebugLog.e("单击");
+					finish();
+				}
+			});
 			view.setTag(photoView);
 			container.addView(view);
 			return view;

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 
@@ -59,6 +60,7 @@ import com.kankan.kankanews.bean.NewsContentVideo;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.ui.MainActivity;
+import com.kankan.kankanews.ui.PhotoViewActivity;
 import com.kankan.kankanews.ui.view.VideoViewController;
 import com.kankan.kankanews.ui.view.VideoViewController.ControllerType;
 import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
@@ -84,6 +86,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private final static int _SHOW_IMAGE_ = 1;
 	private final static int _CHANGE_IMAGE_PROCESS_ = 2;
 	private final static int _SHOW_VIDEO_ = 3;
+	private final static int _PREVIEW_IMAGE_ = 4;
+
 	// 分享类
 	private ShareUtil shareUtil;
 	private NewsContent mNewsContent;
@@ -231,6 +235,24 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				mVideoRootView.setVisibility(View.VISIBLE);
 				playVideo(video);
 				break;
+			case _PREVIEW_IMAGE_:
+				String imgKey = msg.getData().getString("_IMAGE_KEY_");
+				Map<String, NewsContentImage> imgMap = mNewsContent
+						.getConponents().getImage();
+				String[] mImages = new String[imgMap.values().size()];
+				int i = 0;
+				int num = 0;
+				for (Map.Entry<String, NewsContentImage> entry : imgMap
+						.entrySet()) {
+					if (entry.getKey().equals(imgKey))
+						num = i;
+					mImages[i++] = entry.getValue().getImageurl();
+				}
+				Intent intent = new Intent(mContext, PhotoViewActivity.class);
+				intent.putExtra("_IMAGE_GROUP_", mImages);
+				intent.putExtra("_PHOTO_CUR_NUM_", num);
+				startActivity(intent);
+				break;
 			}
 		}
 	};
@@ -242,7 +264,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			@Override
 			public void run() {
 				mVideoView.setVideoPath(video.getVideourl());
-//				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+				// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 			}
 		});
 	};
@@ -591,9 +613,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				/ PixelUtil.getScale();
 		DebugLog.e(image.getWidth() + " " + image.getHeight() + " " + imgHeight
 				+ "");
-		String template = "<p style='text-align: center'><em><i></i><img id='%s' height='%s' width='%s' src='images/loading_0.png' /><span>%s</span></em></p>";
+		String template = "<p style='text-align: center'><em><i></i><img id='%s' height='%s' width='%s' src='images/loading_0.png' onclick=\"previewImage('%s')\" /><span>%s</span></em></p>";
 		return String.format(template, imageKey, imgHeight, this.mWebWidth,
-				image.getTitle());
+				imageKey, image.getTitle());
 	}
 
 	private String initVideo(String content) {
@@ -766,6 +788,16 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		}
 
 		@JavascriptInterface
+		public void previewImage(String imgKey) {
+			Message msg = new Message();
+			msg.what = NewsContentActivity._PREVIEW_IMAGE_;
+			Bundle bundle = new Bundle();
+			bundle.putString("_IMAGE_KEY_", imgKey);
+			msg.setData(bundle);
+			mHandle.sendMessage(msg);
+		}
+
+		@JavascriptInterface
 		public void showtoast(String toast) {
 			Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
 		}
@@ -786,7 +818,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				DebugLog.e(e.getLocalizedMessage());
-			} finally{
+			} finally {
 				try {
 					out.close();
 				} catch (IOException e) {

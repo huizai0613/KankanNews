@@ -75,6 +75,9 @@ function changeImageProcess(process, id) {
 function openNews(id, type, title) {
 	news.openNews(id, type, title);
 }
+function previewImage(id) {
+	news.previewImage(id);
+}
 function openVideo(id) {
 	var video_1 = document.getElementById(id);
 	news.openVideo(id, video_1.offsetLeft, video_1.offsetTop);
