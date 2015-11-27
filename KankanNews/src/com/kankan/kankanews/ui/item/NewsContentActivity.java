@@ -470,6 +470,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	}
 
 	public void showData() {
+//		mContentWebView.loadDataWithBaseURL("file:///android_asset/newsTemplate.html", "sdsdsd", "text/html", "utf-8","");
 		mContentWebView.loadUrl("file:///android_asset/newsTemplate.html");
 		mContentWebView.addJavascriptInterface(new News(), "news");
 	}
