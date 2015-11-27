@@ -585,7 +585,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 								.findViewById(R.id.item_news_home_matrix_item_title);
 						image.setLayoutParams(layoutParams);
 						FontUtils.setTextViewFontSize(NewsHomeFragment.this,
-								title, R.string.home_news_text_size, 1);
+								title, R.string.home_news_matrix_text_size, 1);
 					}
 					convertView.setTag(mMatrixHolder);
 				} else if (itemType == 2) {

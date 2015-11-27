@@ -14,5 +14,6 @@
     <string name="revelations_aboutreport_news_text_size">10</string>
     <string name="border_text_view_text_size">10</string>
     <string name="live_border_text_view_text_size">8</string>
+    <string name="home_news_matrix_text_size">11.5</string>
 
 </resources>

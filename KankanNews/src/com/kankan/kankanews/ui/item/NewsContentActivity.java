@@ -131,7 +131,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		DebugLog.e("我了割草");
 		int width = wm.getDefaultDisplay().getWidth();
 		int height = wm.getDefaultDisplay().getHeight();
 		WindowManager.LayoutParams attrs = getWindow().getAttributes();
@@ -173,7 +172,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			new Handler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					DebugLog.e(mScrollY + "");
 					mScrollView.scrollTo(0, mScrollY);// 改变滚动条的位置
 				}
 			}, 200);
@@ -394,7 +392,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	protected void refreshNetData() {
 		if (CommonUtils.isNetworkAvailable(this)) {
-			DebugLog.e(mNewsId + " " + mNewsType);
 			netUtils.getNewsContent(mNewsId, mNewsType, this.mListener,
 					this.mErrorListener);
 		}
@@ -418,6 +415,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			onBackPressed();
 			break;
 		case R.id.title_bar_content_img:
+			if (mNewsContent == null)
+				return;
 			shareUtil = new ShareUtil(mNewsContent, mContext);
 			// 一键分享
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
@@ -556,7 +555,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			} else
 				buf.append(paragraph);
 		}
-		DebugLog.e(buf.toString());
 		return buf.toString();
 	}
 
@@ -611,8 +609,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				});
 		int imgHeight = this.calcuHeight(image.getWidth(), image.getHeight())
 				/ PixelUtil.getScale();
-		DebugLog.e(image.getWidth() + " " + image.getHeight() + " " + imgHeight
-				+ "");
 		String template = "<p style='text-align: center'><em><i></i><img id='%s' height='%s' width='%s' src='images/loading_0.png' onclick=\"previewImage('%s')\" /><span>%s</span></em></p>";
 		return String.format(template, imageKey, imgHeight, this.mWebWidth,
 				imageKey, image.getTitle());
@@ -724,7 +720,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			// NewsContentActivity.this.mScreenWidth
 			// - width * PixelUtil.getScale() * 2;
 			NewsContentActivity.this.mWebWidth = (int) (NewsContentActivity.this.mScreenWidth * 0.9);
-			DebugLog.e(mWebWidth + "");
 		}
 
 		@JavascriptInterface
@@ -804,10 +799,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 		@JavascriptInterface
 		public void showBody(String body) {
-			DebugLog.e(body);
 			File file = CommonUtils.getImageCachePath(getApplicationContext());
 			file = new File(file.getAbsolutePath() + "test.html");
-			DebugLog.e(file.getAbsolutePath());
 			FileOutputStream out = null;
 			try {
 				out = new FileOutputStream(file);
