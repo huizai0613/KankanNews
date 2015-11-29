@@ -196,7 +196,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			showData();
 		}
 		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
-			refreshNetDate();
+//			refreshNetDate();
+			mNewsHomeListView.setmCurrentMode(Mode.PULL_FROM_START);
+			mNewsHomeListView.setRefreshing(false);
 		} else {
 			if (hasLocal) {
 

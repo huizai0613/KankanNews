@@ -184,6 +184,7 @@ public class ColumsActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void showData() {
+		this.mRetryView.setVisibility(View.GONE);
 		this.mLoadingView.setVisibility(View.GONE);
 		if (mColumsAdapter == null) {
 			mColumsAdapter = new ColumsAdapter(this);
