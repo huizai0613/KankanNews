@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseActivity;
@@ -33,6 +34,7 @@ public class PhotoViewActivity extends BaseActivity implements OnClickListener,
 	private int curPageNum;
 	private ViewPager photoViewPager;
 	private LinearLayout pointsContent;
+	private TextView numView;
 	private MyVpAdapter viewPagerAdapter;
 
 	@Override
@@ -49,6 +51,7 @@ public class PhotoViewActivity extends BaseActivity implements OnClickListener,
 				.findViewById(R.id.photo_view_view_pager);
 		pointsContent = (LinearLayout) this
 				.findViewById(R.id.photo_view_points_vontent);
+		numView = (TextView) this.findViewById(R.id.photo_view_num_text);
 	}
 
 	@Override
@@ -75,10 +78,11 @@ public class PhotoViewActivity extends BaseActivity implements OnClickListener,
 			}
 			imagePointViews.get(curPageNum).setBackgroundResource(
 					R.drawable.point_red);
-			pointsContent.setVisibility(View.VISIBLE);
+			pointsContent.setVisibility(View.GONE);
 		} else {
 			pointsContent.setVisibility(View.GONE);
 		}
+		numView.setText((curPageNum + 1) + "/" + imageGroup.length);
 		viewPagerAdapter = new MyVpAdapter();
 		photoViewPager.setAdapter(viewPagerAdapter);
 		if (curPageNum != 0)
@@ -186,7 +190,8 @@ public class PhotoViewActivity extends BaseActivity implements OnClickListener,
 		}
 		imagePointViews.get(arg0 % imagePointViews.size())
 				.setBackgroundResource(R.drawable.point_red);
-
+		int num = arg0 % imagePointViews.size() + 1;
+		numView.setText(num + "/" + imageGroup.length);
 	}
 
 }

@@ -786,6 +786,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 							.get(curPlayNo).getTitle());
 					mVideoPkgVideoView.requestFocus();
 					mVideoPkgVideoView.start();
+					mVideoPkgVideoStart.setVisibility(View.GONE);
 
 					NetUtils.getInstance(mContext).getAnalyse(
 							this,

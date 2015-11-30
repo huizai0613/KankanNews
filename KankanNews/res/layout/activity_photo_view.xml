@@ -22,4 +22,15 @@
         android:orientation="horizontal" >
     </LinearLayout>
 
+    <com.kankan.kankanews.ui.view.MyTextView
+        android:id="@+id/photo_view_num_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="10dip"
+        android:layout_marginLeft="10dip"
+        android:textColor="@color/mid_gray"
+        android:textSize="20dp"/>
+
 </RelativeLayout>

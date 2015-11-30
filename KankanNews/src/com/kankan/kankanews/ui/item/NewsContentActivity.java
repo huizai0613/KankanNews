@@ -282,14 +282,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				String imgKey = msg.getData().getString("_IMAGE_KEY_");
 				Map<String, NewsContentImage> imgMap = mNewsContent
 						.getConponents().getImage();
-				String[] mImages = new String[imgMap.values().size()];
-				int i = 0;
+				String[] mImages = new String[imgMap.size()];
 				int num = 0;
-				for (Map.Entry<String, NewsContentImage> entry : imgMap
-						.entrySet()) {
-					if (entry.getKey().equals(imgKey))
-						num = i;
-					mImages[i++] = entry.getValue().getImageurl();
+				for (int i = 1; i <= imgMap.size(); i++) {
+					String key = "IMAGE_" + i;
+					if (key.equals(imgKey))
+						num = i - 1;
+					mImages[i - 1] = imgMap.get(key).getImageurl();
 				}
 				Intent intent = new Intent(mContext, PhotoViewActivity.class);
 				intent.putExtra("_IMAGE_GROUP_", mImages);
