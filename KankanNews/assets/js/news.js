@@ -10,7 +10,7 @@ function initialize() {
 	setWebWidth();
 	initNewsContent();
 	initNewsRelated();
-	testAlign();
+	//testAlign();
 }
 function setWebWidth() {
 	if (window.news) {

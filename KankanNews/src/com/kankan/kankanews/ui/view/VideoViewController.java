@@ -1,6 +1,8 @@
 package com.kankan.kankanews.ui.view;
 
 import tv.danmaku.ijk.media.widget.VideoView;
+
+import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.StringUtils;
 //import io.vov.vitamio.widget.MediaController.MediaPlayerControl;
 //import io.vov.vitamio.widget.VideoView;

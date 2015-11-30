@@ -88,6 +88,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	private String mNewsHomeListJson;
 	private NewsHome mNewsHome;
+	private boolean mIsNeedRefresh = true;
 
 	private NewsHomeSwiperHeadAdapter mNewsHomeSwiperHeadAdapter;
 	private NewsHomeListAdapter mNewsHomeListAdapter;
@@ -197,7 +198,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		if (hasLocal) {
 			showData();
 		}
-		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
+		if (CommonUtils.isNetworkAvailable(this.mActivity) && mIsNeedRefresh) {
 			// refreshNetDate();
 			new Handler().postDelayed(new Runnable() {
 				@Override
@@ -219,7 +220,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				this.mRetryView.setVisibility(View.VISIBLE);
 			}
 		}
-//		netUtils.getNewsHomeList(this.mListenerObject, this.mErrorListener);
 	}
 
 	private void initLinsenter() {
@@ -275,12 +275,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					.get(0).getList());
 			mNewsHomeSwiperHeadAdapter.notifyDataSetChanged();
 		}
-//		new Handler().postDelayed(new Runnable() {
-//			@Override
-//			public void run() {
-//				mNewsHomeListView.setSelection(2);
-//			}
-//		}, 200);
+		// new Handler().postDelayed(new Runnable() {
+		// @Override
+		// public void run() {
+		// mNewsHomeListView.setSelection(2);
+		// }
+		// }, 200);
 	}
 
 	@Override
@@ -305,6 +305,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				mNewsHomeListJson = object.getJsonStr();
 				mNewsHome = JsonUtils.toObject(mNewsHomeListJson,
 						NewsHome.class);
+				if (TimeUtil.isListSaveTimeOK(object.getSaveTime()))
+					mIsNeedRefresh = false;
 				return true;
 			} else {
 				return false;
@@ -319,7 +321,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	protected void saveLocalDate() {
 		try {
 			SerializableObj obj = new SerializableObj(UUID.randomUUID()
-					.toString(), mNewsHomeListJson, "NewsHome");
+					.toString(), mNewsHomeListJson, "NewsHome",
+					new Date().getTime());
 			this.mActivity.dbUtils.delete(SerializableObj.class,
 					WhereBuilder.b("classType", "=", "NewsHome"));
 			this.mActivity.dbUtils.save(obj);

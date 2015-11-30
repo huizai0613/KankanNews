@@ -379,6 +379,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			mVideoPkgVideoStart.setVisibility(View.GONE);
 			break;
 		case R.id.video_package_video_controller:
+			DebugLog.e("我了割草");
 			if (!mVideoPkgVideoController.isShow()
 					&& video_pb.getVisibility() != View.VISIBLE)
 				mVideoPkgVideoController.show();
@@ -776,9 +777,6 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 			} else {
 				if (mVideoPkgVideoView != null) {
-					Log.e("new_colums_infos.get(curPlayNo).getVideoUrl()",
-							mNewsVPModule.getList().get(curPlayNo)
-									.getVideourl());
 					mVideoPkgVideoView.stopPlayback();
 					mVideoPkgVideoController.reset();
 					mVideoPkgVideoView.setVideoPath(mNewsVPModule.getList()
@@ -1004,6 +1002,41 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 		// 隐藏
 		mDismissHandler.removeMessages(0);
 		mDismissHandler.sendEmptyMessageDelayed(0, 1000);
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (isFullScrenn) {
+			fullScrenntoSamll();
+		} else {
+			AnimFinsh();
+		}
+	}
+
+	// 从全屏到小屏
+	public void fullScrenntoSamll() {
+
+		CommonUtils.clickevent(mContext, "action", "缩小",
+				AndroidConfig.video_fullscreen_event);
+
+		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
+		}
+	}
+
+	// 从小屏到全屏
+	public void samllScrenntoFull() {
+
+		CommonUtils.clickevent(mContext, "action", "放大",
+				AndroidConfig.video_fullscreen_event);
+
+		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
+		}
 	}
 
 	@Override

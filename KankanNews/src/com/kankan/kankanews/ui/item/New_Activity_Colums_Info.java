@@ -1106,4 +1106,39 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 	}
 
+	@Override
+	public void onBackPressed() {
+		if (isFullScrenn) {
+			fullScrenntoSamll();
+		} else {
+			AnimFinsh();
+		}
+	}
+
+	// 从全屏到小屏
+	public void fullScrenntoSamll() {
+
+		CommonUtils.clickevent(mContext, "action", "缩小",
+				AndroidConfig.video_fullscreen_event);
+
+		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
+		}
+	}
+
+	// 从小屏到全屏
+	public void samllScrenntoFull() {
+
+		CommonUtils.clickevent(mContext, "action", "放大",
+				AndroidConfig.video_fullscreen_event);
+
+		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
+		}
+	}
+
 }

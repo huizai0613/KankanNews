@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.json.JSONObject;
 
@@ -27,7 +29,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Base64;
-import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -53,12 +54,15 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseVideoActivity;
+import com.kankan.kankanews.bean.NewsAlbum;
 import com.kankan.kankanews.bean.NewsContent;
 import com.kankan.kankanews.bean.NewsContentImage;
 import com.kankan.kankanews.bean.NewsContentRecommend;
 import com.kankan.kankanews.bean.NewsContentVideo;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
+import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.config.AndroidConfig;
+import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.PhotoViewActivity;
 import com.kankan.kankanews.ui.view.VideoViewController;
@@ -73,7 +77,11 @@ import com.kankan.kankanews.utils.JsonUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.StringUtils;
+import com.kankan.kankanews.utils.TimeUtil;
 import com.kankanews.kankanxinwen.R;
+import com.lidroid.xutils.db.sqlite.Selector;
+import com.lidroid.xutils.db.sqlite.WhereBuilder;
+import com.lidroid.xutils.exception.DbException;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
@@ -91,8 +99,11 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	// 分享类
 	private ShareUtil shareUtil;
 	private NewsContent mNewsContent;
+	private String mNewsContentJson;
+
 	private WebView mContentWebView;
 	private RelativeLayout mLoadingView;
+	private View mRetryView;
 
 	private ScrollView mScrollView;
 	private View mVideoRootView;
@@ -125,8 +136,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private int mWebWidth = 0;
 
 	private boolean isPause;
+	private boolean isPlay = false;
 
 	private int mScrollY;
+
+	private int mMarginSide;
+	private int mMarginTop;
+	private NewsContentVideo mCurPlayVideo;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -159,6 +175,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			mScrollView.setOnTouchListener(new OnTouchListener() {
 				@Override
 				public boolean onTouch(View v, MotionEvent event) {
+					if (!mVideoViewController.isShow())
+						mVideoViewController.show();
 					return true;
 				}
 			});
@@ -189,9 +207,20 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			// 取消全屏设置
 			this.getWindow().clearFlags(
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-			mVideoRootView.setLayoutParams(new RelativeLayout.LayoutParams(
-					LayoutParams.MATCH_PARENT,
-					(int) (this.mScreenWidth / 16 * 9)));
+			// mVideoRootView.setLayoutParams(new RelativeLayout.LayoutParams(
+			// LayoutParams.MATCH_PARENT,
+			// (int) (this.mScreenWidth / 16 * 9)));
+			RelativeLayout.LayoutParams par = (LayoutParams) mVideoRootView
+					.getLayoutParams();
+			String scale = mCurPlayVideo.getDisplayscale();
+			if (scale.equals("16:9"))
+				par.height = mWebWidth * 9 / 16;
+			if (scale.equals("4:3"))
+				par.height = mWebWidth * 3 / 4;
+			mVideoView.setmRootViewHeight(par.height);
+			par.setMargins(mMarginSide, mMarginTop, mMarginSide, 0);
+			DebugLog.e("" + mMarginSide + mMarginTop + mMarginSide);
+			mVideoRootView.setLayoutParams(par);
 			mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
 		}
 	}
@@ -217,21 +246,34 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				final NewsContentVideo video = mNewsContent.getConponents()
 						.getVideo().get(videoKey);
 				int displayScale = mContext.getResources().getDisplayMetrics().densityDpi / 160;
-				int left = msg.getData().getInt("_OFFSETLEFT_") * displayScale;
-				RelativeLayout.LayoutParams par = (LayoutParams) mVideoRootView
-						.getLayoutParams();
-				String scale = video.getDisplayscale();
-				if (scale.equals("16:9"))
-					par.height = mWebWidth * 9 / 16;
-				if (scale.equals("4:3"))
-					par.height = mWebWidth * 3 / 4;
-				// par.height = (int) ((mScreenWidth - left - left) / 16 * 9);
-				mVideoView.setmRootViewHeight(par.height);
-				par.setMargins(left, msg.getData().getInt("_OFFSETTOP_")
-						* displayScale, left, 0);
-				mVideoRootView.setLayoutParams(par);
-				mVideoRootView.setVisibility(View.VISIBLE);
-				playVideo(video);
+				mMarginSide = msg.getData().getInt("_OFFSETLEFT_")
+						* displayScale;
+				mMarginTop = msg.getData().getInt("_OFFSETTOP_") * displayScale;
+				if (CommonUtils.isNetworkAvailable(mContext)) {
+					if (!CommonUtils.isWifi(mContext)) {
+						final InfoMsgHint dialog = new InfoMsgHint(mContext,
+								R.style.MyDialog1);
+						dialog.setContent(
+								"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络", "",
+								"继续播放", "取消");
+						dialog.setCancleListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialog.dismiss();
+							}
+						});
+						dialog.setOKListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								playVideo(video);
+								dialog.dismiss();
+							}
+						});
+						dialog.show();
+					} else {
+						playVideo(video);
+					}
+				}
 				break;
 			case _PREVIEW_IMAGE_:
 				String imgKey = msg.getData().getString("_IMAGE_KEY_");
@@ -256,13 +298,27 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	};
 
 	private void playVideo(final NewsContentVideo video) {
+		mCurPlayVideo = video;
+		RelativeLayout.LayoutParams par = (LayoutParams) mVideoRootView
+				.getLayoutParams();
+		String scale = video.getDisplayscale();
+		if (scale.equals("16:9"))
+			par.height = mWebWidth * 9 / 16;
+		if (scale.equals("4:3"))
+			par.height = mWebWidth * 3 / 4;
+		mVideoView.setmRootViewHeight(par.height);
+		par.setMargins(mMarginSide, mMarginTop, mMarginSide, 0);
+		mVideoRootView.setLayoutParams(par);
+		mVideoRootView.setVisibility(View.VISIBLE);
+
 		mVideoLodingView.setVisibility(View.VISIBLE);
 		mVideoViewBG.setVisibility(View.VISIBLE);
 		mHandle.post(new Runnable() {
 			@Override
 			public void run() {
+				isPlay = true;
 				mVideoView.setVideoPath(video.getVideourl());
-				// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 			}
 		});
 	};
@@ -276,6 +332,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	@Override
 	protected void initView() {
 		mScrollView = (ScrollView) this.findViewById(R.id.content_scroll_view);
+		mRetryView = this.findViewById(R.id.content_retry_view);
 		mLoadingView = (RelativeLayout) this
 				.findViewById(R.id.content_buffering_indicator);
 		mVideoRootView = this.findViewById(R.id.content_video_root_view);
@@ -351,7 +408,57 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			mNewsType = mModuleItem.getType();
 			mNewsTitle = mModuleItem.getTitle();
 		}
-		refreshNetData();
+		boolean hasLocal = initLocalData();
+		if (hasLocal) {
+			showData();
+		} else {
+			if (CommonUtils.isNetworkAvailable(this)) {
+				refreshNetData();
+			} else {
+				mRetryView.setVisibility(View.VISIBLE);
+			}
+		}
+	}
+
+	@Override
+	protected void saveLocalDate() {
+		try {
+			SerializableObj obj = new SerializableObj(UUID.randomUUID()
+					.toString(), mNewsContentJson, "NewsContent" + mNewsId,
+					new Date().getTime());
+			this.dbUtils.delete(SerializableObj.class,
+					WhereBuilder.b("classType", "=", "NewsContent" + mNewsId));
+			this.dbUtils.save(obj);
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
+	}
+
+	protected boolean initLocalData() {
+		try {
+			SerializableObj object = (SerializableObj) this.dbUtils
+					.findFirst(Selector.from(SerializableObj.class).where(
+							"classType", "=", "NewsContent" + mNewsId));
+			if (object != null) {
+				if (TimeUtil.isContentSaveTimeOK(object.getSaveTime())) {
+					mNewsContentJson = object.getJsonStr();
+					mNewsContent = JsonUtils.toObject(mNewsContentJson,
+							NewsContent.class);
+					return true;
+				} else {
+					this.dbUtils.delete(
+							SerializableObj.class,
+							WhereBuilder.b("classType", "=", "NewsContent"
+									+ mNewsId));
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} catch (DbException e) {
+			DebugLog.e(e.getLocalizedMessage());
+		}
+		return false;
 	}
 
 	@Override
@@ -399,8 +506,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	protected void onSuccess(JSONObject jsonObject) {
-		mNewsContent = JsonUtils.toObject(jsonObject.toString(),
-				NewsContent.class);
+		mNewsContentJson = jsonObject.toString();
+		mNewsContent = JsonUtils.toObject(mNewsContentJson, NewsContent.class);
+		saveLocalDate();
 		showData();
 	}
 
@@ -451,7 +559,37 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void onBackPressed() {
-		AnimFinsh();
+		if (isFullScrenn) {
+			fullScrenntoSamll();
+		} else {
+			AnimFinsh();
+		}
+	}
+
+	// 从全屏到小屏
+	public void fullScrenntoSamll() {
+
+		CommonUtils.clickevent(mContext, "action", "缩小",
+				AndroidConfig.video_fullscreen_event);
+
+		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
+		}
+	}
+
+	// 从小屏到全屏
+	public void samllScrenntoFull() {
+
+		CommonUtils.clickevent(mContext, "action", "放大",
+				AndroidConfig.video_fullscreen_event);
+
+		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
+		}
 	}
 
 	@Override
@@ -467,12 +605,17 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		super.onResume();
 		isPause = false;
 		changeFontSize();
+		if (this.isPlay)
+			this.mVideoView.start();
 	}
 
 	public void showData() {
-//		mContentWebView.loadDataWithBaseURL("file:///android_asset/newsTemplate.html", "sdsdsd", "text/html", "utf-8","");
+		// mContentWebView.loadDataWithBaseURL("file:///android_asset/newsTemplate.html",
+		// "sdsdsd", "text/html", "utf-8","");
 		mContentWebView.loadUrl("file:///android_asset/newsTemplate.html");
 		mContentWebView.addJavascriptInterface(new News(), "news");
+		mRetryView.setVisibility(View.GONE);
+		// mLoadingView.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -511,6 +654,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	}
 
 	private void closeVideo() {
+		isPlay = false;
 		if (this.mVideoView != null) {
 			this.mVideoView.pause();
 			this.mVideoView.stopPlayback();
@@ -837,7 +981,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void onCompletion(IMediaPlayer mp) {
-		this.mVideoView.stopPlayback();
+		if (isFullScrenn)
+			this.fullScrenntoSamll();
+		this.closeVideo();
 		this.mVideoRootView.setVisibility(View.GONE);
 	}
 
