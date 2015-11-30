@@ -34,6 +34,7 @@ import com.kankan.kankanews.bean.New_News_Home;
 import com.kankan.kankanews.bean.New_News_Top;
 import com.kankan.kankanews.bean.New_Recommend;
 import com.kankan.kankanews.bean.RevelationsHomeList;
+import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.SharePreferenceUtil;
@@ -129,7 +130,7 @@ public class CrashApplication extends Application {
 		AssetManager mgr = getAssets();
 		tf = Typeface.createFromAsset(mgr, "nomal.TTF");
 
-		dbUtils = DbUtils.create(this, "kankan", 7, new DbUpgradeListener() {
+		dbUtils = DbUtils.create(this, "kankan", 8, new DbUpgradeListener() {
 			@Override
 			public void onUpgrade(DbUtils arg0, int arg1, int arg2) {
 				// TODO Auto-generated method stub
@@ -147,6 +148,7 @@ public class CrashApplication extends Application {
 					arg0.dropTable(RevelationsHomeList.class);
 					arg0.dropTable(New_HomeCate.class);
 					arg0.dropTable(LiveLiveObj.class);
+					arg0.dropTable(SerializableObj.class);
 					arg0.createTableIfNotExist(New_News_Home.class);
 					arg0.createTableIfNotExist(New_News_Top.class);
 					arg0.createTableIfNotExist(New_News.class);
@@ -160,6 +162,7 @@ public class CrashApplication extends Application {
 					arg0.createTableIfNotExist(RevelationsHomeList.class);
 					arg0.createTableIfNotExist(New_HomeCate.class);
 					arg0.createTableIfNotExist(LiveLiveObj.class);
+					arg0.createTableIfNotExist(SerializableObj.class);
 				} catch (DbException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
