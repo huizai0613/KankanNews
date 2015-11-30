@@ -24,6 +24,7 @@ import com.kankan.kankanews.dialog.InfoMsgHint;
 import com.kankan.kankanews.ui.item.New_Activity_MyFoot;
 import com.kankan.kankanews.ui.item.New_Activity_My_About;
 import com.kankan.kankanews.ui.item.New_Activity_My_FanKui;
+import com.kankan.kankanews.ui.item.NewsBrowseRecordActivity;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -67,12 +68,12 @@ public class MeSetActivity extends BaseActivity implements OnClickListener {
 	protected void initView() {
 		// TODO Auto-generated method stub
 		scroll_view = this.findViewById(R.id.scroll_view);
-//		View view = this.findViewById(R.id.scroll_child);
-//		view.setLayoutParams(new ScrollView.LayoutParams(
-//				ScrollView.LayoutParams.MATCH_PARENT, this.mScreenHeight
-//						+ PixelUtil.dp2px(500)));
-//		scroll_view.setLayoutParams(new FrameLayout.LayoutParams(
-//				FrameLayout.LayoutParams.MATCH_PARENT, this.mScreenHeight));
+		// View view = this.findViewById(R.id.scroll_child);
+		// view.setLayoutParams(new ScrollView.LayoutParams(
+		// ScrollView.LayoutParams.MATCH_PARENT, this.mScreenHeight
+		// + PixelUtil.dp2px(500)));
+		// scroll_view.setLayoutParams(new FrameLayout.LayoutParams(
+		// FrameLayout.LayoutParams.MATCH_PARENT, this.mScreenHeight));
 
 		layout_my_foot = (LinearLayout) this.findViewById(R.id.layout_my_foot);
 		nightView = findViewById(R.id.night_view);
@@ -193,7 +194,7 @@ public class MeSetActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.layout_my_foot:
-			this.startAnimActivity(New_Activity_MyFoot.class);
+			this.startAnimActivity(NewsBrowseRecordActivity.class);
 			break;
 		case R.id.font_size_set:
 			// mActivity.startAnimActivity(New_Activity_My_About.class);

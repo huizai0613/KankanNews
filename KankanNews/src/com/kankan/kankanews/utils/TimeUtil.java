@@ -345,4 +345,9 @@ public class TimeUtil {
 		return new Date().getTime() - saveTime < AndroidConfig._NEWS_LIST_SAVE_OK_TIME_;
 	}
 
+	public static String formatBrowseTime(Date date) {
+		SimpleDateFormat sfd = new SimpleDateFormat(FORMAT_DATE_TIME);
+		return sfd.format(date);
+	}
+
 }

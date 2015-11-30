@@ -37,6 +37,7 @@ import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.Keyboard;
 import com.kankan.kankanews.bean.New_News_Home;
+import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.bean.RevelationsActicityObjBreakNewsList;
 import com.kankan.kankanews.bean.RevelationsBreaknews;
 import com.kankan.kankanews.bean.RevelationsHomeList;
@@ -48,6 +49,9 @@ import com.kankan.kankanews.ui.item.New_Activity_Content_PicSet;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
 import com.kankan.kankanews.ui.item.New_Avtivity_Subject;
+import com.kankan.kankanews.ui.item.NewsAlbumActivity;
+import com.kankan.kankanews.ui.item.NewsContentActivity;
+import com.kankan.kankanews.ui.item.NewsOutLinkActivity;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView.EllipsizeListener;
@@ -694,35 +698,27 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 	private void openNews(RevelationsNew news) {
 		//
 		final int news_type = Integer.valueOf(news.getType());
+		NewsHomeModuleItem moduleItem = new NewsHomeModuleItem();
+		moduleItem.setId(news.getMid());
+		moduleItem.setO_cmsid(news.getMid());
+		moduleItem.setAppclassid(news.getZtid());
+		moduleItem.setTitle(news.getTitle());
+		moduleItem.setTitlepic(news.getTitlepic());
+		moduleItem.setTitleurl(news.getTitleurl());
 		if (news_type % 10 == 1) {
-			this.startAnimActivityByParameter(New_Activity_Content_Video.class,
-					news.getMid(), news.getType(), news.getTitleurl(),
-					news.getNewstime(), news.getTitle(), news.getTitlepic(),
-					news.getTitlepic(), news.getIntro());
+			moduleItem.setType("video");
+			this.startAnimActivityByNewsHomeModuleItem(
+					NewsContentActivity.class, moduleItem);
 		} else if (news_type % 10 == 2) {
-			final String[] pics = news.getTitlepic().split("::::::");
-			this.startAnimActivityByParameter(
-					New_Activity_Content_PicSet.class, news.getMid(),
-					news.getType(), news.getTitleurl(), news.getNewstime(),
-					news.getTitle(), news.getTitlepic(), pics[1],
-					news.getIntro());
+			moduleItem.setType("album");
+			this.startAnimActivityByNewsHomeModuleItem(NewsAlbumActivity.class,
+					moduleItem);
 		} else if (news_type % 10 == 5) {
-			// 专题
-			this.startSubjectActivityByParameter(New_Avtivity_Subject.class,
-					news.getZtid(), news.getTitle(), news.getTitlepic(),
-					news.getTitleurl(), news.getTitlepic(), news.getTitlepic(),
-					news.getIntro());
-		}
-		// else if (news.getZtype().equals("1")) {
-		// this.startSubjectActivityByParameter(New_Avtivity_Subject.class,
-		// news.getZtid(), news.getTitle(), news.getTitlepic(),
-		// news.getTitleurl(), news.getTitlepic(), news.getTitlepic());
-		// }
-		else {
-			this.startAnimActivityByParameter(New_Activity_Content_Web.class,
-					news.getMid(), news.getType(), news.getTitleurl(),
-					news.getNewstime(), news.getTitle(), news.getTitlepic(),
-					news.getTitlepic(), news.getIntro());
+			return;
+		} else {
+			moduleItem.setType("outlink");
+			this.startAnimActivityByNewsHomeModuleItem(
+					NewsOutLinkActivity.class, moduleItem);
 		}
 	}
 

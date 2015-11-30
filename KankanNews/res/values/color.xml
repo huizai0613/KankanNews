@@ -3,12 +3,16 @@
 
     <!-- 白色 无透明 -->
     <color name="white_alpha">#00FFFFFF</color>
+    <color name="half_alpha_white">#50FFFFFF</color>
     <color name="night_mask">#90000000</color>
 
     <!-- 黑色颜色 -->
     <color name="black">#000000</color>
     <color name="half_alpha_black">#50000000</color>
     <color name="A05_alpha_black">#05000000</color>
+    <color name="A70_alpha_black">#90000000</color>
+    <color name="A90_alpha_black">#90000000</color>
+    <color name="A95_alpha_black">#95000000</color>
 
     <!-- 白色 -->
     <color name="white">#FFFFFF</color>

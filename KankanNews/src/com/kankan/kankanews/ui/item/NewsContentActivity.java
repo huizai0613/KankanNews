@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +56,7 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.kankan.kankanews.base.BaseVideoActivity;
 import com.kankan.kankanews.bean.NewsAlbum;
+import com.kankan.kankanews.bean.NewsBrowseRecord;
 import com.kankan.kankanews.bean.NewsContent;
 import com.kankan.kankanews.bean.NewsContentImage;
 import com.kankan.kankanews.bean.NewsContentRecommend;
@@ -133,6 +135,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private String mNewsId;
 	private String mNewsType;
 	private String mNewsTitle;
+	private String mNewsTitlepic;
 	private int mWebWidth = 0;
 
 	private boolean isPause;
@@ -403,11 +406,14 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			mNewsId = this.getIntent().getStringExtra("mid");
 			mNewsType = this.getIntent().getStringExtra("type");
 			mNewsTitle = this.getIntent().getStringExtra("title");
+			mNewsTitlepic = this.getIntent().getStringExtra("titlepic");
 		} else {
 			mNewsId = mModuleItem.getO_cmsid();
 			mNewsType = mModuleItem.getType();
 			mNewsTitle = mModuleItem.getTitle();
+			mNewsTitlepic = mModuleItem.getTitlepic();
 		}
+		saveBrowse();
 		boolean hasLocal = initLocalData();
 		if (hasLocal) {
 			showData();
@@ -418,6 +424,28 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				mRetryView.setVisibility(View.VISIBLE);
 			}
 		}
+	}
+
+	private void saveBrowse() {
+		final NewsBrowseRecord browse = new NewsBrowseRecord();
+		browse.setId(mNewsId);
+		browse.setType(mNewsType);
+		browse.setTitle(mNewsTitle);
+		browse.setBrowseTime(new Date().getTime());
+		browse.setTitlepic(mNewsTitlepic);
+		new Thread() {
+			@Override
+			public void run() {
+				if (browse != null) {
+					try {
+						dbUtils.saveOrUpdate(browse);
+					} catch (DbException e) {
+						e.printStackTrace();
+					}
+				}
+
+			}
+		}.start();
 	}
 
 	@Override
@@ -575,7 +603,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
+			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 500);
 		}
 	}
 
@@ -588,7 +616,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
+			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 500);
 		}
 	}
 
@@ -659,6 +687,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			this.mVideoView.pause();
 			this.mVideoView.stopPlayback();
 		}
+		setFullHandler.removeMessages(SET_FULL_MESSAGE);
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 	}
 
 	private void hideVideo() {
@@ -826,10 +856,11 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			StringBuffer buf = new StringBuffer();
 			buf.append("<div class=\"line\"></div><div class=\"recommend\"><h2 class=\"tit\">热门推荐</h2>");
 			for (NewsContentRecommend related : mNewsContent.getRecommend()) {
-				String template = "<div class=\"recomList\"><a href=\"#\" onclick=\"openNews('%s','%s','%s')\"><h3 class=\"tit\">%s</h3><span class=\"other\"><em>%s</em></span></a></div>";
+				String template = "<div class=\"recomList\"><a href=\"#\" onclick=\"openNews('%s','%s','%s','%s')\"><h3 class=\"tit\">%s</h3><span class=\"other\"><em>%s</em></span></a></div>";
 				buf.append(String.format(template, related.getId(),
 						related.getType(), related.getTitle(),
-						related.getTitle(), related.getNewsdate()));
+						related.getTitlepic(), related.getTitle(),
+						related.getNewsdate()));
 			}
 			buf.append("</div>");
 			return buf.toString();
@@ -918,12 +949,14 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		}
 
 		@JavascriptInterface
-		public void openNews(String id, String type, String title) {
+		public void openNews(String id, String type, String title,
+				String titlepic) {
 			Intent intent = new Intent(NewsContentActivity.this,
 					NewsContentActivity.class);
 			intent.putExtra("mid", id);
 			intent.putExtra("type", type);
 			intent.putExtra("title", title);
+			intent.putExtra("titlepic", titlepic);
 			NewsContentActivity.this.startActivity(intent);
 		}
 

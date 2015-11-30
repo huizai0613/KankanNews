@@ -122,7 +122,6 @@ public class TransitionLoadingActivity extends BaseActivity {
 		moduleItem.setTitle(news.getTitle());
 		moduleItem.setTitlepic(news.getTitlepic());
 		moduleItem.setTitleurl(news.getTitleurl());
-		moduleItem.setSharedPic(news.getSharedPic());
 		if (news_type % 10 == 1) {
 			moduleItem.setType("video");
 			this.startAnimActivityByNewsHomeModuleItem(

@@ -44,6 +44,7 @@ import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News;
 import com.kankan.kankanews.bean.New_NewsPic;
 import com.kankan.kankanews.bean.NewsAlbum;
+import com.kankan.kankanews.bean.NewsBrowseRecord;
 import com.kankan.kankanews.bean.NewsHome;
 import com.kankan.kankanews.bean.NewsHomeModule;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
@@ -134,6 +135,7 @@ public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
 		Intent intent = getIntent();
 		mHomeModuleItem = (NewsHomeModuleItem) intent
 				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
+		saveBrowse();
 		if (initLocalData()) {
 			showData();
 		} else {
@@ -150,6 +152,28 @@ public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
 
 		NetUtils.getInstance(mContext).getAnalyse(this, "album",
 				mHomeModuleItem.getTitle(), mHomeModuleItem.getTitleurl());
+	}
+
+	private void saveBrowse() {
+		final NewsBrowseRecord browse = new NewsBrowseRecord();
+		browse.setId(mHomeModuleItem.getO_cmsid());
+		browse.setType(mHomeModuleItem.getType());
+		browse.setTitle(mHomeModuleItem.getTitle());
+		browse.setBrowseTime(new Date().getTime());
+		browse.setTitlepic(mHomeModuleItem.getTitlepic());
+		new Thread() {
+			@Override
+			public void run() {
+				if (browse != null) {
+					try {
+						dbUtils.saveOrUpdate(browse);
+					} catch (DbException e) {
+						e.printStackTrace();
+					}
+				}
+
+			}
+		}.start();
 	}
 
 	@Override
