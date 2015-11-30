@@ -16,6 +16,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -152,15 +153,26 @@ public class New_RevelationsFragment extends BaseFragment implements
 	}
 
 	private void initData() {
-		boolean flag = this.initLocalDate();
-		if (flag) {
+		boolean hasLocal = this.initLocalDate();
+		if (hasLocal) {
 			showData(true);
-			loadingView.setVisibility(View.GONE);
-			revelationsListView.showHeadLoadingView();
-			// revelationsListView.setmCurrentMode(Mode.PULL_FROM_START);
-			// revelationsListView.setRefreshing(false);
 		}
-		refreshNetDate();
+		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
+			// refreshNetDate();
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					revelationsListView.setmCurrentMode(Mode.PULL_FROM_START);
+					revelationsListView.setRefreshing(false);
+				}
+			}, 100);
+		} else {
+			if (hasLocal) {
+			} else {
+				this.loadingView.setVisibility(View.GONE);
+				this.retryView.setVisibility(View.VISIBLE);
+			}
+		}
 	}
 
 	private void showData(boolean needRefresh) {
@@ -171,6 +183,8 @@ public class New_RevelationsFragment extends BaseFragment implements
 		} else {
 			revelationsListAdapter.notifyDataSetChanged();
 		}
+		retryView.setVisibility(View.GONE);
+		loadingView.setVisibility(View.GONE);
 	}
 
 	private class ActivityPageChangeListener implements
@@ -437,8 +451,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 				topHolder.activityTitle.setText(revelationsHomeList
 						.getActivity().get(position).getTitle());
 				FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
-						topHolder.activityTitle,
-						R.string.home_news_text_size,
+						topHolder.activityTitle, R.string.home_news_text_size,
 						spUtil.getFontSizeRadix());
 			} else if (itemViewType == 1) {
 				final int breakLocation = position
@@ -490,8 +503,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 				newsHolder.newsText.setText(StringUtils.deleteLastNewLine(news
 						.getNewstext()));
 				FontUtils.setTextViewFontSize(New_RevelationsFragment.this,
-						newsHolder.newsText,
-						R.string.home_news_text_size,
+						newsHolder.newsText, R.string.home_news_text_size,
 						spUtil.getFontSizeRadix());
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
 				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);
@@ -638,6 +650,7 @@ public class New_RevelationsFragment extends BaseFragment implements
 		switch (id) {
 		case R.id.revelations_retry_view:
 			refreshNetDate();
+			break;
 		}
 	}
 

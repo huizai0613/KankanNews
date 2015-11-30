@@ -445,6 +445,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 						}
 						mVideoPkgVideoStart.setVisibility(View.GONE);
 						videoPlay();
+						mListView.setSelection(curPlayNo);
 					}
 				} else {
 					if (tmpModule.getList().size() == 0) {

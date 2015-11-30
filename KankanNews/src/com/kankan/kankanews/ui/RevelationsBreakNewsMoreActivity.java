@@ -127,13 +127,26 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 	@Override
 	protected void initData() {
 		// TODO Auto-generated method stub
-		boolean flag = this.initLocalData();
-		if (flag) {
+		boolean hasLocal = this.initLocalData();
+		if (hasLocal) {
 			showData(true);
-			loadingView.setVisibility(View.GONE);
-			breaknewsListView.showHeadLoadingView();
 		}
-		refreshNetDate();
+		if (CommonUtils.isNetworkAvailable(this)) {
+			// refreshNetDate();
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					breaknewsListView.setmCurrentMode(Mode.PULL_FROM_START);
+					breaknewsListView.setRefreshing(false);
+				}
+			}, 100);
+		} else {
+			if (hasLocal) {
+			} else {
+				this.loadingView.setVisibility(View.GONE);
+				this.retryView.setVisibility(View.VISIBLE);
+			}
+		}
 	}
 
 	protected void initListView() {
@@ -248,7 +261,9 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 			breaknewsListView.setAdapter(breaknewsListAdapter);
 		} else {
 			breaknewsListAdapter.notifyDataSetChanged();
-		} 
+		}
+		loadingView.setVisibility(View.GONE);
+		retryView.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -390,8 +405,7 @@ public class RevelationsBreakNewsMoreActivity extends BaseActivity implements
 						.getNewstext()));
 				FontUtils.setTextViewFontSize(
 						RevelationsBreakNewsMoreActivity.this,
-						newsHolder.newsText,
-						R.string.home_news_text_size,
+						newsHolder.newsText, R.string.home_news_text_size,
 						spUtil.getFontSizeRadix());
 				newsHolder.allNewsTextBut.setTag(newsHolder.newsText);
 				newsHolder.newsText.setTag(newsHolder.allNewsTextBut);

@@ -79,6 +79,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		OnPageChangeListener {
 
 	private View inflate;
+	private View mLogoView;
 	private View mLoadingView;
 	private View mRetryView;
 	private View mGoColumsBut;
@@ -130,6 +131,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				.findViewById(R.id.news_home_listview);
 		mLoadingView = inflate.findViewById(R.id.activity_loading_view);
 		mRetryView = inflate.findViewById(R.id.activity_retry_view);
+		mLogoView = inflate.findViewById(R.id.home_logo_but);
 		initListView();
 	}
 
@@ -196,24 +198,35 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			showData();
 		}
 		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
-//			refreshNetDate();
-			mNewsHomeListView.setmCurrentMode(Mode.PULL_FROM_START);
-			mNewsHomeListView.setRefreshing(false);
+			// refreshNetDate();
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					mNewsHomeListView.setmCurrentMode(Mode.PULL_FROM_START);
+					mNewsHomeListView.setRefreshing(false);
+				}
+			}, 100);
 		} else {
 			if (hasLocal) {
-
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						mNewsHomeListView.setSelection(2);
+					}
+				}, 200);
 			} else {
 				this.mLoadingView.setVisibility(View.GONE);
 				this.mRetryView.setVisibility(View.VISIBLE);
 			}
 		}
-		netUtils.getNewsHomeList(this.mListenerObject, this.mErrorListener);
+//		netUtils.getNewsHomeList(this.mListenerObject, this.mErrorListener);
 	}
 
 	private void initLinsenter() {
 		mRetryView.setOnClickListener(this);
 		mGoColumsBut.setOnClickListener(this);
 		mGoMeSetBut.setOnClickListener(this);
+		mLogoView.setOnClickListener(this);
 	}
 
 	@Override
@@ -237,6 +250,14 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				refreshNetDate();
 			}
 			break;
+		case R.id.home_logo_but:
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					mNewsHomeListView.setSelection(2);
+				}
+			}, 100);
+			break;
 		}
 	}
 
@@ -250,17 +271,16 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			mNewsHomeListAdapter.notifyDataSetChanged();
 		}
 		if (mNewsHomeSwiperHeadAdapter != null) {
-			DebugLog.e("卧槽");
 			mNewsHomeSwiperHeadAdapter.setItemList(mNewsHome.getModule_list()
 					.get(0).getList());
 			mNewsHomeSwiperHeadAdapter.notifyDataSetChanged();
 		}
-		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				mNewsHomeListView.setSelection(2);
-			}
-		}, 200);
+//		new Handler().postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
+//				mNewsHomeListView.setSelection(2);
+//			}
+//		}, 200);
 	}
 
 	@Override
@@ -310,6 +330,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	@Override
 	protected void refreshNetDate() {
+		DebugLog.e("卧槽");
 		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
 			netUtils.getNewsHomeList(mListenerObject, mErrorListener);
 		} else {
@@ -335,6 +356,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					NewsHome.class);
 			if (judgeObject()) {
 				showData();
+				new Handler().postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						mNewsHomeListView.setSelection(2);
+					}
+				}, 200);
 				saveLocalDate();
 			}
 		}
@@ -683,7 +710,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.item_news_home_outlink_keyboard_content);
 					mOutLinkHolder.titlePic = (ImageView) convertView
 							.findViewById(R.id.item_news_home_outlink_image);
-					mOutLinkHolder.titlePic.getLayoutParams().height = (int) ((mActivity.mScreenWidth - PixelUtil
+					mOutLinkHolder.titlePic.getLayoutParams().height = (int) ((double) (mActivity.mScreenWidth - PixelUtil
 							.dp2px(12.5f * 2)) / 600 * 285);
 					convertView.setTag(mOutLinkHolder);
 				} else if (itemType == 7) {

@@ -23,6 +23,7 @@
             android:src="@drawable/ic_colums" />
 
         <ImageView
+            android:id="@+id/home_logo_but"
             android:layout_width="97dip"
             android:layout_height="22dip"
             android:layout_centerInParent="true"

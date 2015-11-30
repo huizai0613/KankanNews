@@ -135,13 +135,26 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		this.aid = this.getIntent().getStringExtra("_AID_");
 		if (this.aid == null)
 			this.finish();
-		boolean flag = this.initLocalData();
-		if (flag) {
+		boolean hasLocal = this.initLocalData();
+		if (hasLocal) {
 			showData(true);
-			loadingView.setVisibility(View.GONE);
-			activityListView.showHeadLoadingView();
 		}
-		refreshNetDate();
+		if (CommonUtils.isNetworkAvailable(this)) {
+			// refreshNetDate();
+			new Handler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					activityListView.setmCurrentMode(Mode.PULL_FROM_START);
+					activityListView.setRefreshing(false);
+				}
+			}, 100);
+		} else {
+			if (hasLocal) {
+			} else {
+				this.loadingView.setVisibility(View.GONE);
+				this.retryView.setVisibility(View.VISIBLE);
+			}
+		}
 	}
 
 	protected void initListView() {
@@ -223,7 +236,7 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		// TODO Auto-generated method stub
 		int id = v.getId();
 		switch (id) {
-		case R.id.revelations_retry_view:
+		case R.id.activity_retry_view:
 			refreshNetDate();
 			break;
 		case R.id.go_revelations_but:
@@ -276,6 +289,8 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 			activityListAdapter.notifyDataSetChanged();
 		}
 		activityListView.onRefreshComplete();
+		loadingView.setVisibility(View.GONE);
+		retryView.setVisibility(View.GONE);
 	}
 
 	@Override
