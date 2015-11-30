@@ -28,9 +28,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_marginBottom="10dip"
-        android:layout_marginLeft="10dip"
+        android:layout_marginBottom="20dip"
+        android:layout_marginLeft="20dip"
         android:textColor="@color/mid_gray"
-        android:textSize="20dp"/>
+        android:textSize="20dp" />
 
 </RelativeLayout>

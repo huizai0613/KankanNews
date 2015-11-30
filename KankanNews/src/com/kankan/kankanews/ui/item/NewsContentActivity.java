@@ -678,6 +678,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void netChanged() {
+		if (!CommonUtils.isWifi(this)) {
+			if (isFullScrenn)
+				this.fullScrenntoSamll();
+			this.closeVideo();
+			this.mVideoRootView.setVisibility(View.GONE);
+		}
+
 	}
 
 	private void closeVideo() {
