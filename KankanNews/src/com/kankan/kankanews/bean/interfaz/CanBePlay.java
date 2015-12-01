@@ -5,5 +5,8 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 
 public interface CanBePlay {
 	String getTitle();
+
 	String getStreamurl();
+
+	String getTitleurl();
 }

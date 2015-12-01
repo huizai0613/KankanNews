@@ -242,13 +242,13 @@ public class NewsTopicActivity extends BaseActivity implements
 		mHomeModuleItem = (NewsHomeModuleItem) intent
 				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
 
-		NetUtils.getInstance(mContext).getAnalyse(this, "module",
-				mHomeModuleItem.getTitle(), mHomeModuleItem.getTitleurl());
-
 		this.mLoadingView.setVisibility(View.VISIBLE);
 		boolean _flag = initLocalData();
 		if (_flag) {
 			showData();
+
+			NetUtils.getInstance(mContext).getAnalyse(this, "module",
+					mTopicModule.getTitle(), mTopicModule.getTitleurl());
 		} else {
 			if (CommonUtils.isNetworkAvailable(mContext)) {
 				initNetDate();
@@ -273,6 +273,10 @@ public class NewsTopicActivity extends BaseActivity implements
 		mTopicModuleJson = jsonObject;
 		mTopicModule = JsonUtils.toObject(mTopicModuleJson.toString(),
 				NewsHomeModule.class);
+
+		NetUtils.getInstance(mContext).getAnalyse(this, "module",
+				mTopicModule.getTitle(), mTopicModule.getTitleurl());
+
 		if (!mTopicModule.getAppclassid().trim().equals("")) {
 			// 初始化shareutil类
 			this.saveLocalDate();

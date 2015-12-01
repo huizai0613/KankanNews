@@ -42,6 +42,7 @@ import com.kankan.kankanews.ui.view.popup.CustomShareBoard;
 import com.kankan.kankanews.ui.view.popup.CustomShareBoardRight;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
@@ -255,6 +256,9 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		mLiveVideoView.setmRootViewHeight((int) (this.mActivity.mScreenWidth));
 		mLiveVideoImage.setVisibility(View.VISIBLE);
 		mLiveBufferingIndicator.setVisibility(View.VISIBLE);
+		NetUtils.getInstance(this.mActivity).getAnalyse(this.mActivity, "live",
+				playTarget.getTitle(), playTarget.getTitleurl());
+
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {

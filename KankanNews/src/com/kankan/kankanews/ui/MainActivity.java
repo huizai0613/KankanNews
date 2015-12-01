@@ -284,12 +284,12 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 		}
 		if (id == R.id.tab_home) {
 			//TODO
-//			if (spUtil.getFirstGetColumns()) {
-//				screenGuide
-//						.setBackgroundResource(R.drawable.screen_guide_columns);
-//				screenGuide.setVisibility(View.VISIBLE);
-//				screenGuide.setTag("COLUMNS");
-//			}
+			if (spUtil.getFirstGetColumns()) {
+				screenGuide
+						.setBackgroundResource(R.drawable.screen_guide_columns);
+				screenGuide.setVisibility(View.VISIBLE);
+				screenGuide.setTag("COLUMNS");
+			}
 		}
 		if (id == R.id.tab_revelate) {
 			if (spUtil.getFirstGetRevalations()) {

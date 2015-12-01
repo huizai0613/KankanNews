@@ -817,7 +817,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 								NetUtils.getInstance(mContext).getAnalyse(
 										New_Activity_Colums_Info.this,
-										"column",
+										"video",
 										new_colums_infos.get(curPlayNo)
 												.getTitle(),
 										new_colums_infos.get(curPlayNo)
@@ -843,7 +843,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 					columsVideoView.requestFocus();
 					columsVideoView.start();
 
-					NetUtils.getInstance(mContext).getAnalyse(this, "column",
+					NetUtils.getInstance(mContext).getAnalyse(this, "video",
 							new_colums_infos.get(curPlayNo).getTitle(),
 							new_colums_infos.get(curPlayNo).getTitleurl());
 				}

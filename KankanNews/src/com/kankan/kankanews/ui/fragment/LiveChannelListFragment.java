@@ -41,6 +41,7 @@ import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.Selector;
@@ -484,6 +485,14 @@ public class LiveChannelListFragment extends BaseFragment implements
 										public void onClick(View v) {
 											mCurFMPlayId = channel.getId();
 											videoPlay(channel.getStreamurl());
+
+											NetUtils.getInstance(mActivity)
+													.getAnalyse(
+															mActivity,
+															"live",
+															channel.getTitle()
+																	.trim(),
+															channel.getTitleurl());
 											mLiveChannelViewAdapter
 													.notifyDataSetChanged();
 											dialog.dismiss();
@@ -493,6 +502,11 @@ public class LiveChannelListFragment extends BaseFragment implements
 								} else {
 									mCurFMPlayId = channel.getId();
 									videoPlay(channel.getStreamurl());
+
+									NetUtils.getInstance(mActivity).getAnalyse(
+											mActivity, "live",
+											channel.getTitle().trim(),
+											channel.getTitleurl());
 								}
 							}
 						}
@@ -506,6 +520,7 @@ public class LiveChannelListFragment extends BaseFragment implements
 
 	public void videoPlay(String url) {
 		closeVideoPlay();
+
 		mAudioPlayer = new IjkMediaPlayer();
 		mAudioPlayer.setAvOption(AvFormatOption_HttpDetectRangeSupport.Disable);
 		mAudioPlayer.setOverlayFormat(AvFourCC.SDL_FCC_RV32);

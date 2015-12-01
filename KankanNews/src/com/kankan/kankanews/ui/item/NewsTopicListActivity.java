@@ -215,14 +215,21 @@ public class NewsTopicListActivity extends BaseActivity implements
 		// TODO
 		mHomeModuleItem = (NewsHomeModuleItem) this.getIntent()
 				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
-
-		NetUtils.getInstance(mContext).getAnalyse(this, "module",
-				mHomeModuleItem.getTitle(), mHomeModuleItem.getTitleurl());
 		boolean _flag = this.initLocalData();
 		if (_flag) {
 			showData();
+
+			NetUtils.getInstance(mContext)
+					.getAnalyse(this, "module", mTopicListModule.getTitle(),
+							mTopicListModule.getTitleurl());
 		} else {
-			refreshNetDate();
+			if (CommonUtils.isNetworkAvailable(mContext)) {
+				refreshNetDate();
+			} else {
+				if (!_flag) {
+					this.mRetryView.setVisibility(View.VISIBLE);
+				}
+			}
 		}
 	}
 
@@ -239,6 +246,9 @@ public class NewsTopicListActivity extends BaseActivity implements
 		mTopicListModuleJson = jsonObject.toString();
 		mTopicListModule = JsonUtils.toObject(mTopicListModuleJson,
 				NewsHomeModule.class);
+
+		NetUtils.getInstance(mContext).getAnalyse(this, "module",
+				mTopicListModule.getTitle(), mTopicListModule.getTitleurl());
 		if (mTopicListModule != null) {
 			if (mTopicListModule.getList().size() == 0)
 				mIsLoadEnd = true;

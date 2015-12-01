@@ -118,12 +118,12 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		NewsHomeModule mHomeModule = (NewsHomeModule) this.getIntent()
 				.getSerializableExtra("_NEWS_HOME_MODEULE_");
 		mAppClassId = mHomeModule.getAppclassid();
-		NetUtils.getInstance(mContext).getAnalyse(this, "module",
-				mHomeModule.getTitle(), mHomeModule.getTitleurl());
 
 		boolean flag = this.initLocalData();
 		if (flag) {
 			showData();
+			NetUtils.getInstance(mContext).getAnalyse(this, "module",
+					mNewsHomeModule.getTitle(), mNewsHomeModule.getTitleurl());
 		} else {
 			mNewsListView.showHeadLoadingView();
 			refreshNetDate();
@@ -233,6 +233,8 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		mNewsHomeModuleJson = jsonObject.toString();
 		mNewsHomeModule = JsonUtils.toObject(mNewsHomeModuleJson,
 				NewsHomeModule.class);
+		NetUtils.getInstance(mContext).getAnalyse(this, "module",
+				mNewsHomeModule.getTitle(), mNewsHomeModule.getTitleurl());
 		if (mNewsHomeModule != null) {
 			if (mNewsHomeModule.getList().size() == 0)
 				mIsLoadEnd = true;

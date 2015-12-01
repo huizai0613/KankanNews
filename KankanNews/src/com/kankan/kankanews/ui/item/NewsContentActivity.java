@@ -428,7 +428,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			}
 		}
 		// 提交点击
-		NetUtils.getInstance(mContext).addNewNewsClickData("tjid=" + mNewsId);
+		NetUtils.getInstance(mContext).addNewNewsClickData("id=" + mNewsId);
 
 		NetUtils.getInstance(mContext).getAnalyse(this, mNewsType, mNewsTitle,
 				mNewsTitleurl);
@@ -732,21 +732,39 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	}
 
 	public String initContent() {
-		StringBuffer buf = new StringBuffer();
-		List<String> contents = StringUtils.splitString(
-				mNewsContent.getContents(), "</p>");
-		for (String paragraph : contents) {
-			String content = StringUtils.deleteTag(paragraph, "p").trim();
-			if (content.startsWith("<!--IMAGE_")) {
-				buf.append(initImage(content));
-				continue;
-			} else if (content.startsWith("<!--VIDEO_")) {
-				buf.append(initVideo(content));
-				continue;
-			} else
-				buf.append(paragraph);
+		String tmpStr = mNewsContent.getContents();
+		// StringBuffer buf = new StringBuffer();
+		// List<String> contents = StringUtils.splitString(
+		// mNewsContent.getContents(), "</p>");
+		for (Map.Entry<String, NewsContentImage> entry : mNewsContent
+				.getConponents().getImage().entrySet()) {
+			// System.out.println("key= " + entry.getKey() + " and value= "
+			// + entry.getValue());
+			tmpStr = tmpStr.replace("<!--" + entry.getKey() + "-->",
+					initImage("<!--" + entry.getKey() + "-->"));
+			// initImage("<!--" + entry.getKey() + "-->");
 		}
-		return buf.toString();
+		for (Map.Entry<String, NewsContentVideo> entry : mNewsContent
+				.getConponents().getVideo().entrySet()) {
+			// System.out.println("key= " + entry.getKey() + " and value= "
+			// + entry.getValue());
+			tmpStr = tmpStr.replace("<!--" + entry.getKey() + "-->",
+					initVideo("<!--" + entry.getKey() + "-->"));
+			// initImage("<!--" + entry.getKey() + "-->");
+		}
+		// for (String paragraph : contents) {
+		// String content = StringUtils.deleteTag(paragraph, "p").trim();
+		// if (content.startsWith("<!--IMAGE_")) {
+		// buf.append(initImage(content));
+		// continue;
+		// } else if (content.startsWith("<!--VIDEO_")) {
+		// buf.append(initVideo(content));
+		// continue;
+		// } else
+		// buf.append(paragraph);
+		// }
+		// return buf.toString();
+		return tmpStr;
 	}
 
 	private String initImage(String content) {

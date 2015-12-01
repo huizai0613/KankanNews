@@ -64,6 +64,7 @@ public class TransitionLoadingActivity extends BaseActivity {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				// ToastUtils.ErrorToastNoNet(getActivity());
+				goHome();
 			}
 		});
 	}

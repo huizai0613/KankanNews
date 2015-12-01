@@ -248,9 +248,6 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 		mHomeModuleItem = (NewsHomeModuleItem) this.getIntent()
 				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
 
-		NetUtils.getInstance(mContext).getAnalyse(this, "module",
-				mHomeModuleItem.getTitle(), mHomeModuleItem.getTitleurl());
-
 		if (CommonUtils.isNetworkAvailable(this)) {
 			refreshNetDate();
 		} else {
@@ -428,6 +425,11 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			if (jsonObject != null && !jsonObject.equals("")) {
 				NewsHomeModule tmpModule = JsonUtils.toObject(
 						jsonObject.toString(), NewsHomeModule.class);
+
+				NetUtils.getInstance(mContext).getAnalyse(
+						NewsVideoPackageActivity.this, "module",
+						tmpModule.getTitle(), tmpModule.getTitleurl());
+
 				mRetryView.setVisibility(View.GONE);
 				if (!tmpModule.getTitle().trim().equals(""))
 					NewsVideoPackageActivity.this.setContentTextView(tmpModule
