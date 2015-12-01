@@ -148,6 +148,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private int mMarginSide;
 	private int mMarginTop;
 	private NewsContentVideo mCurPlayVideo;
+	private View mContentScreenGuide;
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -363,6 +364,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		mOperationPercent = (ImageView) findViewById(R.id.operation_percent);
 
 		nightView = findViewById(R.id.night_view);
+		mContentScreenGuide = findViewById(R.id.content_screen_guide);
 
 		// 允许JavaScript执行
 		WebSettings webSettings = mContentWebView.getSettings();
@@ -528,6 +530,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		mVideoView.setOnErrorListener(this);
 		mVideoView.setOnClickListener(this);
 		mVideoViewController.setOnClickListener(this);
+		mContentScreenGuide.setOnClickListener(this);
 
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
@@ -547,6 +550,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		mNewsContent = JsonUtils.toObject(mNewsContentJson, NewsContent.class);
 		saveLocalDate();
 		showData();
+		mContentScreenGuide
+				.setVisibility(spUtil.getFirstContent() ? View.VISIBLE
+						: View.GONE);
 	}
 
 	@Override
@@ -556,6 +562,10 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.content_screen_guide:
+			this.mContentScreenGuide.setVisibility(View.GONE);
+			spUtil.setFirstContent(false);
+			break;
 		case R.id.title_bar_left_img:
 			onBackPressed();
 			break;
@@ -736,21 +746,25 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		// StringBuffer buf = new StringBuffer();
 		// List<String> contents = StringUtils.splitString(
 		// mNewsContent.getContents(), "</p>");
-		for (Map.Entry<String, NewsContentImage> entry : mNewsContent
-				.getConponents().getImage().entrySet()) {
-			// System.out.println("key= " + entry.getKey() + " and value= "
-			// + entry.getValue());
-			tmpStr = tmpStr.replace("<!--" + entry.getKey() + "-->",
-					initImage("<!--" + entry.getKey() + "-->"));
-			// initImage("<!--" + entry.getKey() + "-->");
+		if (mNewsContent.getConponents().getImage() != null) {
+			for (Map.Entry<String, NewsContentImage> entry : mNewsContent
+					.getConponents().getImage().entrySet()) {
+				// System.out.println("key= " + entry.getKey() + " and value= "
+				// + entry.getValue());
+				tmpStr = tmpStr.replace("<!--" + entry.getKey() + "-->",
+						initImage("<!--" + entry.getKey() + "-->"));
+				// initImage("<!--" + entry.getKey() + "-->");
+			}
 		}
-		for (Map.Entry<String, NewsContentVideo> entry : mNewsContent
-				.getConponents().getVideo().entrySet()) {
-			// System.out.println("key= " + entry.getKey() + " and value= "
-			// + entry.getValue());
-			tmpStr = tmpStr.replace("<!--" + entry.getKey() + "-->",
-					initVideo("<!--" + entry.getKey() + "-->"));
-			// initImage("<!--" + entry.getKey() + "-->");
+		if (mNewsContent.getConponents().getVideo() != null) {
+			for (Map.Entry<String, NewsContentVideo> entry : mNewsContent
+					.getConponents().getVideo().entrySet()) {
+				// System.out.println("key= " + entry.getKey() + " and value= "
+				// + entry.getValue());
+				tmpStr = tmpStr.replace("<!--" + entry.getKey() + "-->",
+						initVideo("<!--" + entry.getKey() + "-->"));
+				// initImage("<!--" + entry.getKey() + "-->");
+			}
 		}
 		// for (String paragraph : contents) {
 		// String content = StringUtils.deleteTag(paragraph, "p").trim();

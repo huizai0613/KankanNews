@@ -181,4 +181,11 @@
         android:background="@color/night_mask"
         android:visibility="gone" />
 
+    <ImageView
+        android:id="@+id/content_screen_guide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/full_screen_guide"
+        android:visibility="gone" />
+
 </RelativeLayout>
