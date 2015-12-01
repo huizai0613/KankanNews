@@ -81,6 +81,7 @@ import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.StringUtils;
 import com.kankan.kankanews.utils.TimeUtil;
+import com.kankan.kankanews.utils.ToastUtils;
 import com.kankanews.kankanxinwen.R;
 import com.lidroid.xutils.db.sqlite.Selector;
 import com.lidroid.xutils.db.sqlite.WhereBuilder;
@@ -703,8 +704,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				this.fullScrenntoSamll();
 			this.closeVideo();
 			this.mVideoRootView.setVisibility(View.GONE);
+			new Handler().post(new Runnable() {
+				@Override
+				public void run() {
+					ToastUtils.Errortoast(mContext, "网络环境发生变化,当前无WIFI环境");
+				}
+			});
 		}
-
 	}
 
 	private void closeVideo() {
