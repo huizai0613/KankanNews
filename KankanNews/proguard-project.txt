@@ -18,3 +18,143 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-optimizationpasses 5
+-dontskipnonpubliclibraryclasses
+-dontpreverify
+-verbose
+-optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
+
+-keep public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class com.android.vending.licensing.ILicensingService
+
+
+
+
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+-keepclasseswithmembernames class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+-keepclasseswithmembernames class * {
+    public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+-keep class * implements android.os.Parcelable {
+  public static final android.os.Parcelable$Creator *;
+}
+
+
+-dontshrink
+-dontoptimize
+-dontwarn com.google.android.maps.**
+-dontwarn android.webkit.WebView
+-dontwarn com.umeng.**
+-dontwarn com.tencent.weibo.sdk.**
+-dontwarn com.facebook.**
+
+-libraryjars ..//social_sdk_library_project/libs/SocialSDK_QQZone_2.jar
+
+-keep enum com.facebook.**
+-keepattributes Exceptions,InnerClasses,Signature
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+
+-keep public interface com.facebook.**
+-keep public interface com.tencent.**
+-keep public interface com.umeng.socialize.**
+-keep public interface com.umeng.socialize.sensor.**
+-keep public interface com.umeng.scrshot.**
+
+-keep public class com.umeng.socialize.* {*;}
+-keep public class javax.**
+-keep public class android.webkit.**
+
+-keep class com.facebook.**
+-keep class com.umeng.scrshot.**
+-keep public class com.tencent.** {*;}
+-keep class com.umeng.socialize.sensor.**
+
+-keep class com.tencent.mm.sdk.modelmsg.WXMediaMessage {*;}
+
+-keep class com.tencent.mm.sdk.modelmsg.** implements com.tencent.mm.sdk.modelmsg.WXMediaMessage$IMediaObject {*;}
+
+-keep class im.yixin.sdk.api.YXMessage {*;}
+-keep class im.yixin.sdk.api.** implements im.yixin.sdk.api.YXMessage$YXMessageData{*;}
+
+-keep public class [your_pkg].R$*{
+    public static final int *;
+}
+
+
+-dontwarn android.support.v4.**
+-dontwarn android.support.v4.view.**
+-keep class android.support.v4.view.**{ *;}
+
+-dontwarn com.sina.sso.**
+-keep class com.sina.sso.** { *; }
+
+-dontwarn tv.danmaku.ijk.media.**
+-keep class tv.danmaku.ijk.media.** { *; }
+
+-dontwarn tv.danmaku.ijk.media.**
+-keep class tv.danmaku.ijk.media.** { *; }
+
+-dontwarn com.jeremyfeinstein.slidingmenu.lib.**
+-keep class com.jeremyfeinstein.slidingmenu.lib.** { *; }
+
+-keep class **.R$* {  
+ *;  
+}
+
+-dontwarn com.sina.weibo.sdk.**
+-keep class com.sina.weibo.sdk.** { *; }
+
+-dontwarn com.kankan.kankanews.bean.**
+-keep class com.kankan.kankanews.bean.** { *; }
+
+-dontwarn com.kankan.kankanews.ui.**
+-keep class com.kankan.kankanews.ui.** { *; }
+
+-dontwarn com.kankan.kankanews.base.**
+-keep class com.kankan.kankanews.base.** { *; }
+
+-dontwarn com.kankan.kankanews.base.IA.**
+-keep class com.kankan.kankanews.base.IA.** { *; }
+
+-dontwarn com.kankan.kankanews.ui.view.**
+-keep class com.kankan.kankanews.ui.view.** { *; }
+
+-dontwarn com.fortysevendeg.swipelistview.**
+-keep class com.fortysevendeg.swipelistview.** { *; }
+
+-dontwarn com.kankan.kankanews.wxapi.**
+-keep class com.kankan.kankanews.wxapi.** { *; }
+
+-dontwarn com.umeng.message.entity.**
+-keep class com.umeng.message.entity.** { *; }
+
+-dontwarn com.handmark.pulltorefresh.library.**
+-keep class com.handmark.pulltorefresh.library.** { *; }
+-dontwarn com.nineoldandroids.animation.**
+-keep class com.nineoldandroids.animation.** { *; }
+
+-keep class android.annotation.** { *; }
+
+# ProGuard configurations for NetworkBench Lens
+-keep class com.networkbench.** { *; }
+-dontwarn com.networkbench.**
+-keepattributes Exceptions, Signature, InnerClasses
+# End NetworkBench Lens
