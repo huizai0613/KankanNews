@@ -17,10 +17,11 @@
         <ImageView
             android:id="@+id/item_news_home_matrix_icon"
             android:layout_width="20dip"
-            android:layout_height="20dip"
+            android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_margin="@dimen/margin_base_space"
-            android:scaleType="fitXY" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/margin_base_space"
+            android:layout_marginRight="@dimen/margin_base_space" />
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/item_news_home_matrix_title"
