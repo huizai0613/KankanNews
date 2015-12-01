@@ -100,6 +100,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private final static int _CHANGE_IMAGE_PROCESS_ = 2;
 	private final static int _SHOW_VIDEO_ = 3;
 	private final static int _PREVIEW_IMAGE_ = 4;
+	private final static int _SET_VIDEO_LOCATION_ = 5;
 
 	// 分享类
 	private ShareUtil shareUtil;
@@ -150,6 +151,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private int mMarginSide;
 	private int mMarginTop;
 	private NewsContentVideo mCurPlayVideo;
+	private String mCurPlayVideoKey;
 	private View mContentScreenGuide;
 
 	@Override
@@ -235,6 +237,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	private Handler mHandle = new Handler() {
 		public void handleMessage(Message msg) {
+			int displayScale = mContext.getResources().getDisplayMetrics().densityDpi / 160;
 			switch (msg.what) {
 			case _SHOW_IMAGE_:
 				mContentWebView
@@ -250,10 +253,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				break;
 			case _SHOW_VIDEO_:
 				closeVideo();
-				String videoKey = msg.getData().getString("_VIDEO_KEY_");
+				mCurPlayVideoKey = msg.getData().getString("_VIDEO_KEY_");
 				final NewsContentVideo video = mNewsContent.getConponents()
-						.getVideo().get(videoKey);
-				int displayScale = mContext.getResources().getDisplayMetrics().densityDpi / 160;
+						.getVideo().get(mCurPlayVideoKey);
 				mMarginSide = msg.getData().getInt("_OFFSETLEFT_")
 						* displayScale;
 				mMarginTop = msg.getData().getInt("_OFFSETTOP_") * displayScale;
@@ -283,6 +285,12 @@ public class NewsContentActivity extends BaseVideoActivity implements
 					}
 				}
 				break;
+			case _SET_VIDEO_LOCATION_:
+				mMarginSide = msg.getData().getInt("_OFFSETLEFT_")
+						* displayScale;
+				mMarginTop = msg.getData().getInt("_OFFSETTOP_") * displayScale;
+				setVideoLocation();
+				break;
 			case _PREVIEW_IMAGE_:
 				String imgKey = msg.getData().getString("_IMAGE_KEY_");
 				Map<String, NewsContentImage> imgMap = mNewsContent
@@ -303,6 +311,12 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			}
 		}
 	};
+
+	private void refreshVideoLocation() {
+		// this.mCurPlayVideo.get
+		mContentWebView.loadUrl("javascript:getVideoLocation('"
+				+ mCurPlayVideoKey + "')");
+	}
 
 	private void playVideo(final NewsContentVideo video) {
 		mCurPlayVideo = video;
@@ -328,6 +342,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 			}
 		});
+	};
+
+	private void setVideoLocation() {
+		RelativeLayout.LayoutParams par = (LayoutParams) mVideoRootView
+				.getLayoutParams();
+		par.setMargins(mMarginSide, mMarginTop, mMarginSide, 0);
+		mVideoRootView.setLayoutParams(par);
 	};
 
 	@Override
@@ -703,6 +724,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		mContentWebView.loadUrl("javascript:changeFontSize('font_"
 				+ FontUtils.fontSizeWeb[index] + "')");
 		FontUtils.chagneFontSizeGlobal();
+		if (this.isPlay)
+			refreshVideoLocation();
 	}
 
 	@Override
@@ -723,6 +746,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	private void closeVideo() {
 		isPlay = false;
+		mCurPlayVideoKey = "";
 		if (this.mVideoView != null) {
 			this.mVideoView.pause();
 			this.mVideoView.stopPlayback();
@@ -1011,6 +1035,20 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		}
 
 		@JavascriptInterface
+		public void setVideoLocation(final String videoKey, final int left,
+				final int top) {
+			// TODO
+			Message msg = new Message();
+			msg.what = NewsContentActivity._SET_VIDEO_LOCATION_;
+			Bundle bundle = new Bundle();
+			bundle.putString("_VIDEO_KEY_", videoKey);
+			bundle.putInt("_OFFSETLEFT_", left);
+			bundle.putInt("_OFFSETTOP_", top);
+			msg.setData(bundle);
+			mHandle.sendMessage(msg);
+		}
+
+		@JavascriptInterface
 		public void openNews(String id, String type, String title,
 				String titlepic) {
 			Intent intent = new Intent(NewsContentActivity.this,
@@ -1046,16 +1084,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				out = new FileOutputStream(file);
 				out.write(body.getBytes());
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				DebugLog.e(e.getLocalizedMessage());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				DebugLog.e(e.getLocalizedMessage());
 			} finally {
 				try {
 					out.close();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					DebugLog.e(e.getLocalizedMessage());
 				}
 			}
