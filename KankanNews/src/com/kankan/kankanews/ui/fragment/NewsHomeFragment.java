@@ -1,6 +1,7 @@
 package com.kankan.kankanews.ui.fragment;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -109,6 +110,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			"#ec3838", "#00FFFF", "#FF00FF" };
 
 	private Map<String, Integer> mRandomNumMap = new HashMap<String, Integer>();
+
+	private DecimalFormat mVoteNumDF = new DecimalFormat("0.00");
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -1254,20 +1257,18 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					(double) Math.round(percent * 10000) / 100 + "");
 			tmpVoteSumNum = tmpVoteSumNum.add(tmpPercent);
 			if (i != _flag) {
-				answerPercent.setText(tmpPercent + "%");
+				answerPercent.setText(mVoteNumDF.format(tmpPercent).toString() + "%");
 			} else {
 				if (!tmpVoteSumNum.toString().equals("100.00")
 						|| !tmpVoteSumNum.toString().equals("100.0")
 						|| !tmpVoteSumNum.toString().equals("100")) {
-					DebugLog.e(tmpVoteSumNum.toString());
-					DebugLog.e(tmpPercent.toString());
 					answerPercent.setText(tmpPercent.add(
 							new BigDecimal(new BigDecimal("100").subtract(
 									new BigDecimal(tmpVoteSumNum.toString()))
 									.toString())).toString()
 							+ "%");
 				} else
-					answerPercent.setText(tmpPercent.toString() + "%");
+					answerPercent.setText(mVoteNumDF.format(tmpPercent) + "%");
 			}
 			mVoteHolder.rootView.addView(itemView);
 		}
