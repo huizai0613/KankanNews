@@ -550,9 +550,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		mNewsContent = JsonUtils.toObject(mNewsContentJson, NewsContent.class);
 		saveLocalDate();
 		showData();
-		mContentScreenGuide
-				.setVisibility(spUtil.getFirstContent() ? View.VISIBLE
-						: View.GONE);
+		mContentScreenGuide.setVisibility(spUtil.getFirstContent()
+				&& mNewsContent.getType().equals("video") ? View.VISIBLE
+				: View.GONE);
 	}
 
 	@Override
