@@ -1110,9 +1110,9 @@ public class New_RevelationsFragment extends BaseFragment implements
 		// news.getTitleurl(), news.getTitlepic(), news.getTitlepic());
 		// }
 		else {
-			moduleItem.setType("outlink");
+			moduleItem.setType("text");
 			this.startAnimActivityByNewsHomeModuleItem(
-					NewsOutLinkActivity.class, moduleItem);
+					NewsContentActivity.class, moduleItem);
 			// mActivity.startAnimActivityByParameter(
 			// New_Activity_Content_Web.class, news.getMid(),
 			// news.getType(), news.getTitleurl(), news.getNewstime(),

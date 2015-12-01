@@ -785,9 +785,9 @@ public class RevelationsActivityDetailActivity extends BaseActivity implements
 		} else if (news_type % 10 == 5) {
 			return;
 		} else {
-			moduleItem.setType("outlink");
+			moduleItem.setType("text");
 			this.startAnimActivityByNewsHomeModuleItem(
-					NewsOutLinkActivity.class, moduleItem);
+					NewsContentActivity.class, moduleItem);
 		}
 	}
 
