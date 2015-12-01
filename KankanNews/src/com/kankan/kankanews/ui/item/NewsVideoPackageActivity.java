@@ -328,6 +328,8 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			onBackPressed();
 			break;
 		case R.id.title_bar_right_img:
+			if (mNewsVPModule == null)
+				return;
 			shareUtil = new ShareUtil(new CanSharedObject() {
 				@Override
 				public void setSharedPic(String sharepic) {

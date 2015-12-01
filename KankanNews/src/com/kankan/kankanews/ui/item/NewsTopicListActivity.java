@@ -638,6 +638,8 @@ public class NewsTopicListActivity extends BaseActivity implements
 			onBackPressed();
 			break;
 		case R.id.title_bar_content_img:
+			if (mTopicListModule == null)
+				return;
 			shareUtil = new ShareUtil(mTopicListModule, mContext);
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);

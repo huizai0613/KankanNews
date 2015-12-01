@@ -453,6 +453,8 @@ public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
 			break;
 		case R.id.title_bar_content_img:
 			// 初始化shareutil类
+			if(mAlbum == null)
+				return;
 			shareUtil = new ShareUtil(mAlbum, mContext);
 			// 一键分享
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,

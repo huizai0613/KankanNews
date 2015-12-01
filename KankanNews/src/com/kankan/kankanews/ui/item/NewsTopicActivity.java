@@ -699,7 +699,8 @@ public class NewsTopicActivity extends BaseActivity implements
 			break;
 		case R.id.title_bar_content_img:
 			// 一键分享
-			// if (shareUtil == null)
+			if (mTopicModule == null)
+				return;
 			shareUtil = new ShareUtil(mTopicModule, mContext);
 			CustomShareBoard shareBoard = new CustomShareBoard(this, shareUtil,
 					this);
