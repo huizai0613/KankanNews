@@ -76,6 +76,7 @@ import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.StringUtils;
@@ -136,6 +137,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	private String mNewsType;
 	private String mNewsTitle;
 	private String mNewsTitlepic;
+	private String mNewsTitleurl;
 	private int mWebWidth = 0;
 
 	private boolean isPause;
@@ -406,11 +408,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			mNewsType = this.getIntent().getStringExtra("type");
 			mNewsTitle = this.getIntent().getStringExtra("title");
 			mNewsTitlepic = this.getIntent().getStringExtra("titlepic");
+			mNewsTitleurl = this.getIntent().getStringExtra("titleurl");
 		} else {
 			mNewsId = mModuleItem.getO_cmsid();
 			mNewsType = mModuleItem.getType();
 			mNewsTitle = mModuleItem.getTitle();
 			mNewsTitlepic = mModuleItem.getTitlepic();
+			mNewsTitleurl = mModuleItem.getTitleurl();
 		}
 		saveBrowse();
 		boolean hasLocal = initLocalData();
@@ -423,6 +427,11 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				mRetryView.setVisibility(View.VISIBLE);
 			}
 		}
+		// 提交点击
+		NetUtils.getInstance(mContext).addNewNewsClickData("tjid=" + mNewsId);
+
+		NetUtils.getInstance(mContext).getAnalyse(this, mNewsType, mNewsTitle,
+				mNewsTitleurl);
 	}
 
 	private void saveBrowse() {
@@ -432,6 +441,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		browse.setTitle(mNewsTitle);
 		browse.setBrowseTime(new Date().getTime());
 		browse.setTitlepic(mNewsTitlepic);
+		browse.setTitleurl(mNewsTitleurl);
 		new Thread() {
 			@Override
 			public void run() {

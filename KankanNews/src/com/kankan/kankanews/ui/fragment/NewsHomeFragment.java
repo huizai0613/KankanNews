@@ -878,8 +878,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				mMatrixHolder.more.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						NewsHomeFragment.this.startAnimActivityByAppClassId(
-								NewsListActivity.class, module.getAppclassid());
+						// NewsHomeFragment.this.startAnimActivityByAppClassId(
+						// NewsListActivity.class, module.getAppclassid());
+						NewsHomeFragment.this
+								.startAnimActivityByNewsHomeModule(
+										NewsListActivity.class, module);
 					}
 				});
 			} else if (itemType == 2) {
@@ -1409,6 +1412,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			this.startAnimActivityByNewsHomeModuleItem(
 					NewsContentActivity.class, moduleItem);
 		} else if (moduleItem.getType().equals("outlink")) {
+			moduleItem.setOutLinkType("module");
 			this.startAnimActivityByNewsHomeModuleItem(
 					NewsOutLinkActivity.class, moduleItem);
 		} else if (moduleItem.getType().equals("album")) {

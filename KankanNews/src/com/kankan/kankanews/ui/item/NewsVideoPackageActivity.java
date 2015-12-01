@@ -248,6 +248,9 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 		mHomeModuleItem = (NewsHomeModuleItem) this.getIntent()
 				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
 
+		NetUtils.getInstance(mContext).getAnalyse(this, "module",
+				mHomeModuleItem.getTitle(), mHomeModuleItem.getTitleurl());
+
 		if (CommonUtils.isNetworkAvailable(this)) {
 			refreshNetDate();
 		} else {
@@ -768,6 +771,14 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 								mVideoPkgVideoView.requestFocus();
 								mVideoPkgVideoView.start();
 								mVideoPkgVideoStart.setVisibility(View.GONE);
+
+								NetUtils.getInstance(mContext).getAnalyse(
+										NewsVideoPackageActivity.this,
+										"video",
+										mNewsVPModule.getList().get(curPlayNo)
+												.getTitle(),
+										mNewsVPModule.getList().get(curPlayNo)
+												.getTitleurl());
 							}
 							dialog.dismiss();
 						}
@@ -789,8 +800,8 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 					mVideoPkgVideoStart.setVisibility(View.GONE);
 
 					NetUtils.getInstance(mContext).getAnalyse(
-							this,
-							"column",
+							NewsVideoPackageActivity.this,
+							"video",
 							mNewsVPModule.getList().get(curPlayNo).getTitle(),
 							mNewsVPModule.getList().get(curPlayNo)
 									.getTitleurl());

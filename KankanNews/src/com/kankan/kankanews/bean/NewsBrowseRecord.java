@@ -21,6 +21,7 @@ public class NewsBrowseRecord implements Serializable {
 	private String title;
 	private long browseTime;
 	private String titlepic;
+	private String titleurl;
 
 	public String getId() {
 		return id;
@@ -60,6 +61,14 @@ public class NewsBrowseRecord implements Serializable {
 
 	public void setTitlepic(String titlepic) {
 		this.titlepic = titlepic;
+	}
+
+	public String getTitleurl() {
+		return titleurl;
+	}
+
+	public void setTitleurl(String titleurl) {
+		this.titleurl = titleurl;
 	}
 
 }

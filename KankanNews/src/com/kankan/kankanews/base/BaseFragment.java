@@ -22,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.iss.view.pulltorefresh.PullToRefreshBase.Mode;
 import com.iss.view.pulltorefresh.PullToRefreshListView;
 import com.kankan.kankanews.base.IA.CrashApplication;
+import com.kankan.kankanews.bean.NewsHomeModule;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.ui.MainActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
@@ -259,6 +260,15 @@ public abstract class BaseFragment extends Fragment {
 	public void startAnimActivityByBean(Class<?> cla, String key, BaseBean bean) {
 		Intent intent = new Intent(mActivity, cla);
 		intent.putExtra(key, bean);
+		mActivity.startActivity(intent);
+		mActivity.overridePendingTransition(R.anim.in_from_right,
+				R.anim.out_to_left);
+	}
+
+	public void startAnimActivityByNewsHomeModule(Class<?> cla,
+			NewsHomeModule module) {
+		Intent intent = new Intent(mActivity, cla);
+		intent.putExtra("_NEWS_HOME_MODEULE_", module);
 		mActivity.startActivity(intent);
 		mActivity.overridePendingTransition(R.anim.in_from_right,
 				R.anim.out_to_left);

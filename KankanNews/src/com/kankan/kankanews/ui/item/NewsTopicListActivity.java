@@ -68,6 +68,7 @@ import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -127,9 +128,6 @@ public class NewsTopicListActivity extends BaseActivity implements
 
 		mTopicListListView = (PullToRefreshListView) findViewById(R.id.topiclist_list_view);
 		initListView();
-		//
-		// NetUtils.getInstance(mContext).getAnalyse(this, "topic",
-		// new_news.getTitlelist(), new_news.getTitleurl());
 		// TODO
 
 		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
@@ -217,6 +215,9 @@ public class NewsTopicListActivity extends BaseActivity implements
 		// TODO
 		mHomeModuleItem = (NewsHomeModuleItem) this.getIntent()
 				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
+
+		NetUtils.getInstance(mContext).getAnalyse(this, "module",
+				mHomeModuleItem.getTitle(), mHomeModuleItem.getTitleurl());
 		boolean _flag = this.initLocalData();
 		if (_flag) {
 			showData();
@@ -548,6 +549,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 									.startAnimActivityByNewsHomeModuleItem(
 											NewsContentActivity.class, item);
 						} else if (item.getType().equals("outlink")) {
+							item.setOutLinkType("outlink");
 							NewsTopicListActivity.this
 									.startAnimActivityByNewsHomeModuleItem(
 											NewsOutLinkActivity.class, item);

@@ -178,7 +178,6 @@ public class NewsOutLinkActivity extends BaseActivity implements
 		case R.id.title_bar_right_img:
 			this.refresh();
 			break;
-
 		}
 	}
 
@@ -188,9 +187,13 @@ public class NewsOutLinkActivity extends BaseActivity implements
 		mModuleItem = (NewsHomeModuleItem) this.getIntent()
 				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
 		// 提交点击
-		// NetUtils.getInstance(mContext).addNewNewsClickData("id=" + mid);
-		// NetUtils.getInstance(mContext).getAnalyse(this, "text",
-		// new_news.getTitlelist(), new_news.getTitleurl());
+		// NetUtils.getInstance(mContext).addNewNewsClickData(
+		// "id=" + mModuleItem.getO_cmsid());
+		String outlinkType = mModuleItem.getOutLinkType();
+		if (outlinkType == null || outlinkType.equals(""))
+			outlinkType = "outlink";
+		NetUtils.getInstance(mContext).getAnalyse(this, outlinkType,
+				mModuleItem.getTitle(), mModuleItem.getTitleurl());
 		// 更新数据
 
 		// webView.loadUrl(titleurl + "?fromkkApp=1");

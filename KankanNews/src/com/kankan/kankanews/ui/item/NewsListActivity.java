@@ -60,6 +60,7 @@ import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.StringUtils;
@@ -89,6 +90,8 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 
 	private String mAppClassId = "";
 
+	// private NewsHomeModule mHomeModule;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -110,8 +113,14 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void initData() {
 		// TODO Auto-generated method stub
-		mAppClassId = this.getIntent().getStringExtra(
-				"_NEWS_HOME_APP_CLASS_ID_");
+		// mAppClassId = this.getIntent().getStringExtra(
+		// "_NEWS_HOME_APP_CLASS_ID_");
+		NewsHomeModule mHomeModule = (NewsHomeModule) this.getIntent()
+				.getSerializableExtra("_NEWS_HOME_MODEULE_");
+		mAppClassId = mHomeModule.getAppclassid();
+		NetUtils.getInstance(mContext).getAnalyse(this, "module",
+				mHomeModule.getTitle(), mHomeModule.getTitleurl());
+
 		boolean flag = this.initLocalData();
 		if (flag) {
 			showData();
@@ -449,6 +458,7 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 									.startAnimActivityByNewsHomeModuleItem(
 											NewsContentActivity.class, news);
 						} else if (news.getType().equals("outlink")) {
+							news.setOutLinkType("outlink");
 							NewsListActivity.this
 									.startAnimActivityByNewsHomeModuleItem(
 											NewsOutLinkActivity.class, news);

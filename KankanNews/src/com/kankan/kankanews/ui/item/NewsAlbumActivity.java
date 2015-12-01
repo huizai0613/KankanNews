@@ -161,6 +161,7 @@ public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
 		browse.setTitle(mHomeModuleItem.getTitle());
 		browse.setBrowseTime(new Date().getTime());
 		browse.setTitlepic(mHomeModuleItem.getTitlepic());
+		browse.setTitleurl(mHomeModuleItem.getTitleurl());
 		new Thread() {
 			@Override
 			public void run() {

@@ -25,6 +25,8 @@ public class NewsHomeModuleItem implements Serializable, CanSharedObject {
 	private String album_1;
 	private String album_2;
 	private String album_3;
+	// 用于统计
+	private String outLinkType;
 
 	public String getId() {
 		return id;
@@ -176,6 +178,14 @@ public class NewsHomeModuleItem implements Serializable, CanSharedObject {
 
 	public void setAlbum_3(String album_3) {
 		this.album_3 = album_3;
+	}
+
+	public String getOutLinkType() {
+		return outLinkType;
+	}
+
+	public void setOutLinkType(String outLinkType) {
+		this.outLinkType = outLinkType;
 	}
 
 	@Override

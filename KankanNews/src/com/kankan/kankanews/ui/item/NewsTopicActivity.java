@@ -66,6 +66,7 @@ import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
 import com.kankan.kankanews.utils.ImgUtils;
 import com.kankan.kankanews.utils.JsonUtils;
+import com.kankan.kankanews.utils.NetUtils;
 import com.kankan.kankanews.utils.NewsBrowseUtils;
 import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
@@ -155,8 +156,6 @@ public class NewsTopicActivity extends BaseActivity implements
 		// new_news.setTitleurl(titleurl);
 		// new_news.setIntro(intro);
 		//
-		// NetUtils.getInstance(mContext).getAnalyse(this, "topic",
-		// new_news.getTitlelist(), new_news.getTitleurl());
 
 		initTitleBarIcon(R.drawable.ic_share, R.drawable.new_ic_back,
 				R.drawable.ic_close_white, R.drawable.ic_font,
@@ -188,7 +187,6 @@ public class NewsTopicActivity extends BaseActivity implements
 
 	protected boolean initLocalData() {
 		try {
-			DebugLog.e(mHomeModuleItem.getAppclassid());
 			SerializableObj object = (SerializableObj) this.dbUtils
 					.findFirst(Selector.from(SerializableObj.class).where(
 							"classType", "=",
@@ -243,6 +241,10 @@ public class NewsTopicActivity extends BaseActivity implements
 		Intent intent = getIntent();
 		mHomeModuleItem = (NewsHomeModuleItem) intent
 				.getSerializableExtra("_NEWS_HOME_MODEULE_ITEM_");
+
+		NetUtils.getInstance(mContext).getAnalyse(this, "module",
+				mHomeModuleItem.getTitle(), mHomeModuleItem.getTitleurl());
+
 		this.mLoadingView.setVisibility(View.VISIBLE);
 		boolean _flag = initLocalData();
 		if (_flag) {
@@ -542,6 +544,7 @@ public class NewsTopicActivity extends BaseActivity implements
 									.startAnimActivityByNewsHomeModuleItem(
 											NewsContentActivity.class, item);
 						} else if (item.getType().equals("outlink")) {
+							item.setOutLinkType("outlink");
 							NewsTopicActivity.this
 									.startAnimActivityByNewsHomeModuleItem(
 											NewsOutLinkActivity.class, item);

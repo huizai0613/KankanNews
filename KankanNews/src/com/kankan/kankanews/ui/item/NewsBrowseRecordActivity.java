@@ -257,6 +257,7 @@ public class NewsBrowseRecordActivity extends BaseActivity implements
 		moduleItem.setType(mNewsBrowseRecord.getType());
 		moduleItem.setTitle(mNewsBrowseRecord.getTitle());
 		moduleItem.setTitlepic(mNewsBrowseRecord.getTitlepic());
+		moduleItem.setTitleurl(mNewsBrowseRecord.getTitleurl());
 		if (mNewsBrowseRecord.getType().equals("video"))
 			this.startAnimActivityByNewsHomeModuleItem(
 					NewsContentActivity.class, moduleItem);
