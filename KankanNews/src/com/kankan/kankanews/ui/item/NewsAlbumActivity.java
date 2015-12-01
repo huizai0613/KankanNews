@@ -453,7 +453,7 @@ public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
 			break;
 		case R.id.title_bar_content_img:
 			// 初始化shareutil类
-			if(mAlbum == null)
+			if (mAlbum == null)
 				return;
 			shareUtil = new ShareUtil(mAlbum, mContext);
 			// 一键分享
@@ -515,7 +515,10 @@ public class NewsAlbumActivity extends BaseActivity implements OnClickListener,
 
 	@Override
 	public void copy2Clip() {
-		// TODO Auto-generated method stub
+		if (mAlbum == null) {
+			ToastUtils.Errortoast(this, "请页面加载完成后重试");
+			return;
+		}
 		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 		clip.setText(mAlbum.getUrl());
 		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");

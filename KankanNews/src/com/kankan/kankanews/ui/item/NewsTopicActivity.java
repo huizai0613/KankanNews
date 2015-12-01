@@ -763,7 +763,11 @@ public class NewsTopicActivity extends BaseActivity implements
 	public void copy2Clip() {
 		// TODO
 		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		// clip.setText(mTopicModule.get);
+		if (mTopicModule == null) {
+			ToastUtils.Errortoast(this, "请页面加载完成后重试");
+			return;
+		}
+		clip.setText(mTopicModule.getTitleurl());
 		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
 	}
 

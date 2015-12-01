@@ -19,6 +19,7 @@ import tv.danmaku.ijk.media.player.IMediaPlayer.OnErrorListener;
 import tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener;
 import tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener;
 import tv.danmaku.ijk.media.widget.VideoView;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -687,6 +688,13 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void copy2Clip() {
+		if (mNewsContent == null) {
+			ToastUtils.Errortoast(this, "请页面加载完成后重试");
+			return;
+		}
+		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+		clip.setText(mNewsContent.getUrl());
+		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
 	}
 
 	@Override

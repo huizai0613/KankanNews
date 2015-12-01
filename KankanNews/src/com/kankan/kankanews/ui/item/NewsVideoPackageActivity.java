@@ -1095,7 +1095,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	public void copy2Clip() {
 		// TODO Auto-generated method stub
 		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		clip.setText(mNewsVPModule.getList().get(curPlayNo).getTitleurl());
+		clip.setText(mNewsVPModule.getTitleurl());
 		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
 	}
 

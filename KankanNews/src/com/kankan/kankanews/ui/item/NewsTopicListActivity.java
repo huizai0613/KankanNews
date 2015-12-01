@@ -708,9 +708,12 @@ public class NewsTopicListActivity extends BaseActivity implements
 
 	@Override
 	public void copy2Clip() {
-		// TODO Auto-generated method stub
+		if (mTopicListModule == null) {
+			ToastUtils.Errortoast(this, "请页面加载完成后重试");
+			return;
+		}
 		ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		// clip.setText(mTopicModule.get);
+		clip.setText(mTopicListModule.getTitleurl());
 		ToastUtils.Infotoast(this, "已将链接复制进黏贴板");
 	}
 
