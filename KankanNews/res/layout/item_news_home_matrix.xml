@@ -16,12 +16,13 @@
 
         <ImageView
             android:id="@+id/item_news_home_matrix_icon"
-            android:layout_width="20dip"
-            android:layout_height="wrap_content"
+            android:layout_width="21dip"
+            android:layout_height="19dip"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/margin_base_space"
-            android:layout_marginRight="@dimen/margin_base_space" />
+            android:layout_marginRight="@dimen/margin_base_space"
+            android:scaleType="fitCenter" />
 
         <com.kankan.kankanews.ui.view.MyTextView
             android:id="@+id/item_news_home_matrix_title"
