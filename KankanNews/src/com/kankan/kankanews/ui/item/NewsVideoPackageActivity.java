@@ -156,6 +156,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 			mVideoRootView.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			mVideoPkgVideoView.setmRootViewHeight((int) (this.mScreenWidth));
 			mVideoPkgVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullScrenn = true;
 			((RelativeLayout.LayoutParams) mFullRootView.getLayoutParams()).topMargin = 0;
@@ -182,6 +183,8 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			mVideoRootView.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT,
 					(int) (this.mScreenWidth / 16 * 9)));
+			mVideoPkgVideoView
+					.setmRootViewHeight((int) (this.mScreenWidth / 16 * 9));
 			mVideoPkgVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
 		}
 	}

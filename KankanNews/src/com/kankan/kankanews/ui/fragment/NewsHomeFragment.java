@@ -336,7 +336,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	@Override
 	protected void refreshNetDate() {
-		DebugLog.e("卧槽");
 		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
 			netUtils.getNewsHomeList(mListenerObject, mErrorListener);
 		} else {
@@ -976,10 +975,14 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
+//								NewsHomeFragment.this
+//										.startAnimActivityByAppClassId(
+//												NewsListActivity.class,
+//												module.getAppclassid());
+
 								NewsHomeFragment.this
-										.startAnimActivityByAppClassId(
-												NewsListActivity.class,
-												module.getAppclassid());
+										.startAnimActivityByNewsHomeModule(
+												NewsListActivity.class, module);
 							}
 						});
 			} else if (itemType == 3) {

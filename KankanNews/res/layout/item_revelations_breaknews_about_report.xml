@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/about_report_news_titlepic"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_margin="8dip"
@@ -21,11 +21,13 @@
         android:id="@+id/about_report_news_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dip"
+        android:layout_marginBottom="6dip"
+        android:layout_marginRight="6dip"
+        android:layout_marginTop="6dip"
         android:layout_toRightOf="@+id/about_report_news_titlepic"
         android:ellipsize="end"
         android:lineSpacingExtra="4.5dp"
-        android:maxLines="3"
+        android:maxLines="2"
         android:minLines="2"
         android:textStyle="bold" />
 

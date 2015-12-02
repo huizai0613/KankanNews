@@ -380,7 +380,7 @@ public class LiveChannelListFragment extends BaseFragment implements
 				ImgUtils.imageLoader.displayImage(
 						CommonUtils.doWebpUrl(channel.getTitlepic()),
 						mTvHolder.titlePic, ImgUtils.homeImageOptions);
-				mTvHolder.title.setText(channel.getTitle());
+				mTvHolder.title.setText(channel.getTitle().trim());
 				mTvHolder.nextInfo.setText("即将开始：" + channel.getTrailer_stime()
 						+ " " + channel.getTrailer());
 				if (position == mLiveChannelList.getTv().size() - 1
@@ -437,7 +437,7 @@ public class LiveChannelListFragment extends BaseFragment implements
 				ImgUtils.imageLoader.displayImage(
 						CommonUtils.doWebpUrl(channel.getTitlepic()),
 						mFmHolder.titlePic, ImgUtils.homeImageOptions);
-				mFmHolder.title.setText(channel.getTitle());
+				mFmHolder.title.setText(channel.getTitle().trim());
 				mFmHolder.nextInfo.setText("即将开始：" + channel.getTrailer_stime()
 						+ " " + channel.getTrailer());
 				if (channel.getId().equals(mCurFMPlayId)) {

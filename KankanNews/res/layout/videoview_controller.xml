@@ -31,6 +31,7 @@
                     android:id="@+id/video_controller_top_bar"
                     android:layout_width="match_parent"
                     android:layout_height="55dip"
+                    android:layout_centerInParent="true"
                     android:background="@drawable/player_top_bar"
                     android:orientation="horizontal" >
 
@@ -176,18 +177,18 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dip"
-                        android:textColor="#ffffff"
                         android:text="00:00"
+                        android:textColor="#ffffff"
                         android:visibility="visible" />
 
                     <com.kankan.kankanews.ui.view.MyTextView
                         android:id="@+id/video_controller_totalTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="00:00"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="10dip"
                         android:layout_toLeftOf="@id/video_controller_full_screen"
+                        android:text="00:00"
                         android:textColor="#ffffff" />
 
                     <SeekBar

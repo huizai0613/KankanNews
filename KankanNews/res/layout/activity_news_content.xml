@@ -44,7 +44,6 @@
                     android:id="@+id/content_video_controller"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
                     android:clickable="true"
                     android:visibility="visible" >
                 </com.kankan.kankanews.ui.view.VideoViewController>

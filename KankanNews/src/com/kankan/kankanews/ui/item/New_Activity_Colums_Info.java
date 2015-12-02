@@ -158,6 +158,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 			rootView.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			columsVideoView.setmRootViewHeight((int)(this.mScreenWidth));
 			columsVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullScrenn = true;
 			if (columsVideoView != null
@@ -182,6 +183,8 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			rootView.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT,
 					(int) (this.mScreenWidth / 16 * 9)));
+			columsVideoView
+					.setmRootViewHeight((int) (this.mScreenWidth / 16 * 9));
 			columsVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
 		}
 	}
@@ -210,8 +213,6 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 		listview = (PullToRefreshListView) findViewById(R.id.colums_info_list_view);
 		nodata = (TextView) findViewById(R.id.nodata);
 		rootView = (RelativeLayout) findViewById(R.id.colums_video_root_view);
-		rootView.setLayoutParams(new LinearLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, (int) (this.mScreenWidth / 16 * 9)));
 		columsVideoView = (VideoView) findViewById(R.id.colums_video_view);
 		columsVideoController = (VideoViewController) findViewById(R.id.colums_video_controller);
 		columsVideoImage = (ImageView) findViewById(R.id.colums_video_image);
@@ -238,6 +239,9 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			colums.setClassId(secondColums.getId());
 			colums.setTitle(secondColums.getName());
 		}
+		rootView.setLayoutParams(new LinearLayout.LayoutParams(
+				LayoutParams.MATCH_PARENT, (int) (this.mScreenWidth / 16 * 9)));
+		columsVideoView.setmRootViewHeight((int) (this.mScreenWidth / 16 * 9));
 
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 	}
@@ -341,7 +345,6 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	protected void refreshNetDate() {
 		isLoadMore = false;
 		noMoreNews = false;
-		Log.e("getNewColumsInfoData", colums.getClassId());
 		instance.getNewColumsInfoData(colums.getClassId(), time, "",
 				getColumsInfoListener, getColumsInfoErrorListener);
 	}

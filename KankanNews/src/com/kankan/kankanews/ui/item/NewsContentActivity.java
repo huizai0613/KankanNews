@@ -164,11 +164,10 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			// if (shareBoard != null && shareBoard.isShowing()) {
 			// shareBoard.dismiss();
 			// }
+			mContentScreenGuide.setVisibility(View.GONE);
+			spUtil.setFirstContent(false);
 			this.mContentWebView.setVisibility(View.GONE);
 			mScrollY = this.mScrollView.getScrollY();
-			mVideoViewController
-					.setmControllerType(ControllerType.FullScrennController);
-			mVideoViewController.changeView();
 			setRightFinsh(false);
 			CommonUtils.clickevent(mContext, "action", "放大",
 					AndroidConfig.video_fullscreen_event);
@@ -176,8 +175,17 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			this.getWindow().setAttributes(attrs);
 			this.getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-			mVideoRootView.setLayoutParams(new RelativeLayout.LayoutParams(
+			mScrollView.setLayoutParams(new RelativeLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+//			mVideoRootView.setLayoutParams(new RelativeLayout.LayoutParams(
+//					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			mVideoViewController
+					.setLayoutParams(new RelativeLayout.LayoutParams(
+							LayoutParams.MATCH_PARENT,
+							LayoutParams.MATCH_PARENT));
+			mVideoViewController
+					.setmControllerType(ControllerType.FullScrennController);
+			mVideoViewController.changeView();
 			mVideoView.setmRootViewHeight(this.mScreenWidth);
 			mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullScrenn = true;
@@ -229,7 +237,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				par.height = mWebWidth * 3 / 4;
 			mVideoView.setmRootViewHeight(par.height);
 			par.setMargins(mMarginSide, mMarginTop, mMarginSide, 0);
-			DebugLog.e("" + mMarginSide + mMarginTop + mMarginSide);
 			mVideoRootView.setLayoutParams(par);
 			mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
 		}
@@ -319,6 +326,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	}
 
 	private void playVideo(final NewsContentVideo video) {
+		mContentScreenGuide.setVisibility(spUtil.getFirstContent()
+				&& mNewsContent.getType().equals("video") ? View.VISIBLE
+				: View.GONE);
 		mCurPlayVideo = video;
 		RelativeLayout.LayoutParams par = (LayoutParams) mVideoRootView
 				.getLayoutParams();
@@ -334,6 +344,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 		mVideoLodingView.setVisibility(View.VISIBLE);
 		mVideoViewBG.setVisibility(View.VISIBLE);
+		mVideoViewController.setTitle(video.getTitle());
 		mHandle.post(new Runnable() {
 			@Override
 			public void run() {
@@ -573,9 +584,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		mNewsContent = JsonUtils.toObject(mNewsContentJson, NewsContent.class);
 		saveLocalDate();
 		showData();
-		mContentScreenGuide.setVisibility(spUtil.getFirstContent()
-				&& mNewsContent.getType().equals("video") ? View.VISIBLE
-				: View.GONE);
 	}
 
 	@Override

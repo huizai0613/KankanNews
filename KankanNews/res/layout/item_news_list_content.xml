@@ -39,12 +39,12 @@
                 android:maxLines="3"
                 android:minLines="2"
                 android:paddingRight="2dp"
-                android:paddingTop="3dp"
+                android:paddingTop="0dp"
                 android:textStyle="bold" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="20dip"
+                android:layout_height="16dip"
                 android:layout_marginTop="0dp"
                 android:gravity="center_vertical" >
 

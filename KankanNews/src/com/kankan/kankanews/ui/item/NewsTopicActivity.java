@@ -181,7 +181,7 @@ public class NewsTopicActivity extends BaseActivity implements
 
 		mTitleText = (MyTextView) headerView.findViewById(R.id.intro);
 		FontUtils.setTextViewFontSize(this, mTitleText,
-				R.string.news_content_text_size, spUtil.getFontSizeRadix());
+				R.string.home_news_matrix_text_size, spUtil.getFontSizeRadix());
 
 	}
 
@@ -774,7 +774,7 @@ public class NewsTopicActivity extends BaseActivity implements
 	@Override
 	public void changeFontSize() {
 		FontUtils.setTextViewFontSize(this, mTitleText,
-				R.string.news_content_text_size, spUtil.getFontSizeRadix());
+				R.string.home_news_matrix_text_size, spUtil.getFontSizeRadix());
 		FontUtils.chagneFontSizeGlobal();
 
 		int first = stickyList.getFirstVisiblePosition();

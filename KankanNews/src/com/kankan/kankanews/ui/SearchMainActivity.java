@@ -49,9 +49,11 @@ import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.IA.CrashApplication;
 import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_News_Search;
+import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Video;
 import com.kankan.kankanews.ui.item.New_Activity_Content_Web;
+import com.kankan.kankanews.ui.item.NewsContentActivity;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.ClickUtils;
 import com.kankan.kankanews.utils.CommonUtils;
@@ -613,12 +615,22 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 						if (ClickUtils.isFastDoubleClick()) {
 							return;
 						}
-						SearchMainActivity.this.startAnimActivityByParameter(
-								New_Activity_Content_Video.class,
-								news.getMId(), news.getType(),
-								news.getTitleUrl(), news.getNewsTime(),
-								news.getTitle(), news.getTitlePic(),
-								news.getSharedPic(), null);
+						NewsHomeModuleItem moduleItem = new NewsHomeModuleItem();
+						moduleItem.setId(news.getMId());
+						moduleItem.setO_cmsid(news.getMId());
+						moduleItem.setTitle(news.getTitle());
+						moduleItem.setTitlepic(news.getTitlePic());
+						moduleItem.setTitleurl(news.getTitleUrl());
+						moduleItem.setType("video");
+						SearchMainActivity.this
+								.startAnimActivityByNewsHomeModuleItem(
+										NewsContentActivity.class, moduleItem);
+						// SearchMainActivity.this.startAnimActivityByParameter(
+						// New_Activity_Content_Video.class,
+						// news.getMId(), news.getType(),
+						// news.getTitleUrl(), news.getNewsTime(),
+						// news.getTitle(), news.getTitlePic(),
+						// news.getSharedPic(), null);
 					}
 				});
 			}
