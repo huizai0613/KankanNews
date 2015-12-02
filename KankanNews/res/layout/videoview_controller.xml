@@ -31,7 +31,6 @@
                     android:id="@+id/video_controller_top_bar"
                     android:layout_width="match_parent"
                     android:layout_height="55dip"
-                    android:layout_centerInParent="true"
                     android:background="@drawable/player_top_bar"
                     android:orientation="horizontal" >
 

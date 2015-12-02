@@ -114,8 +114,8 @@
                 android:layout_gravity="left"
                 android:layout_marginBottom="10dip"
                 android:text="全文"
-                android:textColor="@color/blue"
-                android:textSize="16dip"
+                android:textColor="#5e7199"
+                android:textSize="14dip"
                 android:visibility="visible" />
 
             <FrameLayout

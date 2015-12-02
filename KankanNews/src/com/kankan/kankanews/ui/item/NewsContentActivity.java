@@ -175,17 +175,15 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			this.getWindow().setAttributes(attrs);
 			this.getWindow().addFlags(
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-			mScrollView.setLayoutParams(new RelativeLayout.LayoutParams(
+			// mScrollView.setLayoutParams(new RelativeLayout.LayoutParams(
+			// LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			mVideoRootView.setLayoutParams(new RelativeLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-//			mVideoRootView.setLayoutParams(new RelativeLayout.LayoutParams(
-//					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-			mVideoViewController
-					.setLayoutParams(new RelativeLayout.LayoutParams(
-							LayoutParams.MATCH_PARENT,
-							LayoutParams.MATCH_PARENT));
 			mVideoViewController
 					.setmControllerType(ControllerType.FullScrennController);
 			mVideoViewController.changeView();
+			mVideoViewController.getLayoutParams().height = this.mScreenWidth;
+			mVideoViewController.getLayoutParams().width = this.mScreenHeight;
 			mVideoView.setmRootViewHeight(this.mScreenWidth);
 			mVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullScrenn = true;
