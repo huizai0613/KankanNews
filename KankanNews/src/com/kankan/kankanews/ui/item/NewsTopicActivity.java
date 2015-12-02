@@ -232,6 +232,7 @@ public class NewsTopicActivity extends BaseActivity implements
 	}
 
 	private void initNetDate() {
+		mLoadingView.setVisibility(View.VISIBLE);
 		netUtils.getTopicData(mHomeModuleItem.getAppclassid(), mListener,
 				mErrorListener);
 	}
@@ -255,6 +256,7 @@ public class NewsTopicActivity extends BaseActivity implements
 			} else {
 				if (!_flag) {
 					this.mRetryView.setVisibility(View.VISIBLE);
+					mLoadingView.setVisibility(View.GONE);
 				}
 			}
 		}

@@ -743,8 +743,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void netChanged() {
-		if (!CommonUtils.isNetworkAvailableNoToast(this)
-				|| !CommonUtils.isWifi(this)) {
+		if (this.isPlay
+				&& (!CommonUtils.isNetworkAvailableNoToast(this) || !CommonUtils
+						.isWifi(this))) {
 			if (isFullScrenn)
 				this.fullScrenntoSamll();
 			this.closeVideo();

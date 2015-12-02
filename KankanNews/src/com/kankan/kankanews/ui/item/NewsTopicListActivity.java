@@ -166,6 +166,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 	private void refreshNetDate() {
 		mIsLoadEnd = false;
 		if (CommonUtils.isNetworkAvailable(this)) {
+			mLoadingView.setVisibility(View.VISIBLE);
 			netUtils.getNewsList(mHomeModuleItem.getAppclassid(), mLastTime,
 					mListener, mErrorListener);
 		} else {
@@ -228,6 +229,7 @@ public class NewsTopicListActivity extends BaseActivity implements
 			} else {
 				if (!_flag) {
 					this.mRetryView.setVisibility(View.VISIBLE);
+					mLoadingView.setVisibility(View.GONE);
 				}
 			}
 		}
