@@ -459,6 +459,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 				refreshNetData();
 			} else {
 				mRetryView.setVisibility(View.VISIBLE);
+				mLoadingView.setVisibility(View.GONE);
 			}
 		}
 		// 提交点击
@@ -563,7 +564,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		mVideoView.setOnClickListener(this);
 		mVideoViewController.setOnClickListener(this);
 		mContentScreenGuide.setOnClickListener(this);
-
+		mRetryView.setOnClickListener(this);
 		setOnLeftClickLinester(this);
 		setOnRightClickLinester(this);
 		setOnContentClickLinester(this);
@@ -571,6 +572,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	protected void refreshNetData() {
 		if (CommonUtils.isNetworkAvailable(this)) {
+			mLoadingView.setVisibility(View.VISIBLE);
 			netUtils.getNewsContent(mNewsId, mNewsType, this.mListener,
 					this.mErrorListener);
 		}
@@ -591,6 +593,9 @@ public class NewsContentActivity extends BaseVideoActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.content_retry_view:
+			refreshNetData();
+			break;
 		case R.id.content_screen_guide:
 			this.mContentScreenGuide.setVisibility(View.GONE);
 			spUtil.setFirstContent(false);
@@ -681,6 +686,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		super.onResume();
 		isPause = false;
 		changeFontSize();
+		if (isFullScrenn)
+			this.fullScrenntoSamll();
 		if (this.isPlay)
 			this.mVideoView.start();
 	}
@@ -691,7 +698,7 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		mContentWebView.loadUrl("file:///android_asset/newsTemplate.html");
 		mContentWebView.addJavascriptInterface(new News(), "news");
 		mRetryView.setVisibility(View.GONE);
-		// mLoadingView.setVisibility(View.GONE);
+		mLoadingView.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -736,7 +743,8 @@ public class NewsContentActivity extends BaseVideoActivity implements
 
 	@Override
 	public void netChanged() {
-		if (!CommonUtils.isWifi(this)) {
+		if (!CommonUtils.isNetworkAvailableNoToast(this)
+				|| !CommonUtils.isWifi(this)) {
 			if (isFullScrenn)
 				this.fullScrenntoSamll();
 			this.closeVideo();
