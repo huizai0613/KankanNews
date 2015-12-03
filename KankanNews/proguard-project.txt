@@ -98,6 +98,35 @@
     public static final int *;
 }
 
+-keep class org.json.** { *; }
+-keep class com.umeng.message.* {
+        public <fields>;
+        public <methods>;
+}
+
+-keep class com.umeng.message.protobuffer.* {
+        public <fields>;
+        public <methods>;
+}
+
+-keep class com.squareup.wire.* {
+        public <fields>;
+        public <methods>;
+}
+
+-keep class com.umeng.message.local.* {
+        public <fields>;
+        public <methods>;
+}
+-keep class org.android.agoo.impl.*{
+        public <fields>;
+        public <methods>;
+}
+
+-keep class org.android.agoo.service.* {*;}
+
+-keep class org.android.spdy.**{*;}
+ 
 
 -dontwarn android.support.v4.**
 -dontwarn android.support.v4.view.**
