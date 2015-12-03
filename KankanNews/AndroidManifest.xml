@@ -285,7 +285,13 @@
             android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
             android:exported="false" >
         </receiver>
-        <receiver android:name="com.umeng.message.RegistrationReceiver" >
+        <!-- 监听开机运行、网络连接变化、卸载的广播 -->
+        <receiver
+            android:name="com.umeng.message.SystemReceiver"
+            android:process=":push" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -295,22 +301,48 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
-        <receiver android:name="com.umeng.message.UmengBroadcastReceiver" >
+
+        <!-- 监听消息到达的广播 -->
+        <receiver
+            android:name="com.umeng.message.MessageReceiver"
+            android:exported="false"
+            android:process=":push" >
             <intent-filter>
                 <action android:name="org.agoo.android.intent.action.RECEIVE" />
             </intent-filter>
+        </receiver>
+
+        <!-- 监听宿主选举的广播 -->
+        <receiver
+            android:name="com.umeng.message.ElectionReceiver"
+            android:process=":push" >
+            <intent-filter>
+                <action android:name="org.agoo.android.intent.action.ELECTION_RESULT_V4" />
+
+                <category android:name="umeng" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 监听注册的广播 -->
+        <!-- 【应用包名】字符串需要替换成本应用的应用包名 -->
+        <receiver
+            android:name="com.umeng.message.RegistrationReceiver"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.kankanews.kankanxinwen.intent.action.COMMAND" />
             </intent-filter>
+        </receiver>
+        <receiver android:name="com.umeng.message.UmengMessageBootReceiver" >
             <intent-filter>
-                <action android:name="org.agoo.android.intent.action.RE_ELECTION_V2" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <service
             android:name="com.umeng.message.UmengService"
             android:exported="true"
-            android:process=":umengService_v1" >
+            android:label="PushService"
+            android:process=":push" >
             <intent-filter>
                 <action android:name="com.kankanews.kankanxinwen.intent.action.START" />
             </intent-filter>
@@ -318,18 +350,48 @@
                 <action android:name="com.kankanews.kankanxinwen.intent.action.COCKROACH" />
             </intent-filter>
             <intent-filter>
-                <action android:name="org.agoo.android.intent.action.PING" />
+                <action android:name="org.agoo.android.intent.action.PING_V4" />
+
+                <category android:name="umeng" />
+            </intent-filter>
+        </service>
+
+        <!-- Umeng的消息接收服务 -->
+        <service
+            android:name="com.umeng.message.UmengIntentService"
+            android:process=":push" />
+
+        <!-- Umeng的消息路由服务 -->
+        <service
+            android:name="com.umeng.message.UmengMessageIntentReceiverService"
+            android:exported="true"
+            android:process=":push" >
+            <intent-filter>
+                <action android:name="org.android.agoo.client.MessageReceiverService" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="org.android.agoo.client.ElectionReceiverService" />
             </intent-filter>
         </service>
         <service
-            android:name="org.android.agoo.service.ElectionService"
-            android:exported="true"
-            android:process=":umengService_v1" >
+            android:name="com.umeng.message.UmengMessageCallbackHandlerService"
+            android:exported="false" >
             <intent-filter>
-                <action android:name="org.agoo.android.intent.action.ELECTION_V2" />
+                <action android:name="com.umeng.messge.registercallback.action" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.umeng.message.unregistercallback.action" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.umeng.message.message.handler.action" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="com.umeng.message.autoupdate.handler.action" />
             </intent-filter>
         </service>
-        <service android:name="com.umeng.message.UmengIntentService" />
+
+        <!-- V1.3.0添加的service，负责下载通知的资源 -->
+        <service android:name="com.umeng.message.UmengDownloadResourceService" />
 
         <meta-data
             android:name="UMENG_APPKEY"

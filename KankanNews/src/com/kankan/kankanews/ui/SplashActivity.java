@@ -142,18 +142,18 @@ public class SplashActivity extends BaseActivity {
 		setRightFinsh(false);
 
 		init();
-		Bundle bundle = getIntent().getExtras();
-		if (bundle != null) {
-			DebugLog.e(bundle.getString("PUSH_NEWS_ID"));
-
-			for (String key : bundle.keySet()) {
-				DebugLog.e("key: " + key + "  " + bundle.getString(key));
-			}
-		}
+		// Bundle bundle = getIntent().getExtras();
+		// if (bundle != null) {
+		// DebugLog.e(bundle.getString("PUSH_NEWS_ID"));
+		//
+		// for (String key : bundle.keySet()) {
+		// DebugLog.e("key: " + key + "  " + bundle.getString(key));
+		// }
+		// }
 
 		// createShortcut();
 		// String device_token = UmengRegistrar.getRegistrationId(this);
-		// DebugLog.e(device_token);
+		// DebugLog.e("token" + device_token);
 	}
 
 	@Override

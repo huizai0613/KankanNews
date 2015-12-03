@@ -640,8 +640,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.item_news_home_matrix_list_icon0);
 					RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
 							LayoutParams.MATCH_PARENT,
-							(int) ((mActivity.mScreenWidth - PixelUtil
-									.dp2px(12.5f * 2)) * 0.5));
+							(int) ((double) (mActivity.mScreenWidth - PixelUtil
+									.dp2px(12.5f * 2)) * 285 / 600));
 					mMatrixListHolder.img0.setLayoutParams(layoutParams);
 					mMatrixListHolder.title0 = (MyTextView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_title0);
@@ -975,10 +975,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
-//								NewsHomeFragment.this
-//										.startAnimActivityByAppClassId(
-//												NewsListActivity.class,
-//												module.getAppclassid());
+								// NewsHomeFragment.this
+								// .startAnimActivityByAppClassId(
+								// NewsListActivity.class,
+								// module.getAppclassid());
 
 								NewsHomeFragment.this
 										.startAnimActivityByNewsHomeModule(
@@ -1260,7 +1260,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					(double) Math.round(percent * 10000) / 100 + "");
 			tmpVoteSumNum = tmpVoteSumNum.add(tmpPercent);
 			if (i != _flag) {
-				answerPercent.setText(mVoteNumDF.format(tmpPercent).toString() + "%");
+				answerPercent.setText(mVoteNumDF.format(tmpPercent).toString()
+						+ "%");
 			} else {
 				if (!tmpVoteSumNum.toString().equals("100.00")
 						|| !tmpVoteSumNum.toString().equals("100.0")
