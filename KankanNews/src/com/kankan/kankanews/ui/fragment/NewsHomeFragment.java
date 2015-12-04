@@ -545,7 +545,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							R.layout.item_news_home_swiper_head, null);
 					mSwiperHeadHolder.title = (TextView) convertView
 							.findViewById(R.id.news_home_swiper_head_title);
-					FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+					FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 							mSwiperHeadHolder.title,
 							R.string.home_news_text_size, 1);
 					mSwiperHeadHolder.imgViewPager = (ViewPager) convertView
@@ -618,7 +618,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						TextView title = (TextView) mMatrixHolder.rootView[i]
 								.findViewById(R.id.item_news_home_matrix_item_title);
 						image.setLayoutParams(layoutParams);
-						FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+						FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 								title, R.string.home_news_matrix_text_size, 1);
 					}
 					convertView.setTag(mMatrixHolder);
@@ -932,16 +932,16 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						.getTitle());
 				mMatrixListHolder.title2.setText(module.getList().get(2)
 						.getTitle());
-				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 						mMatrixListHolder.title0, R.string.home_news_text_size,
 						1);
-				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 						mMatrixListHolder.intro0,
 						R.string.home_news_intro_size, 1);
-				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 						mMatrixListHolder.title1, R.string.home_news_text_size,
 						1);
-				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 						mMatrixListHolder.title2, R.string.home_news_text_size,
 						1);
 				mMatrixListHolder.click1.setText(module.getList().get(1)
@@ -1045,10 +1045,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				ImgUtils.imageLoader.displayImage(
 						CommonUtils.doWebpUrl(module.getTitlepic()),
 						mTopicOneHolder.titlePic, ImgUtils.homeImageOptions);
-				FontUtils.setTextViewFontSize(NewsHomeFragment.this,
+				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 						mTopicOneHolder.title, R.string.home_news_text_size, 1);
 				FontUtils
-						.setTextViewFontSize(NewsHomeFragment.this,
+						.setTextViewFontSizeDIP(NewsHomeFragment.this,
 								mTopicOneHolder.intro,
 								R.string.home_news_intro_size, 1);
 				mTopicOneHolder.title.setText(module.getTitle());
@@ -1132,8 +1132,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					int px3 = PixelUtil.dp2px(3);
 					view.setPadding(px3, px3, px3, px3);
 					view.setText(mKeyboard.getText());
-					FontUtils.setTextViewFontSize(mActivity, view,
-							R.string.live_border_text_view_text_size, 1);
+					FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
+							view, R.string.live_border_text_view_text_size, 1f);
 					view.setTextColor(Color.parseColor(mKeyboard.getColor()));
 					mOutLinkHolder.keyboardIconContent.addView(view);
 				}
