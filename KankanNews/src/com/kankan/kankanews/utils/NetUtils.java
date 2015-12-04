@@ -323,7 +323,7 @@ public class NetUtils {
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
 				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA_CHANGE
-						+ classid + "/timestamp/" + time + "/page/" + pageNum,
+						+ classid + "/timestamp/" + time + "/page/" + pageNum + "/version/1",
 				null, reponseListener, errorListener);
 
 		mRequestQueue.add(mCustomRequest);

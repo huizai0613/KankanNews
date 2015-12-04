@@ -3,9 +3,12 @@ package com.kankan.kankanews.ui.fragment;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -486,11 +489,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					.get(position - 1);
 			if ("swiper-head".equals(module.getType())) {
 				return 0;
-			} else if ("matrix".equals(module.getType())
-					&& module.getNum() == 4) {
+			} else if ("matrix-changeable".equals(module.getType())
+					|| "matrix-square".equals(module.getType())) {
 				return 1;
-			} else if ("matrix".equals(module.getType())
-					&& module.getNum() == 3) {
+			} else if ("matrix-triple".equals(module.getType())) {
 				return 2;
 			} else if ("swiper-video".equals(module.getType())) {
 				return 3;
@@ -558,8 +560,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.setLayoutParams(new RelativeLayout.LayoutParams(
 									RelativeLayout.LayoutParams.MATCH_PARENT,
 									(int) (mActivity.mScreenWidth / 6.4 * 3)));
-					mSwiperHeadHolder.imgViewPager
-							.setOnPageChangeListener(NewsHomeFragment.this);
 					mNewsHomeSwiperHeadAdapter = new NewsHomeSwiperHeadAdapter(
 							module.getList());
 					mSwiperHeadHolder.imgViewPager
@@ -771,6 +771,37 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 								% module.getList().size());
 				mSwiperHeadHolder.title.setText(moduleItem.getTitle());
 				mSwiperHeadHolder.title.setTag(module.getList());
+				final SwiperHeadHolder mHeadHolder = mSwiperHeadHolder;
+				mSwiperHeadHolder.imgViewPager
+						.setOnPageChangeListener(new OnPageChangeListener() {
+							@Override
+							public void onPageSelected(int arg0) {
+							}
+
+							@Override
+							public void onPageScrolled(int arg0, float arg1,
+									int arg2) {
+								// TODO
+								if (mHeadHolder != null) {
+									List<NewsHomeModuleItem> itemList = (List<NewsHomeModuleItem>) mHeadHolder.title
+											.getTag();
+									int index = arg0 % itemList.size();
+									mHeadHolder.title.setText(itemList.get(
+											index).getTitle());
+									List<View> points = (List<View>) mHeadHolder.pointRootView
+											.getTag();
+									for (View v : points) {
+										v.setBackgroundResource(R.drawable.point_white);
+									}
+									points.get(index).setBackgroundResource(
+											R.drawable.point_red);
+								}
+							}
+
+							@Override
+							public void onPageScrollStateChanged(int arg0) {
+							}
+						});
 			} else if (itemType == 1) {
 				if (module.getChange() == 1) {
 					mMatrixHolder.change.setVisibility(View.VISIBLE);
@@ -1224,7 +1255,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	}
 
 	private void initVoteView(NewsHomeModule module) {
-		// TODO
 		mVoteHolder.rootView.removeAllViews();
 		if (spUtil.judgeVoteId(module.getId())) {
 			initVoteHasVote(module);
@@ -1450,8 +1480,13 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		if (mNewsHome.getModule_list().size() > 1) {
 			for (int i = 1; i < mNewsHome.getModule_list().size(); i++) {
 				NewsHomeModule module = mNewsHome.getModule_list().get(i);
-				if (module.getType().equals("matrix")) {
-					if (module.getNum() != 4 && module.getNum() != 3)
+				if (module.getType().equals("matrix-square")
+						|| module.getType().equals("matrix-changeable")) {
+					if (module.getNum() != 4)
+						return false;
+				}
+				if (module.getType().equals("matrix-triple")) {
+					if (module.getNum() != 3)
 						return false;
 				}
 				if (module.getType().equals("swiper-video")) {
