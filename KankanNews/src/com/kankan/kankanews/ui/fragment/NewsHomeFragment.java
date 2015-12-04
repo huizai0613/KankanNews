@@ -535,6 +535,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				}
 				return convertView;
 			}
+			if (itemType == -2) {
+				convertView = new View(mActivity);
+				return convertView;
+			}
 			final NewsHomeModule module = mNewsHome.getModule_list().get(
 					position - 1);
 			if (convertView == null) {
@@ -735,6 +739,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mVoteHolder.icon = (ImageView) convertView
 							.findViewById(R.id.item_news_home_vote_icon);
 					convertView.setTag(mVoteHolder);
+				} else {
+					convertView = new View(mActivity);
+					return convertView;
 				}
 			} else {
 				if (itemType == 0) {
@@ -753,6 +760,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mOutLinkHolder = (OutLinkHolder) convertView.getTag();
 				} else if (itemType == 7) {
 					mVoteHolder = (VoteHolder) convertView.getTag();
+				} else {
+					return convertView;
 				}
 			}
 			if (itemType == 0) {
