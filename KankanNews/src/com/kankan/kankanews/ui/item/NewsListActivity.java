@@ -461,7 +461,7 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 				});
 			} else {
 				final NewsHomeModuleItem news = mNewsHomeModule.getList().get(
-						position - 1);
+						hasTopPic ? position - 1 : position);
 				if (itemViewType == 0) {
 					if (NewsBrowseUtils.isBrowed(news.getId())) {
 						mNewsListHolder.title.setTextColor(Color
