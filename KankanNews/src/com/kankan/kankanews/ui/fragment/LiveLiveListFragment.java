@@ -389,6 +389,7 @@ public class LiveLiveListFragment extends BaseFragment implements
 				});
 				if ("正在直播".equals(liveObj.getType())) {
 					liveType.setBackgroundResource(R.drawable.ic_live);
+					liveType.getBackground().setAlpha(170); 
 					yuyueBut.setVisibility(View.GONE);
 					keyboardIconContent.setVisibility(View.VISIBLE);
 					List<Keyboard> keyboardList = liveObj.getKeyboard();
@@ -454,6 +455,7 @@ public class LiveLiveListFragment extends BaseFragment implements
 					});
 				} else if ("直播预告".equals(liveObj.getType())) {
 					liveType.setBackgroundResource(R.drawable.ic_next);
+					liveType.getBackground().setAlpha(170); 
 					yuyueBut.setVisibility(View.VISIBLE);
 					keyboardIconContent.setVisibility(View.VISIBLE);
 					if (liveObj.isOrder()) {

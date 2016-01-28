@@ -351,7 +351,7 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 			// this.mActivity
 			// .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 			// 一键分享
-			this.mSharedObj.setSharedPic(null);
+//			this.mSharedObj.setSharedPic(null);
 			CustomShareBoardRight shareBoard = new CustomShareBoardRight(
 					(BaseActivity) this.mActivity, this.mSharedObj);
 			shareBoard.setAnimationStyle(R.style.popwin_anim_style);

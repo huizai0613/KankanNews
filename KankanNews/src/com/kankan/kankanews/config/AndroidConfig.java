@@ -134,7 +134,7 @@ public class AndroidConfig {
 	public static final String New_HomeData = "/v5/info/public_timeline/";
 
 	// 主页数据
-	public static final String NEWS_HOME_DATA = "/v5/KKAppIndex/version/1";
+	public static final String NEWS_HOME_DATA = "/v5/KKAppIndex/version/2";
 	// 主页随机数据
 	public static final String NEWS_HOME_DATA_CHANGE = "/v5/KKAppList/command/random/appclassid/";
 	// 主页投票随机数据

@@ -410,56 +410,30 @@ public class New_LivePlayFragment extends BaseFragment implements
 	}
 
 	private void playerVideo() {
+
 		if (CommonUtils.isNetworkAvailable(this.mActivity)) {
 			if (!CommonUtils.isWifi(this.mActivity)) {
-				if (!spUtil.isFlow()) {
-					final TishiMsgHint dialog = new TishiMsgHint(
-							this.mActivity, R.style.MyDialog1);
-					dialog.setContent("您已设置2G/3G/4G网络下不允许播放/缓存视频", "我知道了");
-					dialog.setCancleListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					dialog.show();
-				} else {
-					final InfoMsgHint dialog = new InfoMsgHint(this.mActivity,
-							R.style.MyDialog1);
-					dialog.setContent(
-							"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络", "",
-							"继续播放", "取消");
-					dialog.setCancleListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					dialog.setOKListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							showData();
-							dialog.dismiss();
-						}
-					});
-					dialog.show();
-
-				}
-
+				final InfoMsgHint dialog = new InfoMsgHint(this.mActivity,
+						R.style.MyDialog1);
+				dialog.setContent("亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
+						"", "继续播放", "取消");
+				dialog.setCancleListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
+				dialog.setOKListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						showData();
+						dialog.dismiss();
+					}
+				});
+				dialog.show();
 			} else {
 				showData();
 			}
-		} else {
-			final TishiMsgHint dialog = new TishiMsgHint(this.mActivity,
-					R.style.MyDialog1);
-			dialog.setContent("当前无可用网络", "我知道了");
-			dialog.setCancleListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
-			dialog.show();
 		}
 	}
 
@@ -695,79 +669,56 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 							@Override
 							public void onClick(View v) {
-								if (CommonUtils
-										.isNetworkAvailable(New_LivePlayFragment.this.mActivity)) {
-									if (!CommonUtils
-											.isWifi(New_LivePlayFragment.this.mActivity)) {
-										if (!spUtil.isFlow()) {
-											final TishiMsgHint dialog = new TishiMsgHint(
-													New_LivePlayFragment.this.mActivity,
-													R.style.MyDialog1);
-											dialog.setContent(
-													"您已设置2G/3G/4G网络下不允许播放/缓存视频",
-													"我知道了");
-											dialog.setCancleListener(new OnClickListener() {
-												@Override
-												public void onClick(View v) {
-													closeVideoView();
-													dialog.dismiss();
-												}
-											});
-											dialog.show();
-										} else {
-											final InfoMsgHint dialog = new InfoMsgHint(
-													New_LivePlayFragment.this.mActivity,
-													R.style.MyDialog1);
-											dialog.setContent(
-													"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
-													"", "继续播放", "取消");
-											dialog.setCancleListener(new OnClickListener() {
-												@Override
-												public void onClick(View v) {
-													closeVideoView();
-													dialog.dismiss();
-												}
-											});
-											dialog.setOKListener(new OnClickListener() {
-												@Override
-												public void onClick(View v) {
 
-													livePlayTitle.setText("正在播放:"
-															+ new_LivePlay
-																	.getTitle());
-													fullScreenLivePlayTitle.setText("正在播放:"
-															+ new_LivePlay
-																	.getTitle());
-													// 更改直播频道
-													// video_view.release(true);
-													// mVideoLoadingLayout
-													// .setVisibility(View.GONE);
-													closeVideoView();
-													liveVideoView
-															.setVideoPath(new_LivePlay
-																	.getStreamurl());
+								if (CommonUtils.isNetworkAvailable(mActivity)) {
+									if (!CommonUtils.isWifi(mActivity)) {
+										final InfoMsgHint dialog = new InfoMsgHint(
+												mActivity, R.style.MyDialog1);
+										dialog.setContent(
+												"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
+												"", "继续播放", "取消");
+										dialog.setCancleListener(new OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												closeVideoView();
+												dialog.dismiss();
+											}
+										});
+										dialog.setOKListener(new OnClickListener() {
+											@Override
+											public void onClick(View v) {
+												livePlayTitle.setText("正在播放:"
+														+ new_LivePlay
+																.getTitle());
+												fullScreenLivePlayTitle.setText("正在播放:"
+														+ new_LivePlay
+																.getTitle());
+												// 更改直播频道
+												// video_view.release(true);
+												// mVideoLoadingLayout
+												// .setVisibility(View.GONE);
+												closeVideoView();
+												liveVideoView
+														.setVideoPath(new_LivePlay
+																.getStreamurl());
 
-													NetUtils.getInstance(
-															New_LivePlayFragment.this.mActivity)
-															.getAnalyse(
-																	New_LivePlayFragment.this.mActivity,
-																	"live",
-																	new_LivePlay
-																			.getTitle(),
-																	new_LivePlay
-																			.getTitleurl());
+												NetUtils.getInstance(
+														New_LivePlayFragment.this.mActivity)
+														.getAnalyse(
+																New_LivePlayFragment.this.mActivity,
+																"live",
+																new_LivePlay
+																		.getTitle(),
+																new_LivePlay
+																		.getTitleurl());
 
-													// setVideoLoadingLayoutVisibility(View.VISIBLE);
-													nowLiveNew = new_LivePlay;
-													dialog.dismiss();
-												}
-											});
-											dialog.show();
-
-										}
-
+												// setVideoLoadingLayoutVisibility(View.VISIBLE);
+												nowLiveNew = new_LivePlay;
+												dialog.dismiss();
+											}
+										});
+										dialog.show();
 									} else {
-
 										livePlayTitle.setText("正在播放:"
 												+ new_LivePlay.getTitle());
 										fullScreenLivePlayTitle.setText("正在播放:"
@@ -776,12 +727,7 @@ public class New_LivePlayFragment extends BaseFragment implements
 										// video_view.release(true);
 										// mVideoLoadingLayout
 										// .setVisibility(View.GONE);
-										liveVideoView.stopPlayback();
-										liveVideoImage
-												.setVisibility(View.VISIBLE);
-										mVideoLoadingLayout
-												.setVisibility(View.VISIBLE);
-										liveStart.setVisibility(View.GONE);
+										closeVideoView();
 										liveVideoView.setVideoPath(new_LivePlay
 												.getStreamurl());
 
@@ -797,18 +743,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 										// setVideoLoadingLayoutVisibility(View.VISIBLE);
 										nowLiveNew = new_LivePlay;
 									}
-								} else {
-									final TishiMsgHint dialog = new TishiMsgHint(
-											New_LivePlayFragment.this.mActivity,
-											R.style.MyDialog1);
-									dialog.setContent("当前无可用网络", "我知道了");
-									dialog.setCancleListener(new OnClickListener() {
-										@Override
-										public void onClick(View v) {
-											dialog.dismiss();
-										}
-									});
-									dialog.show();
 								}
 							}
 						});

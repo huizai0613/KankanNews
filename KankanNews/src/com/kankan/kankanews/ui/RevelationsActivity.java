@@ -449,6 +449,8 @@ public class RevelationsActivity extends BaseActivity implements
 		}
 		switch (requestCode) {
 		case AndroidConfig.REVELATIONS_FRAGMENT_PHOTO_REQUEST_NO:
+			if(data == null)
+				return;
 			Uri uri = data.getData();
 			if (uri == null) {
 				Bundle bundle = data.getExtras();

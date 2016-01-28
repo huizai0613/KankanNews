@@ -58,7 +58,7 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 	private View inflate;
 
 	private LinearLayout layout_my_foot;
-	private ToggleButton layout_download;
+//	private ToggleButton layout_download;
 	private LinearLayout layout_about;
 	private LinearLayout layout_point;
 	private LinearLayout layout_fankui;
@@ -98,8 +98,8 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		layout_my_foot = (LinearLayout) inflate
 				.findViewById(R.id.layout_my_foot);
 
-		layout_download = (ToggleButton) inflate
-				.findViewById(R.id.layout_download);
+//		layout_download = (ToggleButton) inflate
+//				.findViewById(R.id.layout_download);
 		layout_about = (LinearLayout) inflate.findViewById(R.id.layout_about);
 		font_size_set = (LinearLayout) inflate.findViewById(R.id.font_size_set);
 		layout_fankui = (LinearLayout) inflate.findViewById(R.id.layout_fankui);
@@ -134,14 +134,14 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 				}
 			}
 		});
-		layout_download.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
-
-			@Override
-			public void onToggle(boolean on) {
-				// TODO Auto-generated method stub
-				mActivity.spUtil.setFlow(on);
-			}
-		});
+//		layout_download.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+//
+//			@Override
+//			public void onToggle(boolean on) {
+//				// TODO Auto-generated method stub
+//				mActivity.spUtil.setFlow(on);
+//			}
+//		});
 
 		UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
 			@Override
@@ -432,10 +432,10 @@ public class New_MyFragment extends BaseFragment implements OnClickListener {
 		} else {
 			isDayMode.setToggleOn();
 		}
-		if (mActivity.spUtil.isFlow()) {
-			layout_download.setToggleOn();
-		} else {
-			layout_download.setToggleOff();
-		}
+		// if (mActivity.spUtil.isFlow()) {
+		// layout_download.setToggleOn();
+		// } else {
+		// layout_download.setToggleOff();
+		// }
 	}
 }

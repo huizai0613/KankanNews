@@ -821,62 +821,34 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	}
 
 	private void playerVideo() {
-		if (CommonUtils.isNetworkAvailable(mContext)) {
-			if (!CommonUtils.isWifi(mContext)) {
-				if (!spUtil.isFlow()) {
-					final TishiMsgHint dialog = new TishiMsgHint(mContext,
-							R.style.MyDialog1);
-					dialog.setContent("您已设置2G/3G/4G网络下不允许播放/缓存视频", "我知道了");
-					dialog.setCancleListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					dialog.show();
-				} else {
-					final InfoMsgHint dialog = new InfoMsgHint(mContext,
-							R.style.MyDialog1);
-					dialog.setContent(
-							"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络", "",
-							"继续播放", "取消");
-					dialog.setCancleListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					dialog.setOKListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							goneContentVideoTempImage();
-							playState();
-							play();
-							dialog.dismiss();
-						}
-					});
-					dialog.show();
 
-				}
-
+		if (CommonUtils.isNetworkAvailable(this)) {
+			if (!CommonUtils.isWifi(this)) {
+				final InfoMsgHint dialog = new InfoMsgHint(this,
+						R.style.MyDialog1);
+				dialog.setContent("亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
+						"", "继续播放", "取消");
+				dialog.setCancleListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
+				dialog.setOKListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						goneContentVideoTempImage();
+						playState();
+						play();
+						dialog.dismiss();
+					}
+				});
+				dialog.show();
 			} else {
-				video_controller.getContent_video_temp_image().setVisibility(
-						View.GONE);
 				goneContentVideoTempImage();
 				playState();
 				play();
 			}
-		} else {
-			final TishiMsgHint dialog = new TishiMsgHint(mContext,
-					R.style.MyDialog1);
-			dialog.setContent("当前无可用网络", "我知道了");
-			dialog.setCancleListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
-			dialog.show();
 		}
 	}
 

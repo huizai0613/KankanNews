@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white_no_alpha"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/top_pic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:scaleType="fitXY" />
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/top_title"
+            android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/bg_news_home_swiper_head"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:paddingBottom="10dip"
+            android:paddingTop="0dip"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/separation_line_height"
+        android:background="@color/gray_cc" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dip"
+        android:background="@color/bright_gray" />
+
+</LinearLayout>

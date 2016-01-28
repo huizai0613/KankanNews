@@ -14,17 +14,45 @@
         android:id="@+id/item_news_home_gallery_title_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_base_space"
         android:layout_marginLeft="@dimen/margin_base_space"
         android:background="@drawable/bg_item_news_home_left_top_title"
         android:textColor="@color/white"
         android:textSize="16dip"
         android:textStyle="bold" />
 
+    <RelativeLayout
+        android:id="@+id/item_news_home_gallery_title_item_2"
+        android:layout_width="match_parent"
+        android:layout_height="45dip"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/item_news_home_gallery_icon"
+            android:layout_width="20dip"
+            android:layout_height="20dip"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/margin_base_space"
+            android:layout_marginRight="@dimen/margin_base_space"
+            android:layout_marginTop="@dimen/margin_base_space"
+            android:scaleType="fitXY" />
+
+        <com.kankan.kankanews.ui.view.MyTextView
+            android:id="@+id/item_news_home_gallery_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/item_news_home_gallery_icon"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="17dip"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_base_space"
-        android:layout_marginTop="@dimen/margin_base_space"
         android:scrollbars="none" >
 
         <LinearLayout

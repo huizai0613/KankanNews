@@ -3,7 +3,9 @@ package com.kankan.kankanews.ui.item;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -113,6 +115,8 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	private ImageView mVideoPkgVideoImage;
 	private ImageView mVideoPkgVideoStart;
 	private LinearLayout screen_pb;
+
+	private Set<String> showIntroSet = new HashSet<String>();
 
 	private int curPlayNo = 0;
 
@@ -570,7 +574,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 					convertView.setTag(columsInfoDetailHolder);
 				} else if (itemViewType == 0) {
 					convertView = LayoutInflater.from(mContext).inflate(
-							R.layout.new_colums_info_item, null);
+							R.layout.item_video_package_list, null);
 					newsItemHolder = new NewsItemHolder();
 					newsItemHolder.rootView = convertView
 							.findViewById(R.id.conlums_item_root_view);
@@ -578,8 +582,14 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 							.findViewById(R.id.conlums_item_titlepic);
 					newsItemHolder.title = (TextView) convertView
 							.findViewById(R.id.conlums_item_title);
-					newsItemHolder.newstime = (TextView) convertView
-							.findViewById(R.id.conlums_item_newstime);
+					newsItemHolder.click = (TextView) convertView
+							.findViewById(R.id.conlums_item_click);
+					newsItemHolder.intro = (TextView) convertView
+							.findViewById(R.id.conlums_item_intro);
+					newsItemHolder.detail = convertView
+							.findViewById(R.id.conlums_item_detail);
+					newsItemHolder.detailArrow = (ImageView) convertView
+							.findViewById(R.id.conlums_item_arrowshow);
 					convertView.setTag(newsItemHolder);
 				} else if (itemViewType == 1) {
 					convertView = LayoutInflater.from(mContext).inflate(
@@ -675,9 +685,49 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 						newsItemHolder.titlepic, ImgUtils.homeImageOptions);
 
 				newsItemHolder.title.setText(moduleItem.getTitle());
-				newsItemHolder.newstime.setText(TimeUtil.unix2date(
-						Long.valueOf(moduleItem.getNewstime()),
-						"yyyy-MM-dd HH:mm"));
+				newsItemHolder.click.setText(moduleItem.getOnclick() + "");
+
+				if (moduleItem.getIntro() == null
+						|| moduleItem.getIntro().trim().equals("")) {
+					newsItemHolder.intro.setVisibility(View.GONE);
+					newsItemHolder.detail.setVisibility(View.GONE);
+				} else {
+					newsItemHolder.detail.setVisibility(View.VISIBLE);
+					newsItemHolder.intro.setText(moduleItem.getIntro());
+					if (showIntroSet.contains(moduleItem.getId())) {
+						newsItemHolder.detailArrow
+								.setImageResource(R.drawable.ic_arrowdown);
+						newsItemHolder.intro.setVisibility(View.VISIBLE);
+					} else {
+						newsItemHolder.detailArrow
+								.setImageResource(R.drawable.ic_arrowshow);
+						newsItemHolder.intro.setVisibility(View.GONE);
+					}
+					newsItemHolder.detail.setTag(newsItemHolder.intro);
+					newsItemHolder.detail
+							.setOnClickListener(new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									MyTextView intro = (MyTextView) v.getTag();
+									ImageView arrowshow = (ImageView) v
+											.findViewById(R.id.conlums_item_arrowshow);
+									if (showIntroSet.contains(moduleItem
+											.getId())) {
+										intro.setVisibility(View.GONE);
+										arrowshow
+												.setImageResource(R.drawable.ic_arrowshow);
+										showIntroSet.remove(moduleItem.getId());
+									} else {
+										intro.setVisibility(View.VISIBLE);
+										arrowshow
+												.setImageResource(R.drawable.ic_arrowdown);
+										showIntroSet.add(moduleItem.getId());
+									}
+									mListAdapter.notifyDataSetChanged();
+								}
+							});
+				}
+
 				if (curPlayNo == position) {
 					newsItemHolder.rootView.setBackgroundColor(getResources()
 							.getColor(R.color.thin_gray));
@@ -699,8 +749,11 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 	class NewsItemHolder {
 		ImageView titlepic;
 		TextView title;
-		TextView newstime;
+		TextView click;
 		View rootView;
+		View detail;
+		ImageView detailArrow;
+		TextView intro;
 	}
 
 	// 没有更多数据
@@ -741,59 +794,42 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 		if (CommonUtils.isNetworkAvailable(this)) {
 			if (!CommonUtils.isWifi(this)) {
-				if (!spUtil.isFlow()) {
-					final TishiMsgHint dialog = new TishiMsgHint(this,
-							R.style.MyDialog1);
-					dialog.setContent("您已设置2G/3G/4G网络下不允许播放/缓存视频", "我知道了");
-					dialog.setCancleListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					dialog.show();
-				} else {
-					final InfoMsgHint dialog = new InfoMsgHint(this,
-							R.style.MyDialog1);
-					dialog.setContent(
-							"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络", "",
-							"继续播放", "取消");
-					dialog.setCancleListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					dialog.setOKListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							if (mVideoPkgVideoView != null) {
-								mVideoPkgVideoView.stopPlayback();
-								mVideoPkgVideoController.reset();
-								mVideoPkgVideoView
-										.setVideoPath(mNewsVPModule.getList()
-												.get(curPlayNo).getVideourl());
-								mVideoPkgVideoController.setTitle(mNewsVPModule
-										.getList().get(curPlayNo).getTitle());
-								mVideoPkgVideoView.requestFocus();
-								mVideoPkgVideoView.start();
-								mVideoPkgVideoStart.setVisibility(View.GONE);
+				final InfoMsgHint dialog = new InfoMsgHint(this,
+						R.style.MyDialog1);
+				dialog.setContent("亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
+						"", "继续播放", "取消");
+				dialog.setCancleListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
+				dialog.setOKListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (mVideoPkgVideoView != null) {
+							mVideoPkgVideoView.stopPlayback();
+							mVideoPkgVideoController.reset();
+							mVideoPkgVideoView.setVideoPath(mNewsVPModule
+									.getList().get(curPlayNo).getVideourl());
+							mVideoPkgVideoController.setTitle(mNewsVPModule
+									.getList().get(curPlayNo).getTitle());
+							mVideoPkgVideoView.requestFocus();
+							mVideoPkgVideoView.start();
+							mVideoPkgVideoStart.setVisibility(View.GONE);
 
-								NetUtils.getInstance(mContext).getAnalyse(
-										NewsVideoPackageActivity.this,
-										"video",
-										mNewsVPModule.getList().get(curPlayNo)
-												.getTitle(),
-										mNewsVPModule.getList().get(curPlayNo)
-												.getTitleurl());
-							}
-							dialog.dismiss();
+							NetUtils.getInstance(mContext).getAnalyse(
+									NewsVideoPackageActivity.this,
+									"video",
+									mNewsVPModule.getList().get(curPlayNo)
+											.getTitle(),
+									mNewsVPModule.getList().get(curPlayNo)
+											.getTitleurl());
 						}
-					});
-					dialog.show();
-
-				}
-
+						dialog.dismiss();
+					}
+				});
+				dialog.show();
 			} else {
 				if (mVideoPkgVideoView != null) {
 					mVideoPkgVideoView.stopPlayback();
@@ -814,17 +850,6 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 									.getTitleurl());
 				}
 			}
-		} else {
-			final TishiMsgHint dialog = new TishiMsgHint(this,
-					R.style.MyDialog1);
-			dialog.setContent("当前无可用网络", "我知道了");
-			dialog.setCancleListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
-			dialog.show();
 		}
 	}
 

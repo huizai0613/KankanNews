@@ -237,26 +237,27 @@ public class PicSelectedMainActivity extends Activity implements
 					if (firstImage == null)
 						firstImage = path;
 					// 获取该图片的父路径名
-					File parentFile = new File(path).getParentFile();
-					if (parentFile == null)
-						continue;
-					String dirPath = parentFile.getAbsolutePath();
-					ImageFloder imageFloder = null;
-					// 利用一个HashSet防止多次扫描同一个文件夹（不加这个判断，图片多起来还是相当恐怖的~~）
-					if (mDirPaths.contains(dirPath)) {
-						continue;
-					} else {
-						mDirPaths.add(dirPath);
-						// 初始化imageFloder
-						imageFloder = new ImageFloder();
-						imageFloder.setDir(dirPath);
-						imageFloder.setFirstImagePath(path);
-					}
-
-					if (parentFile == null)
-						continue;
-					int picSize = 0;
 					try {
+						File parentFile = new File(path).getParentFile();
+						if (parentFile == null)
+							continue;
+						String dirPath = parentFile.getAbsolutePath();
+						ImageFloder imageFloder = null;
+						// 利用一个HashSet防止多次扫描同一个文件夹（不加这个判断，图片多起来还是相当恐怖的~~）
+						if (mDirPaths.contains(dirPath)) {
+							continue;
+						} else {
+							mDirPaths.add(dirPath);
+							// 初始化imageFloder
+							imageFloder = new ImageFloder();
+							imageFloder.setDir(dirPath);
+							imageFloder.setFirstImagePath(path);
+						}
+
+						if (parentFile == null)
+							continue;
+
+						int picSize = 0;
 
 						String[] parentFileList = parentFile
 								.list(new FilenameFilter() {
@@ -282,18 +283,18 @@ public class PicSelectedMainActivity extends Activity implements
 						// imageFloder.setFirstImagePath(path);
 						// allImgs.addAll(Arrays.asList(parentFileList));
 						picSize = parentFileList.length;
+						totalCount += picSize;
+
+						imageFloder.setCount(picSize);
+						mImageFloders.add(imageFloder);
+
+						if (picSize > mPicsSize) {
+							mPicsSize = picSize;
+							mImgDir = parentFile;
+						}
 					} catch (NullPointerException e) {
 						Log.e("NULLPOINT", e.getLocalizedMessage(), e);
 						continue;
-					}
-					totalCount += picSize;
-
-					imageFloder.setCount(picSize);
-					mImageFloders.add(imageFloder);
-
-					if (picSize > mPicsSize) {
-						mPicsSize = picSize;
-						mImgDir = parentFile;
 					}
 				}
 				allImageFloder.setCount(totalCount);

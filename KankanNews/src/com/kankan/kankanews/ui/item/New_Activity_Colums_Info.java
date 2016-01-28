@@ -158,7 +158,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 					WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 			rootView.setLayoutParams(new LinearLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-			columsVideoView.setmRootViewHeight((int)(this.mScreenWidth));
+			columsVideoView.setmRootViewHeight((int) (this.mScreenWidth));
 			columsVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullScrenn = true;
 			if (columsVideoView != null
@@ -782,61 +782,42 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 		if (CommonUtils.isNetworkAvailable(this)) {
 			if (!CommonUtils.isWifi(this)) {
-				if (!spUtil.isFlow()) {
-					final TishiMsgHint dialog = new TishiMsgHint(this,
-							R.style.MyDialog1);
-					dialog.setContent("您已设置2G/3G/4G网络下不允许播放/缓存视频", "我知道了");
-					dialog.setCancleListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					dialog.show();
-				} else {
-					final InfoMsgHint dialog = new InfoMsgHint(this,
-							R.style.MyDialog1);
-					dialog.setContent(
-							"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络", "",
-							"继续播放", "取消");
-					dialog.setCancleListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							dialog.dismiss();
-						}
-					});
-					dialog.setOKListener(new OnClickListener() {
-						@Override
-						public void onClick(View v) {
-							if (columsVideoView != null) {
-								columsVideoView.stopPlayback();
-								columsVideoController.reset();
-								columsVideoView.setVideoPath(new_colums_infos
-										.get(curPlayNo).getVideoUrl());
-								columsVideoController.setTitle(new_colums_infos
-										.get(curPlayNo).getTitle());
-								columsVideoView.requestFocus();
-								columsVideoView.start();
+				final InfoMsgHint dialog = new InfoMsgHint(this,
+						R.style.MyDialog1);
+				dialog.setContent("亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
+						"", "继续播放", "取消");
+				dialog.setCancleListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialog.dismiss();
+					}
+				});
+				dialog.setOKListener(new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (columsVideoView != null) {
+							columsVideoView.stopPlayback();
+							columsVideoController.reset();
+							columsVideoView.setVideoPath(new_colums_infos.get(
+									curPlayNo).getVideoUrl());
+							columsVideoController.setTitle(new_colums_infos
+									.get(curPlayNo).getTitle());
+							columsVideoView.requestFocus();
+							columsVideoView.start();
 
-								NetUtils.getInstance(mContext).getAnalyse(
-										New_Activity_Colums_Info.this,
-										"video",
-										new_colums_infos.get(curPlayNo)
-												.getTitle(),
-										new_colums_infos.get(curPlayNo)
-												.getTitleurl());
-							}
-							dialog.dismiss();
+							NetUtils.getInstance(mContext).getAnalyse(
+									New_Activity_Colums_Info.this,
+									"video",
+									new_colums_infos.get(curPlayNo).getTitle(),
+									new_colums_infos.get(curPlayNo)
+											.getTitleurl());
 						}
-					});
-					dialog.show();
-
-				}
-
+						dialog.dismiss();
+					}
+				});
+				dialog.show();
 			} else {
 				if (columsVideoView != null) {
-					Log.e("new_colums_infos.get(curPlayNo).getVideoUrl()",
-							new_colums_infos.get(curPlayNo).getVideoUrl());
 					columsVideoView.stopPlayback();
 					columsVideoController.reset();
 					columsVideoView.setVideoPath(new_colums_infos
@@ -846,22 +827,12 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 					columsVideoView.requestFocus();
 					columsVideoView.start();
 
-					NetUtils.getInstance(mContext).getAnalyse(this, "video",
+					NetUtils.getInstance(mContext).getAnalyse(
+							New_Activity_Colums_Info.this, "video",
 							new_colums_infos.get(curPlayNo).getTitle(),
 							new_colums_infos.get(curPlayNo).getTitleurl());
 				}
 			}
-		} else {
-			final TishiMsgHint dialog = new TishiMsgHint(this,
-					R.style.MyDialog1);
-			dialog.setContent("当前无可用网络", "我知道了");
-			dialog.setCancleListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
-			dialog.show();
 		}
 	}
 

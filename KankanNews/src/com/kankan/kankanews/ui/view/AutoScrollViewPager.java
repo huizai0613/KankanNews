@@ -37,7 +37,7 @@ import android.view.animation.Interpolator;
  */
 public class AutoScrollViewPager extends ViewPager {
 
-	public static final int DEFAULT_INTERVAL = 1500;
+	public static final int DEFAULT_INTERVAL = 6000;
 
 	public static final int LEFT = 0;
 	public static final int RIGHT = 1;
@@ -76,6 +76,8 @@ public class AutoScrollViewPager extends ViewPager {
 	private boolean isAutoScroll = false;
 	private boolean isStopByTouch = false;
 	private float touchX = 0f, downX = 0f;
+
+	private long delayTimeInMills = -1;
 
 	public boolean isAutoScroll() {
 		return isAutoScroll;
@@ -121,6 +123,7 @@ public class AutoScrollViewPager extends ViewPager {
 	 *            first scroll delay time
 	 */
 	public void startAutoScroll(int delayTimeInMills) {
+		this.delayTimeInMills = delayTimeInMills;
 		isAutoScroll = true;
 		sendScrollMessage(delayTimeInMills);
 	}
@@ -266,7 +269,10 @@ public class AutoScrollViewPager extends ViewPager {
 				scroller.setScrollDurationFactor(autoScrollFactor);
 				scrollOnce();
 				scroller.setScrollDurationFactor(swipeScrollFactor);
-				sendScrollMessage(interval + scroller.getDuration());
+				if (delayTimeInMills != -1)
+					sendScrollMessage(delayTimeInMills);
+				else
+					sendScrollMessage(interval + scroller.getDuration());
 			default:
 				break;
 			}

@@ -49,6 +49,7 @@ import com.kankan.kankanews.bean.SerializableObj;
 import com.kankan.kankanews.ui.fragment.LiveLiveListFragment;
 import com.kankan.kankanews.ui.fragment.New_LivePlayFragment;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
+import com.kankan.kankanews.ui.fragment.NewsHomeFragment;
 import com.kankan.kankanews.ui.fragment.item.New_HomeItemFragment;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.EllipsizingTextView;
@@ -85,6 +86,7 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 	private NewsListHolder mNewsListHolder;
 	private NewAlbumsHolder mNewAlbumsHolder;
 	private LoadedFinishHolder mFinishHolder;
+	private NewTopPicHolder mNewTopPicHolder;
 	private boolean mIsLoadEnd = false;
 	private String mLastTime = "";
 
@@ -283,6 +285,11 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		ImageView albums_image_3;
 	}
 
+	private class NewTopPicHolder {
+		MyTextView title;
+		ImageView image;
+	}
+
 	private class LoadedFinishHolder {
 		MyTextView loadedTextView;
 	}
@@ -291,27 +298,53 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 
 		@Override
 		public int getCount() {
-			if (mIsLoadEnd)
+			boolean hasTopPic = mNewsHomeModule.getHeadline() != null
+					&& mNewsHomeModule.getHeadline().size() > 0;
+			if (hasTopPic) {
+				if (mIsLoadEnd)
+					return mNewsHomeModule.getList().size() + 2;
 				return mNewsHomeModule.getList().size() + 1;
-			return mNewsHomeModule.getList().size();
+			} else {
+				if (mIsLoadEnd)
+					return mNewsHomeModule.getList().size() + 1;
+				return mNewsHomeModule.getList().size();
+			}
 		}
 
 		@Override
 		public int getViewTypeCount() {
-			return 3;
+			return 4;
 		}
 
 		@Override
 		public int getItemViewType(int position) {
-			if (position == mNewsHomeModule.getList().size()) {
-				return 1;
-			} else {
-				NewsHomeModuleItem news = mNewsHomeModule.getList().get(
-						position);
-				if (news.getType().equals("album")) {
-					return 2;
+			boolean hasTopPic = mNewsHomeModule.getHeadline() != null
+					&& mNewsHomeModule.getHeadline().size() > 0;
+			if (hasTopPic) {
+				if (position == 0)
+					return 3;
+				if (position == mNewsHomeModule.getList().size() + 1) {
+					return 1;
 				} else {
-					return 0;
+					NewsHomeModuleItem news = mNewsHomeModule.getList().get(
+							position - 1);
+					if (news.getType().equals("album")) {
+						return 2;
+					} else {
+						return 0;
+					}
+				}
+			} else {
+				if (position == mNewsHomeModule.getList().size()) {
+					return 1;
+				} else {
+					NewsHomeModuleItem news = mNewsHomeModule.getList().get(
+							position);
+					if (news.getType().equals("album")) {
+						return 2;
+					} else {
+						return 0;
+					}
 				}
 			}
 		}
@@ -330,6 +363,8 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 		public View getView(final int position, View convertView,
 				ViewGroup parent) {
 
+			final boolean hasTopPic = mNewsHomeModule.getHeadline() != null
+					&& mNewsHomeModule.getHeadline().size() > 0;
 			int itemViewType = getItemViewType(position);
 			if (convertView == null) {
 				if (itemViewType == 0) {
@@ -385,6 +420,19 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 									(int) ((mScreenWidth - PixelUtil
 											.dp2px(10 * 4)) / 3 * 0.7)));
 					convertView.setTag(mNewAlbumsHolder);
+				} else if (itemViewType == 3) {
+					convertView = inflate.inflate(
+							R.layout.item_news_list_header, null);
+					mNewTopPicHolder = new NewTopPicHolder();
+					mNewTopPicHolder.title = (MyTextView) convertView
+							.findViewById(R.id.top_title);
+					mNewTopPicHolder.image = (ImageView) convertView
+							.findViewById(R.id.top_pic);
+					mNewTopPicHolder.image
+							.setLayoutParams(new RelativeLayout.LayoutParams(
+									RelativeLayout.LayoutParams.MATCH_PARENT,
+									(int) (mContext.mScreenWidth / 6.4 * 3)));
+					convertView.setTag(mNewTopPicHolder);
 				}
 			} else {
 				if (itemViewType == 0) {
@@ -394,123 +442,144 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 					return convertView;
 				} else if (itemViewType == 2) {
 					mNewAlbumsHolder = (NewAlbumsHolder) convertView.getTag();
+				} else if (itemViewType == 2) {
+					mNewTopPicHolder = (NewTopPicHolder) convertView.getTag();
 				}
 			}
-			final NewsHomeModuleItem news = mNewsHomeModule.getList().get(
-					position);
-			if (itemViewType == 0) {
-				if (NewsBrowseUtils.isBrowed(news.getId())) {
-					mNewsListHolder.title.setTextColor(Color
-							.parseColor("#B0B0B0"));
-				} else {
-					mNewsListHolder.title.setTextColor(Color
-							.parseColor("#000000"));
-				}
-				news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
-				String clicktime = news.getOnclick() + "";
-				clicktime = TextUtils.isEmpty(clicktime) ? "0" : clicktime;
-				mNewsListHolder.titlepic.setTag(R.string.viewwidth,
-						PixelUtil.dp2px(80));
+			if (itemViewType == 3) {
+				mNewTopPicHolder.title.setText(mNewsHomeModule.getHeadline()
+						.get(0).getTitle());
 				ImgUtils.imageLoader.displayImage(
-						CommonUtils.doWebpUrl(news.getTitlepic()),
-						mNewsListHolder.titlepic, ImgUtils.homeImageOptions);
-				mNewsListHolder.title.setText(news.getTitle());
-				if (news.getType().equals("outlink")) {
-					mNewsListHolder.newsTimeIcon.setVisibility(View.GONE);
-					mNewsListHolder.newsClick.setVisibility(View.GONE);
-				} else {
-					mNewsListHolder.newsTimeIcon.setVisibility(View.VISIBLE);
-					mNewsListHolder.newsClick.setVisibility(View.VISIBLE);
-					mNewsListHolder.newsClick.setText(clicktime);
-				}
-				mNewsListHolder.keyboardIconContent.setVisibility(View.VISIBLE);
-				Keyboard mKeyboard = news.getKeyboard();
-				if (mKeyboard != null
-						&& !mKeyboard.getColor().trim().equals("")
-						&& !mKeyboard.getText().trim().equals("")) {
-					mNewsListHolder.keyboardIconContent.removeAllViews();
-					TextView view = new BorderTextView(mContext,
-							mKeyboard.getColor());
-					LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-							LinearLayout.LayoutParams.MATCH_PARENT,
-							LinearLayout.LayoutParams.WRAP_CONTENT);
-					view.setLayoutParams(params);
-					view.setGravity(Gravity.CENTER);
-					int px3 = PixelUtil.dp2px(3);
-					view.setPadding(px3, px3, px3, px3);
-					view.setText(mKeyboard.getText());
-					FontUtils.setTextViewFontSize(mContext, view,
-							R.string.live_border_text_view_text_size, 1);
-					view.setTextColor(Color.parseColor(mKeyboard.getColor()));
-					mNewsListHolder.keyboardIconContent.addView(view);
-				}
+						CommonUtils.doWebpUrl(mNewsHomeModule.getHeadline()
+								.get(0).getTitlepic()), mNewTopPicHolder.image,
+						ImgUtils.homeImageOptions);
 				convertView.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						if (ClickUtils.isFastDoubleClick()) {
-							return;
-						}
-						MyTextView textView = (MyTextView) v
-								.findViewById(R.id.home_news_title);
-						textView.setTextColor(Color.parseColor("#B0B0B0"));
-						NewsBrowseUtils.hasBrowedNews(news.getId());
-						if (news.getType().equals("video")
-								|| news.getType().equals("text")) {
-							NewsListActivity.this
-									.startAnimActivityByNewsHomeModuleItem(
-											NewsContentActivity.class, news);
-						} else if (news.getType().equals("outlink")) {
-							news.setOutLinkType("outlink");
-							NewsListActivity.this
-									.startAnimActivityByNewsHomeModuleItem(
-											NewsOutLinkActivity.class, news);
-						}
+						openNews(mNewsHomeModule.getHeadline().get(0));
 					}
 				});
-			} else if (itemViewType == 2) {
-				if (NewsBrowseUtils.isBrowed(news.getId())) {
-					mNewAlbumsHolder.title.setTextColor(Color
-							.parseColor("#B0B0B0"));
-				} else {
-					mNewAlbumsHolder.title.setTextColor(Color
-							.parseColor("#000000"));
+			} else {
+				final NewsHomeModuleItem news = mNewsHomeModule.getList().get(
+						position - 1);
+				if (itemViewType == 0) {
+					if (NewsBrowseUtils.isBrowed(news.getId())) {
+						mNewsListHolder.title.setTextColor(Color
+								.parseColor("#B0B0B0"));
+					} else {
+						mNewsListHolder.title.setTextColor(Color
+								.parseColor("#000000"));
+					}
+					news.setTitlepic(CommonUtils.doWebpUrl(news.getTitlepic()));
+					String clicktime = news.getOnclick() + "";
+					clicktime = TextUtils.isEmpty(clicktime) ? "0" : clicktime;
+					mNewsListHolder.titlepic.setTag(R.string.viewwidth,
+							PixelUtil.dp2px(80));
+					ImgUtils.imageLoader
+							.displayImage(
+									CommonUtils.doWebpUrl(news.getTitlepic()),
+									mNewsListHolder.titlepic,
+									ImgUtils.homeImageOptions);
+					mNewsListHolder.title.setText(news.getTitle());
+					if (news.getType().equals("outlink")) {
+						mNewsListHolder.newsTimeIcon.setVisibility(View.GONE);
+						mNewsListHolder.newsClick.setVisibility(View.GONE);
+					} else {
+						mNewsListHolder.newsTimeIcon
+								.setVisibility(View.VISIBLE);
+						mNewsListHolder.newsClick.setVisibility(View.VISIBLE);
+						mNewsListHolder.newsClick.setText(clicktime);
+					}
+					mNewsListHolder.keyboardIconContent
+							.setVisibility(View.VISIBLE);
+					Keyboard mKeyboard = news.getKeyboard();
+					if (mKeyboard != null
+							&& !mKeyboard.getColor().trim().equals("")
+							&& !mKeyboard.getText().trim().equals("")) {
+						mNewsListHolder.keyboardIconContent.removeAllViews();
+						TextView view = new BorderTextView(mContext,
+								mKeyboard.getColor());
+						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+								LinearLayout.LayoutParams.MATCH_PARENT,
+								LinearLayout.LayoutParams.WRAP_CONTENT);
+						view.setLayoutParams(params);
+						view.setGravity(Gravity.CENTER);
+						int px3 = PixelUtil.dp2px(3);
+						view.setPadding(px3, px3, px3, px3);
+						view.setText(mKeyboard.getText());
+						FontUtils.setTextViewFontSize(mContext, view,
+								R.string.live_border_text_view_text_size, 1);
+						view.setTextColor(Color.parseColor(mKeyboard.getColor()));
+						mNewsListHolder.keyboardIconContent.addView(view);
+					}
+					convertView.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							if (ClickUtils.isFastDoubleClick()) {
+								return;
+							}
+							MyTextView textView = (MyTextView) v
+									.findViewById(R.id.home_news_title);
+							textView.setTextColor(Color.parseColor("#B0B0B0"));
+							NewsBrowseUtils.hasBrowedNews(news.getId());
+							if (news.getType().equals("video")
+									|| news.getType().equals("text")) {
+								NewsListActivity.this
+										.startAnimActivityByNewsHomeModuleItem(
+												NewsContentActivity.class, news);
+							} else if (news.getType().equals("outlink")) {
+								news.setOutLinkType("outlink");
+								NewsListActivity.this
+										.startAnimActivityByNewsHomeModuleItem(
+												NewsOutLinkActivity.class, news);
+							}
+						}
+					});
+				} else if (itemViewType == 2) {
+					if (NewsBrowseUtils.isBrowed(news.getId())) {
+						mNewAlbumsHolder.title.setTextColor(Color
+								.parseColor("#B0B0B0"));
+					} else {
+						mNewAlbumsHolder.title.setTextColor(Color
+								.parseColor("#000000"));
+					}
+					mNewAlbumsHolder.title.setText(news.getTitle());
+					int width = (mScreenWidth - PixelUtil.dp2px(20) / 3);
+					mNewAlbumsHolder.albums_image_1.setTag(R.string.viewwidth,
+							width);
+					mNewAlbumsHolder.albums_image_2.setTag(R.string.viewwidth,
+							width);
+					mNewAlbumsHolder.albums_image_3.setTag(R.string.viewwidth,
+							width);
+					ImgUtils.imageLoader.displayImage(
+							CommonUtils.doWebpUrl(news.getAlbum_1()),
+							mNewAlbumsHolder.albums_image_1,
+							ImgUtils.homeImageOptions);
+					ImgUtils.imageLoader.displayImage(
+							CommonUtils.doWebpUrl(news.getAlbum_2()),
+							mNewAlbumsHolder.albums_image_2,
+							ImgUtils.homeImageOptions);
+					ImgUtils.imageLoader.displayImage(
+							CommonUtils.doWebpUrl(news.getAlbum_3()),
+							mNewAlbumsHolder.albums_image_3,
+							ImgUtils.homeImageOptions);
+					convertView.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View arg0) {
+							if (ClickUtils.isFastDoubleClick()) {
+								return;
+							}
+							MyTextView textView = (MyTextView) arg0
+									.findViewById(R.id.home_albums_title);
+							NewsBrowseUtils.hasBrowedNews(news.getId());
+							textView.setTextColor(Color.parseColor("#B0B0B0"));
+							NewsBrowseUtils.hasBrowedNews(news.getId());
+							NewsListActivity.this
+									.startAnimActivityByNewsHomeModuleItem(
+											NewsAlbumActivity.class, news);
+						}
+					});
 				}
-				mNewAlbumsHolder.title.setText(news.getTitle());
-				int width = (mScreenWidth - PixelUtil.dp2px(20) / 3);
-				mNewAlbumsHolder.albums_image_1.setTag(R.string.viewwidth,
-						width);
-				mNewAlbumsHolder.albums_image_2.setTag(R.string.viewwidth,
-						width);
-				mNewAlbumsHolder.albums_image_3.setTag(R.string.viewwidth,
-						width);
-				ImgUtils.imageLoader.displayImage(
-						CommonUtils.doWebpUrl(news.getAlbum_1()),
-						mNewAlbumsHolder.albums_image_1,
-						ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(
-						CommonUtils.doWebpUrl(news.getAlbum_2()),
-						mNewAlbumsHolder.albums_image_2,
-						ImgUtils.homeImageOptions);
-				ImgUtils.imageLoader.displayImage(
-						CommonUtils.doWebpUrl(news.getAlbum_3()),
-						mNewAlbumsHolder.albums_image_3,
-						ImgUtils.homeImageOptions);
-				convertView.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View arg0) {
-						if (ClickUtils.isFastDoubleClick()) {
-							return;
-						}
-						MyTextView textView = (MyTextView) arg0
-								.findViewById(R.id.home_albums_title);
-						NewsBrowseUtils.hasBrowedNews(news.getId());
-						textView.setTextColor(Color.parseColor("#B0B0B0"));
-						NewsBrowseUtils.hasBrowedNews(news.getId());
-						NewsListActivity.this
-								.startAnimActivityByNewsHomeModuleItem(
-										NewsAlbumActivity.class, news);
-					}
-				});
 			}
 			return convertView;
 		}
@@ -579,5 +648,30 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 			DebugLog.e(e.getLocalizedMessage());
 		}
 
+	}
+
+	private void openNews(NewsHomeModuleItem moduleItem) {
+		if (moduleItem.getType().equals("video")
+				|| moduleItem.getType().equals("text")) {
+			this.startAnimActivityByNewsHomeModuleItem(
+					NewsContentActivity.class, moduleItem);
+		} else if (moduleItem.getType().equals("outlink")) {
+			moduleItem.setOutLinkType("outlink");
+			this.startAnimActivityByNewsHomeModuleItem(
+					NewsOutLinkActivity.class, moduleItem);
+		} else if (moduleItem.getType().equals("album")) {
+			this.startAnimActivityByNewsHomeModuleItem(NewsAlbumActivity.class,
+					moduleItem);
+		} else if (moduleItem.getType().equals("topic")) {
+			if (moduleItem.getAppclassid() == null
+					|| moduleItem.getAppclassid().trim().equals(""))
+				moduleItem.setAppclassid(moduleItem.getLabels());
+			if (moduleItem.getNum() > 0)
+				this.startAnimActivityByNewsHomeModuleItem(
+						NewsTopicActivity.class, moduleItem);
+			else
+				this.startAnimActivityByNewsHomeModuleItem(
+						NewsTopicListActivity.class, moduleItem);
+		}
 	}
 }

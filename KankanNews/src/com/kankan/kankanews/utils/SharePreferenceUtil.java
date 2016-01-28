@@ -49,7 +49,7 @@ public class SharePreferenceUtil {
 	private String SHARED_KEY_USER_NAME = "shared_key_user_name";
 	private String SHARED_KEY_USER_POST = "shared_key_user_post";
 	// 是否用手机流量看/下载视频 默认为否
-	private String SHARED_KEY_FLOW = "shared_key_flow";
+//	private String SHARED_KEY_FLOW = "shared_key_flow";
 
 	private String SEARCH_HIS_LIST = "search_his_list";
 
@@ -85,15 +85,15 @@ public class SharePreferenceUtil {
 		editor.commit();
 	}
 
-	// 是否用流量看视频
-	public boolean isFlow() {
-		return mSharedPreferences.getBoolean(SHARED_KEY_FLOW, false);
-	}
-
-	public void setFlow(boolean isFlow) {
-		editor.putBoolean(SHARED_KEY_FLOW, isFlow);
-		editor.commit();
-	}
+//	// 是否用流量看视频
+//	public boolean isFlow() {
+//		return mSharedPreferences.getBoolean(SHARED_KEY_FLOW, false);
+//	}
+//
+//	public void setFlow(boolean isFlow) {
+//		editor.putBoolean(SHARED_KEY_FLOW, isFlow);
+//		editor.commit();
+//	}
 
 	// 用户id
 	public void setUserId(String userid) {

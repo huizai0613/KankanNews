@@ -152,8 +152,8 @@ public class SplashActivity extends BaseActivity {
 		// }
 
 		// createShortcut();
-		// String device_token = UmengRegistrar.getRegistrationId(this);
-		// DebugLog.e("token" + device_token);
+		String device_token = UmengRegistrar.getRegistrationId(this);
+		DebugLog.e("token " + device_token);
 	}
 
 	@Override

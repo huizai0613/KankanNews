@@ -64,6 +64,7 @@ import com.kankan.kankanews.ui.item.NewsOutLinkActivity;
 import com.kankan.kankanews.ui.item.NewsTopicActivity;
 import com.kankan.kankanews.ui.item.NewsTopicListActivity;
 import com.kankan.kankanews.ui.item.NewsVideoPackageActivity;
+import com.kankan.kankanews.ui.view.AutoScrollViewPager;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.utils.CommonUtils;
@@ -385,7 +386,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	}
 
 	private class SwiperHeadHolder {
-		ViewPager imgViewPager;
+		AutoScrollViewPager imgViewPager;
 		TextView title;
 		LinearLayout pointRootView;
 	}
@@ -394,14 +395,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		ImageView icon;
 		TextView title;
 		View[] rootView = new View[4];
-		// ImageView img0;
-		// MyTextView title0;
-		// ImageView img1;
-		// MyTextView title1;
-		// ImageView img2;
-		// MyTextView title2;
-		// ImageView img3;
-		// MyTextView title3;
 		View change;
 		ImageView changeIcon;
 		View more;
@@ -426,10 +419,18 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		ImageView icon2;
 		TextView title2;
 		TextView click2;
+		View rootView3;
+		ImageView img3;
+		ImageView icon3;
+		TextView title3;
+		TextView click3;
 	}
 
 	private class GalleryHolder {
 		TextView title;
+		RelativeLayout item2;
+		ImageView icon;
+		TextView title2;
 		LinearLayout rootView;
 	}
 
@@ -494,7 +495,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				return 1;
 			} else if ("matrix-triple".equals(module.getType())) {
 				return 2;
-			} else if ("swiper-video".equals(module.getType())) {
+			} else if ("swiper-video".equals(module.getType())
+					|| "swiper-video-2".equals(module.getType())) {
 				return 3;
 			} else if ("topic".equals(module.getType())) {
 				return 4;
@@ -554,8 +556,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 							mSwiperHeadHolder.title,
 							R.string.home_news_text_size, 1);
-					mSwiperHeadHolder.imgViewPager = (ViewPager) convertView
+					mSwiperHeadHolder.imgViewPager = (AutoScrollViewPager) convertView
 							.findViewById(R.id.news_home_swiper_head_view_pager);
+					mSwiperHeadHolder.imgViewPager.startAutoScroll(6000);
 					mSwiperHeadHolder.imgViewPager
 							.setLayoutParams(new RelativeLayout.LayoutParams(
 									RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -671,6 +674,16 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.item_news_home_matrix_list_icon2);
 					mMatrixListHolder.title2 = (MyTextView) convertView
 							.findViewById(R.id.item_news_home_matrix_list_title2);
+					mMatrixListHolder.click3 = (MyTextView) convertView
+							.findViewById(R.id.item_news_home_matrix_list_click3);
+					mMatrixListHolder.rootView3 = convertView
+							.findViewById(R.id.item_news_home_matrix_list_3);
+					mMatrixListHolder.img3 = (ImageView) convertView
+							.findViewById(R.id.item_news_home_matrix_list_image3);
+					mMatrixListHolder.icon3 = (ImageView) convertView
+							.findViewById(R.id.item_news_home_matrix_list_icon3);
+					mMatrixListHolder.title3 = (MyTextView) convertView
+							.findViewById(R.id.item_news_home_matrix_list_title3);
 					convertView.setTag(mMatrixListHolder);
 				} else if (itemType == 3) {
 					mGalleryHolder = new GalleryHolder();
@@ -678,6 +691,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							R.layout.item_news_home_gallery, null);
 					mGalleryHolder.title = (TextView) convertView
 							.findViewById(R.id.item_news_home_gallery_title_item);
+					mGalleryHolder.item2 = (RelativeLayout) convertView
+							.findViewById(R.id.item_news_home_gallery_title_item_2);
+					mGalleryHolder.title2 = (TextView) convertView
+							.findViewById(R.id.item_news_home_gallery_title);
+					mGalleryHolder.icon = (ImageView) convertView
+							.findViewById(R.id.item_news_home_gallery_icon);
 					mGalleryHolder.rootView = (LinearLayout) convertView
 							.findViewById(R.id.item_news_home_gallery_root_view);
 					convertView.setTag(mGalleryHolder);
@@ -943,6 +962,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				} else {
 					mMatrixListHolder.icon2.setVisibility(View.GONE);
 				}
+				if (module.getList().get(3).getType().trim().equals("video")) {
+					mMatrixListHolder.icon3.setVisibility(View.VISIBLE);
+				} else {
+					mMatrixListHolder.icon3.setVisibility(View.GONE);
+				}
 				ImgUtils.imageLoader.displayImage(
 						CommonUtils.doWebpUrl(module.getIcon()),
 						mMatrixListHolder.icon, ImgUtils.homeImageOptions);
@@ -958,6 +982,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						CommonUtils.doWebpUrl(module.getList().get(2)
 								.getTitlepic()), mMatrixListHolder.img2,
 						ImgUtils.homeImageOptions);
+				ImgUtils.imageLoader.displayImage(
+						CommonUtils.doWebpUrl(module.getList().get(3)
+								.getTitlepic()), mMatrixListHolder.img3,
+						ImgUtils.homeImageOptions);
 				mMatrixListHolder.title.setText(module.getTitle());
 				if (!module.getList().get(0).getIntro().trim().equals("")) {
 					mMatrixListHolder.intro0.setVisibility(View.VISIBLE);
@@ -972,6 +1000,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						.getTitle());
 				mMatrixListHolder.title2.setText(module.getList().get(2)
 						.getTitle());
+				mMatrixListHolder.title3.setText(module.getList().get(3)
+						.getTitle());
 				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 						mMatrixListHolder.title0, R.string.home_news_text_size,
 						1);
@@ -984,10 +1014,16 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 						mMatrixListHolder.title2, R.string.home_news_text_size,
 						1);
+				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
+						mMatrixListHolder.title3, R.string.home_news_text_size,
+						1);
 				mMatrixListHolder.click1.setText(module.getList().get(1)
 						.getOnclick()
 						+ "");
 				mMatrixListHolder.click2.setText(module.getList().get(2)
+						.getOnclick()
+						+ "");
+				mMatrixListHolder.click3.setText(module.getList().get(3)
 						.getOnclick()
 						+ "");
 				mMatrixListHolder.rootView0
@@ -1011,6 +1047,13 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 								openNews(module.getList().get(2));
 							}
 						});
+				mMatrixListHolder.rootView3
+						.setOnClickListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								openNews(module.getList().get(3));
+							}
+						});
 				mMatrixListHolder.more
 						.setOnClickListener(new OnClickListener() {
 							@Override
@@ -1026,7 +1069,22 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							}
 						});
 			} else if (itemType == 3) {
-				mGalleryHolder.title.setText("#" + module.getTitle() + "#");
+				if (module.getType().equals("swiper-video")) {
+					mGalleryHolder.item2.setVisibility(View.GONE);
+					mGalleryHolder.title.setVisibility(View.VISIBLE);
+					mGalleryHolder.title.setText("#" + module.getTitle() + "#");
+				}
+				if (module.getType().equals("swiper-video-2")) {
+					mGalleryHolder.item2.setVisibility(View.VISIBLE);
+					mGalleryHolder.title.setVisibility(View.GONE);
+					mGalleryHolder.title2.setText(module.getTitle());
+					ImgUtils.imageLoader.displayImage(
+							CommonUtils.doWebpUrl(module.getIcon()),
+							mGalleryHolder.icon, ImgUtils.homeImageOptions);
+					FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
+							mGalleryHolder.title2,
+							R.string.home_news_text_size, 1);
+				}
 				if (module != (NewsHomeModule) mGalleryHolder.rootView.getTag()) {
 					mGalleryHolder.rootView.removeAllViews();
 					for (int i = 0; i < module.getList().size(); i++) {
@@ -1156,8 +1214,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						ImgUtils.homeImageOptions);
 				mOutLinkHolder.keyboardIconContent.setVisibility(View.VISIBLE);
 				Keyboard mKeyboard = module.getList().get(0).getKeyboard();
-				mKeyboard.setColor("#ffab40");
-				mKeyboard.setText("推广");
+				// mKeyboard.setColor("#ffab40");
+				// mKeyboard.setText("推广");
 				if (mKeyboard != null
 						&& !mKeyboard.getColor().trim().equals("")
 						&& !mKeyboard.getText().trim().equals("")) {
@@ -1456,7 +1514,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			this.startAnimActivityByNewsHomeModuleItem(
 					NewsContentActivity.class, moduleItem);
 		} else if (moduleItem.getType().equals("outlink")) {
-			moduleItem.setOutLinkType("module");
+			moduleItem.setOutLinkType("module");// 用来做统计
 			this.startAnimActivityByNewsHomeModuleItem(
 					NewsOutLinkActivity.class, moduleItem);
 		} else if (moduleItem.getType().equals("album")) {
@@ -1465,6 +1523,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		} else if (moduleItem.getType().equals("stream")) {
 			mActivity.touchTab(mActivity.tabLive);
 		} else if (moduleItem.getType().equals("topic")) {
+			if (moduleItem.getAppclassid() == null
+					|| moduleItem.getAppclassid().trim().equals(""))
+				moduleItem.setAppclassid(moduleItem.getLabels());
 			if (moduleItem.getNum() > 0)
 				this.startAnimActivityByNewsHomeModuleItem(
 						NewsTopicActivity.class, moduleItem);
@@ -1482,11 +1543,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				NewsHomeModule module = mNewsHome.getModule_list().get(i);
 				if (module.getType().equals("matrix-square")
 						|| module.getType().equals("matrix-changeable")) {
-					if (module.getNum() != 4)
+					if (module.getNum() < 4)
 						return false;
 				}
 				if (module.getType().equals("matrix-triple")) {
-					if (module.getNum() != 3)
+					if (module.getNum() < 4)
 						return false;
 				}
 				if (module.getType().equals("swiper-video")) {
