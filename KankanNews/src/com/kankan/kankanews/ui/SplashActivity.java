@@ -91,7 +91,8 @@ public class SplashActivity extends BaseActivity {
 				break;
 			case AD_GO_GUIDE:
 			case GO_GUIDE:
-				goGuide();
+//				goGuide();
+				goHome();
 				break;
 			case GO_TRANS:
 				goTrasition();
@@ -352,7 +353,8 @@ public class SplashActivity extends BaseActivity {
 							if (isFirstIn
 									|| !version.equals(spUtil.getVersion())) {
 								// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
-								goGuide();
+//								goGuide();
+								goHome();
 							} else {
 								// mHandler.sendEmptyMessage(CLICK_GO_HOME);
 								if (key.equalsIgnoreCase("infoid")) {
