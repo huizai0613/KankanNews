@@ -273,8 +273,20 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 		mVideoPkgVideoView.setOnInfoListener(this);
 		mVideoPkgVideoView.setOnClickListener(this);
 		mVideoPkgVideoController.setOnClickListener(this);
+		initListView();
 
+		setOnLeftClickLinester(this);
+		setOnRightClickLinester(this);
+		setOnContentClickLinester(this);
+	}
+
+	protected void initListView() {
 		mListView.setMode(Mode.PULL_FROM_END);
+		mListView.getLoadingLayoutProxy(true, false).setPullLabel("下拉可以刷新");
+		mListView.getLoadingLayoutProxy(true, false).setReleaseLabel("释放后刷新");
+		mListView.getLoadingLayoutProxy(false, true).setPullLabel("上拉加载更多");
+		mListView.getLoadingLayoutProxy(false, true).setRefreshingLabel("刷新中…");
+		mListView.getLoadingLayoutProxy(false, true).setReleaseLabel("松开立即加载");
 		mListView
 				.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2() {
 					@Override
@@ -288,9 +300,6 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 						loadMoreNetDate();
 					}
 				});
-		setOnLeftClickLinester(this);
-		setOnRightClickLinester(this);
-		setOnContentClickLinester(this);
 	}
 
 	protected void refreshNetDate() {
@@ -460,7 +469,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 						}
 						mVideoPkgVideoStart.setVisibility(View.GONE);
 						videoPlay();
-						mListView.setSelection(curPlayNo);
+						// mListView.setSelection(curPlayNo);
 					}
 				} else {
 					if (tmpModule.getList().size() == 0) {
