@@ -565,7 +565,8 @@ public class LiveChannelListFragment extends BaseFragment implements
 	@Override
 	public void refresh() {
 		super.refresh();
-		DebugLog.e("刷新了");
+		if (!this.mCurFMPlayId.equals("NULL"))
+			return;
 		mLiveChannelView.showHeadLoadingView();
 		this.cleanAudioPlay();
 		this.refreshNetDate();
