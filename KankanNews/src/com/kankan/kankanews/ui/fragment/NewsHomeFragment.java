@@ -739,7 +739,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mOutLinkHolder.titlePic = (ImageView) convertView
 							.findViewById(R.id.item_news_home_outlink_image);
 					mOutLinkHolder.titlePic.getLayoutParams().height = (int) ((double) (mActivity.mScreenWidth - PixelUtil
-							.dp2px(12.5f * 2)) / 600 * 285);
+							.dp2px(12.5f * 2)) / 600 * 235);
 					convertView.setTag(mOutLinkHolder);
 				} else if (itemType == 7) {
 					mVoteHolder = new VoteHolder();

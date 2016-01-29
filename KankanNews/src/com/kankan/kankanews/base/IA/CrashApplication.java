@@ -130,7 +130,7 @@ public class CrashApplication extends Application {
 		AssetManager mgr = getAssets();
 		tf = Typeface.createFromAsset(mgr, "nomal.TTF");
 
-		dbUtils = DbUtils.create(this, "kankan", 9, new DbUpgradeListener() {
+		dbUtils = DbUtils.create(this, "kankan", 10, new DbUpgradeListener() {
 			@Override
 			public void onUpgrade(DbUtils arg0, int arg1, int arg2) {
 				// TODO Auto-generated method stub
