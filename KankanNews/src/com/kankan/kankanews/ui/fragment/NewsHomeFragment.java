@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -64,9 +65,10 @@ import com.kankan.kankanews.ui.item.NewsOutLinkActivity;
 import com.kankan.kankanews.ui.item.NewsTopicActivity;
 import com.kankan.kankanews.ui.item.NewsTopicListActivity;
 import com.kankan.kankanews.ui.item.NewsVideoPackageActivity;
-import com.kankan.kankanews.ui.view.AutoScrollViewPager;
 import com.kankan.kankanews.ui.view.BorderTextView;
 import com.kankan.kankanews.ui.view.MyTextView;
+import com.kankan.kankanews.ui.view.autoscrollview.AutoScrollViewPager;
+import com.kankan.kankanews.ui.view.autoscrollview.VerticalViewPager;
 import com.kankan.kankanews.utils.CommonUtils;
 import com.kankan.kankanews.utils.DebugLog;
 import com.kankan.kankanews.utils.FontUtils;
@@ -105,6 +107,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 	private TopicTwoHolder mTopicTwoHolder;
 	private OutLinkHolder mOutLinkHolder;
 	private VoteHolder mVoteHolder;
+	private ScrollbarMessageHolder mScrollbarMessageHolder;
 
 	private int mLastVisibleItem = 2;
 
@@ -460,6 +463,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		LinearLayout rootView;
 	}
 
+	private class ScrollbarMessageHolder {
+		ImageView icon;
+		VerticalViewPager viewpager;
+	}
+
 	public class NewsHomeListAdapter extends BaseAdapter {
 
 		@Override
@@ -506,13 +514,15 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				return 6;
 			} else if ("vote".equals(module.getType())) {
 				return 7;
+			} else if ("scrollbar-message".equals(module.getType())) {
+				return 8;
 			}
 			return -2;
 		}
 
 		@Override
 		public int getViewTypeCount() {
-			return 9;
+			return 10;
 		}
 
 		@Override
@@ -559,6 +569,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mSwiperHeadHolder.imgViewPager = (AutoScrollViewPager) convertView
 							.findViewById(R.id.news_home_swiper_head_view_pager);
 					mSwiperHeadHolder.imgViewPager.startAutoScroll(6000);
+					mSwiperHeadHolder.imgViewPager.setCycle(true);
+					mSwiperHeadHolder.imgViewPager.setStopScrollWhenTouch(true);
+					mSwiperHeadHolder.imgViewPager
+							.setSwipeScrollDurationFactor(0.5);
+					mSwiperHeadHolder.imgViewPager.setInterval(6000);
 					mSwiperHeadHolder.imgViewPager
 							.setLayoutParams(new RelativeLayout.LayoutParams(
 									RelativeLayout.LayoutParams.MATCH_PARENT,
@@ -758,6 +773,19 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mVoteHolder.icon = (ImageView) convertView
 							.findViewById(R.id.item_news_home_vote_icon);
 					convertView.setTag(mVoteHolder);
+				} else if (itemType == 8) {
+					mScrollbarMessageHolder = new ScrollbarMessageHolder();
+					convertView = inflate.inflate(mActivity,
+							R.layout.item_news_home_message_scrollbar, null);
+					mScrollbarMessageHolder.icon = (ImageView) convertView
+							.findViewById(R.id.news_home_message_scrollbar_icon);
+					mScrollbarMessageHolder.viewpager = (VerticalViewPager) convertView
+							.findViewById(R.id.news_home_message_scrollbar_view_pager);
+					mScrollbarMessageHolder.viewpager
+							.setAdapter(new NewsHomeMessageScrollbarAdapter(
+									module.getList()));
+					mScrollbarMessageHolder.viewpager.startAutoScroll(5000);
+					convertView.setTag(mScrollbarMessageHolder);
 				} else {
 					convertView = new View(mActivity);
 					return convertView;
@@ -779,6 +807,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mOutLinkHolder = (OutLinkHolder) convertView.getTag();
 				} else if (itemType == 7) {
 					mVoteHolder = (VoteHolder) convertView.getTag();
+				} else if (itemType == 8) {
+					mScrollbarMessageHolder = (ScrollbarMessageHolder) convertView
+							.getTag();
 				} else {
 					return convertView;
 				}
@@ -1307,6 +1338,11 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						}
 					}
 				});
+			} else if (itemType == 8) {
+				ImgUtils.imageLoader
+						.displayImage(CommonUtils.doWebpUrl(module.getIcon()),
+								mScrollbarMessageHolder.icon,
+								ImgUtils.homeImageOptions);
 			}
 			return convertView;
 		}
@@ -1470,6 +1506,66 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			ImgUtils.imageLoader.displayImage(
 					CommonUtils.doWebpUrl(itemList.get(index).getTitlepic()),
 					(ImageView) convertView, ImgUtils.homeImageOptions);
+			convertView.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					openNews(itemList.get(index));
+				}
+			});
+			return convertView;
+		}
+
+	}
+
+	public class NewsHomeMessageScrollbarAdapter extends RecyclingPagerAdapter {
+		private List<NewsHomeModuleItem> itemList;
+
+		public void setItemList(List<NewsHomeModuleItem> itemList) {
+			this.itemList = itemList;
+		}
+
+		private int mChildCount = 0;
+
+		public NewsHomeMessageScrollbarAdapter(List<NewsHomeModuleItem> itemList) {
+			super();
+			this.itemList = itemList;
+		}
+
+		@Override
+		public void notifyDataSetChanged() {
+			mChildCount = getCount();
+			super.notifyDataSetChanged();
+		}
+
+		@Override
+		public int getItemPosition(Object object) {
+			if (mChildCount > 0) {
+				return POSITION_NONE;
+			}
+			return super.getItemPosition(object);
+		}
+
+		@Override
+		public int getCount() {
+			return itemList.size() == 1 ? 1 : Integer.MAX_VALUE;
+		}
+
+		@Override
+		public View getView(final int position, View convertView,
+				ViewGroup container) {
+			final int index = position % itemList.size();
+			if (convertView == null) {
+				MyTextView textView = new MyTextView(
+						NewsHomeFragment.this.mActivity);
+				textView.setMaxLines(2);
+				textView.setMinLines(1);
+				textView.setEllipsize(TextUtils.TruncateAt.END);
+				textView.setText(itemList.get(index).getTitle());
+
+				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
+						textView, R.string.home_news_text_size, 1);
+				convertView = textView;
+			}
 			convertView.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

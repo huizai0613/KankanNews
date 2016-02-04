@@ -1,5 +1,6 @@
-package com.kankan.kankanews.ui.view;
+package com.kankan.kankanews.ui.view.autoscrollview;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 
 import android.content.Context;
@@ -37,7 +38,7 @@ import android.view.animation.Interpolator;
  */
 public class AutoScrollViewPager extends ViewPager {
 
-	public static final int DEFAULT_INTERVAL = 6000;
+	public static final int DEFAULT_INTERVAL = 1500;
 
 	public static final int LEFT = 0;
 	public static final int RIGHT = 1;
@@ -68,25 +69,14 @@ public class AutoScrollViewPager extends ViewPager {
 	/** whether animating when auto scroll at the last or first item **/
 	private boolean isBorderAnimation = true;
 	/** scroll factor for auto scroll animation, default is 1.0 **/
-	private double autoScrollFactor = 5.0;
+	private double autoScrollFactor = 1.0;
 	/** scroll factor for swipe scroll animation, default is 1.0 **/
-	private double swipeScrollFactor = 5.0;
+	private double swipeScrollFactor = 1.0;
 
 	private Handler handler;
 	private boolean isAutoScroll = false;
 	private boolean isStopByTouch = false;
 	private float touchX = 0f, downX = 0f;
-
-	private long delayTimeInMills = -1;
-
-	public boolean isAutoScroll() {
-		return isAutoScroll;
-	}
-
-	public void setAutoScroll(boolean isAutoScroll) {
-		this.isAutoScroll = isAutoScroll;
-	}
-
 	private CustomDurationScroller scroller = null;
 
 	public static final int SCROLL_WHAT = 0;
@@ -103,7 +93,7 @@ public class AutoScrollViewPager extends ViewPager {
 	}
 
 	private void init() {
-		handler = new MyHandler();
+		handler = new MyHandler(this);
 		setViewPagerScroller();
 	}
 
@@ -123,7 +113,6 @@ public class AutoScrollViewPager extends ViewPager {
 	 *            first scroll delay time
 	 */
 	public void startAutoScroll(int delayTimeInMills) {
-		this.delayTimeInMills = delayTimeInMills;
 		isAutoScroll = true;
 		sendScrollMessage(delayTimeInMills);
 	}
@@ -253,12 +242,19 @@ public class AutoScrollViewPager extends ViewPager {
 				return super.dispatchTouchEvent(ev);
 			}
 		}
-		// getParent().requestDisallowInterceptTouchEvent(false);
+		getParent().requestDisallowInterceptTouchEvent(true);
 
 		return super.dispatchTouchEvent(ev);
 	}
 
-	private class MyHandler extends Handler {
+	private static class MyHandler extends Handler {
+
+		private final WeakReference<AutoScrollViewPager> autoScrollViewPager;
+
+		public MyHandler(AutoScrollViewPager autoScrollViewPager) {
+			this.autoScrollViewPager = new WeakReference<AutoScrollViewPager>(
+					autoScrollViewPager);
+		}
 
 		@Override
 		public void handleMessage(Message msg) {
@@ -266,13 +262,16 @@ public class AutoScrollViewPager extends ViewPager {
 
 			switch (msg.what) {
 			case SCROLL_WHAT:
-				scroller.setScrollDurationFactor(autoScrollFactor);
-				scrollOnce();
-				scroller.setScrollDurationFactor(swipeScrollFactor);
-				if (delayTimeInMills != -1)
-					sendScrollMessage(delayTimeInMills);
-				else
-					sendScrollMessage(interval + scroller.getDuration());
+				AutoScrollViewPager pager = this.autoScrollViewPager.get();
+				if (pager != null) {
+					pager.scroller
+							.setScrollDurationFactor(pager.autoScrollFactor);
+					pager.scrollOnce();
+					pager.scroller
+							.setScrollDurationFactor(pager.swipeScrollFactor);
+					pager.sendScrollMessage(pager.interval
+							+ pager.scroller.getDuration());
+				}
 			default:
 				break;
 			}

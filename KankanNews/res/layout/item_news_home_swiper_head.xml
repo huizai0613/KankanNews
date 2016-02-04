@@ -9,11 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <com.kankan.kankanews.ui.view.AutoScrollViewPager
+        <com.kankan.kankanews.ui.view.autoscrollview.AutoScrollViewPager
             android:id="@+id/news_home_swiper_head_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
-        </com.kankan.kankanews.ui.view.AutoScrollViewPager>
+        </com.kankan.kankanews.ui.view.autoscrollview.AutoScrollViewPager>
 
         <LinearLayout
             android:layout_width="match_parent"
