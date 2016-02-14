@@ -803,6 +803,9 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 		if (CommonUtils.isNetworkAvailable(this)) {
 			if (!CommonUtils.isWifi(this)) {
+				mVideoPkgVideoImage.setVisibility(View.VISIBLE);
+				mVideoPkgVideoStart.setVisibility(View.VISIBLE);
+				mVideoPkgVideoView.stopPlayback();
 				final InfoMsgHint dialog = new InfoMsgHint(this,
 						R.style.MyDialog1);
 				dialog.setContent("亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
