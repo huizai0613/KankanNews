@@ -393,11 +393,10 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 					Gravity.BOTTOM, 0, 0);
 			break;
 		case R.id.video_package_video_start:
-			videoPlay();
 			mVideoPkgVideoStart.setVisibility(View.GONE);
+			videoPlay();
 			break;
 		case R.id.video_package_video_controller:
-			DebugLog.e("我了割草");
 			if (!mVideoPkgVideoController.isShow()
 					&& video_pb.getVisibility() != View.VISIBLE)
 				mVideoPkgVideoController.show();
@@ -803,7 +802,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 		if (CommonUtils.isNetworkAvailable(this)) {
 			if (!CommonUtils.isWifi(this)) {
-				mVideoPkgVideoImage.setVisibility(View.VISIBLE);
+				video_pb.setVisibility(View.GONE);
 				mVideoPkgVideoStart.setVisibility(View.VISIBLE);
 				mVideoPkgVideoView.stopPlayback();
 				final InfoMsgHint dialog = new InfoMsgHint(this,
@@ -828,6 +827,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 									.getList().get(curPlayNo).getTitle());
 							mVideoPkgVideoView.requestFocus();
 							mVideoPkgVideoView.start();
+							video_pb.setVisibility(View.VISIBLE);
 							mVideoPkgVideoStart.setVisibility(View.GONE);
 
 							NetUtils.getInstance(mContext).getAnalyse(

@@ -386,6 +386,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	@Override
 	protected void onFailure(VolleyError error) {
+		mNewsHomeListView.onRefreshComplete();
+		ToastUtils.Infotoast(mActivity, "网络不给力,请重试");
 	}
 
 	private class SwiperHeadHolder {
@@ -568,9 +570,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							R.string.home_news_text_size, 1);
 					mSwiperHeadHolder.imgViewPager = (AutoScrollViewPager) convertView
 							.findViewById(R.id.news_home_swiper_head_view_pager);
+
 					mSwiperHeadHolder.imgViewPager.startAutoScroll(6000);
 					mSwiperHeadHolder.imgViewPager.setCycle(true);
-					mSwiperHeadHolder.imgViewPager.setStopScrollWhenTouch(true);
+					mSwiperHeadHolder.imgViewPager.setStopScrollWhenTouch(false);
 					mSwiperHeadHolder.imgViewPager
 							.setSwipeScrollDurationFactor(0.5);
 					mSwiperHeadHolder.imgViewPager.setInterval(6000);

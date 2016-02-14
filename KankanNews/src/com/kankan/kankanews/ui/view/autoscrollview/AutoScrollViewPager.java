@@ -242,7 +242,7 @@ public class AutoScrollViewPager extends ViewPager {
 				return super.dispatchTouchEvent(ev);
 			}
 		}
-		getParent().requestDisallowInterceptTouchEvent(true);
+//		getParent().requestDisallowInterceptTouchEvent(true);
 
 		return super.dispatchTouchEvent(ev);
 	}
@@ -401,4 +401,5 @@ public class AutoScrollViewPager extends ViewPager {
 	public void setBorderAnimation(boolean isBorderAnimation) {
 		this.isBorderAnimation = isBorderAnimation;
 	}
+
 }
