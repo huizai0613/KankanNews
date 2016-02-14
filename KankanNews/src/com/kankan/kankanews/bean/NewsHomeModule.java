@@ -21,6 +21,7 @@ public class NewsHomeModule implements Serializable, CanSharedObject {
 	private String category;
 	private String share_url;
 	private List<NewsHomeModuleItem> headline;
+	private String sharetitle;
 
 	public String getAppclassid() {
 		return appclassid;
@@ -144,7 +145,16 @@ public class NewsHomeModule implements Serializable, CanSharedObject {
 
 	@Override
 	public String getShareTitle() {
-		return this.getTitle();
+		// TODO Auto-generated method stub
+		if (this.sharetitle == null)
+			return title;
+		return this.sharetitle;
+	}
+
+	@Override
+	public void setSharedTitle(String shareTitle) {
+		// TODO Auto-generated method stub
+		this.sharetitle = shareTitle;
 	}
 
 	@Override

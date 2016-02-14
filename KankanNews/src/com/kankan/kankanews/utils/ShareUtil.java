@@ -211,8 +211,8 @@ public class ShareUtil {
 		// sinaContent.setShareImage(new UMImage(activity,
 		// "http://static.statickksmg.com/image/2015/05/07/ad7b6608ed69b909356b605db8924891.jpg"));
 		// TODO
-		sinaContent.setShareContent(sharedIntro + "-看看新闻 " + sharedUrl
-				+ " （分享自@看看新闻网） ");
+		sinaContent.setShareContent("分享看看新闻：《" + shareObj.getShareTitle() + "》 " + sharedUrl
+				+ " @看看新闻网");
 		mController.setShareMedia(sinaContent);
 	}
 

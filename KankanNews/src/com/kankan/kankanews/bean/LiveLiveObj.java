@@ -23,6 +23,7 @@ public class LiveLiveObj implements CanBePlay, Serializable, CanSharedObject {
 	private String time;
 	private String widepic;
 	private boolean isOrder = false;
+	private String sharetitle;
 
 	public String getId() {
 		return id;
@@ -150,7 +151,16 @@ public class LiveLiveObj implements CanBePlay, Serializable, CanSharedObject {
 
 	@Override
 	public String getShareTitle() {
-		return title;
+		// TODO Auto-generated method stub
+		if (this.sharetitle == null)
+			return title;
+		return this.sharetitle;
+	}
+
+	@Override
+	public void setSharedTitle(String shareTitle) {
+		// TODO Auto-generated method stub
+		this.sharetitle = shareTitle;
 	}
 
 	@Override

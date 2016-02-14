@@ -23,8 +23,8 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 	private String ztid;
 	// private String mid;
 
-//	private String titlepiclist;// 列表页的图片，用于作为分享的图片
-	private String titlelist;//列表页的title
+	// private String titlepiclist;// 列表页的图片，用于作为分享的图片
+	private String titlelist;// 列表页的title
 
 	// 新闻详情
 	private String omsid;
@@ -36,6 +36,8 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 	private String my_type;
 	// 记录观看的时间
 	private String looktime = "0";
+
+	private String sharetitle;
 
 	@Override
 	public JSONObject toJSON() {
@@ -222,8 +224,18 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 		this.newstext = newstext;
 	}
 
+	@Override
 	public String getShareTitle() {
-		return titlelist;
+		// TODO Auto-generated method stub
+		if (this.sharetitle == null)
+			return title;
+		return this.sharetitle;
+	}
+
+	@Override
+	public void setSharedTitle(String shareTitle) {
+		// TODO Auto-generated method stub
+		this.sharetitle = shareTitle;
 	}
 
 	public void setTitlelist(String titlelist) {
@@ -243,7 +255,6 @@ public class New_News extends BaseBean<New_News> implements CanSharedObject {
 		return this.getIntro();
 	}
 
-	
 	// public ArrayList<String> getParagraph() {
 	// return paragraph;
 	// }

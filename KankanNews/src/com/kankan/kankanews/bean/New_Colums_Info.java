@@ -27,6 +27,8 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> implements
 
 	private String classId;// 用来区分是什么栏目上的新闻
 
+	private String sharetitle;
+
 	@Override
 	public JSONObject toJSON() {
 		// TODO Auto-generated method stub
@@ -168,7 +170,15 @@ public class New_Colums_Info extends BaseBean<New_Colums_Info> implements
 	@Override
 	public String getShareTitle() {
 		// TODO Auto-generated method stub
-		return this.title;
+		if (this.sharetitle == null)
+			return title;
+		return this.sharetitle;
+	}
+
+	@Override
+	public void setSharedTitle(String shareTitle) {
+		// TODO Auto-generated method stub
+		this.sharetitle = shareTitle;
 	}
 
 	@Override

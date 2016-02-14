@@ -16,4 +16,6 @@ public interface CanSharedObject {
 	void setSharedPic(String sharepic);
 
 	String getShareIntro();
+
+	void setSharedTitle(String shareTitle);
 }

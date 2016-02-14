@@ -29,6 +29,8 @@ public class NewsHomeModuleItem implements Serializable, CanSharedObject {
 	// 用于统计
 	private String outLinkType;
 
+	private String sharetitle;
+
 	public String getId() {
 		return id;
 	}
@@ -199,7 +201,16 @@ public class NewsHomeModuleItem implements Serializable, CanSharedObject {
 
 	@Override
 	public String getShareTitle() {
-		return this.title;
+		// TODO Auto-generated method stub
+		if (this.sharetitle == null)
+			return title;
+		return this.sharetitle;
+	}
+
+	@Override
+	public void setSharedTitle(String shareTitle) {
+		// TODO Auto-generated method stub
+		this.sharetitle = shareTitle;
 	}
 
 	@Override

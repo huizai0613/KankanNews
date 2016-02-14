@@ -24,6 +24,7 @@ public class LiveChannelObj implements CanBePlay, CanSharedObject, Serializable 
 	private String datetime;
 	private String type;
 	private String time;
+	private String sharetitle;
 
 	public String getId() {
 		return id;
@@ -160,7 +161,15 @@ public class LiveChannelObj implements CanBePlay, CanSharedObject, Serializable 
 	@Override
 	public String getShareTitle() {
 		// TODO Auto-generated method stub
-		return title;
+		if (this.sharetitle == null)
+			return title;
+		return this.sharetitle;
+	}
+
+	@Override
+	public void setSharedTitle(String shareTitle) {
+		// TODO Auto-generated method stub
+		this.sharetitle = shareTitle;
 	}
 
 	@Override

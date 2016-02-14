@@ -103,11 +103,26 @@ public class NewsAlbum implements Serializable, CanSharedObject {
 	}
 
 	public String getShare_title() {
-		return share_title;
+		if (this.share_title == null)
+			return title;
+		return this.share_title;
 	}
 
 	public void setShare_title(String share_title) {
 		this.share_title = share_title;
+	}
+
+	@Override
+	public String getShareTitle() {
+		// TODO Auto-generated method stub
+		return this.getShare_title();
+
+	}
+
+	@Override
+	public void setSharedTitle(String shareTitle) {
+		// TODO Auto-generated method stub
+		this.share_title = shareTitle;
 	}
 
 	public String getShare_titlepic() {
@@ -132,11 +147,6 @@ public class NewsAlbum implements Serializable, CanSharedObject {
 
 	public void setAlbum(List<NewsAlbumImage> album) {
 		this.album = album;
-	}
-
-	@Override
-	public String getShareTitle() {
-		return this.getShare_title();
 	}
 
 	@Override

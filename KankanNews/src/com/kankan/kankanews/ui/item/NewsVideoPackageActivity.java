@@ -349,7 +349,6 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			shareUtil = new ShareUtil(new CanSharedObject() {
 				@Override
 				public void setSharedPic(String sharepic) {
-					mNewsVPModule.getList().get(0).getSharedPic();
 				}
 
 				@Override
@@ -385,6 +384,11 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 				@Override
 				public String getShareIntro() {
 					return mNewsVPModule.getList().get(0).getIntro();
+				}
+
+				@Override
+				public void setSharedTitle(String shareTitle) {
+					
 				}
 			}, mContext);
 			shareBoard = new CustomShareBoard(this, shareUtil, this);

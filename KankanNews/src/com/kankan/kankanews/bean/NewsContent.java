@@ -174,7 +174,9 @@ public class NewsContent implements Serializable, CanSharedObject {
 	}
 
 	public String getShare_title() {
-		return share_title;
+		if (this.share_title == null)
+			return title;
+		return this.share_title;
 	}
 
 	public void setShare_title(String share_title) {
@@ -200,6 +202,12 @@ public class NewsContent implements Serializable, CanSharedObject {
 	@Override
 	public String getShareTitle() {
 		return getShare_title();
+	}
+
+	@Override
+	public void setSharedTitle(String shareTitle) {
+		// TODO Auto-generated method stub
+		this.share_title = shareTitle;
 	}
 
 	@Override

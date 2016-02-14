@@ -35,6 +35,8 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements
 	private String appBgPic;
 	private boolean isOrder;
 
+	private String sharetitle;
+
 	public boolean isOrder() {
 		return isOrder;
 	}
@@ -126,7 +128,15 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements
 	@Override
 	public String getShareTitle() {
 		// TODO Auto-generated method stub
-		return this.title;
+		if (this.sharetitle == null)
+			return title;
+		return this.sharetitle;
+	}
+
+	@Override
+	public void setSharedTitle(String shareTitle) {
+		// TODO Auto-generated method stub
+		this.sharetitle = shareTitle;
 	}
 
 	@Override
@@ -173,6 +183,5 @@ public class New_LivePlay extends BaseBean<New_LivePlay> implements
 	public String getShareIntro() {
 		return this.getIntro();
 	}
-
 
 }
