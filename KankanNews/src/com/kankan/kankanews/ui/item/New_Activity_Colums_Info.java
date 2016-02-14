@@ -1083,12 +1083,6 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	}
 
 	@Override
-	public void netChanged() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void onBackPressed() {
 		if (isFullScrenn) {
 			fullScrenntoSamll();
@@ -1120,6 +1114,24 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
 			setFullHandler.sendEmptyMessageDelayed(SET_FULL_MESSAGE, 1000);
+		}
+	}
+
+	@Override
+	public void netChanged() {
+		if (columsVideoView.isPlaying()
+				&& (!CommonUtils.isNetworkAvailableNoToast(this) || !CommonUtils
+						.isWifi(this))) {
+			if (isFullScrenn)
+				this.fullScrenntoSamll();
+			columsVideoView.pause();
+			columsVideoController.show();
+			new Handler().post(new Runnable() {
+				@Override
+				public void run() {
+					ToastUtils.Errortoast(mContext, "网络环境发生变化,当前无WIFI环境");
+				}
+			});
 		}
 	}
 

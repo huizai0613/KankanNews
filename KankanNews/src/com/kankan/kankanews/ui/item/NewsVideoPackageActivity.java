@@ -1152,8 +1152,21 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 	@Override
 	public void netChanged() {
-		// TODO Auto-generated method stub
-
+		if (mVideoPkgVideoView.isPlaying()
+				&& (!CommonUtils.isNetworkAvailableNoToast(this) || !CommonUtils
+						.isWifi(this))) {
+			if (isFullScrenn)
+				this.fullScrenntoSamll();
+//			this.closeVideo();
+			mVideoPkgVideoView.pause();
+			mVideoPkgVideoController.show();
+			new Handler().post(new Runnable() {
+				@Override
+				public void run() {
+					ToastUtils.Errortoast(mContext, "网络环境发生变化,当前无WIFI环境");
+				}
+			});
+		}
 	}
 
 }
