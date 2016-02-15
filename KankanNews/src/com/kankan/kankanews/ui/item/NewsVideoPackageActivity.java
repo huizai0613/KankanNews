@@ -165,8 +165,13 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 			isFullScrenn = true;
 			((RelativeLayout.LayoutParams) mFullRootView.getLayoutParams()).topMargin = 0;
 			if (mVideoPkgVideoView != null
-					&& mVideoPkgVideoImage.getVisibility() == View.GONE)
-				mVideoPkgVideoView.start();
+					&& mVideoPkgVideoImage.getVisibility() == View.GONE) {
+				if (!mVideoPkgVideoView.isPlaying()
+						&& !CommonUtils.isWifi(this))
+					this.fullScrenntoSamll();
+				else
+					mVideoPkgVideoView.start();
+			}
 			mVideoPkgVideoView.getHolder().setFixedSize(
 					LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
@@ -388,7 +393,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 				@Override
 				public void setSharedTitle(String shareTitle) {
-					
+
 				}
 			}, mContext);
 			shareBoard = new CustomShareBoard(this, shareUtil, this);
@@ -1157,7 +1162,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 						.isWifi(this))) {
 			if (isFullScrenn)
 				this.fullScrenntoSamll();
-//			this.closeVideo();
+			// this.closeVideo();
 			mVideoPkgVideoView.pause();
 			mVideoPkgVideoController.show();
 			new Handler().post(new Runnable() {
