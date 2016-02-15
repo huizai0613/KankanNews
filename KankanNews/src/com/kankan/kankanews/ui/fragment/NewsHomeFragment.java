@@ -630,12 +630,6 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						mSwiperHeadHolder.pointRootView
 								.setVisibility(View.GONE);
 					}
-					if (mNewsHome.getModule_list().size() > 1
-							&& mNewsHome.getModule_list().get(1).getType()
-									.equals("scrollbar-message"))
-						mSwiperHeadHolder.spaceLine.setVisibility(View.GONE);
-					else
-						mSwiperHeadHolder.spaceLine.setVisibility(View.VISIBLE);
 
 					convertView.setTag(mSwiperHeadHolder);
 				} else if (itemType == 1) {
@@ -883,6 +877,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							public void onPageScrollStateChanged(int arg0) {
 							}
 						});
+				if (mNewsHome.getModule_list().size() > 1
+						&& mNewsHome.getModule_list().get(1).getType()
+								.equals("scrollbar-message"))
+					mSwiperHeadHolder.spaceLine.setVisibility(View.GONE);
+				else
+					mSwiperHeadHolder.spaceLine.setVisibility(View.VISIBLE);
 			} else if (itemType == 1) {
 				if (module.getChange() == 1) {
 					mMatrixHolder.change.setVisibility(View.VISIBLE);

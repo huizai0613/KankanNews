@@ -185,7 +185,7 @@ public class NetUtils {
 		// reponseListener, errorListener);
 		mCustomRequest = new CustomRequest(Request.Method.GET,
 				"http://www.kankanews.com/ceshi/test.txt?r="
-						+ random.nextInt(100), null, reponseListener,
+						+ random.nextInt(1000000), null, reponseListener,
 				errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
