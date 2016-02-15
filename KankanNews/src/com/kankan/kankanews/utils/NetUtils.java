@@ -18,6 +18,7 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import org.apache.http.HttpResponse;
@@ -53,6 +54,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 public class NetUtils {
 
 	private static NetUtils netUtils;
+	private static Random random = new Random();
 	private RequestQueue mRequestQueue;
 	private CustomRequest mCustomRequest;
 	private CustomRequestArray mCustomRequestArray;
@@ -178,12 +180,13 @@ public class NetUtils {
 	 */
 	public void getNewsHomeList(Listener<JSONObject> reponseListener,
 			ErrorListener errorListener) {
-//		mCustomRequest = new CustomRequest(Request.Method.GET,
-//				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA, null,
-//				reponseListener, errorListener);
+		// mCustomRequest = new CustomRequest(Request.Method.GET,
+		// AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA, null,
+		// reponseListener, errorListener);
 		mCustomRequest = new CustomRequest(Request.Method.GET,
-				"http://www.kankanews.com/ceshi/test.txt", null,
-				reponseListener, errorListener);
+				"http://www.kankanews.com/ceshi/test.txt?r="
+						+ random.nextInt(100), null, reponseListener,
+				errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
 
@@ -326,8 +329,8 @@ public class NetUtils {
 			Listener<JSONObject> reponseListener, ErrorListener errorListener) {
 		mCustomRequest = new CustomRequest(Request.Method.POST,
 				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA_CHANGE
-						+ classid + "/timestamp/" + time + "/page/" + pageNum + "/version/1",
-				null, reponseListener, errorListener);
+						+ classid + "/timestamp/" + time + "/page/" + pageNum
+						+ "/version/1", null, reponseListener, errorListener);
 
 		mRequestQueue.add(mCustomRequest);
 	}
