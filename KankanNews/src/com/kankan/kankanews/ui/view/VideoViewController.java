@@ -517,7 +517,32 @@ public class VideoViewController extends RelativeLayout implements
 				if (content_video_temp_image != null) {
 					content_video_temp_image.setVisibility(View.GONE);
 				}
-				video.start();
+				if (CommonUtils.isNetworkAvailable(this.activity_Content)) {
+					if (!CommonUtils.isWifi(this.activity_Content)) {
+						final InfoMsgHint dialog = new InfoMsgHint(
+								this.activity_Content, R.style.MyDialog1);
+						dialog.setContent(
+								"亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络", "",
+								"继续播放", "取消");
+						dialog.setCancleListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialog.dismiss();
+								activity_Content.fullScrenntoSamll();
+							}
+						});
+						dialog.setOKListener(new OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								video.start();
+								dialog.dismiss();
+							}
+						});
+						dialog.show();
+					} else {
+						video.start();
+					}
+				}
 			}
 			updatePausePlay();
 			break;

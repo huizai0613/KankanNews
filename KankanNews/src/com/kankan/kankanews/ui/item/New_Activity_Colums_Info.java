@@ -162,8 +162,12 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 			columsVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 			isFullScrenn = true;
 			if (columsVideoView != null
-					&& columsVideoImage.getVisibility() == View.GONE)
-				columsVideoView.start();
+					&& columsVideoImage.getVisibility() == View.GONE) {
+				if (!columsVideoView.isPlaying() && !CommonUtils.isWifi(this))
+					this.fullScrenntoSamll();
+				else
+					columsVideoView.start();
+			}
 			columsVideoView.getHolder().setFixedSize(LayoutParams.MATCH_PARENT,
 					LayoutParams.MATCH_PARENT);
 
@@ -782,6 +786,9 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 
 		if (CommonUtils.isNetworkAvailable(this)) {
 			if (!CommonUtils.isWifi(this)) {
+				video_pb.setVisibility(View.GONE);
+				columsVideoStart.setVisibility(View.VISIBLE);
+				columsVideoView.stopPlayback();
 				final InfoMsgHint dialog = new InfoMsgHint(this,
 						R.style.MyDialog1);
 				dialog.setContent("亲，您现在使用的是运营商网络，继续使用可能会产生流量费用，建议改用WIFI网络",
@@ -804,6 +811,8 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 									.get(curPlayNo).getTitle());
 							columsVideoView.requestFocus();
 							columsVideoView.start();
+							video_pb.setVisibility(View.VISIBLE);
+							columsVideoStart.setVisibility(View.GONE);
 
 							NetUtils.getInstance(mContext).getAnalyse(
 									New_Activity_Colums_Info.this,
@@ -826,6 +835,7 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 							curPlayNo).getTitle());
 					columsVideoView.requestFocus();
 					columsVideoView.start();
+					columsVideoStart.setVisibility(View.GONE);
 
 					NetUtils.getInstance(mContext).getAnalyse(
 							New_Activity_Colums_Info.this, "video",
