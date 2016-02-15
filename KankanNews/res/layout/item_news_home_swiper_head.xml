@@ -54,6 +54,7 @@
         android:background="@color/gray_cc" />
 
     <View
+        android:id="@+id/news_home_swiper_space_line"
         android:layout_width="match_parent"
         android:layout_height="20dip"
         android:background="@color/bright_gray" />

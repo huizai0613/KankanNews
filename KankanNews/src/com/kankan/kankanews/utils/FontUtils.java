@@ -46,6 +46,15 @@ public class FontUtils {
 		view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
 	}
 
+	public static void setTextViewFontSizeDIP(Activity activity, TextView view,
+			int resourceId, float radix) {
+		float fontSize = Float.parseFloat(activity.getResources().getString(
+				resourceId))
+				* radix;
+
+		view.setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize);
+	}
+
 	public static void setTextViewFontSize(Activity activity, TextView view,
 			int resourceId, float radix) {
 		float fontSize = Float.parseFloat(activity.getResources().getString(

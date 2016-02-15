@@ -426,6 +426,9 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 					mNewTopPicHolder = new NewTopPicHolder();
 					mNewTopPicHolder.title = (MyTextView) convertView
 							.findViewById(R.id.top_title);
+					FontUtils.setTextViewFontSizeDIP(NewsListActivity.this,
+							mNewTopPicHolder.title,
+							R.string.home_news_text_size, 1);
 					mNewTopPicHolder.image = (ImageView) convertView
 							.findViewById(R.id.top_pic);
 					mNewTopPicHolder.image

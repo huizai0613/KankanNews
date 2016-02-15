@@ -394,6 +394,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 		AutoScrollViewPager imgViewPager;
 		TextView title;
 		LinearLayout pointRootView;
+		View spaceLine;
 	}
 
 	private class MatrixHolder {
@@ -571,9 +572,13 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 					mSwiperHeadHolder.imgViewPager = (AutoScrollViewPager) convertView
 							.findViewById(R.id.news_home_swiper_head_view_pager);
 
+					mSwiperHeadHolder.spaceLine = convertView
+							.findViewById(R.id.news_home_swiper_space_line);
+
 					mSwiperHeadHolder.imgViewPager.startAutoScroll(6000);
 					mSwiperHeadHolder.imgViewPager.setCycle(true);
-					mSwiperHeadHolder.imgViewPager.setStopScrollWhenTouch(false);
+					mSwiperHeadHolder.imgViewPager
+							.setStopScrollWhenTouch(false);
 					mSwiperHeadHolder.imgViewPager
 							.setSwipeScrollDurationFactor(0.5);
 					mSwiperHeadHolder.imgViewPager.setInterval(6000);
@@ -609,6 +614,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						mSwiperHeadHolder.pointRootView
 								.setVisibility(View.GONE);
 					}
+					if (mNewsHome.getModule_list().size() > 1
+							&& mNewsHome.getModule_list().get(1).getType()
+									.equals("scrollbar-message"))
+						mSwiperHeadHolder.spaceLine.setVisibility(View.GONE);
+					else
+						mSwiperHeadHolder.spaceLine.setVisibility(View.VISIBLE);
 
 					convertView.setTag(mSwiperHeadHolder);
 				} else if (itemType == 1) {
@@ -1568,6 +1579,9 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
 						textView, R.string.home_news_text_size, 1);
 				convertView = textView;
+			} else {
+				((MyTextView) convertView).setText(itemList.get(index)
+						.getTitle());
 			}
 			convertView.setOnClickListener(new OnClickListener() {
 				@Override

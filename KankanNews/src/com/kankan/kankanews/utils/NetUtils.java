@@ -178,8 +178,11 @@ public class NetUtils {
 	 */
 	public void getNewsHomeList(Listener<JSONObject> reponseListener,
 			ErrorListener errorListener) {
+//		mCustomRequest = new CustomRequest(Request.Method.GET,
+//				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA, null,
+//				reponseListener, errorListener);
 		mCustomRequest = new CustomRequest(Request.Method.GET,
-				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA, null,
+				"http://www.kankanews.com/ceshi/test.txt", null,
 				reponseListener, errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
