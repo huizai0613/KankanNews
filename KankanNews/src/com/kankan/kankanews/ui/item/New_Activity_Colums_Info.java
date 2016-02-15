@@ -380,8 +380,8 @@ public class New_Activity_Colums_Info extends BaseVideoActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.colums_video_start:
-			videoPlay();
 			columsVideoStart.setVisibility(View.GONE);
+			videoPlay();
 			break;
 		case R.id.colums_share_but:
 			if (new_colums_infos.size() == 0
