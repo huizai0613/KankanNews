@@ -54,7 +54,7 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 public class NetUtils {
 
 	private static NetUtils netUtils;
-	private static Random random = new Random();
+	private static Random _random = new Random();
 	private RequestQueue mRequestQueue;
 	private CustomRequest mCustomRequest;
 	private CustomRequestArray mCustomRequestArray;
@@ -180,13 +180,14 @@ public class NetUtils {
 	 */
 	public void getNewsHomeList(Listener<JSONObject> reponseListener,
 			ErrorListener errorListener) {
-		// mCustomRequest = new CustomRequest(Request.Method.GET,
-		// AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA, null,
-		// reponseListener, errorListener);
 		mCustomRequest = new CustomRequest(Request.Method.GET,
-				"http://www.kankanews.com/ceshi/test.txt?r="
-						+ random.nextInt(1000000), null, reponseListener,
-				errorListener);
+				AndroidConfig.KANKAN_HOST + AndroidConfig.NEWS_HOME_DATA
+						+ "?_random=" + _random.nextInt(10000), null,
+				reponseListener, errorListener);
+		// mCustomRequest = new CustomRequest(Request.Method.GET,
+		// "http://www.kankanews.com/ceshi/test.txt?r="
+		// + _random.nextInt(1000000), null, reponseListener,
+		// errorListener);
 		mRequestQueue.add(mCustomRequest);
 	}
 
