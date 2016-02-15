@@ -99,6 +99,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 
 	private NewsHomeSwiperHeadAdapter mNewsHomeSwiperHeadAdapter;
 	private NewsHomeListAdapter mNewsHomeListAdapter;
+	private NewsHomeMessageScrollbarAdapter mNewsHomeMessageScrollbarAdapter;
 	private SwiperHeadHolder mSwiperHeadHolder;
 	private MatrixHolder mMatrixHolder;
 	private MatrixListHolder mMatrixListHolder;
@@ -284,6 +285,21 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 			mNewsHomeSwiperHeadAdapter.setItemList(mNewsHome.getModule_list()
 					.get(0).getList());
 			mNewsHomeSwiperHeadAdapter.notifyDataSetChanged();
+		}
+		if (mNewsHomeMessageScrollbarAdapter != null) {
+			int position = -1;
+			for (int i = 0; i < mNewsHome.getModule_list().size(); i++) {
+				NewsHomeModule module = mNewsHome.getModule_list().get(i);
+				if (module.getType().equals("scrollbar-message")) {
+					position = i;
+					break;
+				}
+			}
+			if (position != -1) {
+				mNewsHomeMessageScrollbarAdapter.setItemList(mNewsHome
+						.getModule_list().get(position).getList());
+				mNewsHomeMessageScrollbarAdapter.notifyDataSetChanged();
+			}
 		}
 		// new Handler().postDelayed(new Runnable() {
 		// @Override
@@ -795,9 +811,10 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 							.findViewById(R.id.news_home_message_scrollbar_icon);
 					mScrollbarMessageHolder.viewpager = (VerticalViewPager) convertView
 							.findViewById(R.id.news_home_message_scrollbar_view_pager);
+					mNewsHomeMessageScrollbarAdapter = new NewsHomeMessageScrollbarAdapter(
+							module.getList());
 					mScrollbarMessageHolder.viewpager
-							.setAdapter(new NewsHomeMessageScrollbarAdapter(
-									module.getList()));
+							.setAdapter(mNewsHomeMessageScrollbarAdapter);
 					mScrollbarMessageHolder.viewpager.startAutoScroll(5000);
 					convertView.setTag(mScrollbarMessageHolder);
 				} else {
