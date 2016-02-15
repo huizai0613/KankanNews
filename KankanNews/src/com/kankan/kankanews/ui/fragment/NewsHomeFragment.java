@@ -1187,6 +1187,8 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						title.setText(moduleItem.getTitle());
 						title.setLayoutParams(textLayoutParams);
 						title.setLineSpacing(PixelUtil.dp2px(3), 1);
+						FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
+								title, R.string.home_news_intro_size, 1);
 						itemView.setOnClickListener(new OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -1590,11 +1592,12 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						NewsHomeFragment.this.mActivity);
 				textView.setMaxLines(2);
 				textView.setMinLines(1);
+				textView.setGravity(Gravity.CENTER_VERTICAL|Gravity.LEFT);
 				textView.setEllipsize(TextUtils.TruncateAt.END);
 				textView.setText(itemList.get(index).getTitle());
 
 				FontUtils.setTextViewFontSizeDIP(NewsHomeFragment.this,
-						textView, R.string.home_news_text_size, 1);
+						textView, R.string.home_news_intro_size, 1);
 				convertView = textView;
 			} else {
 				((MyTextView) convertView).setText(itemList.get(index)
