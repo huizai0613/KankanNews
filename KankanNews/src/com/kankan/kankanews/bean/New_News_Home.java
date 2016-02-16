@@ -19,6 +19,7 @@ public class New_News_Home extends BaseBean<New_News_Home> {
 	private String ztid;
 	private String mid;
 	private String classid;
+	private String labels;
 
 	private String ztype = "";
 	private String intro;
@@ -59,6 +60,7 @@ public class New_News_Home extends BaseBean<New_News_Home> {
 
 		ztype = jsonObj.optString("ztype");
 		intro = jsonObj.optString("intro");
+		labels = jsonObj.optString("labels");
 
 		stime = jsonObj.optString("stime");
 		etime = jsonObj.optString("etime");
@@ -184,6 +186,14 @@ public class New_News_Home extends BaseBean<New_News_Home> {
 
 	public void setSharedPic(String sharedPic) {
 		this.sharedPic = sharedPic;
+	}
+
+	public String getLabels() {
+		return labels;
+	}
+
+	public void setLabels(String labels) {
+		this.labels = labels;
 	}
 
 }

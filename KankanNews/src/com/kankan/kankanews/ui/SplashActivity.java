@@ -190,28 +190,28 @@ public class SplashActivity extends BaseActivity {
 					Bundle bundle = getIntent().getExtras();
 					if (bundle != null && bundle.containsKey("PUSH_NEWS_ID"))
 						return;
-					if (isFirstIn || !version.equals(spUtil.getVersion())) {
+//					if (isFirstIn || !version.equals(spUtil.getVersion())) {
 						// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
-						mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
-								AD_NO_DELAY_MILLIS);
-					} else {
+//						mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
+//								AD_NO_DELAY_MILLIS);
+//					} else {
 						mHandler.sendEmptyMessageDelayed(AD_GO_HOME,
 								AD_NO_DELAY_MILLIS);
-					}
+//					}
 					return;
 				} else {
 					showAdvert();
 					Bundle bundle = getIntent().getExtras();
 					if (bundle != null && bundle.containsKey("PUSH_NEWS_ID"))
 						return;
-					if (isFirstIn || !version.equals(spUtil.getVersion())) {
+//					if (isFirstIn || !version.equals(spUtil.getVersion())) {
 						// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
-						mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
-								AD_HAS_DELAY_MILLIS);
-					} else {
+//						mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
+//								AD_HAS_DELAY_MILLIS);
+//					} else {
 						mHandler.sendEmptyMessageDelayed(AD_GO_HOME,
 								AD_HAS_DELAY_MILLIS);
-					}
+//					}
 					return;
 				}
 			}
@@ -233,12 +233,12 @@ public class SplashActivity extends BaseActivity {
 		if (bundle != null && bundle.containsKey("PUSH_NEWS_ID"))
 			mHandler.sendEmptyMessageDelayed(GO_TRANS, SPLASH_DELAY_MILLIS);
 		else {
-			if (isFirstIn || !version.equals(spUtil.getVersion())) {
+//			if (isFirstIn || !version.equals(spUtil.getVersion())) {
 				// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
-				mHandler.sendEmptyMessageDelayed(GO_GUIDE, SPLASH_DELAY_MILLIS);
-			} else {
+//				mHandler.sendEmptyMessageDelayed(GO_GUIDE, SPLASH_DELAY_MILLIS);
+//			} else {
 				mHandler.sendEmptyMessageDelayed(GO_HOME, SPLASH_DELAY_MILLIS);
-			}
+//			}
 		}
 	}
 
@@ -350,19 +350,19 @@ public class SplashActivity extends BaseActivity {
 								intent.putExtra("PUSH_NEWS_ID", value);
 							if (key.equalsIgnoreCase("liveid"))
 								intent.putExtra("LIVE_ID", value);
-							if (isFirstIn
-									|| !version.equals(spUtil.getVersion())) {
+//							if (isFirstIn
+//									|| !version.equals(spUtil.getVersion())) {
 								// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
 //								goGuide();
-								goHome();
-							} else {
+//								goHome();
+//							} else {
 								// mHandler.sendEmptyMessage(CLICK_GO_HOME);
 								if (key.equalsIgnoreCase("infoid")) {
 									goTrasition();
 								} else {
 									goHome();
 								}
-							}
+//							}
 						}
 					}
 				}
@@ -392,13 +392,13 @@ public class SplashActivity extends BaseActivity {
 			if (bundle != null && bundle.containsKey("PUSH_NEWS_ID")) {
 				return;
 			}
-			if (isFirstIn || !version.equals(spUtil.getVersion())) {
+//			if (isFirstIn || !version.equals(spUtil.getVersion())) {
 				// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
-				mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
-						AD_NO_DELAY_MILLIS);
-			} else {
+//				mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
+//						AD_NO_DELAY_MILLIS);
+//			} else {
 				mHandler.sendEmptyMessageDelayed(AD_GO_HOME, AD_NO_DELAY_MILLIS);
-			}
+//			}
 			return;
 		}
 		if (advert == null)
@@ -414,12 +414,12 @@ public class SplashActivity extends BaseActivity {
 		if (bundle != null && bundle.containsKey("PUSH_NEWS_ID")) {
 			return;
 		}
-		if (isFirstIn || !version.equals(spUtil.getVersion())) {
+//		if (isFirstIn || !version.equals(spUtil.getVersion())) {
 			// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
-			mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE, AD_HAS_DELAY_MILLIS);
-		} else {
+//			mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE, AD_HAS_DELAY_MILLIS);
+//		} else {
 			mHandler.sendEmptyMessageDelayed(AD_GO_HOME, AD_HAS_DELAY_MILLIS);
-		}
+//		}
 	}
 
 	@Override
