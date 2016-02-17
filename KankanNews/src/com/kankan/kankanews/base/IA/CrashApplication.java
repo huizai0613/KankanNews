@@ -20,6 +20,8 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.bean.Advert;
 import com.kankan.kankanews.bean.Content_News;
@@ -49,10 +51,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.L;
-import com.umeng.message.PushAgent;
-import com.umeng.message.UmengMessageHandler;
-import com.umeng.message.UmengRegistrar;
-import com.umeng.message.entity.UMessage;
 
 public class CrashApplication extends Application {
 
@@ -93,31 +91,33 @@ public class CrashApplication extends Application {
 		this.tf = tf;
 	}
 
-	static UmengMessageHandler messageHandler = new UmengMessageHandler() {
-		public void dealWithNotificationMessage(final Context arg0,
-				UMessage arg1) {
-			if (isStart) {
-				Intent intent = new Intent("dialog");
-
-				intent.putExtra("value", arg1.text);
-
-				mInstance.sendBroadcast(intent);
-
-			} else {
-				super.dealWithNotificationMessage(arg0, arg1);
-			}
-		};
-
-	};
+	// static UmengMessageHandler messageHandler = new UmengMessageHandler() {
+	// public void dealWithNotificationMessage(final Context arg0,
+	// UMessage arg1) {
+	// if (isStart) {
+	// Intent intent = new Intent("dialog");
+	//
+	// intent.putExtra("value", arg1.text);
+	//
+	// mInstance.sendBroadcast(intent);
+	//
+	// } else {
+	// super.dealWithNotificationMessage(arg0, arg1);
+	// }
+	// };
+	//
+	// };
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
-		mPushAgent = PushAgent.getInstance(this);
-		mPushAgent.setDebugMode(true);
+		// TODO
+		JPushInterface.setDebugMode(false);
+		JPushInterface.init(this);
+		// mPushAgent = PushAgent.getInstance(this);
+		// mPushAgent.setDebugMode(true);
 		mInstance = this;
-		mPushAgent.setMessageHandler(messageHandler);
+		// mPushAgent.setMessageHandler(messageHandler);
 		ActivityManager activityManager = (ActivityManager) this
 				.getSystemService(Context.ACTIVITY_SERVICE);
 		int memoryClass = activityManager.getMemoryClass();
@@ -178,7 +178,6 @@ public class CrashApplication extends Application {
 
 		CrashHandler crashHandler = CrashHandler.getInstance();
 		crashHandler.init(this);
-		String device_token = UmengRegistrar.getRegistrationId(this);
 	}
 
 	public void initImageLoader(Context context, File cacheDir) {
@@ -314,7 +313,6 @@ public class CrashApplication extends Application {
 	long later;
 	private Typeface tf;
 	private DbUtils dbUtils;
-	private PushAgent mPushAgent;
 	private int width;
 
 	public DbUtils getDbUtils() {

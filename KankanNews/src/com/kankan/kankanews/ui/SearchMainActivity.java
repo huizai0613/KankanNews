@@ -83,7 +83,7 @@ public class SearchMainActivity extends BaseActivity implements OnClickListener 
 	private LinearLayout noDataLayout;
 
 	private int curPageNum = 1;
-	private int maxSearchNum = 10;
+	private int maxSearchNum = 30;
 
 	private List<New_News_Search> searchList = new LinkedList<New_News_Search>();
 

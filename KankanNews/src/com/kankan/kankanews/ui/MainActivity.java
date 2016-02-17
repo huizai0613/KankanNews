@@ -3,11 +3,8 @@ package com.kankan.kankanews.ui;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.json.JSONObject;
 
@@ -15,7 +12,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -29,45 +25,24 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 
 import com.android.volley.VolleyError;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.kankan.kankanews.animation.RotateAndTranslateAnimation;
-import com.kankan.kankanews.base.BaseActivity;
 import com.kankan.kankanews.base.BaseFragment;
 import com.kankan.kankanews.base.BaseVideoActivity;
-import com.kankan.kankanews.bean.MyCollect;
-import com.kankan.kankanews.bean.New_LivePlay;
 import com.kankan.kankanews.config.AndroidConfig;
 import com.kankan.kankanews.ui.fragment.LiveHomeFragment;
-import com.kankan.kankanews.ui.fragment.New_ColumsFragment;
-import com.kankan.kankanews.ui.fragment.New_MyFragment;
 import com.kankan.kankanews.ui.fragment.New_RevelationsFragment;
 import com.kankan.kankanews.ui.fragment.NewsHomeFragment;
-import com.kankan.kankanews.ui.view.MyTextView;
 import com.kankan.kankanews.ui.view.popup.RevelationsChoiceBoard;
-import com.kankan.kankanews.ui.view.popup.SecondColumsBoard;
 import com.kankan.kankanews.utils.ClickUtils;
-import com.kankan.kankanews.utils.CommonUtils;
-import com.kankan.kankanews.utils.DebugLog;
-import com.kankan.kankanews.utils.Options;
 import com.kankan.kankanews.utils.PixelUtil;
 import com.kankan.kankanews.utils.ShareUtil;
 import com.kankan.kankanews.utils.TimeUtil;
 import com.kankanews.kankanxinwen.R;
-import com.lidroid.xutils.http.HttpHandler;
-import com.networkbench.agent.impl.NBSAppAgent;
-import com.umeng.message.PushAgent;
 import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -283,7 +258,7 @@ public class MainActivity extends BaseVideoActivity implements OnClickListener {
 			refreshLive();
 		}
 		if (id == R.id.tab_home) {
-			//TODO
+			// TODO
 			if (spUtil.getFirstGetColumns()) {
 				screenGuide
 						.setBackgroundResource(R.drawable.screen_guide_columns);
