@@ -180,7 +180,8 @@
                 android:layout_height="16dp"
                 android:layout_marginTop="0dp"
                 android:gravity="center_vertical|right"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone" >
 
                 <ImageView
                     android:layout_width="10dp"
@@ -271,7 +272,8 @@
                 android:layout_height="16dp"
                 android:layout_marginTop="0dp"
                 android:gravity="center_vertical|right"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone" >
 
                 <ImageView
                     android:layout_width="10dp"
@@ -363,7 +365,8 @@
                 android:layout_height="16dp"
                 android:layout_marginTop="0dp"
                 android:gravity="center_vertical|right"
-                android:orientation="horizontal" >
+                android:orientation="horizontal"
+                android:visibility="gone" >
 
                 <ImageView
                     android:layout_width="10dp"
