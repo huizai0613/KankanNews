@@ -59,19 +59,20 @@
 
 -dontshrink
 -dontoptimize
--dontwarn com.google.android.maps.**
+-dontwarn cn.jpush.** 
+-dontwarn com.google.**
 -dontwarn android.webkit.WebView
 -dontwarn com.umeng.**
 -dontwarn com.tencent.weibo.sdk.**
 -dontwarn com.facebook.**
-
--libraryjars ..//social_sdk_library_project/libs/SocialSDK_QQZone_2.jar
 
 -keep enum com.facebook.**
 -keepattributes Exceptions,InnerClasses,Signature
 -keepattributes *Annotation*
 -keepattributes SourceFile,LineNumberTable
 
+-keep class cn.jpush.** { *; }
+-keep class com.google.** { *; }
 -keep public interface com.facebook.**
 -keep public interface com.tencent.**
 -keep public interface com.umeng.socialize.**
