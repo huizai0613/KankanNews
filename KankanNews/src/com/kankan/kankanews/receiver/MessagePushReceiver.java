@@ -57,6 +57,7 @@ public class MessagePushReceiver extends BroadcastReceiver {
 			if (bundle != null) {
 				CrashApplication a;
 				a = (CrashApplication) (context.getApplicationContext());
+
 				String extra = bundle.getString(JPushInterface.EXTRA_EXTRA);
 				if (extra != null && !extra.equals("")) {
 					try {
@@ -65,7 +66,7 @@ public class MessagePushReceiver extends BroadcastReceiver {
 						if (newsId != null && !newsId.equals("")) {
 							// 打开自定义的Activity
 
-							if (a.getMainActivity() == null) {
+							if (a.getMainActivity() == null && !a.isStart()) {
 								Intent i = new Intent(context,
 										SplashActivity.class);
 								bundle.putString("PUSH_NEWS_ID", newsId);
@@ -156,7 +157,9 @@ public class MessagePushReceiver extends BroadcastReceiver {
 									.getAppclassid());
 							if (moduleItem.getCategory() != null
 									&& !moduleItem.getCategory().trim()
-											.equals("")) {
+											.equals("")
+									&& !moduleItem.getCategory().trim()
+											.equalsIgnoreCase("list")) {
 								startAnimActivityByNewsHomeModuleItem(context,
 										NewsTopicActivity.class, homeModuleItem);
 							} else {

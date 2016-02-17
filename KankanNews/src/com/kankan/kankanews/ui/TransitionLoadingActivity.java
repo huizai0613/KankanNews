@@ -146,19 +146,6 @@ public class TransitionLoadingActivity extends BaseActivity {
 			// New_Activity_Content_PicSet.class, news.getMid(),
 			// news.getType(), news.getTitleurl(), news.getNewstime(),
 			// news.getTitle(), news.getTitlepic(), pics[1]);
-		} else if (news_type % 10 == 5) {
-			// 专题
-			moduleItem.setType("topic");
-
-			// this.startAnimActivityByNewsHomeModuleItem(NewsTopicActivity.class,
-			// moduleItem);
-			goHome();
-			this.finish();
-
-			// this.startSubjectActivityByParameterAlpha(
-			// New_Avtivity_Subject.class, news.getZtid(),
-			// news.getTitle(), news.getTitlepic(), news.getTitleurl(),
-			// news.getTitlepic(), news.getSharedPic());
 		} else if (news_type % 10 == 6) {
 			Intent intent = getIntent();
 			intent.setClass(this, MainActivity.class);
@@ -172,7 +159,8 @@ public class TransitionLoadingActivity extends BaseActivity {
 			// fragment.setSelectPlay(true);
 			// fragment.setSelectPlayID(Integer.parseInt(news.getZtid()));
 			// mActivity.touchTab(mActivity.tab_two);
-		} else if (news_type % 10 == 8 || news.getZtype().equals("1")) {
+		} else if (news_type % 10 == 5 || news_type % 10 == 8
+				|| news.getZtype().equals("1")) {
 			moduleItem.setType("topic");
 			moduleItem.setAppclassid(news.getLabels());
 			netUtils.getTopicData(moduleItem.getAppclassid(),
@@ -186,7 +174,9 @@ public class TransitionLoadingActivity extends BaseActivity {
 									.getAppclassid());
 							if (moduleItem.getCategory() != null
 									&& !moduleItem.getCategory().trim()
-											.equals("")) {
+											.equals("")
+									&& !moduleItem.getCategory().trim()
+											.equalsIgnoreCase("list")) {
 								TransitionLoadingActivity.this
 										.startAnimActivityByNewsHomeModuleItem(
 												NewsTopicActivity.class,
