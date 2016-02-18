@@ -358,37 +358,51 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 
 				@Override
 				public String getTitleurl() {
-					return mNewsVPModule.getShare_url();
+					return mNewsVPModule.getType().equals("swiper-video-2") ? mNewsVPModule
+							.getList().get(curPlayNo).getTitleurl()
+							: mNewsVPModule.getShare_url();
 				}
 
 				@Override
 				public String getTitlepic() {
-					return mNewsVPModule.getList().get(0).getTitlepic();
+					return mNewsVPModule.getType().equals("swiper-video-2") ? mNewsVPModule
+							.getList().get(curPlayNo).getTitlepic()
+							: mNewsVPModule.getList().get(0).getTitlepic();
 				}
 
 				@Override
 				public String getTitle() {
-					return mNewsVPModule.getList().get(0).getTitle();
+					return mNewsVPModule.getType().equals("swiper-video-2") ? mNewsVPModule
+							.getList().get(curPlayNo).getTitle()
+							: mNewsVPModule.getList().get(0).getTitle();
 				}
 
 				@Override
 				public String getSharedPic() {
-					return mNewsVPModule.getList().get(0).getSharedPic();
+					return mNewsVPModule.getType().equals("swiper-video-2") ? mNewsVPModule
+							.getList().get(curPlayNo).getSharedPic()
+							: mNewsVPModule.getList().get(0).getSharedPic();
 				}
 
 				@Override
 				public String getShareTitle() {
-					return mNewsVPModule.getList().get(0).getShareTitle();
+					return mNewsVPModule.getType().equals("swiper-video-2") ? mNewsVPModule
+							.getList().get(curPlayNo).getShareTitle()
+							: mNewsVPModule.getList().get(0).getShareTitle();
 				}
 
 				@Override
 				public String getIntro() {
-					return mNewsVPModule.getList().get(0).getIntro();
+					return mNewsVPModule.getType().equals("swiper-video-2") ? mNewsVPModule
+							.getList().get(curPlayNo).getIntro()
+							: mNewsVPModule.getList().get(0).getIntro();
 				}
 
 				@Override
 				public String getShareIntro() {
-					return mNewsVPModule.getList().get(0).getIntro();
+					return mNewsVPModule.getType().equals("swiper-video-2") ? mNewsVPModule
+							.getList().get(curPlayNo).getIntro()
+							: mNewsVPModule.getList().get(0).getIntro();
 				}
 
 				@Override
@@ -463,6 +477,7 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 				if (!isLoadMore) {
 					curPlayNo = 0;
 					mNewsVPModule = tmpModule;
+					mNewsVPModule.setType(mHomeModuleItem.getType());
 					saveDate();
 					mListAdapter = new NewsVideoPkgListAdapter();
 					mListView.setAdapter(mListAdapter);

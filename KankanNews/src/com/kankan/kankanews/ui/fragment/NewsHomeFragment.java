@@ -1163,6 +1163,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 								.dp2px(12.5f);
 						final NewsHomeModuleItem moduleItem = module.getList()
 								.get(i);
+						moduleItem.setType(module.getType());
 						moduleItem.setAppclassid(module.getAppclassid());
 						ImageView image = (ImageView) itemView
 								.findViewById(R.id.image_item);
@@ -1592,7 +1593,7 @@ public class NewsHomeFragment extends BaseFragment implements OnClickListener,
 						NewsHomeFragment.this.mActivity);
 				textView.setMaxLines(2);
 				textView.setMinLines(1);
-				textView.setGravity(Gravity.CENTER_VERTICAL|Gravity.LEFT);
+				textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
 				textView.setEllipsize(TextUtils.TruncateAt.END);
 				textView.setText(itemList.get(index).getTitle());
 
