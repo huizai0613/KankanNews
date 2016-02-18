@@ -246,6 +246,14 @@ public class SplashActivity extends BaseActivity {
 
 	private void goHome() {
 		Intent intent = getIntent();
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			if (bundle.containsKey("LIVE_ID"))
+				intent.putExtra("LIVE_ID", bundle.getString("LIVE_ID"));
+			if (bundle.containsKey("PUSH_NEWS_ID"))
+				intent.putExtra("PUSH_NEWS_ID",
+						bundle.getString("PUSH_NEWS_ID"));
+		}
 		String scheme = intent.getScheme();
 		if ("kkl".equalsIgnoreCase(scheme)) {
 			Uri uridata = this.getIntent().getData();

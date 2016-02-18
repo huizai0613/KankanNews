@@ -38,6 +38,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 public class MessagePushReceiver extends BroadcastReceiver {
@@ -106,6 +107,7 @@ public class MessagePushReceiver extends BroadcastReceiver {
 										});
 							}
 						} else if (liveId != null && !liveId.equals("")) {
+							Log.e("LIVE_ID", liveId);
 							if (a.getMainActivity() == null && !a.isStart()) {
 								Intent i = new Intent(context,
 										SplashActivity.class);
