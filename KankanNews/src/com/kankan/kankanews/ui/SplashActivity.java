@@ -187,8 +187,9 @@ public class SplashActivity extends BaseActivity {
 				mHandler.sendEmptyMessage(REMOVE_MESSAGES);
 				if (advert == null) {
 					Bundle bundle = getIntent().getExtras();
-					if (bundle != null && bundle.containsKey("PUSH_NEWS_ID"))
+					if (bundle != null && bundle.containsKey("PUSH_NEWS_ID")) {
 						return;
+					}
 					// if (isFirstIn || !version.equals(spUtil.getVersion())) {
 					// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
 					// mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
@@ -201,8 +202,10 @@ public class SplashActivity extends BaseActivity {
 				} else {
 					showAdvert();
 					Bundle bundle = getIntent().getExtras();
-					if (bundle != null && bundle.containsKey("PUSH_NEWS_ID"))
+					if (bundle != null && bundle.containsKey("PUSH_NEWS_ID")) {
+						Log.e("", "我了割草4");
 						return;
+					}
 					// if (isFirstIn || !version.equals(spUtil.getVersion())) {
 					// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
 					// mHandler.sendEmptyMessageDelayed(AD_GO_GUIDE,
@@ -229,10 +232,11 @@ public class SplashActivity extends BaseActivity {
 		// 判断程序与第几次运行，如果是第一次运行则跳转到引导界面，否则跳转到主界面
 
 		Bundle bundle = getIntent().getExtras();
-		Log.e("bundle", bundle + "");
-		if (bundle != null && bundle.getString("NEWS_PUSH_ID") != null) {
+		if (bundle != null && bundle.containsKey("PUSH_NEWS_ID")) {
+			Log.e("wocao ", "我了割草");
 			mHandler.sendEmptyMessageDelayed(GO_TRANS, SPLASH_DELAY_MILLIS);
 		} else {
+			Log.e("wocao ", "我了割草2");
 			// if (isFirstIn || !version.equals(spUtil.getVersion())) {
 			// 使用Handler的postDelayed方法，2秒后执行跳转到MainActivity
 			// mHandler.sendEmptyMessageDelayed(GO_GUIDE, SPLASH_DELAY_MILLIS);
@@ -243,6 +247,7 @@ public class SplashActivity extends BaseActivity {
 	}
 
 	private void goHome() {
+		Log.e("wocao", "我了割草3");
 		Intent intent = getIntent();
 		String scheme = intent.getScheme();
 		if ("kkl".equalsIgnoreCase(scheme)) {
