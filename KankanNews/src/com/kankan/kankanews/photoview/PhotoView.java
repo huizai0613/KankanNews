@@ -135,25 +135,21 @@ public class PhotoView extends ImageView implements IPhotoView {
 	@Override
 	public void setOnMatrixChangeListener(OnMatrixChangedListener listener) {
 		mAttacher.setOnMatrixChangeListener(listener);
-		DebugLog.e("setOnMatrixChangeListener");
 	}
 
 	@Override
 	public void setOnLongClickListener(OnLongClickListener l) {
 		mAttacher.setOnLongClickListener(l);
-		DebugLog.e("setOnLongClickListener");
 	}
 
 	@Override
 	public void setOnPhotoTapListener(OnPhotoTapListener listener) {
 		mAttacher.setOnPhotoTapListener(listener);
-		DebugLog.e("setOnPhotoTapListener");
 	}
 
 	@Override
 	public void setOnViewTapListener(OnViewTapListener listener) {
 		mAttacher.setOnViewTapListener(listener);
-		DebugLog.e("setOnViewTapListener");
 	}
 
 	@Override

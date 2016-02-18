@@ -49,7 +49,6 @@ public class SharedJumpActivity extends BaseActivity {
 
 	@Override
 	protected void onResume() {
-		DebugLog.e("卧槽onResume");
 		super.onResume();
 		if (!isFirst)
 			this.AnimFinsh();
@@ -60,7 +59,6 @@ public class SharedJumpActivity extends BaseActivity {
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		DebugLog.e("卧槽onPause");
 	}
 
 	@Override
@@ -115,7 +113,6 @@ public class SharedJumpActivity extends BaseActivity {
 				ssoHandler.authorizeCallBack(requestCode, resultCode, data);
 			}
 		}
-		DebugLog.e("卧槽");
 	}
 
 	public void goReturn(View v) {

@@ -174,7 +174,6 @@ public class VideoSelectedMainActivity extends Activity implements
 				Cursor mCursor = mContentResolver.query(mImageUri, null, null,
 						null, MediaStore.Video.Media.DATE_MODIFIED + " DESC");
 
-				Log.e("Cursor", mCursor.getColumnCount() + "");
 				while (mCursor.moveToNext()) {
 					// 获取视频编号
 					VideoUpload video = new VideoUpload();
@@ -194,10 +193,10 @@ public class VideoSelectedMainActivity extends Activity implements
 							new String[] { MediaStore.Video.Thumbnails.DATA,
 									MediaStore.Video.Thumbnails.VIDEO_ID },
 							null, null, null);
-					while (thumbCursor.moveToNext()) {
-						DebugLog.e(thumbCursor.getString(thumbCursor
-								.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.VIDEO_ID)));
-					}
+//					while (thumbCursor.moveToNext()) {
+//						DebugLog.e(thumbCursor.getString(thumbCursor
+//								.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.VIDEO_ID)));
+//					}
 					// if (thumbCursor.moveToFirst()) {
 					// video.setThumbPath(thumbCursor.getString(thumbCursor
 					// .getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA)));

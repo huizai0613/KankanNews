@@ -364,7 +364,6 @@ public class NewsTopicListActivity extends BaseActivity implements
 
 		@Override
 		public int getCount() {
-			DebugLog.e(mIsLoadEnd + "");
 			if (mIsLoadEnd)
 				return mTopicListModule.getList().size() + 2;
 			return mTopicListModule.getList().size() + 1;

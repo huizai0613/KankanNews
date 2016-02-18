@@ -227,7 +227,6 @@ public class PicSelectedMainActivity extends Activity implements
 						"image/jpeg", "image/png", "image/jpg" },
 						MediaStore.Images.Media.DATE_MODIFIED + " DESC");
 
-				Log.e("Cursor", mCursor.getColumnCount() + "");
 				while (mCursor.moveToNext()) {
 					// 获取图片的路径
 					String path = mCursor.getString(mCursor

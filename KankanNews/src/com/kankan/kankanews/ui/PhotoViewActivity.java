@@ -140,7 +140,6 @@ public class PhotoViewActivity extends BaseActivity implements OnClickListener,
 				@Override
 				public void onPhotoTap(View view, float x, float y) {
 					// TODO Auto-generated method stub
-					DebugLog.e("单击");
 					finish();
 				}
 			});

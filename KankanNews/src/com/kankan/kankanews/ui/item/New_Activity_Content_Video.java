@@ -1000,7 +1000,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		// video_controller.getContent_video_temp_image().setImageBitmap(
 		// currentFrame);
 		// }
-		DebugLog.e("pause");
 
 		// if (this.getRequestedOrientation() ==
 		// ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
@@ -1021,7 +1020,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		DebugLog.e("onResume");
 		isPause = false;
 		isGoShare = false;
 		// if (this.getRequestedOrientation() ==
@@ -1129,7 +1127,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	@Override
 	public void onPrepared(IMediaPlayer mp) {
 		// TODO Auto-generated method stub
-		Log.e("onPrepared", "onPrepared");
 		hasBeenPaly = true;
 		small_video_pb.setVisibility(View.GONE);
 		video_pb.setVisibility(View.GONE);
@@ -1557,7 +1554,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 	}
 
 	private void verticalScreen(boolean isNeedPlay) {
-		DebugLog.e("竖了");
 		WindowManager.LayoutParams attrs = getWindow().getAttributes();
 		contentVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_SCALE);
 		if (contentVideoView.isPlaying()
@@ -1598,7 +1594,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 				public void run() {
 					isPlayer = false;
 					if (contentVideoView.getVideoURI() == null) {
-						Log.e("video_view", "video_view");
 						playState();
 						play();
 					} else {
@@ -1618,7 +1613,6 @@ public class New_Activity_Content_Video extends BaseVideoActivity implements
 		WindowManager.LayoutParams attrs = getWindow().getAttributes();
 		if (fontBoard != null && fontBoard.isShowing())
 			fontBoard.dismiss();
-		DebugLog.e("heng" + this);
 		contentVideoView.setVideoLayout(VideoView.VIDEO_LAYOUT_STRETCH);
 		CommonUtils.clickevent(mContext, "action", "放大",
 				AndroidConfig.video_fullscreen_event);

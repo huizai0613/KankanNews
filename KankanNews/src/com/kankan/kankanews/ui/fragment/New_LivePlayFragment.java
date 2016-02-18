@@ -439,7 +439,6 @@ public class New_LivePlayFragment extends BaseFragment implements
 
 	private void showData() {
 		boolean unStart = false;
-		DebugLog.e("selectPlayID" + selectPlayID);
 		for (New_LivePlay news : mLivePlayList) {
 
 			if (isSelectPlay && Integer.parseInt(news.getZid()) == selectPlayID) {

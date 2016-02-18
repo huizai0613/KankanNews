@@ -383,7 +383,6 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 
 	@Override
 	public boolean onError(IMediaPlayer mp, int what, int extra) {
-		DebugLog.e("卧槽onError有消息" + extra);
 		ToastUtils.Errortoast(this.mActivity, "抱歉当前内容不能播放,请稍后重试");
 		this.closePlay();
 		return false;

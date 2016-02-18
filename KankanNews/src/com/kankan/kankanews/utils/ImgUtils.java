@@ -365,11 +365,9 @@ public class ImgUtils {
 			in = con.getInputStream();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			DebugLog.e(e.getLocalizedMessage());
 			Log.e("getNetImage", e.getLocalizedMessage(), e);
 			return null;
 		}
-		DebugLog.e("试着加载了");
 		Bitmap bit = BitmapFactory.decodeStream(in);
 		return bit;
 	}

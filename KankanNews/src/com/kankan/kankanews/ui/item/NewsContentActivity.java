@@ -347,7 +347,6 @@ public class NewsContentActivity extends BaseVideoActivity implements
 			@Override
 			public void run() {
 				isPlay = true;
-				DebugLog.e(video.getVideourl());
 				mVideoView.setVideoPath(video.getVideourl());
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 			}

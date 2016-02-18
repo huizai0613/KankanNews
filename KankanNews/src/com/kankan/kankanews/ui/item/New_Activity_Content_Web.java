@@ -285,7 +285,6 @@ public class New_Activity_Content_Web extends BaseActivity implements
 		switch (keyCode) {
 		// 音量减小
 		case KeyEvent.KEYCODE_VOLUME_DOWN:
-			Log.e("KEYCODE_VOLUME_DOWN", "KEYCODE_VOLUME_DOWN");
 			mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
 					AudioManager.ADJUST_LOWER,
 					AudioManager.FX_FOCUS_NAVIGATION_UP);
@@ -293,7 +292,6 @@ public class New_Activity_Content_Web extends BaseActivity implements
 
 			// 音量增大
 		case KeyEvent.KEYCODE_VOLUME_UP:
-			Log.e("KEYCODE_VOLUME_UP", "KEYCODE_VOLUME_UP");
 			mAudioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
 					AudioManager.ADJUST_RAISE,
 					AudioManager.FX_FOCUS_NAVIGATION_UP);
