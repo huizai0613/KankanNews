@@ -63,16 +63,14 @@ public class MessagePushReceiver extends BroadcastReceiver {
 					try {
 						JSONObject jsonObject = new JSONObject(extra);
 						String newsId = jsonObject.getString("PUSH_NEWS_ID");
+						String liveId = jsonObject.getString("LIVE_ID");
 						if (newsId != null && !newsId.equals("")) {
 							// 打开自定义的Activity
-
 							if (a.getMainActivity() == null && !a.isStart()) {
 								Intent i = new Intent(context,
 										SplashActivity.class);
 								bundle.putString("PUSH_NEWS_ID", newsId);
 								i.putExtras(bundle);
-
-								// i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 								i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
 										| Intent.FLAG_ACTIVITY_CLEAR_TOP);
 								context.startActivity(i);
@@ -106,6 +104,16 @@ public class MessagePushReceiver extends BroadcastReceiver {
 												return;
 											}
 										});
+							}
+						} else if (liveId != null && !liveId.equals("")) {
+							if (a.getMainActivity() == null && !a.isStart()) {
+								Intent i = new Intent(context,
+										SplashActivity.class);
+								bundle.putString("LIVE_ID", liveId);
+								i.putExtras(bundle);
+								i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+										| Intent.FLAG_ACTIVITY_CLEAR_TOP);
+								context.startActivity(i);
 							}
 						}
 					} catch (JSONException e) {
