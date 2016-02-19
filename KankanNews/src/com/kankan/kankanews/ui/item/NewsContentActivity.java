@@ -943,9 +943,10 @@ public class NewsContentActivity extends BaseVideoActivity implements
 		int videoImageH = 0;
 		int imageH = this.mWebWidth * 3 / 4 / PixelUtil.getScale();
 		String scale = video.getDisplayscale();
-		if (scale.equals("16:9"))
+		if (scale != null && scale.equals("16:9"))
 			videoImageH = this.mWebWidth * 9 / 16 / PixelUtil.getScale();
-		if (scale.equals("4:3"))
+		// if (scale.equals("4:3"))
+		else
 			videoImageH = this.mWebWidth * 3 / 4 / PixelUtil.getScale();
 		String template = "<em id=\"%s\" class=\"video\" style=\"height:%spx\"><img id=\"%s\" width=\"%spx\" height=\"%spx\" src='images/small_no_loading.png' onclick=\"openVideo('%s')\"/><i><img src=\"images/ic_liveplay.png\" onclick=\"openVideo('%s')\"/></i></em>";
 		return String.format(template, videoKey, videoImageH, videoKey
