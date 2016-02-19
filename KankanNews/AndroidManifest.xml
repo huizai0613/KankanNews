@@ -1,7 +1,7 @@
 ﻿<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kankanews.kankanxinwen"
-    android:versionCode="16"
-    android:versionName="3.0.1" >
+    android:versionCode="17"
+    android:versionName="3.0.2" >
 
     <uses-sdk
         android:minSdkVersion="16"
