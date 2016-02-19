@@ -3,6 +3,7 @@ package com.kankan.kankanews.ui.item;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -61,6 +62,7 @@ import com.kankan.kankanews.base.view.SildingFinishLayout;
 import com.kankan.kankanews.bean.New_Colums;
 import com.kankan.kankanews.bean.New_Colums_Info;
 import com.kankan.kankanews.bean.New_Colums_Second;
+import com.kankan.kankanews.bean.NewsBrowseRecord;
 import com.kankan.kankanews.bean.NewsHomeModule;
 import com.kankan.kankanews.bean.NewsHomeModuleItem;
 import com.kankan.kankanews.bean.interfaz.CanSharedObject;
@@ -819,9 +821,34 @@ public class NewsVideoPackageActivity extends BaseVideoActivity implements
 				R.string.home_news_text_size, spUtil.getFontSizeRadix());
 	}
 
+	private void saveBrowse() {
+		final NewsBrowseRecord browse = new NewsBrowseRecord();
+		browse.setId(mNewsVPModule.getList().get(curPlayNo).getO_cmsid());
+		browse.setType(mNewsVPModule.getList().get(curPlayNo).getType());
+		browse.setTitle(mNewsVPModule.getList().get(curPlayNo).getTitle());
+		browse.setBrowseTime(new Date().getTime());
+		browse.setTitlepic(mNewsVPModule.getList().get(curPlayNo).getTitlepic());
+		browse.setTitleurl(mNewsVPModule.getList().get(curPlayNo).getTitleurl());
+		new Thread() {
+			@Override
+			public void run() {
+				if (browse != null) {
+					try {
+						dbUtils.saveOrUpdate(browse);
+					} catch (DbException e) {
+						e.printStackTrace();
+					}
+				}
+
+			}
+		}.start();
+	}
+
 	private void videoPlay() {
 		mVideoPkgVideoImage.setVisibility(View.VISIBLE);
 		video_pb.setVisibility(View.VISIBLE);
+		if (mNewsVPModule.getType().equals("swiper-video-2"))
+			saveBrowse();
 
 		if (CommonUtils.isNetworkAvailable(this)) {
 			if (!CommonUtils.isWifi(this)) {
