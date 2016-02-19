@@ -484,7 +484,8 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 									mNewsListHolder.titlepic,
 									ImgUtils.homeImageOptions);
 					mNewsListHolder.title.setText(news.getTitle());
-					if (news.getType().equals("outlink")) {
+					if (news.getType().equals("outlink")
+							|| news.getType().equals("topic")) {
 						mNewsListHolder.newsTimeIcon.setVisibility(View.GONE);
 						mNewsListHolder.newsClick.setVisibility(View.GONE);
 					} else {
@@ -535,6 +536,17 @@ public class NewsListActivity extends BaseActivity implements OnClickListener {
 								NewsListActivity.this
 										.startAnimActivityByNewsHomeModuleItem(
 												NewsOutLinkActivity.class, news);
+							} else if (news.getType().equals("topic")) {
+								if (news.getAppclassid() == null
+										|| news.getAppclassid().trim()
+												.equals(""))
+									news.setAppclassid(news.getLabels());
+								if (news.getNum() > 0)
+									startAnimActivityByNewsHomeModuleItem(
+											NewsTopicActivity.class, news);
+								else
+									startAnimActivityByNewsHomeModuleItem(
+											NewsTopicListActivity.class, news);
 							}
 						}
 					});

@@ -252,6 +252,25 @@ public class NewsTopicListActivity extends BaseActivity implements
 		NetUtils.getInstance(mContext).getAnalyse(this, "module",
 				mTopicListModule.getTitle(), mTopicListModule.getTitleurl());
 		if (mTopicListModule != null) {
+			if (mTopicListModule.getList() == null) {
+				String[] categorys = mTopicListModule.getCategory().split(",");
+				mTopicListModule.setList(new ArrayList<NewsHomeModuleItem>());
+				for (int i = 0; i < categorys.length; i++) {
+					List<NewsHomeModuleItem> list;
+					try {
+						list = JsonUtils.toObjectByType(
+								jsonObject.get(categorys[i]).toString(),
+								new TypeToken<List<NewsHomeModuleItem>>() {
+								}.getType());
+					} catch (JSONException e) {
+						continue;
+					}
+					for (NewsHomeModuleItem newsHomeModuleItem : list) {
+						newsHomeModuleItem.setCategory(i + "");
+					}
+					mTopicListModule.getList().addAll(list);
+				}
+			}
 			if (mTopicListModule.getList().size() == 0)
 				mIsLoadEnd = true;
 			saveLocalDate();
@@ -287,6 +306,25 @@ public class NewsTopicListActivity extends BaseActivity implements
 					mTopicListModuleJson = object.getJsonStr();
 					mTopicListModule = JsonUtils.toObject(mTopicListModuleJson,
 							NewsHomeModule.class);
+					if (mTopicListModule.getList() == null) {
+						String[] categorys = mTopicListModule.getCategory().split(",");
+						mTopicListModule.setList(new ArrayList<NewsHomeModuleItem>());
+						for (int i = 0; i < categorys.length; i++) {
+							List<NewsHomeModuleItem> list;
+							try {
+								list = JsonUtils.toObjectByType(
+										jsonObject.get(categorys[i]).toString(),
+										new TypeToken<List<NewsHomeModuleItem>>() {
+										}.getType());
+							} catch (JSONException e) {
+								continue;
+							}
+							for (NewsHomeModuleItem newsHomeModuleItem : list) {
+								newsHomeModuleItem.setCategory(i + "");
+							}
+							mTopicListModule.getList().addAll(list);
+						}
+					}
 					return true;
 				} else {
 					this.dbUtils.delete(
