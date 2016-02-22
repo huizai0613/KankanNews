@@ -50,7 +50,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="Copyright © 2014-2015 Kankanews.com Inc. All Rights Reserved."
+                    android:text="Copyright © 2016 Kankanews.com Inc. All Rights Reserved."
                     android:textColor="@color/mid_gray"
                     android:textSize="10dp" />
             </LinearLayout>
