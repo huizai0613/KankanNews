@@ -109,7 +109,6 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 			}
 		}) {
 		}.start();
-		DebugLog.e("LiveHomeFragment onPause");
 	}
 
 	@Override
@@ -118,14 +117,14 @@ public class LiveHomeFragment extends BaseFragment implements OnInfoListener,
 		super.onResume();
 		if (mActivity.curTouchTab == mActivity.tabLive) {
 			if (this.isPlayStat()) {
-				if (!CommonUtils.isWifi(this.mActivity)) {
-					this.closePlay();
-					mLiveHandler.sendEmptyMessage(_CLOSE_AUDIO_PLAY_);
-					mLiveHandler.sendEmptyMessage(_NET_CHANGE_);
-				} else {
+//				if (!CommonUtils.isWifi(this.mActivity)) {
+//					this.closePlay();
+//					mLiveHandler.sendEmptyMessage(_CLOSE_AUDIO_PLAY_);
+//					mLiveHandler.sendEmptyMessage(_NET_CHANGE_);
+//				} else {
 					this.mLiveVideoView.start();
 					updateFullStartBut(true);
-				}
+//				}
 			}
 		}
 	}
