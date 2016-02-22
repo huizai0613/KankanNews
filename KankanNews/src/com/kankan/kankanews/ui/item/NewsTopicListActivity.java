@@ -307,15 +307,21 @@ public class NewsTopicListActivity extends BaseActivity implements
 					mTopicListModule = JsonUtils.toObject(mTopicListModuleJson,
 							NewsHomeModule.class);
 					if (mTopicListModule.getList() == null) {
-						String[] categorys = mTopicListModule.getCategory().split(",");
-						mTopicListModule.setList(new ArrayList<NewsHomeModuleItem>());
+						String[] categorys = mTopicListModule.getCategory()
+								.split(",");
+						mTopicListModule
+								.setList(new ArrayList<NewsHomeModuleItem>());
 						for (int i = 0; i < categorys.length; i++) {
 							List<NewsHomeModuleItem> list;
 							try {
-								list = JsonUtils.toObjectByType(
-										jsonObject.get(categorys[i]).toString(),
-										new TypeToken<List<NewsHomeModuleItem>>() {
-										}.getType());
+								list = JsonUtils
+										.toObjectByType(
+												new JSONObject(
+														mTopicListModuleJson)
+														.get(categorys[i])
+														.toString(),
+												new TypeToken<List<NewsHomeModuleItem>>() {
+												}.getType());
 							} catch (JSONException e) {
 								continue;
 							}
